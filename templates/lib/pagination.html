@@ -1,0 +1,25 @@
+{% set paginationSize = 6 %}
+
+<div class="center">
+  <ul class="pagination">
+    {% if pagenum > 0 %}
+      <!--<li><a href="{{page_urls[0]}}">⇤</a></li>-->
+      <li><a href="{{page_urls[pagenum - 1]}}">«</a></li>
+    {% endif %}
+    {% for i in pagination %}
+      <li>
+        <a href="{{page_urls[i]}}" 
+           {% if pagenum == i %}
+             class="active"
+           {% endif %}>
+          {{i+1}}
+        </a>
+      </li>
+    {% endfor %}
+    {% if pagenum < last_page %}
+      <li><a href="{{page_urls[pagenum + 1]}}">»</a></li>
+      <!--<li><a href="{{page_urls[-1]}}">⇥</a></li>-->
+    {% endif %}
+
+  </ul>
+</div>

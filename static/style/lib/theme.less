@@ -1,0 +1,50 @@
+/*
+  Color Palette
+  #bdf239 - bright green
+    #d8f988 - ligther, lighter
+    #c9f55d - lighter
+    #aced0b - darker
+   
+  #82e536 - green
+  #eefc3c - yellow
+
+*/
+
+@theme-bright: #bdf239;
+@theme-green: #82e536;
+@theme-yellow: #eefc3c;
+
+@bgcolor: lighten(@theme-bright, 20%);
+@acolor: #333;
+@bordercolor: #d2d2d2;
+@pagination-hover: lighten(@theme-yellow, 20%);
+@pagination-active: @theme-green;
+@text-shadow-color: lighten(@theme-bright, 30%);
+
+
+body {
+    background-color: @bgcolor;
+}
+
+body, a {
+  color: @acolor;
+}
+
+header {
+  a, a:hover {
+    text-decoration: none;
+    color: @acolor;
+  }
+}
+
+.tooltip {
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.83);
+  color: black;
+}
+
+div.slideshow {
+  -webkit-box-shadow: 0px 0px 15px 3px rgba(92,128,0,0.66);
+  -moz-box-shadow: 0px 0px 15px 3px rgba(92,128,0,0.66);
+  box-shadow: 0px 0px 15px 3px rgba(92,128,0,0.66);
+  background-color: lighten(@theme-yellow, 30%)
+}

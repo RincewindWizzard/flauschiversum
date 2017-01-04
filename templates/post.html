@@ -1,0 +1,44 @@
+{% extends "./layout.html" %}
+{% block header %}
+  {{super()}}
+  <div class="post-header">
+    <h2>{{title|escape}}</h2>
+    {% if post.thumb %}
+      <div class="center"><img src="{{post.thumb}}"/></div>
+    {% endif %}
+    <p class="author">Von <a href="/autoren.html" class="author">{{post.author|escape}}</a>
+    </p>
+    <div class="center">
+      <small>Schreibe Ihr eine 
+        <a href="mailto:ermeline@flauschiversum.de?subject=[Flauschiversum] {{post.title}}" class="mailto">
+          Antwort
+        </a>!
+      </small>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <main class="page">
+    {{post.html|safe}}
+    <div data-href="https://flauschiversum.de{{post.url}}" 
+         data-layout="standard" 
+         data-action="like" 
+         data-show-faces="true" 
+         data-share="true" 
+         class="fb-like">
+    </div>
+    <div data-href="https://flauschiversum.de{{post.url}}" 
+         data-numposts="5" 
+         class="fb-comments">
+    </div>
+  </main>
+{% endblock %}
+
+{% block js %}
+  {{super()}}
+  <script src="/script/jquery.js"></script>
+  <script src="/script/responsiveslides.min.js"></script>
+  <script src="/script/slideshow.js"></script>
+  {% include "./lib/facebook.html" %}
+{% endblock %}

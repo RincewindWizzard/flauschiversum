@@ -1,0 +1,11 @@
+build/*
+log/*
+node_modules/*
+.cache
+upload
+*.pyc
+*.swp
+ftp_upload.sh
+*~
+__pycache__/*
+__pycache__

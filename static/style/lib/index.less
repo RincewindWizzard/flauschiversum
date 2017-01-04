@@ -1,0 +1,44 @@
+main#index {
+  padding-top: 1em;
+  padding-bottom: 1em;
+    article {
+      max-width: 31em;
+
+      border-top: 1px dashed @bordercolor;
+      //border-bottom: 1px dashed @bordercolor;
+      margin: 1em;
+
+      h2 {
+        text-align: center;
+        font-style: italic;
+        font-weight: 400;
+      }
+      img {
+        height: 8em;
+        border-radius: 20em;
+        display: block;
+        margin: 1em;
+      }
+
+      a.post-image {
+        float: left;
+      }
+      p.excerpt {
+        //margin-left: 2em;
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 14em;
+      }
+      p.date {
+        margin-top: -0.85em;
+        span {
+          background-color: @bgcolor;
+        }
+      }
+    }
+
+    // Weiterlesen
+    a.more {
+      margin-left: 5px;
+    }
+}

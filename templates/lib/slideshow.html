@@ -1,0 +1,11 @@
+<div class="slideshow">
+  <ul class="rslides">{% for image in __pyjade_iter(images,1) %}
+    <li{{__pyjade_attrs(attrs=[('id',(image.id))])}}>
+      <div class="center">
+        <div class="tooltip">
+          <h3>{{image.alt|escape}}</h3>
+        </div>
+      </div><a{{__pyjade_attrs(attrs=[('href',(image.full_src))])}}><img{{__pyjade_attrs(attrs=[('src',(image.src)), ('alt',(image.alt))])}}/></a>
+    </li>{% endfor %}
+  </ul>
+</div>
