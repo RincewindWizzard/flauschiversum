@@ -37,5 +37,6 @@ Die übrige Wolle habe ich an den Rand gehäkelt, unter anderem um die Fäden vo
 Jetzt habe ich definitiv einen kuscheligen Schal, der mit seiner enormen Länge von über 3 Metern große Variationsmöglichkeiten beim Tragen bietet, also quasi von Mumifizierung bis Schlabberlook ist alles drin und gleichzeitig hält er meine Arme warm.
 ![Schal getragen](_1010619.JPG)
 ![Schal](_1010621.JPG)
+![Schal nah](armelschal_thumb.jpg)
 
 
