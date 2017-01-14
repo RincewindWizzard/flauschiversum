@@ -44,6 +44,9 @@ class Post(object):
 
     self.reload()
 
+  def __repr__(self):
+    return "'{}'".format(self.slug)
+
   @property
   def published(self):
     return date.today() >= self.date

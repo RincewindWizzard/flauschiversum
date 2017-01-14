@@ -39,7 +39,7 @@ def index(category, page):
     posts = list(reversed(db.posts_by_date(category)))
     page_urls = ['/' + category if category else '/'] + [ 
       os.path.join('/', category if category else '', 'page', str(pagenum), 'index.html#index')
-      for pagenum in range(1, max(len(posts)//settings.posts_per_page, 1))
+      for pagenum in range(1, max(len(posts)//settings.posts_per_page + 1, 1))
     ]
 
 
@@ -47,15 +47,20 @@ def index(category, page):
     start = max(0, page - settings.pagination_size//2)
     end = min(len(page_urls), start + settings.pagination_size)
 
+    cur_page_post_list = posts[
+      page * settings.posts_per_page : page * settings.posts_per_page + settings.posts_per_page
+    ]
+    #print(cur_page_post_list)
+
     html = render_template(
       'index.html', 
-      posts=posts[page * settings.posts_per_page:page * settings.posts_per_page + settings.posts_per_page],
+      posts=cur_page_post_list,
       category=category,
       currentyear=datetime.now().year,
       pagenum=page,
       page_urls=page_urls,
       pagination=list(range(start, end)),
-      last_page=len(page_urls)-1
+      last_page=len(page_urls) - 1
     )
     response = Response(postprocess(html))
     response.headers['Last-modified'] = datetime.now().strftime('%a, %d %m %Y %H:%M:%S GMT')
