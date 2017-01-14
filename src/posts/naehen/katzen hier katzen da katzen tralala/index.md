@@ -15,7 +15,7 @@ Die Idee mit dem Innenstoff fand ich toll, da ich auch den Tatzenstoff gefunden 
 ![Innenfutter einnähen](DSCF5546.JPG)
 ![Außenfutter ist noch innen](DSCF5547.JPG)
 
-Für meine Katze brauchte ich dann noch die Gleidmaßen, den Schwanz und den Kopf erstmal auf Papier vorgezeichnet, dann mussten die Stoffteile ausgeschnitten und zusammengenäht werden.
+Für meine Katze brauchte ich dann noch die Gliedmaßen, den Schwanz und den Kopf erstmal auf Papier vorgezeichnet, dann mussten die Stoffteile ausgeschnitten und zusammengenäht werden.
 ![Schwanz](DSCF5548.JPG)
 ![Kurven einschneiden](DSCF5551.JPG)
 ![Schwanz umgekrämpelt](DSCF5553.JPG)

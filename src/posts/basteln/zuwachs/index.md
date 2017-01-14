@@ -13,7 +13,7 @@ Seit etwas mehr als einer Woche herrscht Ausnahmezustand. Wir haben Familienzuwa
 ![Ey, das ist nicht meine Schokoladenseite!](DSCF5817.JPG)
 ![gut getroffen](DSCF5821.JPG)
 
-Diverseste Ideen warten auf Umsetzung, denn schließlich geht ab Herbst wieder das richtige Basteln los. Das musste jedoch alles warten und so kümmerten wir uns um einen Sichtzaun der die derzeit noch zwei Territorien trennt. Derzeit scherzeln wir noch viel über eiserne Vorhänge, Besatzungszonen und Ost- und West-Block, trotzdem bin ich froh, wenn die Tür wieder weg kann und meine Flauschis keine Zerfleischis mehr sind. Ich hatte eine Freundin zum Nähen bei mir, war im Kino, ich habe das Kabel meines MP3-Players umstrickt, habe mich in Occhi geübt, mich mit vielen Menschen getroffen und letztendlich versuche ich nebenbei noch meine Ferien ein wenig entspannt angehen zu lassen. Deshalb wird es heute mal eine Sammlung von UFOs und solchen die zunächst welche bleiben werden geben.
+Diverseste Ideen warten auf Umsetzung, denn schließlich geht ab Herbst wieder das richtige Basteln los. Das musste jedoch alles warten und so kümmerten wir uns um einen Sichtzaun der die derzeit noch zwei Territorien trennt. Aktuell scherzeln wir noch viel über eiserne Vorhänge, Besatzungszonen und Ost- und West-Block, trotzdem bin ich froh, wenn die Tür wieder weg kann und meine Flauschis keine Zerfleischis mehr sind. Ich hatte eine Freundin zum Nähen bei mir, war im Kino, ich habe das Kabel meines MP3-Players umstrickt, habe mich in Occhi geübt, mich mit vielen Menschen getroffen und letztendlich versuche ich nebenbei noch meine Ferien ein wenig entspannt angehen zu lassen. Deshalb wird es heute mal eine Sammlung von UFOs und solchen die zunächst welche bleiben werden geben.
 
 Jetzt muss auch mein MP3-Player-Kopfhörerkabel nicht mehr frieren und ich muss nur das Ladekabel wiederfinden, damit ich beim Sport endlich Musik hören kann.
 ![Kopfhörer](DSCF5815.JPG)
@@ -25,7 +25,7 @@ Der Sichtzaun wird schon eifrig zum Beschnuppern genutzt und das nebeneinander F
 ![Sichtzaun](DSCF5800.JPG)
 ![Zaun komplett](DSCF5807.JPG)
 
-Mein Rezeptebuch wurde durch die Nutzung immer schmutziger, so kümmerte ich mich um eine Rettung meiner Lieblingsrezepte durch Laminierfolien. Jetzt müssen sie nur noch ausgeschnitten und gefaltet werden und dann kann man sie sichzum Kochenhinstellen, ohne Angst zu haben, dass sie vollgeschmiert werden.
+Mein Rezeptebuch wurde durch die Nutzung immer schmutziger, so kümmerte ich mich um eine Rettung meiner Lieblingsrezepte durch Laminierfolien. Jetzt müssen sie nur noch ausgeschnitten und gefaltet werden und dann kann man sie sich zum Kochen hinstellen, ohne Angst zu haben, dass sie vollgeschmiert werden.
 ![Rezepte](DSCF5806.JPG)
 
 Dieser Stoff soll mal ein Tellerrock werden.
