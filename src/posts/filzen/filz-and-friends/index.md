@@ -34,5 +34,5 @@ eine Regenbogentasche, die einfach nur eine Regenbogentasche sein soll und keine
 
 
 An dieser Stelle will ich auch noch die Handpuppe würdigen, die ich leider aufgrund des vorzeitigen Aufbruchs der Filzerin nicht mehr abgelichtet habe, als Vorlage diente uns meine [Susette](/2015/07/filzen-filzen-filzen/) mit der persönlichen Abwandlung zu einer Drachenhandpuppe. Entstanden ist sie aus einer Mischung von Nass- und Trockenfilzen. In Heimarbeit ist sogar noch eine Geschwisterpuppe entstanden.
-![Handpuppen](Svenjas Handpuppen.jpg)
+![Handpuppen](Handpuppen.jpg)
 
