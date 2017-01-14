@@ -6,6 +6,5 @@ beautifulsoup4
 python-slugify
 python-frontmatter
 markdown
-sudo apt-get install python3-lxml
-sudo apt-get install ncftp
-sudo apt-get install node-less
+sudo apt-get install python3-lxml ncftp node-less libjpeg-dev python3-dev
+
