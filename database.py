@@ -16,8 +16,8 @@ import settings
 from PIL import Image
 from markdown_slideshow import resized_image
 
-
-
+# Render unpublished posts?
+render_unpublished = False
 
 
 class Post(object):
@@ -49,7 +49,7 @@ class Post(object):
 
   @property
   def published(self):
-    return date.today() >= self.date
+    return render_unpublished or date.today() >= self.date
 
   def tryget(self, doc, key, msg=None):
     """ Try getting a value from a dic and log if error """
@@ -192,7 +192,9 @@ def get_errors():
   with dbLock:
     return copy.copy(database['errors'])
 
-def load_posts():
+def load_posts(debug=False):
+  global render_unpublished
+  render_unpublished = debug
   with dbLock:
     # flushing
     del database['posts']
