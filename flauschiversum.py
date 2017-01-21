@@ -5,9 +5,9 @@ import logging
 from routes import app
 import database as db
 
-def main():
+def main(debug=True):
   logging.debug('Started Webserver.')
-  db.load_posts()
+  db.load_posts(debug=debug)
   try:
     app.run(host="0.0.0.0")
   except OSError as e:
@@ -30,4 +30,4 @@ def as_process():
 
 if __name__ == '__main__':
   logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.ERROR)
-  main()
+  main(debug=False)
