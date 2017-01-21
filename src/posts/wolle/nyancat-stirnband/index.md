@@ -6,7 +6,7 @@ date: 2017-01-22
 image: "nyancat-stirnband_thumb.jpg"
 excerpt: "Zu dieser Jahreszeit passen Regenbögen sehr gut,denn sie machen wieder fröhlich, wenn alles grau ist."
 ---
-Zu dieser Jahreszeit passen Regenbögen sehr gut,denn sie machen wieder fröhlich, wenn alles grau ist. Kann man ja mal wirklich gut gebrauchen, wenn der Winter weiterhin nicht hält was er versprechen sollte. Was passt da besser als die NyanCat, die einem als Stirnband den Kopf warm hält? 
+Zu dieser Jahreszeit passen Regenbögen sehr gut, denn sie machen wieder fröhlich, wenn alles grau ist. Kann man ja mal wirklich gut gebrauchen, wenn der Winter weiterhin nicht hält was er versprechen sollte. Was passt da besser als die NyanCat, die einem als Stirnband den Kopf warm hält? 
 ![Stirnband](_1020034.JPG)
 ![NyanCat](_1020035.JPG)
 
