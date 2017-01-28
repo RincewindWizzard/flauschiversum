@@ -17,7 +17,7 @@ Hat trotzdem alles wunderbar funktioniert.
 ![Namenlos](IMG_20170127_134322.jpg)
 
 Eine Stunde lang wurde gebastelt und eine weitere mit den Flattermännern gespielt.
-![Spaß hats gemacht](IMG_20170127_123031.jpg)
+![Spaß hats gemacht](IMG_20170127_123327.jpg)
 
 Und weil die Ermeline die Kinder beschäftigt hat, konnte sie selbst auch noch einen Piepmatz bauen, um dem Stil der Kinder treu zu bleiben nannte ich ihn Krähe und machte noch eine kurze Anleitung für euch.
 ![Das ist Krähe](_1020259.JPG)
@@ -26,7 +26,7 @@ Als erstes haben wir Perlen aufgefädelt und locker über den Faden verteilt, da
 Für den Kopf machst du einen Knoten am Ende des Fadens und stichst zuerst durch den Kopf durch um danach erneut Perlen für den Hals aufzufädeln.
 ![Beine, Kopf, Körper](IMG_20170127_124233.jpg)
 
-Dann stichst du durch den Körper um mit dem est des Fadens die Beine zu befestigen, noch gut vernähen und fertig ist das Grundgerüst.
+Dann stichst du durch den Körper um mit dem Rest des Fadens die Beine zu befestigen, noch gut vernähen und fertig ist das Grundgerüst.
 ![durch den Bauch](IMG_20170127_124254.jpg)
 ![Beine befestigen](IMG_20170127_124411.jpg)
 ![gut vernähen](IMG_20170127_124430.jpg)
@@ -38,7 +38,7 @@ Wenn die wichtigsten Teile mit Bastelkleber befestigt sind, kann mit Federn verz
 ![Gesicht](IMG_20170127_124926.jpg)
 ![Verzierungen](IMG_20170127_133953.jpg)
 
-So weit so gut, alle Kinder abgeholt, Feierabend in greifbarer Nähe aber so richtig fertig ist die ermeline noch nicht. Meine Gedanken kreisen um eine größere Variante und dafür fehlen mir noch ein paar Ingredienzien, also auf zum [Idee](/2013/07/idee-creativmarkt/)
+So weit so gut, alle Kinder abgeholt, Feierabend in greifbarer Nähe aber so richtig fertig ist die Ermeline noch nicht. Meine Gedanken kreisen um eine größere Variante und dafür fehlen mir noch ein paar Ingredienzien, also auf zum [Idee](/2013/07/idee-creativmarkt/).
 Ich hatte meine [Grinsekatzentasche](/2016/05/grinsetasche/) dabei, stand bepackt mit dem Klöterkram an der Kasse, als mich die nette Verkäuferin darauf hinwies man könne die Tasche mit Lederfarben noch aufpimpen. Mist da hatte sie mich auf dem richtigen Fuße erwischt, habe zu viel Geld dort gelassen aber mein Marionettenprojekt konnte noch heute losgehen und die Grinsekatze kommt dann auch demnächst dran.
 
 
@@ -51,13 +51,13 @@ Ich habe mich zunächst dem Kreuz gewidmet. Mit einem Handbohrer machte ich ein 
 ![Einleimen](_1020215.JPG)
 ![Passt so trocknen lassen](_1020217.JPG)
 
-Jetzt widme ich mich dem Kopf und dem Körper. Beide sollen aus dem Lila Plüschstoff gemacht werden, dazu benötige ich zwei unterschiedlich große Quadrate. Das kleine Quadrat für den Kopf hat eine Seitenlänge von etwa 15cm und das größere etwa 30cm. Per Hand nähe ich nun auf Links drei Seiten zusammen, am Anfang müssen alle Ecken in der Mitte verbunden werden. Beim Zusammennähenmusst du daraufachten, den Plüsch immer innen zu behalten, also immer alles reinstopfen. Bevor die letzte Seite geschlossen wird, krämpel ich die Arbeit um und stopfe alles mit Füllwatte aus.
+Jetzt widme ich mich dem Kopf und dem Körper. Beide sollen aus dem Lila Plüschstoff gemacht werden, dazu benötige ich zwei unterschiedlich große Quadrate. Das kleine Quadrat für den Kopf hat eine Seitenlänge von etwa 15cm und das größere etwa 30cm. Per Hand nähe ich nun auf Links drei Seiten zusammen, am Anfang müssen alle Ecken in der Mitte verbunden werden. Beim Zusammennähen musst du darauf achten, den Plüsch immer Innen zu behalten, also immer alles reinstopfen. Bevor die letzte Seite geschlossen wird, krämpel ich die Arbeit um und stopfe alles mit Füllwatte aus.
 ![erst die gegenüberliegenden Ecken](_1020237.JPG)
 ![die nächste Ecke](_1020238.JPG)
 ![und die letzte Ecke](_1020240.JPG)
 ![Seiten zusammennähen](_1020241.JPG)
 ![einfache Stiche von der Mitte nach Außen](_1020242.JPG)
-![und wieder zurück zurMitte nähen](_1020243.JPG)
+![und wieder zurück zur Mitte nähen](_1020243.JPG)
 ![wenden](_1020245.JPG)
 ![ausstopfen](_1020246.JPG)
 ![mit versteckten Stichen zunähen](_1020247.JPG)
@@ -77,7 +77,7 @@ Wenn alles fertig genäht ist, kümmere ich mich noch um das Gesicht. Ich brauch
 Ich habe zwar noch große, runde Holzklötze, die ich als Füße nutzen könnte, aber mir fielen meine alten Babyschuhe ein, die ich noch in einer Kiste liegen hatte, hier wird also alles weiterverwendet.
 ![Hoffentlich wird Mutti nicht nostalgisch](_1020231.JPG)
 
-Jetzt muss nur noch alles verbunden werden und da mir die Kombination aus Lila und Grün so gut gefiel, schnappte ich mir noch etwas von dem Grünplüsch und schnitt daraus einfach einen Streifen für den Hals und zwei gleiche für die Beine zurecht. Die Beine an den Schuhen festnähen und dann unter dem Bauch des Vogels, der Hals wird am Kopf befestigt, achtet dabei darauf, dass ihr den Kopf nicht schief annäht, sonst habt ihr nen schrägen Vogel (Autsch!! den konnte ich mir nicht verkneifen). Näht den Hals noch am Körper des Vogels fest und dann müssen nun nur noch die Fäden gezogen werden.
+Jetzt muss nur noch alles verbunden werden und da mir die Kombination aus Lila und Grün so gut gefiel, schnappte ich mir noch etwas von dem Grünplüsch und schnitt daraus einfach einen Streifen für den Hals und zwei gleiche für die Beine zurecht. Die Beine an den Schuhen festnähen und dann unter dem Bauch des Vogels. Der Hals wird am Kopf befestigt, achtet dabei darauf, dass ihr den Kopf nicht schief annäht, sonst habt ihr nen schrägen Vogel (Autsch!! den konnte ich mir nicht verkneifen). Näht den Hals noch am Körper des Vogels fest und dann müssen nun nur noch die Fäden gezogen werden.
 ![grüner Hals](_1020249.JPG)
 ![Füße festnähen](_1020252.JPG)
 
