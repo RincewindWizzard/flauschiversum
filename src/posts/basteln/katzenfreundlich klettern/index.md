@@ -27,4 +27,31 @@ Die Brücke ist ihr noch nicht ganz geheuer, sie schaffte es jedoch schon sich d
 
 Das Beste ist wohl, dass ich trotz der Seilkonstruktion immernoch das Bett auseinanderbauen könnte und die Vorhänge auch noch zum Waschen abbekomme. Wer kein Problem mit Asymmetrie hat, kann sich leicht damit anfreunden, der vierte Vorhang ist nun auf die Fensterseite gewandert und kann beliebig hin und her geschoben werden. Zumindest nimmt der neue Kratzbaum keinen Platz weg, wo vorher welcher war. Und ja - in diesem Haushalt lebt nur eine Katze...
 
+## Update
+Wie man schon aus den letzten Posts mitbekommen haben sollte, sind es mittlerweise [zwei Katzen](/2016/10/zuwachs/), die die Flauschiversumzentrale unsicher machen. Das Himmelbettkletterkonstrukt hat sich etabliert und ist nicht mehr wegzudenken, sogar Jemima hat in ihren noch sehr tabsigen Anfängen nicht vor dem hohen Ungetüm haltgemacht und es trotzdem geschafft Shubia auf die Nerven zu gehen. 
+![Jemimas erste Kletterversuche](IMG_20161027_223053.jpg)
+![Shubia ärgern](IMG_20161106_123249.jpg)
+![Jemima auf der Plattform](_1000579.JPG)
+
+Jetzt haben wir den Salat, seit einigen Wochen springen die beiden Schnuffels gerne vom Bettgerüst zum Kleiderschrank. Um eine neue Herausforderung zu schaffen, hat sich meine bessere Hälfte also etwas einfallen lassen und für die Katzen eine Hängebrücke gebaut. 
+![Montage](_1020450.JPG)
+![fertig, sauber machen](_1020452.JPG)
+![es führt über den Main keine Brücke aus Stein...](_1020453.JPG)
+
+Sisal hatten wir noch genug und mit etwas Holz und einem Bohrer kann man alles super kombinieren. Ein paar ordentliche Dübel in die Wand und fertig ist das Update. Direkt im Anschluss wurd auch schon ausprobiert, was man denn alles so machen kann, irgendwie aber nicht so wie wir uns das gedacht hatten. 
+![erste Experimente](_1020472.JPG)
+![Ausflug ins Leere](_1020494.JPG)
+
+Nicht umsonst nenne ich Jemima mein kleines Äffchen. Shubia beobachtet noch etwas zurückhaltend, aber sie ist halt auch meine Eule, die mit ihren großen Augen alles genauestens im Blick behält, vor allem Jemima.
+![Eule](_1000392.JPG)
+![Äffchen](_1000569.JPG)
+
+Dann hat es aber doch noch geklappt. Und am zweiten Tag läuft die Kleine schon ganz souverän zum Schrank ins Körbchen. 
+![Auf...](_1020498.JPG)
+![...zu...](_1020503.JPG)
+![...neuen...](_1020504.JPG)
+![...Ufern](_1020504.JPG)
+
+Bin ja mal gespannt, was alles so passiert, wenn man mal seine eigenen 4 Wände hat. Alles wird katzifiziert und es macht Spaß dabei zu zu schauen. Schönen Sonntag meine Lieben, Eure Ermeline.
+
 
