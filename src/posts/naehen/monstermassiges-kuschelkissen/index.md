@@ -3,7 +3,7 @@ title: "monstermässiges Kuschelkissen"
 category: nähen
 author: Ermeline
 date: 2015-04-03 08:42:16
-image: "DSCF2576.jpg"
+image: "DSCF2682.jpg"
 excerpt: "Wer hat ein hässliches Kissen zuhause und wollte sich schon immer mal an einem Kissenbezug versuchen? Das ist der beste Zeitpunkt die gute alte Nähmaschine wieder raus zu holen."
 ---
 
