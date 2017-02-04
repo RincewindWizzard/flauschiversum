@@ -180,7 +180,7 @@ Den großen Drachen habe ich auf Wunsch einer Freundin gehäkelt, er soll ein Ge
 Viel Spass eure Ermeline, ich freue mich über Drachenbabyfotos.
 
 Eines habe ich von Svenja bekommen, sie hat gerade erst mit dem Häkeln begonnen, ist der Drache nicht richtig toll geworden?
-![Drache vorne](Svenjas Drache.jpg)
-![Drache Seite](Svenjas Drache 2.jpg)
+![Drache vorne](Svenjas_Drache.jpg)
+![Drache Seite](Svenjas_Drache_2.jpg)
 
 
