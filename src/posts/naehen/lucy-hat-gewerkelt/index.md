@@ -58,7 +58,7 @@ Ein Probestück ist dieses winzige Täschchen, das einfach aus einer abgeschnitt
 Mein Perlenstickexzess fand seinen Höhepunkt allerdings in den herrlich bunten Filz-Stoff-Perlen, die ich um eine Stricknadel herum gearbeitet habe. Die werde ich wohl für eine Kette oder Armbänder verwenden. Mal sehen... Auch die kleinen Anhänger kann ich bestimmt für weitere Projekte verwenden, hierfür habe ich viele kleine Reste verwerten können. 
 
 ![Perlen und Anhänger](_1020553.JPG)
-![Perlen](_102055.JPG)
+![Perlen](_1020554.JPG)
 ![Perlen 2](_1020555.JPG)
 ![Anhänger 1](_1020556.JPG)
 ![Anhänger 2](_1020557.JPG)
