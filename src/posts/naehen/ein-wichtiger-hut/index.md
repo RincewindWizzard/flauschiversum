@@ -2,7 +2,7 @@
 title: "ein wichtiger Hut"
 category: nähen
 author: Ermeline
-date: 2017-02-09
+date: 2017-02-19
 image: "ein-wichtiger-hut_thumb.jpg"
 excerpt: "Dieser Hut ist wahrlich sooo groß - er muss wichtig sein!"
 ---

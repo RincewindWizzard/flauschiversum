@@ -50,7 +50,7 @@ Wäre da noch mein genäht, gehäkelter mit Perlen bestickter Pompadour-Beutel. 
 ![Beutel unten](_1020569.JPG)
 ![Beutel ausgebreitet](_1020564.JPG)
 
-Ein Probestück ist dieses winzige Täschchen, das einfach aus einer abgeschnittenen Hemdenmanschette entstanden ist. an den Seiten einfach zusammennähen, etwas Spitze oder buntes Band zur Verzierung, und in Null Komma Nichts fertig. Läßt sich natürlich auch noch mehr aufpimpen, wenn man will (Pailetten, Perlen, Stickereien etc.). Da läßt sich aber höchstens ein Schlüssel oder ne EC-Karte drin unterbringen.
+Ein Probestück ist dieses winzige Täschchen, das einfach aus einer abgeschnittenen Hemdenmanschette entstanden ist. An den Seiten einfach zusammennähen, etwas Spitze oder buntes Band zur Verzierung, und in Null Komma Nichts fertig. Läßt sich natürlich auch noch mehr aufpimpen, wenn man will (Pailetten, Perlen, Stickereien etc.). Da läßt sich aber höchstens ein Schlüssel oder ne EC-Karte drin unterbringen.
 
 ![Hemdmanschettentasche](_1020565.JPG)
 ![Tasche offen](_1020566.JPG)
@@ -65,7 +65,7 @@ Mein Perlenstickexzess fand seinen Höhepunkt allerdings in den herrlich bunten 
 ![Anhänger 3](_1020558.JPG)
 ![Anhänger 4](_1020559.JPG)
 
-Zum Schluss zeige ich euch noch, was ich aus zwei alten Polsterkissen für Gartenmöbel gemacht habe. Ich habe sie auf dem Flohmarkt erstanden und noch mit dem alten Bezug in die Waschmaschine getan. Was ichaus dem Bezug gemacht habe, zeige ich euch vielleicht ein anderes Mal, jeden falls ergeben die Polster, zusammen gerollt und mit einem passenden Bezug versehen, super Nackenrollen.
+Zum Schluss zeige ich euch noch, was ich aus zwei alten Polsterkissen für Gartenmöbel gemacht habe. Ich habe sie auf dem Flohmarkt erstanden und noch mit dem alten Bezug in die Waschmaschine getan. Was ich aus dem Bezug gemacht habe, zeige ich euch vielleicht ein anderes Mal, jedenfalls ergeben die Polster, zusammengerollt und mit einem passenden Bezug versehen, super Nackenrollen.
 
 ![Nackenrollen](_1020578.JPG)
 ![ab ins Rampenlicht](_1020585.JPG)
