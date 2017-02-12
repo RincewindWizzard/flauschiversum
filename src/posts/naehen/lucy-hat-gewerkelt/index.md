@@ -16,7 +16,7 @@ Auf dem Flohmarkt habe ich zum Fast-geschenkt-Preis eine destroid-Jeans erstande
 ![Hosenbein](_1020591.JPG)
 ![Loch](_1020592.JPG)
 ![Loch 2](_1020593.JPG)
-![Katzensocken](_1020590.JPG)
+![Katzensocken](_1020594.JPG)
 ![Socke Shubia](_1020595.JPG)
 ![Socke Jemima](_1020596.JPG)
 
