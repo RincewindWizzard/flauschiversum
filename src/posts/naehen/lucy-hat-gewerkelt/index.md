@@ -6,6 +6,7 @@ date: 2017-02-12
 image: "lucy-hat-gewerkelt_thumb.jpg"
 excerpt: "Es ist mal wieder an der Zeit, euch meine gesammelten Werke der letzten Wochen vorzustellen."
 ---
+
 Es ist mal wieder an der Zeit, euch meine ges(t)ammelten Werke der letzten Wochen vorzustellen.
 
 Ich arbeite ja immer an mehreren Projekten gleichzeitig, und die größeren Sachen sind alle nur halb fertig. Hier also jede Menge Kleinigkeiten, die ich so zwischendurch gemacht habe.
