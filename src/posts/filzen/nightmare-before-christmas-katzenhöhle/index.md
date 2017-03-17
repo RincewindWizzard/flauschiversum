@@ -3,7 +3,7 @@ title: "Nightmare-Before-Christmas-Katzenhöhle"
 category: filzen
 author: Ermeline
 date: 2016-10-30 15:28:57
-image: "Arthos 1.jpg"
+image: "Arthos_1.jpg"
 excerpt: "Die Filzsaison ist eröffnet und wie hätte ich sie besser starten können, als gemeinsam mit Tomcat."
 ---
 
@@ -50,13 +50,13 @@ Angefangen haben wir mit diesem Projekt um 13:00 Uhr das Ende war erst nach 21:0
 
 Alles trocken, jetzt wird das Ding mal unter die Lupe genommen.
 
-![James und Arthos sind noch skeptisch](Untersuchung.jpg)
+![James und Arthos erkunden ihre Nightmare-before-Christmas-Höhle](Untersuchung.jpg)
 
 Und dann zieht Arthos ein. 
 
-![Arthos 1](Arthos 1.jpg)
-![Arthos 2](Arthos 2.jpg)
-![Arthos 3](Arthos 3.jpg)
-![Arthos 4](Arthos 4.jpg)
+![Arthos 1](Arthos_1.jpg)
+![Arthos 2](Arthos_2.jpg)
+![Arthos 3](Arthos_3.jpg)
+![Arthos 4](Arthos_4.jpg)
 
 Wie schön, dass sich unsere Arbeit gelohnt hat, nicht nur die Flauschis sondern auch die Dosenöffner sind glücklich. Bei diesen Temperaturen hätte ich manchmal auch gerne eine kleine Kuschelhöhle... Einen schönen Sonntag wünschen Euch Tomcat und Ermeline.

@@ -32,6 +32,7 @@ In unserem Paket sind: eine Tischdecke, eine Gardine, Reste von Stuhlhussen, ein
 
 Dann ging es ans gerechte Zerschneiden...
 ... der Weste...
+
 ![Weste](IMG_4470.JPG)
 ![Weste 2](IMG_4471.JPG)
 ![Weste 3](IMG_4473.JPG)
@@ -71,11 +72,13 @@ Im dritten Update wurde alles ein wenig unscharf.
 
 ## Lucy 
 Zu Beginn der Challenge war ich wirklich überwältigt von dem Haufen verschiedener Stoffe, die da vor mir lagen. Habe mich also erstmal langsam herangetastet, ein paar Färbeversuche unternommen, Kordeln gedreht und unterschiedliche Blumen fabriziert. Das Färben ging bei einigen Stoffen aber gar nicht so gut, weshalb ich mich entschied, in der Natur- und Pastellskala zu bleiben.
+
 ![überwältigender Materialberg](IMG_4492.JPG)
 ![Kordel](IMG_4503.JPG)
 
 ### Handtasche
 So habe ich erstmal eine Handtasche nach einem selbstentworfenen Schnitt im Muscheldesign genäht. Das ist jetzt nicht gerade ein Alltagsmodell sondern eher was zum Ausgehen, denn soviel paßt da nicht rein, und sie ist durch die hellen Stoffe natürlich auch eher schmutzempfindlich. Auf der Vorderseite habe ich am Trägeransatz ein Paar Ohrclips aus meinem Fundus angebracht. Das bringt meiner Meinung nach einen gewissen luxuriösen Touch.
+
 ![Schnittmuster Tasche](IMG_4493.JPG)
 ![arrangieren der Blumen](IMG_4494.JPG)
 ![Rückseite](IMG_4495.JPG)
@@ -88,15 +91,18 @@ So habe ich erstmal eine Handtasche nach einem selbstentworfenen Schnitt im Musc
 ### Herzchen
 Dann dachte ich mir, daß ich ja mit den angefallenen Schnipseln ein paar Herzchen nähen könnte, man läßt ja nicht so gern was umkommen. Nach der etwas komplizierteren Tasche waren die easy und just for fun.
 Lassen sich auch als Nadelkissen benutzen, oder man hängt sie über den Türgriff, damit niemand durchs Schlüsselloch gucken kann.
+
 ![Herzchen](IMG_4498.JPG)
 ![Herzchen befüllen](IMG_4499.JPG)
 
 ### T-Shirt
 Mir fiel ein kürzlich erworbenes T-Shirt ein, das sich bestimmt gut zum Umgestalten eignen würde, und so schnitt ich beherzt Keile in die Seitennaht, setzte dafür Keile eines anderen grauen T-Shirts ein und tobte mich mit der Schere auch an Halsausschnitt und Ärmeln aus. Von einem Tuch verwendete ich ein Tüllstück als Rüsche um den Hals herum.
+
 ![T-Shirt](IMG_4539.JPG)
 
 ### Küchenhandschuh
 Warum sollen Satin und Perlen eigentlich vor der Küchentür Halt machen?, fragte ich mich als Nächstes. Mein Topfhandschuh sieht doch sehr dekorativ aus. Für außen habe ich den Baumwollstoff der Tischdecke genommen, weil es sicher nicht im Sinne des Erfinders ist, wenn der Satin beim Herausziehen einer heißen Kuchenform zerschmolzen an derselbigen kleben bleibt. Hier habe ich die Technik der raw-edge-application ausprobiert, wobei die Zacken und die Blüte nach dem Waschen noch etwas ausfransen werden. Aber auch so sieht's ja schon ganz nett aus.
+
 ![Küchenhandschuh1](IMG_4545.JPG)
 ![Küchenhandschuh2](IMG_4546.JPG) 
 
@@ -109,30 +115,39 @@ Mir würde bestimmt noch Etliches einfallen, was sich aus den gegebenen Dingen h
 
 ## Ermeline
 Nachdem wir auf dem Flohmarkt die letzte Zutat zur Challenge gefunden hatten, sah es mit der Motivation gut aus aber mit den Ideen nicht wirklich. Jedoch beim Nähen mit einer Freundin, kam mir die zündende Idee, während ich ihr die Challenge erklärte und sie sich mit Ihren Kissenbezügen plagte. Ich hatte für 3€ ein Top mit kleinen Rosen darauf gekauft und auf dieser Basis entwickelte sich meine Skizze von einem Kleid. 
+
 ![Skizze vorne](DSCF4557.JPG)
 ![Skizze hinten](DSCF4556.JPG)
 
 Da ich erst kürzlich meine Schneiderpuppe wieder zu mir geholt hatte, konnte ich an dieser zum Glück viel experimentieren und feststecken. 
 Die gelbe Stola sah gut aus, war aber farblich zu quietschig. 
+
 ![gelbe Stola 1](DSCF4226.JPG)
 ![gelbe Stola 2](DSCF4227.JPG)
 ![gelbe Stola 3](DSCF4229.JPG)
+
 Der Unterrock sollte sein, aber mit der gesamten Gardinen-Spitze war er zu schwer und zu wuchtig.
+
 ![Unterrock](DSCF4232.JPG)
 
 Also wird hier gefärbt...
+
 ![Stola gefärbt 1](DSCF4267.JPG)
 ![Stola gefärbt 2](DSCF4269.JPG)
+
 ...und da geschnippelt.
+
 ![Gardine schnippeln 1](DSCF4255.JPG)
 ![Gardine schnippeln 2](DSCF4257.JPG)
 ![Gardine annähen](DSCF4258.JPG)
 
 Beim Färben habe ich von allen Stoffen ein Wenig mitfärben wollen, allerdings haben leider der Satin vom Kleid und der Stoff von den Hussen die Farbe nicht angenommen. Die Stola kann man bestimmt für etwas anderes verwenden, aber für dieses Projekt war mir das Färbeergebnis zu schedderig. Der Effekt beim Hochzeitskleid mit der pinken Spitze gefiel mir aber sehr gut und auch die pinke Tischdecke. 
+
 ![pinke Spitze](DSCF4268.JPG)
 ![pinke Tischdecke](DSCF4264.JPG)
 
 Aus einem Teil der Stuhlhussen nähte ich kleine Blümchen (die findet ihr bestimmt bei den folgenden Fotos wieder). Und aus einem kaputten Shirt entnahm ich die Spitze für eine neue Stola.
+
 ![Blümchen](DSCF4261.JPG)
 ![Spitzenshirt](DSCF4270.JPG)
 ![Spitze](DSCF4271.JPG)
@@ -142,13 +157,16 @@ Aus einem Teil der Stuhlhussen nähte ich kleine Blümchen (die findet ihr besti
 ![Stolaträger 4](DSCF4274.JPG)
 
 Mir war klar, dass das Kleid einen Tellerrock haben musste, egal wieviel Arbeit ich damit haben würde. Da es aber recht schwierig ist mit Patchwork einen vernünftigen Kreis zu nähen, entschied ich mich für einen dünnen lilafarbenen Basisstoff, der sich noch in meinen unzähligen Kisten befand. Auf diesem nähte ich im Stile des Crazy-Patchwork mal hier mal da meine Stoffe auf, wenn ich mich entschieden hatte wie ich sie anordnen wollte. Ich begann bei meinem Lieblingsdetail, dem lila Reißverschluss.
+
 ![Basisstoff](DSCF4278.JPG)
 ![Legeprobe](DSCF4279.JPG)
 ![Legeprobe Detail](DSCF4280.JPG)
 ![Legeprobe Detail ausdefinieren](DSCF4281.JPG)
 ![Feststecken Aua!!](DSCF4282.JPG)
 ![Festnähen](DSCF4283.JPG)
+
 Und so kam mit jedem mal Auslegen des Rockes immer mehr dazu (manchmal auch Shubia, bei der ich mich gegen das Festnähen entschied). 
+
 ![Rock 1](DSCF4286.JPG)
 ![Rock 2](DSCF4290.JPG)
 ![Rock 3](DSCF4291.JPG)
@@ -158,10 +176,12 @@ Und so kam mit jedem mal Auslegen des Rockes immer mehr dazu (manchmal auch Shub
 ![Rock an Puppe](DSCF4299.JPG)
 
 Wenn ich aber schon mit verspielten Stoffen hantiere, dann darf es auch so richtig kitschig werden, Blümchen waren ja schon gemacht, dann können auch noch Herzchen dazu.
+
 ![Herzchen](DSCF4285.JPG)
 ![Herzchen 2](DSCF4289.JPG)
 
 Ich kam Tagelang nicht zur Ruhe, weil mir immer mehr Ideen kamen. Auch habe ich oft bis spät in die Nacht genäht, sodass ich nach circa 1,5 Wochen fast fertig war. Dann kam die Schaffenspause, die mit Blockade und Unlust einherging. 
+
 ![Entwicklung 1](DSCF4300.JPG)
 ![Entwicklung 2](DSCF4301.JPG)
 ![Entwicklung 3](DSCF4302.JPG)

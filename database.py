@@ -192,7 +192,7 @@ def get_errors():
   with dbLock:
     return copy.copy(database['errors'])
 
-def load_posts(debug=False):
+def load_posts(debug=render_unpublished):
   global render_unpublished
   render_unpublished = debug
   with dbLock:

@@ -11,7 +11,7 @@ Seit über einem Jahr liegt dieses Projekt herum. Heute habe ich ich in einer An
 
 Ich hatte, was diese Handpuppe angeht, meinen erstandenen "Herbert von Gobelin" alias "das Teufelskissen"als Vorbild, anhand dessen ich den Schnitt entworfen habe.
 
-![Herbert von Gobelin](Herbert von Gobelin.jpg)
+![Herbert von Gobelin](Herbert_von_Gobelin.jpg)
 
 
 Ich habe insgesamt sieben Schnittmuster und wenn ich alle Kelinigkeiten mitberechne 13 Einzelteile, die zusammengenäht werden mussten. Wenn ich den Heiligenschein und die Flügel abziehe, besteht das Püppchen aus 10 Teilen.
