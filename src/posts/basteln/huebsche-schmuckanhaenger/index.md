@@ -1,6 +1,6 @@
 ---
 title: "Hübsche Schmuckanhänger "
-category: wolle
+category: basteln
 author: Ermeline
 date: 2017-03-19
 image: "hubsche-schmuckanhanger_thumb.jpg"
