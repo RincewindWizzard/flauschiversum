@@ -1,7 +1,7 @@
 ---
 title: "Hübsche Schmuckanhänger "
 category: basteln
-author: Ermeline
+author: Lucy
 date: 2017-03-19
 image: "hubsche-schmuckanhanger_thumb.jpg"
 excerpt: "Ich habe mal wieder auf Pinterest gestöbert und dabei eine interessante Bastelei gefunden."
