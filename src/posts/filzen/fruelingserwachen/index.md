@@ -1,5 +1,5 @@
 ---
-title: "Fruelingserwachen"
+title: "Frühlingserwachen"
 category: filzen
 author: Ermeline
 date: 2017-04-02
