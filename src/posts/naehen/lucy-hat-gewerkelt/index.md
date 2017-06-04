@@ -1,6 +1,6 @@
 ---
 title: "Lucy hat gewerkelt"
-category: naehen
+category: nähen
 author: Lucy
 date: 2017-02-12
 image: "lucy-hat-gewerkelt_thumb.jpg"
