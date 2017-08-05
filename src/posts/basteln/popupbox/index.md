@@ -22,9 +22,9 @@ Als Geschenk für eine goldene Hochzeit habe ich eine sogenannte Popupbox gebast
 ![Box wird geschlossen](DSCF3570.JPG)
 ![Box geschlossen](DSCF3571.JPG)
 
-Hier nochein paar Details.
+Hier noch ein paar Details.
 
-![Deatil 1](DSCF3555.JPG)
+![Detail 1](DSCF3555.JPG)
 ![Rügenkarte](DSCF3556.JPG)
 ![Kärtchen 1](DSCF3558.JPG)
 ![Kärtchen 1 nah](DSCF3557.JPG)
@@ -33,8 +33,8 @@ Hier nochein paar Details.
 ![Kartenfach](DSCF3562.JPG)
 ![Kärtchen 3](DSCF3561.JPG)
 ![Kärtchen 4](DSCF3563.JPG)
-![Deatil 2](DSCF3567.JPG)
-![Deatil 3](DSCF3568.JPG)
+![Detail 2](DSCF3567.JPG)
+![Detail 3](DSCF3568.JPG)
 ![Eckenherzchen](DSCF3569.JPG)
 
 nach viel Detailarbeit ist sie nun fertig und hat für Staunen und Freude gesorgt. 
