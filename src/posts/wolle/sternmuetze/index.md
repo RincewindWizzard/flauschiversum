@@ -16,7 +16,7 @@ Eine Kollegin hatte eine dunkelblaue Mütze mit hellblauem Stern verloren. Sie h
 ![getragen mit hellem Stern](IMG_20161204_213032.jpg)
 ![getragen mit dunklem Stern](IMG_20161204_212942.jpg)
 
-Eine Herausforderung stellten für mich die späteren Abnahmen dar, da ich noch jeweils abwechelnd die Maschen der inneren und der äußeren Mütze auf der Nadel hatte, da musste ich noch auf zwei Nadeln umswitchen und erst die innere Mütze fertig stricken, ehe ich das Projekt beenden konnte. 
+Eine Herausforderung stellten für mich die späteren Abnahmen dar, da ich noch jeweils abwechselnd die Maschen der inneren und der äußeren Mütze auf der Nadel hatte, da musste ich noch auf zwei Nadeln umswitchen und erst die innere Mütze fertig stricken, ehe ich das Projekt beenden konnte. 
 Mit Jemimas tatkräftiger Unterstützung habe ich für diese Mütze nur doppelt so lange gebraucht wie ich normalerweise benötigt hätte. Sie war zum einen der Meinung sie müsse meine Strickvorlage immer neu ausrichten und das Knäul vorsorglich abwickeln und auf Knoten überprüfen (scheinbar waren ihr noch nicht genug Knoten vorhanden) und zum anderen war mein ganzes Handarbeitsensemble so bequem, dass sie stundenlang darauf schlummerte. 
 
 ![Vorlagenhalter](IMG_20161202_175341.jpg)
