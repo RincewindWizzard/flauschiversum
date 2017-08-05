@@ -7,7 +7,7 @@ image: "acab-silberring_thumb.jpg"
 excerpt: "Wer kann schon sagen er hätte einen Ring selbstgemacht?"
 ---
 
-Wer kann schon sagen er hätte einen Ring selbstgemacht? Alle, die einen Kurs an der Volkshochschulle gemacht haben, so wie ich. Endlich hatte ich mal Gelegenheit meine kaputten Ringe zu reparieren und die ungeliebten Silberteile weiterzuverwerten. Der Goldschmiedekurs ging über drei Tage und ich bin sehr zufrieden. Alles was mir nicht gefiel wurde zunächst eingeschmolzen, so konnte ich Materialkosten sparen. 
+Wer kann schon sagen er hätte einen Ring selbstgemacht? Alle, die einen Kurs an der Volkshochschule gemacht haben, so wie ich. Endlich hatte ich mal Gelegenheit meine kaputten Ringe zu reparieren und die ungeliebten Silberteile weiterzuverwerten. Der Goldschmiedekurs ging über drei Tage und ich bin sehr zufrieden. Alles was mir nicht gefiel wurde zunächst eingeschmolzen, so konnte ich Materialkosten sparen. 
 
 ![Mein Silberklumpen glüht noch](IMG_20170617_122458.jpg)
 
