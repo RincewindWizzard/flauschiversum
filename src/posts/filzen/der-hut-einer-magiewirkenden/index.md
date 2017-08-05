@@ -39,7 +39,7 @@ Ich habe noch eine Spitze an der Hutkrempe eingeschnitten und alles nochmal nach
 ![SpitzenSchablone 4](DSCF4030.JPG)
 
 
-Jetzt habe ich alles in Form gebracht und noch an ein paar Stellen nachgewalkt, nach dem endgültigen Ausspülen der Seife musste alles irgendwie fixiert werden. Leider habe ich nicht über die Oxidationsfähigkeit von Eisen nachgedacht, so hat mein Hut ein Paar kleine Roststellen abbekommen (immer nur nichtrostende Wäscheklammern und Nadeln nehmen...), die aber noch mit der Zeit und etwas Weschrubbeln verschwinden. 
+Jetzt habe ich alles in Form gebracht und noch an ein paar Stellen nachgewalkt, nach dem endgültigen Ausspülen der Seife musste alles irgendwie fixiert werden. Leider habe ich nicht über die Oxidationsfähigkeit von Eisen nachgedacht, so hat mein Hut ein Paar kleine Roststellen abbekommen (immer nur nichtrostende Wäscheklammern und Nadeln nehmen...), die aber noch mit der Zeit und etwas Wegschrubbeln verschwinden. 
 
 ![Hut finish 1](DSCF4036.JPG)
 ![Hut finish 2](DSCF4037.JPG)
