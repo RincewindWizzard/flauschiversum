@@ -4,7 +4,7 @@ category: brandings
 author: Ermeline
 date: 2014-05-18 16:21:42
 image: "Labbybrett.jpg"
-excerpt: "Nachdem ich trauriger Weise den Umzug meiner langjährigen Arbeitsstelle dulden musste, habe ich (als Andenken von uns Mitarbeitern für die Chefs) eine hölzerne Gedenktafel ins Leben gerufen."
+excerpt: "Nachdem ich trauriger Weise den Umzug meiner langjährigen Arbeitsstelle dulden musste, habe ich eine hölzerne Gedenktafel ins Leben gerufen."
 ---
 
 ![Tafel links](IMG_4453.jpg)
