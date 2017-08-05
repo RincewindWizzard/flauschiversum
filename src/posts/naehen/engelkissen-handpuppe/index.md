@@ -93,13 +93,13 @@ Nun wird alles aufeinandergelegt und zwar ist nun auf der einen Seite (Du nähst
 ![Schichten 4](DSCF3661.JPG)
 
 
-Diese Schichten kann meine Maschine noch locker nähen, man denke an die Wollschichten, die sie bewältigen musste beiden [Monstern](http://flauschiversum.de/2014/12/mobile-monster-macht-man-selbst/). 
+Diese Schichten kann meine Maschine noch locker nähen, man denke an die Wollschichten, die sie bewältigen musste bei den [Monstern](http://flauschiversum.de/2014/12/mobile-monster-macht-man-selbst/). 
 
 ![Schicht](DSCF3657.JPG)
 ![Schicht 1](DSCF3658.JPG)
 
 
-Wenn alles zusammengenäht ist, kannst du das Ganze wenden und schon sieht das ganze fast fertig aus.
+Wenn alles zusammengenäht ist, kannst du das Ganze wenden und schon sieht das Ganze fast fertig aus.
 
 ![Gewendet](DSCF3662.JPG)
 ![Gewendet 1](DSCF3663.JPG)
