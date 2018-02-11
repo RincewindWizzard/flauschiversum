@@ -33,24 +33,24 @@ Auch dieser Hut wurde vom Shubia-TÜV zertifiziert.
 
 Und nun kommt mal meine bisherige Liste aller gefilzter Hüte (in annähernd richtiger Filz-Reihenfolge):
 26. siehst du hier in diesem Post
-25. [Schreiberlingshut] (/2017/04/schreiberlingshut/)
-22. - 24. [Hut meiner Wollwerkerin, Alltagshut 2, Alltagshut 1] (/2016/05/alltagshute/)
-21. [Magierinnenhut] (/2016/03/der-hut-einer-magiewirkenden/)
-20. [Seepferdchenhut] (/2015/11/seepferdchenhut/)
-19. [Blumenhut] (/2015/07/filzen-filzen-filzen/)
-18. [Barett] (/2015/07/barett/)
-17. [Kapuzenweste] (/2015/05/gefilzte-kapuzenweste/)
-16. [Räuberhut] (/2015/04/rauberhut/)
-15. [Fez] (/2014/08/fescher-fez/)
-14. [grüner Schneckenzwirbelhut] (/2014/08/ein-schneckenzwirbelhut/)
-13. [blauer zerknautschter Zylinder] (/2014/08/zerknautschter-hut-ist-immer-gut/)
-12. [grün schwarzer Hexenhut] (/2014/07/schwarzgruner-zwirbelhut/)
-11. [brauner Gandalfhut] (/2014/07/gandalf-hut/)
-10. [lila schwarzer Hexenhut] (/2014/07/ermelines-neuer-hexenhut/)
-9. [Hasenhut] (/2014/04/flauschangriff/) eine Anleitung zum Hütefilzen
+25. [Schreiberlingshut](/2017/04/schreiberlingshut/)
+22. - 24. [Hut meiner Wollwerkerin, Alltagshut 2, Alltagshut 1](/2016/05/alltagshute/)
+21. [Magierinnenhut](/2016/03/der-hut-einer-magiewirkenden/)
+20. [Seepferdchenhut](/2015/11/seepferdchenhut/)
+19. [Blumenhut](/2015/07/filzen-filzen-filzen/)
+18. [Barett](/2015/07/barett/)
+17. [Kapuzenweste](/2015/05/gefilzte-kapuzenweste/)
+16. [Räuberhut](/2015/04/rauberhut/)
+15. [Fez](/2014/08/fescher-fez/)
+14. [grüner Schneckenzwirbelhut](/2014/08/ein-schneckenzwirbelhut/)
+13. [blauer zerknautschter Zylinder](/2014/08/zerknautschter-hut-ist-immer-gut/)
+12. [grün schwarzer Hexenhut](/2014/07/schwarzgruner-zwirbelhut/)
+11. [brauner Gandalfhut](/2014/07/gandalf-hut/)
+10. [lila schwarzer Hexenhut](/2014/07/ermelines-neuer-hexenhut/)
+9. [Hasenhut](/2014/04/flauschangriff/) eine Anleitung zum Hütefilzen
 6. - 8. findest du unten in den Bildern
-5. [Steinfreund-Hut] (/2014/04/ein-hut-fur-steinfreunde/)
-4. [Blumenkinderhut] (/2014/01/fur-blumenkinder/)
+5. [Steinfreund-Hut](/2014/04/ein-hut-fur-steinfreunde/)
+4. [Blumenkinderhut](/2014/01/fur-blumenkinder/)
 2. - 3. [Ehrlichs Hut und der Oberhexenhut](/2014/01/rincewind-hut/)
 1. [Ermelines Waschunfall](/2014/01/mein-erster-filzhut/)
 
