@@ -3,5 +3,6 @@ echo Update Flauschiversum!
 cd /flauschiversum
 git pull origin master
 
+rm -rf /var/www/flauschiversum/*;
 make run &
 cd /var/www/flauschiversum/; wget -mnH -nv -o /var/log/flauschiversum_err.log http://localhost:5000/
