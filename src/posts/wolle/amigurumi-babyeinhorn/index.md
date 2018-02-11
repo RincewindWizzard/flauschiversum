@@ -14,6 +14,7 @@ Wichtige Infos vorweg:
 Ich beende jede Runde mit einer Kettmasche, das vereinfacht das Rundenzählen und den Farbwechsel. Die Innenseite ist immer da, wo der Anfangsfaden hängt, du müsstest ihn also nur in das Werkstück hineinstopfen. Je nach Garndicke benötigst du die passende Häkelnadel, ich habe mit Perlgarn gehäkelt und dafür die Nadelstärke 2mm gewählt.
  
 Du brauchst:
+
 - Garn in drei Farben (rosa/weiß/blau)
 - optional Goldgarn
 - Häkelnadel in der richtigen Größe
@@ -26,6 +27,7 @@ Du brauchst:
 ![Jemima liegt auf meiner Wolle, sie will mir sagen das sie Hunger hat](1517429206755.jpg)
 
 Du brauchst Kenntnis über:
+
 - Magic Loop (ML)
 - Luftmaschen (Lm)
 - feste Maschen (fM)
