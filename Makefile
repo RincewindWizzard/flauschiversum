@@ -18,4 +18,4 @@ docker-build:
 	cd docker-build; docker build -t flauschiversum-build .
 
 docker-run:
-	docker run -ti flauschiversum-build
+	docker run -ti -v /tmp/flauschiversum/:/var/www/flauschiversum/ flauschiversum-build

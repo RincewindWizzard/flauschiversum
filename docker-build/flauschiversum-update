@@ -1,0 +1,7 @@
+#!/bin/bash
+echo Update Flauschiversum!
+cd /flauschiversum
+git pull origin master
+
+make run &
+cd /var/www/flauschiversum/; wget -mnH -nv -o /var/log/flauschiversum_err.log http://localhost:5000/
