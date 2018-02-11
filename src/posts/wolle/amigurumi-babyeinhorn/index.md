@@ -6,7 +6,7 @@ date: 2018-02-25
 image: "amigurumi-babyeinhorn_thumb.jpg"
 excerpt: "Wie versprochen kommt hier nun die Anleitung für mein Babyeinhorn."
 ---
-Wie versprochen kommt hier nun die Anleitung für mein Babyeinhorn. 
+Wie [letzte Woche](/2018/02/hakeleinhorn/) versprochen kommt hier nun die Anleitung für mein Babyeinhorn. 
 
 ![Babyeinhorn](_1080278.jpg)
 
