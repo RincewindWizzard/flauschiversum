@@ -4,15 +4,22 @@ import subprocess, os, io, logging
 from datetime import datetime
 from PIL import Image
 from flask import Flask, Response, request, send_file, render_template, send_from_directory, abort, after_this_request
+import jinja2
 app = Flask(__name__)
+
 
 import htmlmin
 from bs4 import BeautifulSoup as parse_html_string
 
-import settings
-from database import dbLock, database
-import database as db
+from . import settings
+from .database import dbLock, database
+from . import database as db
 
+my_loader = jinja2.ChoiceLoader([
+    app.jinja_loader,
+    jinja2.FileSystemLoader(settings.templates_dir),
+])
+app.jinja_loader = my_loader
 
 def postprocess(html):
   if settings.pretty_xml == 'pretty':
@@ -120,7 +127,8 @@ def convert_thumbnail(year, month, title, width, height, image):
 @app.route('/<path>/<basename>')
 @app.route('/<basename>', defaults={'path': ''})
 def static_files(path, basename):
-  return send_from_directory(os.path.join('static', path), basename)
+    path = os.path.abspath(os.path.join(settings.static_path, path))
+    return send_from_directory(path, basename)
 
 @app.route('/style.css')
 def style():

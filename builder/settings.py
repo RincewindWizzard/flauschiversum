@@ -5,13 +5,14 @@ from os.path import expanduser
 from slugify import slugify
 
 # Configuration
-posts_path = 'src/posts/'
+base_dir = '.'
+posts_path = os.path.join(base_dir, 'content/posts/')
+templates_dir = os.path.join(base_dir, 'templates')
+def post_path(title, category=None):
+  return os.path.join(posts_path, slugify(title))
 
-def post_path(title, category):
-  return os.path.join(posts_path, category, slugify(title)) 
-
-static_path = 'static/'
-static_images_path = 'static/images/'
+static_path = os.path.join(base_dir, 'static/')
+static_images_path = os.path.join(base_dir, 'static/images/')
 overlay = os.path.join(static_images_path, 'Wasserzeichen.png')
 index_file = 'index.md'
 pretty_xml = 'pretty' # 'pretty', 'minimize', None

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from routes import app
-import database as db
+from builder.routes import app
+import builder.database as db
 
 def main(debug=True):
   logging.debug('Started Webserver.')

@@ -6,3 +6,4 @@ beautifulsoup4
 python-slugify
 python-frontmatter
 markdown
+lxml

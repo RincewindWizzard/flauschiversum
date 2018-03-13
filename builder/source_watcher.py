@@ -4,7 +4,7 @@ import inotify.adapters
 from PIL import Image
 from inotify.constants import IN_DELETE, IN_CREATE, IN_MODIFY, IN_CLOSE_WRITE
 
-import settings
+from . import settings
 
 def resize_image(img_path):
   #timg = tempfile.mktemp()

@@ -9,12 +9,12 @@ from threading import RLock, Thread
 # external libraries
 import frontmatter
 from slugify import slugify
-from markdown_slideshow import compile as markdown
+from .markdown_slideshow import compile as markdown
 
 # own libraries
-import settings
+from . import settings
 from PIL import Image
-from markdown_slideshow import resized_image
+from .markdown_slideshow import resized_image
 
 # Render unpublished posts?
 render_unpublished = False
@@ -203,9 +203,8 @@ def load_posts(debug=render_unpublished):
     database['posts'] = {}
     database['errors'] = []
 
-    for category_path in os.listdir(settings.posts_path):
-      for post_path in os.listdir(os.path.join(settings.posts_path, category_path)):
-        Post(os.path.join(settings.posts_path, category_path, post_path))
+    for post_path in os.listdir(os.path.join(settings.posts_path)):
+        Post(os.path.join(settings.posts_path, post_path))
 
   return database
 
