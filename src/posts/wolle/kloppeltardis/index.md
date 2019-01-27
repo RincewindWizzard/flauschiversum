@@ -7,13 +7,13 @@ image: "kloppeltardis_thumb.jpg"
 excerpt: "Das Klöppeln und die Tardis von Dr. Who haben es mir angetan."
 ---
 
-![die Tardis](_1190860.JPG)
+![die Tardis](_1190860.jpg)
 
 Das Klöppeln und die Tardis von Dr. Who haben es mir angetan. In letzter Zeit finde ich die Tardis sehr toll, da ich kürzlich mit dem Klöppeln begonnen habe und meine ersten Werke, [das Herz](/2018/08/kloppelherz/) und [den Efeu](/2018/08/kloppelefeu/) erfolgreich abgeschlossen wurden, habe ich mich mal an einen ersten eigenen Entwurf getraut.
 
 Entstanden ist hier die Tardis im Leinenschlag mit Löcherschlagelementen und falschen Flechtern in den Fenstern. 
 
-![Tardis auf dem Kissen](_1190834.JPG)
+![Tardis auf dem Kissen](_1190834.jpg)
 
 Meine ersten Klöppelbriefe wiesen jedoch ein paar Denkfehler auf, weshalb ich noch ein paarmal umgestalten musste. 
 
@@ -27,12 +27,12 @@ Letztendlich ist dies mein dritter Versuch, der auch zum Ende gebracht wurde, au
 
 Aber auch das ist schaffbar wie man sieht.
 
-![Tardis nah](_1190828.JPG)
+![Tardis nah](_1190828.jpg)
 
 Um die Tardis dann in Szene zu setzen habe ich ein altes Poster vom Mars zurechtgeschnitten ein wenig Glitter und Wirbel hinzugefügt und die Tardis eingefügt. Dieses Bild schenkte ich einer Freundin, die auch sehr nerdig unterwegs ist. Bei ihr ist das Bild in besten Händen.
 
-![Hintergrund](_1190840.JPG)
-![Tardis im Rahmen](_1190842.JPG)
-![Tardisbild](_1190846.JPG)
+![Hintergrund](_1190840.jpg)
+![Tardis im Rahmen](_1190842.jpg)
+![Tardisbild](_1190846.jpg)
 
 Ein spacetastisches Wochenende wünscht Eure Ermeline.

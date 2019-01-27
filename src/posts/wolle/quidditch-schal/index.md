@@ -39,4 +39,4 @@ Aber auch beim Fotografieren hatte ich es wieder nicht so leicht. Irgendwie sche
 ![Shubias Blick als ich sie bat aus dem Zelt zu kommen](_1200225.jpg)
 ![Ob Shubia ADHS hat?](_1200231.jpg)
 
-An alle anderen Teammitglieder, die gerne so einen Schal hätten: Eure Begeisterung wurde mir zugetragen und es tut mir leid, aber ich habe leider nicht die Kapazität in Massenproduktion zu gehen, dafür habe ich zu viele Hobbys und switche zwischen diesen zu oft hin und her. Wenn ihr aber die Vorlage haben wollt, damit jemand anders oder ihr selbst euch den Schal strickt, schickt mir gerne eine Email, ich schicke euch dann die Vorlage zu.
+An alle anderen Teammitglieder, die gerne so einen Schal hätten: Eure Begeisterung wurde mir zugetragen und es tut mir leid, aber ich habe leider nicht die Kapazität in Massenproduktion zu gehen, dafür habe ich zu viele Hobbys und switche zwischen diesen zu oft hin und her. Wenn ihr aber die Vorlage haben wollt, damit jemand anders oder ihr selbst euch den Schal strickt, schickt mir gerne eine Email an ermeline@flauschiversum.de und ich schicke euch dann umgehend die Vorlage zu.
