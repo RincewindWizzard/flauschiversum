@@ -4,7 +4,7 @@ category: basteln
 author: Tomcat
 date: 2018-04-29
 image: "everybody-needs-a-niffler_thumb.jpg"
-excerpt: "Ein kurzer Ausschnitt, der den Beitrag beschreibt."
+excerpt: "Inspiriert durch den Film "fantastische Tierwesen" kam mir der Gedanke, eines meiner Lieblingstiere - den Niffler - aus eben jenem Film nachzubauen."
 ---
 
 ![Na wer luschert denn da?](_1150390.jpg)
