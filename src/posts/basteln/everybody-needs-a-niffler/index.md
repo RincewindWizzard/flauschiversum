@@ -9,7 +9,10 @@ excerpt: "Ein kurzer Ausschnitt, der den Beitrag beschreibt."
 
 ![Na wer luschert denn da?](_1150390.jpg)
 
-Inspiriert durch den Film "fantastische Tierwesen" und nach einem DIY-Video-Marathon kam mir der Gedanke, eines meiner Lieblingstiere - den Niffler - aus eben jenem Film nachzubauen. Es gibt ihn aus verschiedensten Materialien. Ich habe mich für FIMO entschieden, da ich bisher noch nie etwas damit gebastelt habe und es mit diesem Projekt prima kombiniert werden kann. Nachdem mein Niffler gedanklich geboren wurde, kaufte ich schwarzes und hautfarbenes FIMO.
+Inspiriert durch den Film fantastische Tierwesen und nach einem DIY-Video-Marathon kam mir der Gedanke, eines meiner Lieblingstiere - den Niffler - aus eben jenem Film nachzubauen.
+Es gibt ihn aus verschiedensten Materialien. 
+Ich habe mich für FIMO entschieden, da ich bisher noch nie etwas damit gebastelt habe und es mit diesem Projekt prima kombiniert werden kann. 
+Nachdem mein Niffler gedanklich geboren wurde, kaufte ich schwarzes und hautfarbenes FIMO.
 
 ![Kuckuck](_1150380.jpg) 
 
