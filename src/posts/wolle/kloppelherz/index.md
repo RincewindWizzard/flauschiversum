@@ -18,7 +18,7 @@ In diesem Fall der 28. Juni diesen Jahres, an dem ich mehr als überrascht wurde
 
 ![und das sind nur die Kleinteile](2018-06-28_21_44_15.jpg)
 
-Viele spannende Bücher und Hilfsmitel sowie verschiedenste Klöppel gab es zu entdecken.
+Viele spannende Bücher und Hilfsmittel sowie verschiedenste Klöppel gab es zu entdecken.
 
 ![sogar aus Glas](2018-06-28_22_10_23.jpg)
 
