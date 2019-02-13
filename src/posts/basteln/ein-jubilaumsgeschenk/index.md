@@ -4,7 +4,7 @@ category: basteln
 author: Ermeline
 date: 2018-04-15
 image: "ein-jubilaumsgeschenk_thumb.jpg"
-excerpt: "Ein kurzer Ausschnitt, der den Beitrag beschreibt."
+excerpt: "Damit kein Missverständnis entsteht: Ich liebe Katzen!"
 ---
 
 Damit kein Missverständnis entsteht: Ich liebe Katzen!
