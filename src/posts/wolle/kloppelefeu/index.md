@@ -4,10 +4,10 @@ category: wolle
 author: Ermeline
 date: 2019-02-03
 image: "kloppelefeu_thumb.jpg"
-excerpt: "Ich klöppel mir die Welt, wide wide wie sie mir gefällt."
+excerpt: "Ich klöppel mir einfach alles selbst."
 ---
 
-Ich klöppel mir die Welt, wide wide wie sie mir gefällt. Ich habe ja schon angekündigt, dass da was neues kommt. Naja, da mein [Herz](/2018/08/kloppelherz/) ja ganz gut geworden ist, auf zu neuen Ufern, ich überspringe die Anfängerübungen und mache diesen Efeu im Leinenschlag mit falschen Flechtern. 
+Ich klöppel mir einfach alles selbst. Ich habe ja schon angekündigt, dass da was neues kommt. Naja, da mein [Herz](/2018/08/kloppelherz/) ja ganz gut geworden ist, auf zu neuen Ufern, ich überspringe die Anfängerübungen und mache diesen Efeu im Leinenschlag mit falschen Flechtern. 
 
 ![Anfang vom Efeuzweig](IMG_20180803_112529_319.jpg)
 ![Nah](2018-08-04.jpg)
