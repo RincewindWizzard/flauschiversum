@@ -13,12 +13,12 @@ Wieder wurde eine Katze versponnen. Diesmal musste Lolita herhalten, oder viel m
 
 Kennt ihr Lolita schon? Sie ist eine von Lucys Katzen und trotz ihrer anfänglichen Zurückhaltung und Fotoscheue sehr verschmust und freundlich. Schaut man in ihr Gesichtchen muss man Schmunzeln, denn die kurzsichtige kleine Mietz schielt und zaubert mit diesem Blick stets ein Lächeln in unsere Gesichter, außerdem macht Lolita Yoga wenn sie sich streckt, sie hat schon ein paar außergewöhnliche Eigenschaften.
 
-Und ich habe mich darangemacht auch aus Lolta ein Knäul Wolle zu machen, wie ich es schon von [Jemima](/2018/03/jemimas-wolle/) gemacht habe. Dieses Fell war echt eine Herausforderung für mich. Es ist sehr fein und weich, jedoch auch unglaublich filzfreudig, sogar ohne Wasser und Seife. Ich musste immer in kleinen Flocken arbeiten und schon beim Transport von Lucy zu mir nach Hause hat sich das Fell enorm verdichtet. Aber bisher habe ich noch jedes Fell mit meinem Spinnrad bezwungen.
+Und ich habe mich darangemacht auch aus Lolita ein Knäul Wolle zu machen, wie ich es schon von [Jemima](/2018/03/jemimas-wolle/) gemacht habe. Dieses Fell war echt eine Herausforderung für mich. Es ist sehr fein und weich, jedoch auch unglaublich filzfreudig, sogar ohne Wasser und Seife. Ich musste immer in kleinen Flocken arbeiten und schon beim Transport von Lucy zu mir nach Hause hat sich das Fell enorm verdichtet. Aber bisher habe ich noch jedes Fell mit meinem Spinnrad bezwungen.
 
 ![Lolita im Übergang von Flocke zu Garn](img_0003.jpg)
 ![Detail vom Spinnen](img_0002.jpg)
 
-Meine beiden Flauschis waren während der Arbeit nie weit entfernt. Shubia war von dem Geruch der fremden Katze so verwirrt, das sie sich ständig an mir geschubbert hat, während Mimi das ganze nicht so wirklich tangiert hat, die Vögel vorm Fenster waren viel spannender. 
+Meine beiden Flauschis waren während der Arbeit nie weit entfernt. Shubia war von dem Geruch der fremden Katze so verwirrt, das sie sich ständig an mir geschubbert hat, während Mimi das Ganze nicht so wirklich tangiert hat, die Vögel vorm Fenster waren viel spannender. 
 
 ![Jemima ist sehr aufmerksam](img_0004.jpg)
 
