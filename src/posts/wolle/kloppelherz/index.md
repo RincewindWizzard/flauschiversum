@@ -33,7 +33,7 @@ Lucy und ich klöppelten gemeinsam am Herzen und auch wenn ich es nicht noch bei
 ![meine ersten zwei Werke](IMG_20180802_125541.jpg)
 ![ein kleiner Ausblick](IMG_20180804_081147.jpg)
 
-Und das sind nun meine ersten zwei Projekte nebeneinander, das dritte ist schon auf dem Kissen, aber das ist ein anderer Post.
+Und das sind nun meine ersten zwei Projekte nebeneinander, das [dritte](/2019/02/kloppelefeu/) ist schon auf dem Kissen, aber das ist ein anderer Post.
 
 Einen schönen Sonntag wünscht eure Ermeline.
 
