@@ -20,16 +20,16 @@ Meine ersten Klöppelbriefe wiesen jedoch ein paar Denkfehler auf, weshalb ich n
 ![Erste Briefzeichnung](IMG_20180928_153910.jpg)
 ![erster Versuch](IMG_20180922_171216.jpg)
 
-Letztendlich ist dies mein dritter Versuch, der auch zum Ende gebracht wurde, auch hier hatte ich ein paar Denkfehler, zum Beispiel habe ich nicht spiegelverkehrt geklöppelt, denn nach der Fertigstellung wird die Arbeit umgedreht, weshalb das weiße Schild auf der falschen Seite war. In meinem Perfektionismuswahn habe ich das dann wieder korrigiert. Auch ist das Garn etwas zu dünn, aber was das angeht, stört mich das nicht so sehr, es half mir in diesem Falle die Fehler besser zu erkennen und ich habe dabei viel lernen können. wie es im Flauschiversum so ist, ist mir auch bei dieser Handarbeit keine Ruhe vergönnt und so muss ich unter erschwerten Bedingungen auch diese Arbeit verrichten. shubia konnte ich dann überzeugen sich nicht auf das Klöppelkissen zu legen, bei Jemima war ich nicht ganz so erfolgreich.
+Letztendlich ist dies mein dritter Versuch, der auch zum Ende gebracht wurde, auch hier hatte ich ein paar Denkfehler, zum Beispiel habe ich nicht spiegelverkehrt geklöppelt, denn nach der Fertigstellung wird die Arbeit umgedreht, weshalb das weiße Schild auf der falschen Seite war. In meinem Perfektionismuswahn habe ich das dann wieder korrigiert. Auch ist das Garn etwas zu dünn, aber was das angeht, stört mich das nicht so sehr, es half mir in diesem Falle die Fehler besser zu erkennen und ich habe dabei viel lernen können. wie es im Flauschiversum so ist, ist mir auch bei dieser Handarbeit keine Ruhe vergönnt und so muss ich unter erschwerten Bedingungen auch diese Arbeit verrichten. Shubia konnte ich dann überzeugen sich nicht auf das Klöppelkissen zu legen, bei Jemima war ich nicht ganz so erfolgreich.
 
 ![Sabotage wie immer](IMG_20181005_142711.jpg)
-![sogar von beiden Seiten, das ist eine Verschwörung](IMG_20180928_153910.jpg)
+![sogar von beiden Seiten, das ist eine Verschwörung](IMG_20181005_150201.jpg)
 
 Aber auch das ist schaffbar wie man sieht.
 
 ![Tardis nah](_1190828.jpg)
 
-Um die Tardis dann in Szene zu setzen habe ich ein altes Poster vom Mars zurechtgeschnitten ein wenig Glitter und Wirbel hinzugefügt und die Tardis eingefügt. Dieses Bild schenkte ich einer Freundin, die auch sehr nerdig unterwegs ist. Bei ihr ist das Bild in besten Händen.
+Um die Tardis dann in Szene zu setzen, habe ich ein altes Poster vom Mars zurechtgeschnitten ein wenig Glitter und Wirbel hinzugefügt und die Tardis eingefügt. Dieses Bild schenkte ich einer Freundin, die auch sehr nerdig unterwegs ist. Bei ihr ist das Bild in besten Händen.
 
 ![Hintergrund](_1190840.jpg)
 ![Tardis im Rahmen](_1190842.jpg)
