@@ -4,10 +4,10 @@ category: filzen
 author: Ermeline
 date: 2017-04-30
 image: "schreiberlingshut_thumb.jpg"
-excerpt: "Ein kurzer Ausschnitt, der den Beitrag beschreibt."
+excerpt: "Sowohl für Walpurgis brauchte ich einen neuen Hut, als auch für meinen neuen LARP-Charakter."
 ---
 
-Sowohl für Walpurgis brauchte ich einen neuen Hut, als auch für Katherie meinen LARP-Charakter, eine Schreiberin. Das ist das Ergebnis, ein eigentlich recht normaler Hut, jedoch mit der rollenspieltauglichen Möglichkeit auch im Dunkeln schreiben zu können und der stets verfügbaren Tafel mitsamt Kreide.
+Sowohl für Walpurgis brauchte ich einen neuen Hut, als auch für Katherie meinen neuen LARP-Charakter, eine Schreiberin. Das ist das Ergebnis, ein eigentlich recht normaler Hut, jedoch mit der rollenspieltauglichen Möglichkeit auch im Dunkeln schreiben zu können und der stets verfügbaren Tafel mitsamt Kreide.
 
 ![Skizze](_1050549.JPG)
 
