@@ -3,6 +3,16 @@ echo Update Flauschiversum!
 cd /flauschiversum
 git pull origin master
 
-rm -rf /var/www/flauschiversum/*;
+rm -rf /tmp/flauschiversum/
+mkdir /tmp/flauschiversum/
+
 make run &
-cd /var/www/flauschiversum/; wget -mnH -nv -o /var/log/flauschiversum_err.log http://localhost:5000/
+
+MAKE_PID=$!
+cd /tmp/flauschiversum/; wget -mnH http://localhost:5000/
+kill $MAKE_PID
+
+rsync -av --delete /tmp/flauschiversum/ /var/www/flauschiversum/
+
+
+
