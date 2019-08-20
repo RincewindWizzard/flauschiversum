@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 import unittest
-from database import database, Post
+from old.database import Post
 
 class TestPosts(unittest.TestCase):
   def setUp(self):

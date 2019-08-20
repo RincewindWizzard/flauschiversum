@@ -9,9 +9,8 @@ app = Flask(__name__)
 import htmlmin
 from bs4 import BeautifulSoup as parse_html_string
 
-import settings
-from database import dbLock, database
-import database as db
+from old import settings, database as db
+from old.database import dbLock, database
 
 
 def postprocess(html):
@@ -39,16 +38,16 @@ def index(category, page):
     posts = list(reversed(db.posts_by_date(category)))
     page_urls = ['/' + category if category else '/'] + [ 
       os.path.join('/', category if category else '', 'page', str(pagenum), 'index.html#index')
-      for pagenum in range(1, max(len(posts)//settings.posts_per_page + 1, 1))
+      for pagenum in range(1, max(len(posts) // settings.posts_per_page + 1, 1))
     ]
 
 
     # pagination
-    start = max(0, page - settings.pagination_size//2)
+    start = max(0, page - settings.pagination_size // 2)
     end = min(len(page_urls), start + settings.pagination_size)
 
     cur_page_post_list = posts[
-      page * settings.posts_per_page : page * settings.posts_per_page + settings.posts_per_page
+                         page * settings.posts_per_page: page * settings.posts_per_page + settings.posts_per_page
     ]
     #print(cur_page_post_list)
 

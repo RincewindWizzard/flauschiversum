@@ -1,9 +1,9 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
-import logging, io, os
+import io, os
 import ftplib
 from ftplib import FTP_TLS as FTPS
-from settings import ftp_host, ftp_user, ftp_password
+from old.settings import ftp_host, ftp_user, ftp_password
 
 class FTPUpload(FTPS):
   def upload_bytes(self, path, bs):

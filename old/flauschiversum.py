@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from routes import app
-import database as db
+from old.routes import app
+from old import database as db
+
 
 def main(debug=True):
   logging.debug('Started Webserver.')
@@ -18,7 +19,7 @@ def main(debug=True):
 
 
 def as_process():
-  from multiprocessing import Process, Queue
+  from multiprocessing import Process
   from time import sleep
   p = Process(target = main)
   p.start()

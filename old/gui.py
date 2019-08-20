@@ -1,13 +1,13 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
-import os, subprocess, logging, threading, types, re, multiprocessing, queue, copy, time
-from multiprocessing import Queue, Process
+import os, subprocess, logging, threading, time
+from multiprocessing import Process
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, GLib
-import inotify.adapters
 from datetime import datetime, date
-import settings, database, source_watcher, flauschiversum
+from old import settings, source_watcher, flauschiversum, database
+
 
 class Worker(threading.Thread):
   """

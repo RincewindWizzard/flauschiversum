@@ -1,10 +1,11 @@
-import os, shutil, tempfile, sys, argparse, threading, logging, multiprocessing, queue, re, subprocess
+import os, tempfile, logging, multiprocessing, queue, re, subprocess
 from multiprocessing import Queue, Process
 import inotify.adapters
 from PIL import Image
-from inotify.constants import IN_DELETE, IN_CREATE, IN_MODIFY, IN_CLOSE_WRITE
+from inotify.constants import IN_CLOSE_WRITE
 
-import settings
+from old import settings
+
 
 def resize_image(img_path):
   #timg = tempfile.mktemp()
@@ -49,7 +50,7 @@ def watcher_main(queue, stop):
   """
   logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
   # convert all images to max size first
-  convert_all([ path for path, _, _ in os.walk(settings.posts_path) ])
+  convert_all([path for path, _, _ in os.walk(settings.posts_path)])
 
 
   watch = inotify.adapters.InotifyTree(

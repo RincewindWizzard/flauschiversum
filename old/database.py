@@ -4,17 +4,17 @@
 #stdlib
 import logging, os, copy
 from datetime import datetime, date
-from threading import RLock, Thread
+from threading import RLock
 
 # external libraries
 import frontmatter
 from slugify import slugify
-from markdown_slideshow import compile as markdown
+from old.markdown_slideshow import compile as markdown
 
 # own libraries
-import settings
+from old import settings
 from PIL import Image
-from markdown_slideshow import resized_image
+from old.markdown_slideshow import resized_image
 
 # Render unpublished posts?
 render_unpublished = False

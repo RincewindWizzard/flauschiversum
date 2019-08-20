@@ -7,7 +7,8 @@ from markdown.treeprocessors import Treeprocessor
 from markdown.util import etree
 
 from slugify import slugify
-import settings
+from old import settings
+
 
 def resized_image(url, width=None, height=None):
   """ Creates an url to a resized version of the image which is not bigger than width x height """
