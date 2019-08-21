@@ -1,5 +1,5 @@
 from functools import lru_cache
-from .model import Post, Page, Image
+from .model import Post, Page, Image, StaticFile
 from . import urls
 import types
 
@@ -23,6 +23,7 @@ def paginate(dataset, pagesize):
 query_posts = query_by_class(Post)
 query_pages = query_by_class(Page)
 query_images = query_by_class(Image)
+query_static = query_by_class(StaticFile)
 
 def filtered_dataset(filter_func):
     """

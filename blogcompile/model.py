@@ -36,6 +36,10 @@ class AbstractContentObject(object):
         return os.path.basename(self.path)
 
     @property
+    def relpath(self):
+        return self.path.replace(settings.CONTENT_PATH, '')
+
+    @property
     def url(self):
         from .urls import get_url_for
         return get_url_for(self)
@@ -87,6 +91,9 @@ class Article(AbstractContentObject):
 
 
 class Post(Article):
+    """
+    For everything that is considered a blog post.
+    """
     @property
     @lru_cache(maxsize=None)
     def date(self):
@@ -130,10 +137,21 @@ class Post(Article):
 
 
 class Page(Article):
+    """
+    All static pages, that do not change much.
+    For example: Impressum
+    """
     ...
 
+class StaticFile(AbstractContentObject):
+    @property
+    def relpath(self):
+        return self.path.replace(settings.STATIC_PATH, '')
 
 class Image(AbstractContentObject):
+    """
+    Images and their resized (small, medium, large) form.
+    """
     def __init__(self, path):
         super().__init__(path)
 
@@ -179,6 +197,7 @@ class Image(AbstractContentObject):
             return self.thumbnail(settings.IMAGE_LARGE_WIDTH)
 
     def thumbnail(self, width=200, height=sys.maxsize):
+        # TODO: this needs performance tweaking (caching, etc...)
         img = PImage.open(self.path)
 
         overlay = PImage.open(settings.OVERLAY_IMG)

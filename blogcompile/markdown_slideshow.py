@@ -12,7 +12,8 @@ import settings
 
 class Slideshow(Treeprocessor, Extension):
   """
-  If multiple images in a row a found, we create a dom structure for our slideshow javascript library
+  If multiple images in a row a found, we create a dom structure for our slideshow javascript library.
+  An all image url are converted to their resized form (IMAGE_MEDIUM_WIDTH)
   """
   def extendMarkdown(self, md, md_globals):
     self.md = md

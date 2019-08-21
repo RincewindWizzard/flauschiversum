@@ -3,7 +3,7 @@ from slugify import slugify
 import os
 import subprocess
 import settings
-from blogcompile.query import query_images, query_pages, query_posts, filtered_dataset, pagination, only_once
+from blogcompile.query import query_images, query_pages, query_posts, filtered_dataset, pagination, only_once, query_static
 from blogcompile.urls import get_url_for_post, get_url_for_pagination, get_url_for
 from datetime import datetime
 from . import urls
@@ -39,11 +39,16 @@ def render_image(img):
     yield urls.get_url_for_image(img, settings.IMAGE_MEDIUM_WIDTH), img.medium
     yield urls.get_url_for_image(img, settings.IMAGE_LARGE_WIDTH), img.large
 
+
+@filtered_dataset(query_pages)
+def render_pages(page):
+    return (get_url_for(page), env.get_template('page.html').render(page=page, title=page.title).encode('utf-8'))
+
 @only_once
 def style():
     return ('/style.css',
             subprocess.run(['lessc', os.path.join(settings.STYLE_PATH, 'main.less')], stdout=subprocess.PIPE).stdout)
 
-@filtered_dataset(query_pages)
-def render_pages(page):
-    return (get_url_for(page), env.get_template('page.html').render(page=page, title=page.title).encode('utf-8'))
+@filtered_dataset(query_static)
+def static(static_file):
+    return (get_url_for(static_file), static_file.content)

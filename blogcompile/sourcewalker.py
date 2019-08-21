@@ -1,14 +1,15 @@
 import os
 import re
-from .model import Post, Page, Image
+from .model import Post, Page, Image, StaticFile
 
 CONTENT_MODELS = [
     (re.compile(regex), clazz)
     for regex, clazz in [
         (r'.*/posts/.*\.md$', Post),
         (r'.*/pages/.*\.md$', Page),
-        (r'.*\.jpg$', Image),
-        (r'.*\.JPG$', Image)
+        (r'.*/posts/.*\.jpg$', Image),
+        (r'.*/posts/.*\.JPG$', Image),
+        (r'.*/static/.*', StaticFile)
     ]
 ]
 
