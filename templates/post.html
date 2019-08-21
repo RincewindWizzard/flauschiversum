@@ -21,17 +21,6 @@
 {% block content %}
   <main class="page">
     {{post.html|safe}}
-    <div data-href="https://flauschiversum.de{{post.url}}" 
-         data-layout="standard" 
-         data-action="like" 
-         data-show-faces="true" 
-         data-share="true" 
-         class="fb-like">
-    </div>
-    <div data-href="https://flauschiversum.de{{post.url}}" 
-         data-numposts="5" 
-         class="fb-comments">
-    </div>
   </main>
 {% endblock %}
 

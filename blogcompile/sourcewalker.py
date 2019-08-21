@@ -1,11 +1,12 @@
 import os
 import re
-from .model import Article, Image
+from .model import Post, Page, Image
 
 CONTENT_MODELS = [
     (re.compile(regex), clazz)
     for regex, clazz in [
-        (r'.*\.md', Article),
+        (r'.*/posts/.*\.md', Post),
+        (r'.*/pages/.*\.md', Page),
         (r'.*\.jpg', Image),
         (r'.*\.JPG', Image)
     ]
