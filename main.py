@@ -1,13 +1,23 @@
+import os
 import argparse
-from blogcompile import sourcewalker, model, query, builder
+import settings
+from blogcompile import builder
 
 
 def main():
-    #for post in query.query_posts(sourcewalker.find_sources('src')):
-    #    print(repr(post))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dst", help="Path to destination of build.")
+    parser.add_argument("--cache", help="Path to image cache.")
+    args = parser.parse_args()
+
+    if args.cache:
+        settings.CACHE_PATH = os.path.abspath(args.cache)
+
+    if args.dst:
+        settings.BUILD_PATH = os.path.abspath(args.dst)
+
     builder.clean()
     builder.build()
-
 
 if __name__ == '__main__':
     main()
