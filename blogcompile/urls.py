@@ -21,14 +21,19 @@ def get_url_for_post(post):
 
 def get_url_for_image(img, width=None, height=None, prefix=''):
     """ Creates an url to a resized version of the image which is not bigger than width x height """
-    if img.post:
+    if hasattr(img, 'post') and img.post:
         prefix = get_url_for_post(img.post)
 
-    if width and height:
-        return os.path.join(prefix, '{}x{}'.format(width, height), img.basename)
-    elif width:
-        return os.path.join(prefix, '{}x'.format(width), img.basename)
-    elif height:
-        return os.path.join(prefix, 'x{}'.format(height), img.basename)
+    if isinstance(img, Image):
+        basename = img.basename
     else:
-        return os.path.join(prefix, img.basename)
+        basename = str(img)
+
+    if width and height:
+        return os.path.join(prefix, '{}x{}'.format(width, height), basename)
+    elif width:
+        return os.path.join(prefix, '{}x'.format(width), basename)
+    elif height:
+        return os.path.join(prefix, 'x{}'.format(height), basename)
+    else:
+        return os.path.join(prefix, basename)

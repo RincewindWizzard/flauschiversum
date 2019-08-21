@@ -9,6 +9,7 @@ import io
 import sys
 import hashlib
 from . import cache
+from . import markdown_slideshow
 
 
 class AbstractContentObject(object):
@@ -121,6 +122,11 @@ class Post(Article):
     def thumb(self):
         if self.meta.get('image'):
             return Image(os.path.join(os.path.dirname(self.path), self.meta.get('image')))
+
+    @property
+    @lru_cache(maxsize=None)
+    def html(self):
+        return markdown_slideshow.convert(self.markdown)
 
 
 class Page(Article):
