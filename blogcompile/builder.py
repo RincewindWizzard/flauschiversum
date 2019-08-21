@@ -18,7 +18,7 @@ def build():
     copy_static()
 
     dataset = list(sourcewalker.find_sources('src'))
-    view_list = [ views.style, views.render_post, views.render_post_index, views.render_image ]
+    view_list = [ views.style, views.render_pages, views.render_post, views.render_post_index, views.render_image ]
 
     for view in view_list:
         for url, content in view(dataset):

@@ -1,2 +1,15 @@
-{% extends "./layout.jade" %}{% block header %}{{super()}}
-<h2>{{title|escape}}</h2>{% endblock %}{% block title %}{{title|escape}}{% endblock %}
+{% extends "./layout.html" %}
+{% block title %}{{title|escape}}{% endblock %}
+
+{% block header %}
+  {{super()}}
+  <div class="post-header">
+    <h2>{{title|escape}}</h2>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <main class="page">
+    {{page.html|safe}}
+  </main>
+{% endblock %}

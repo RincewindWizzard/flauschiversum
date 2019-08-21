@@ -11,6 +11,9 @@ from slugify import slugify
 import settings
 
 class Slideshow(Treeprocessor, Extension):
+  """
+  If multiple images in a row a found, we create a dom structure for our slideshow javascript library
+  """
   def extendMarkdown(self, md, md_globals):
     self.md = md
     md.treeprocessors.add('slideshow', self, '>inline')

@@ -4,7 +4,7 @@ import os
 import subprocess
 import settings
 from blogcompile.query import query_images, query_pages, query_posts, filtered_dataset, pagination, only_once
-from blogcompile.urls import get_url_for_post, get_url_for_pagination
+from blogcompile.urls import get_url_for_post, get_url_for_pagination, get_url_for
 from datetime import datetime
 from . import urls
 import PIL
@@ -43,3 +43,7 @@ def render_image(img):
 def style():
     return ('/style.css',
             subprocess.run(['lessc', os.path.join(settings.STYLE_PATH, 'main.less')], stdout=subprocess.PIPE).stdout)
+
+@filtered_dataset(query_pages)
+def render_pages(page):
+    return (get_url_for(page), env.get_template('page.html').render(page=page, title=page.title).encode('utf-8'))
