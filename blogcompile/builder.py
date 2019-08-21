@@ -8,19 +8,23 @@ def clean():
         shutil.rmtree(settings.BUILD_PATH)
 
 def build():
-    dataset = sourcewalker.find_sources('src')
+    dataset = list(sourcewalker.find_sources('src'))
     view_list = [ views.render_post, views.render_post_index ]
 
     for view in view_list:
         for url, content in view(dataset):
             export(url, content)
 
+    # compile lesscss to normal css
     export(*views.style())
 
     copy_static()
 
 def export(url, content):
     dst = os.path.join(settings.BUILD_PATH, url.lstrip('/'))
+    if dst[-1] == '/':
+        dst = os.path.join(dst, 'index.html')
+
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     with open(dst, 'wb') as f:
         f.write(content)

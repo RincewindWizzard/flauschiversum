@@ -4,3 +4,5 @@ CONTENT_PATH = os.path.join(REPO_DIR, 'src')
 STATIC_PATH = os.path.join(REPO_DIR, 'static')
 STYLE_PATH = os.path.join(REPO_DIR, 'style')
 BUILD_PATH = os.path.join(REPO_DIR, 'build')
+
+PAGINATION_SIZE = 5

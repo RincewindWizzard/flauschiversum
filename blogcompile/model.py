@@ -2,6 +2,7 @@ from markdown import Markdown
 import frontmatter
 import os.path
 from functools import lru_cache
+from datetime import datetime, date
 
 
 class AbstractContentObject(object):
@@ -22,6 +23,11 @@ class AbstractContentObject(object):
     @property
     def path(self):
         return self._path
+
+    @property
+    def url(self):
+        from .urls import get_url_for
+        return get_url_for(self)
 
     @property
     @lru_cache(maxsize=None)
@@ -45,10 +51,6 @@ class Article(AbstractContentObject):
         return self.meta.get('title')
 
     @property
-    def date(self):
-        return self.meta.get('date')
-
-    @property
     @lru_cache(maxsize=None)
     def meta(self):
         """
@@ -68,7 +70,31 @@ class Article(AbstractContentObject):
         return markdown.convert(self.markdown)
 
 class Post(Article):
-    ...
+    @property
+    def date(self):
+        dt = self.meta.get('date')
+        if isinstance(dt, date):
+            return datetime(dt.year, dt.month, dt.day)
+        else:
+            return dt
+
+    @property
+    def published(self):
+        return self.date.today() >= self.date
+
+    @property
+    def datestring(self):
+        months = [
+            'Januar', 'Februar', 'März', 'April',
+            'Mai', 'Juni', 'Juli', 'August',
+            'September', 'Oktober', 'November', 'Dezember'
+        ]
+        return '{}. {} {}'.format(self.date.day, months[self.date.month - 1], self.date.year)
+
+
+    @property
+    def excerpt(self):
+        return self.meta.get('excerpt')
 
 class Page(Article):
     ...

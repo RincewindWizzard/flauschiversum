@@ -1,14 +1,14 @@
 import unittest
 from blogcompile.model import Post, Page, Image
 from blogcompile import query
-from blogcompile.query import query_images, query_pages, query_posts, paginate, filtered_dataset
+from blogcompile.query import query_images, query_pages, query_posts, paginate, filtered_dataset, pagination
 
 @filtered_dataset(query_posts)
 def print_post(post):
     return post.path[-1]
 
-@filtered_dataset(query_images, 3)
-def paginated_images(index, imgs):
+@pagination(query_images, pagesize=3)
+def paginated_images(index, imgs, pagecount):
     return [ img.path[-1] for img in imgs ]
 
 class QueryTest(unittest.TestCase):
