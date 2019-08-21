@@ -5,10 +5,10 @@ from .model import Post, Page, Image
 CONTENT_MODELS = [
     (re.compile(regex), clazz)
     for regex, clazz in [
-        (r'.*/posts/.*\.md', Post),
-        (r'.*/pages/.*\.md', Page),
-        (r'.*\.jpg', Image),
-        (r'.*\.JPG', Image)
+        (r'.*/posts/.*\.md$', Post),
+        (r'.*/pages/.*\.md$', Page),
+        (r'.*\.jpg$', Image),
+        (r'.*\.JPG$', Image)
     ]
 ]
 

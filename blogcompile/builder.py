@@ -4,20 +4,28 @@ import os
 from . import sourcewalker, query, views
 
 def clean():
+    # clears the build folder
     if os.path.isdir(settings.BUILD_PATH):
-        shutil.rmtree(settings.BUILD_PATH)
+        for basename in os.listdir(settings.BUILD_PATH):
+            dst = os.path.join(settings.BUILD_PATH, basename)
+            if os.path.isfile(dst):
+                os.remove(dst)
+            else:
+                shutil.rmtree(dst)
 
 def build():
+    # for performance purposes do static copy before
+    copy_static()
+
     dataset = list(sourcewalker.find_sources('src'))
-    view_list = [ views.render_post, views.render_post_index ]
+    view_list = [ views.style, views.render_post, views.render_post_index, views.render_image ]
 
     for view in view_list:
         for url, content in view(dataset):
+            print(url)
             export(url, content)
 
-    # compile lesscss to normal css
-    export(*views.style())
-
+    # and after, so we are sure nothing has been overwritten
     copy_static()
 
 def export(url, content):

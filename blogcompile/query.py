@@ -1,6 +1,7 @@
 from functools import lru_cache
 from .model import Post, Page, Image
 from . import urls
+import types
 
 """
 This module contains all queries to the dataset of Post, Pages and Images.
@@ -33,7 +34,12 @@ def filtered_dataset(filter_func):
         def apply(dataset):
             for doc in dataset:
                 if filter_func(doc):
-                    yield func(doc)
+                    result = func(doc)
+                    if isinstance(result, types.GeneratorType):
+                        for e in result:
+                            yield e
+                    else:
+                        yield func(doc)
         return apply
     return decorator
 
@@ -61,3 +67,8 @@ def pagination(filter_func, sort_key=None, reverse=False, pagesize=1):
 
         return apply
     return decorator
+
+def only_once(func):
+    def apply(dataset):
+        yield func()
+    return apply

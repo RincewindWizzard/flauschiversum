@@ -3,6 +3,12 @@ import frontmatter
 import os.path
 from functools import lru_cache
 from datetime import datetime, date
+from PIL import Image as PImage
+import settings
+import io
+import sys
+import hashlib
+from . import cache
 
 
 class AbstractContentObject(object):
@@ -25,14 +31,23 @@ class AbstractContentObject(object):
         return self._path
 
     @property
+    def basename(self):
+        return os.path.basename(self.path)
+
+    @property
     def url(self):
         from .urls import get_url_for
         return get_url_for(self)
 
     @property
     @lru_cache(maxsize=None)
+    def sha256sum(self):
+        return hashlib.sha256(self.content).hexdigest()
+
+    @property
+    @lru_cache(maxsize=None)
     def content(self):
-        with open(self.path) as f:
+        with open(self.path, 'rb') as f:
             return f.read()
 
     def __repr__(self):
@@ -69,8 +84,10 @@ class Article(AbstractContentObject):
     def html(self):
         return markdown.convert(self.markdown)
 
+
 class Post(Article):
     @property
+    @lru_cache(maxsize=None)
     def date(self):
         dt = self.meta.get('date')
         if isinstance(dt, date):
@@ -79,10 +96,12 @@ class Post(Article):
             return dt
 
     @property
+    @lru_cache(maxsize=None)
     def published(self):
         return self.date.today() >= self.date
 
     @property
+    @lru_cache(maxsize=None)
     def datestring(self):
         months = [
             'Januar', 'Februar', 'März', 'April',
@@ -93,14 +112,78 @@ class Post(Article):
 
 
     @property
+    @lru_cache(maxsize=None)
     def excerpt(self):
         return self.meta.get('excerpt')
+
+    @property
+    @lru_cache(maxsize=None)
+    def thumb(self):
+        if self.meta.get('image'):
+            return Image(os.path.join(os.path.dirname(self.path), self.meta.get('image')))
+
 
 class Page(Article):
     ...
 
+
 class Image(AbstractContentObject):
-    ...
+    def __init__(self, path):
+        super().__init__(path)
+
+        self._small, self._medium, self._large = cache.retrieve_image(self)
+
+    @property
+    def post(self):
+        """
+        Image can be contained in a blog post.
+        If that is the case this method returns the parent post.
+        :return: parent post if present
+        """
+        post_path = os.path.join(os.path.dirname(self.path), 'index.md')
+        if os.path.isfile(post_path):
+            return Post(post_path)
+        return None
+
+    @property
+    @lru_cache(maxsize=None)
+    def small(self):
+        if self._small:
+            return self._small
+        else:
+            cache.store_image(self)
+            return self.thumbnail(settings.IMAGE_SMALL_WIDTH)
+
+    @property
+    @lru_cache(maxsize=None)
+    def medium(self):
+        if self._medium:
+            return self._medium
+        else:
+            cache.store_image(self)
+            return self.thumbnail(settings.IMAGE_MEDIUM_WIDTH)
+
+    @property
+    @lru_cache(maxsize=None)
+    def large(self):
+        if self._large:
+            return self._large
+        else:
+            cache.store_image(self)
+            return self.thumbnail(settings.IMAGE_LARGE_WIDTH)
+
+    def thumbnail(self, width=200, height=sys.maxsize):
+        img = PImage.open(self.path)
+
+        overlay = PImage.open(settings.OVERLAY_IMG)
+        overlay.thumbnail(img.size, PImage.ANTIALIAS)
+
+        img.paste(overlay, (img.size[0] - overlay.size[0], img.size[1] - overlay.size[1]), overlay)
+        img.thumbnail((width, height), PImage.ANTIALIAS)
+
+        f = io.BytesIO()
+        img.save(f, format='JPEG')
+        return f.getvalue()
 
 
 markdown = Markdown()
