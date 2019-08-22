@@ -8,7 +8,7 @@ volumes:
 services:
   flauschiversum-build:
     build: docker
-    container_name: build
+    container_name: flauschiversum-build
     volumes:
       - flauschiversum-www:/var/www/flauschiversum/
       - flauschiversum-cache:/var/share/flauschiversum-cache/
@@ -16,7 +16,7 @@ services:
 
   flauschiversum:
     image: nginx
-    container_name: nginx
+    container_name: flauschiversum-nginx
     restart: always
     volumes:
       - flauschiversum-www:/var/www/html/
