@@ -1,6 +1,4 @@
-inotify
 Pillow
-flask
 htmlmin
 beautifulsoup4
 python-slugify
