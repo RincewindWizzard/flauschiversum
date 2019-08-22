@@ -33,6 +33,7 @@ services:
       - LETSENCRYPT_EMAIL=letsencrypt@magierdinge.de
 
   webhook:
+    container_name: flauschiversum-webhook
     restart: unless-stopped
     image: staticfloat/docker-webhook
     volumes:
