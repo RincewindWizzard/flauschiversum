@@ -1,5 +1,11 @@
 version: '3.7'
 
+networks:
+  default:
+    name: nginx_network
+    driver: bridge
+
+
 volumes:
   flauschiversum:
   flauschiversum-www:
