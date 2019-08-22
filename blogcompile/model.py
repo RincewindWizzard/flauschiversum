@@ -128,7 +128,8 @@ class Post(Article):
     @lru_cache(maxsize=None)
     def thumb(self):
         if self.meta.get('image'):
-            return Image(os.path.join(os.path.dirname(self.path), self.meta.get('image')))
+            from .urls import get_url_for_image
+            return get_url_for_image(Image(os.path.join(os.path.dirname(self.path), self.meta.get('image'))), width=settings.IMAGE_SMALL_WIDTH)
 
     @property
     @lru_cache(maxsize=None)
