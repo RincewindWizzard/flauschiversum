@@ -26,4 +26,7 @@ Dies ist der Inhalt in die Software, die das Flauschiversum bereitstellt.
 - test Hier liegen ein paar Tests (hauptsächlich unwichtiges gefrickel)
 - main.py Hiermit wird der Blog compiler gestartet
 - settings.py Globale Einstellungen
+
+## Webhook
+Ziel ist es, automatisch neu zu bauen, wenn es einen push auf das Repo gibt.
     
