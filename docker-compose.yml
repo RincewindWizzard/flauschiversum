@@ -8,8 +8,20 @@ volumes:
 services:
   flauschiversum-build:
     build: docker
-    container_name: flauschiversum-build
+    container_name: build
     volumes:
       - flauschiversum-www:/var/www/flauschiversum/
       - flauschiversum-cache:/var/share/flauschiversum-cache/
       - flauschiversum:/var/share/flauschiversum/
+
+  flauschiversum:
+    image: nginx
+    container_name: nginx
+    restart: always
+    volumes:
+      - flauschiversum-www:/var/www/html/
+    environment:
+      - VIRTUAL_PORT=80
+      - VIRTUAL_HOST=flauschiversum.de
+      - LETSENCRYPT_HOST=flauschiversum.de
+      - LETSENCRYPT_EMAIL=letsencrypt@magierdinge.de
