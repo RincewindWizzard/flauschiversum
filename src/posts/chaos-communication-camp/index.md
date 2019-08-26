@@ -13,7 +13,10 @@ Alles geht jetzt schneller, besser und bald gibt es vielleicht sogar ein neues D
 
 Damit ihr auch was davon habt, habe ich ein paar Fotos vom Camp gemacht.
 
+
 ![Fairy Dust](fairy_dust.jpg)
 ![Discokugel im Wald](IMG_20190821_234728.jpg)
 ![Panorama](IMG_20190821_230830.jpg)
 ![Lasershow](IMG_20190821_232415.jpg)
+
+Viele Grüße an alle Leser!
