@@ -1,10 +1,12 @@
 {% extends "./layout.html" %}
 {% block header %}
-  {{ super() }}
-  <div class="center">
-    Von <a href="/autoren.html" style="margin-left: 0.3em;">Ermeline Wollknoll</a>
-  </div>
-  <div class="category-images">
+    {{ super() }}
+    <div class="center">
+        Von <a href="/autoren.html" style="margin-left: 0.3em;">Ermeline Wollknoll</a>
+    </div>
+
+    {#
+    <div class="category-images">
     {% if  (not category and pagenum == 0) or category == 'basteln' %}
       <a href="#">
         <h2>Basteln</h2>
@@ -44,36 +46,37 @@
       </a>
     {% endif %}
   </div>
+  #}
 {% endblock %}
 
 {% block content %}
-  <main id="index">
-    {% include "./lib/pagination.html" %}
-    {% for post in posts %}
-      {% if post.published %} 
-        <div class="center">
-          <article>
-            <header>
-              <p class="date"><span class="date">{{ post.datestring }}</span></p>
-              <a href="{{ post.url }}">
-                <h2>{{ post.title }}</h2>
-              </a>
-            </header>
-            <div class="center">
-              {% if  post.thumb %}
-                <a href="{{ post.url }}" class="post-image">
-                  <img src="{{ post.thumb }}" class="post-image"/>
-                </a>
-              {% endif %}
-              <p class="excerpt">
-                {{ post.excerpt }}
-                <a href="{{ post.url }}" class="more">weiterlesen</a>
-              </p>
-            </div>
-          </article>
-        </div>
-      {% endif %}
-    {% endfor %}
-    {% include "./lib/pagination.html" %}
-  </main>
+    <main id="index">
+        {% include "./lib/pagination.html" %}
+        {% for post in posts %}
+            {% if post.published %}
+                <div class="center">
+                    <article>
+                        <header>
+                            <p class="date"><span class="date">{{ post.datestring }}</span></p>
+                            <a href="{{ post.url }}">
+                                <h2>{{ post.title }}</h2>
+                            </a>
+                        </header>
+                        <div class="center">
+                            {% if  post.thumb %}
+                                <a href="{{ post.url }}" class="post-image">
+                                    <img src="{{ post.thumb }}" class="post-image"/>
+                                </a>
+                            {% endif %}
+                            <p class="excerpt">
+                                {{ post.excerpt }}
+                                <a href="{{ post.url }}" class="more">weiterlesen</a>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% include "./lib/pagination.html" %}
+    </main>
 {% endblock %}

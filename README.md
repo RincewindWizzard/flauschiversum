@@ -16,7 +16,7 @@ Dies ist der Inhalt in die Software, die das Flauschiversum bereitstellt.
     - posts Alle Posts liegen hier als Markdown Dokumente vor zusammen mit ihren Bildern.
     - static Diese Daten werden unbearbeitet in die Webseite übernommen
     - style Hier liegen die CSS Dateien im LessCSS Syntax vor, wird alles nach style.css exportiert.
-- templates
+- templates Werden in [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) geschrieben
     - lib
         - pagination.html Zuständig für das Blättern in Index Seiten
     - layout.html Das grundlegende Layout der Seite. Alles was hier drin steht ist überall zu sehen.

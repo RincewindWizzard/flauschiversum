@@ -19,4 +19,3 @@ Damit ihr auch was davon habt, habe ich ein paar Fotos vom Camp gemacht.
 ![Panorama](IMG_20190821_230830.jpg)
 ![Lasershow](IMG_20190821_232415.jpg)
 
-Viele Grüße an alle Leser!
