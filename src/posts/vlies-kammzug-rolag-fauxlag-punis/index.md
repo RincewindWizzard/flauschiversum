@@ -52,7 +52,7 @@ Ist einem das Band noch zu dick, kann es mittels Ziehen durch ein kleineres Loch
 
 Achtet darauf, dass nicht zu viel Kraft aufgewandt wird, da diese Hilfsmittel meißt aus Plastik sind und leicht brechen könnten wenn man zu dicke Wollbänder hindurchziehen will. Ändert lieber langsam die Lochgröße und dünnt es dafür öfter aus.
 
-![Ich mach mein Band nun dünner indem ich es komplett durch das Loch ziehe](_1210890.jpg)
+![Ich mach mein Band nun dünner indem ich es komplett durch das Loch ziehe](_1210518.jpg)
 ![ist gleich viel länger geworden](_1210514.jpg)
 
 
@@ -89,7 +89,7 @@ Die eingeklemmten Fasern sollte man nun etwas ausziehen und wieder aufwickeln, i
 
 Nun zieht man die erste Nadel heraus, halte dabei den Rolag noch mit der anderen Nadel zusammen fest. Ziehst du beide Nadeln gleichzeitig heraus, ziehst du unter Umständen den Rolag auseinander und er reißt eventuell.
 
-![erste Nadel ziehen](P1220505,jpg)
+![erste Nadel ziehen](P1220505.jpg)
 ![zweite Nadel raus](P1220507.jpg)
 ![fertig](P1220514.jpg)
 ![es werden mehr](P1220520.jpg)
@@ -117,7 +117,7 @@ Ich lasse beim Mischen die Einzugsrolle aus und halte die Kammzüge direkt auf d
 Nun wickelt man die Rolags wie auch schon beschrieben beim Rolagsdrehen aus dem Vlies. Nur wird hier mehr darauf geachtet, sich immer nur ein Paar Fasern auszuziehen und diese aufzuwickeln. Ich selbst finde es noch etwas frickelig mit den Daumen die Trommel zu fixieren, während ich mit den anderen Fingern die Nadeln halte, Fasern ausziehe und wickle. Aber Übung macht auch hier den Meister oder ein Helferlein das die Trommel fixiert.
 
 ![Rolag am Gerät](P1220535.jpg)
-![abgezogen mit Faserenden](P1220539.jpg)
+![abgezogen mit Faserenden](P1220537.jpg)
 ![Fasern an den Rolag drücken](P1220538.jpg)
 ![Nadeln raus und fertig](P1220541.jpg)
 

@@ -7,11 +7,11 @@ image: "heisse-vampirbisse_thumb.jpg"
 excerpt: "Ein Schal mit Biss für Vampirfans."
 ---
 
-Ein Schal mit Biss für Vampirfans. Hmm wie kam es zur Idee für diesen Schal. Ich wachte am 1.1.2019 auf und musste am meine [Monsterschals]() denken und dass ich es schade finde, diese wegegeben zu haben. Joa aber wieder einenn Monsterschal wollte ich nicht, ich mache ja nur Unikate. Dann habe ich überlegt was man denn noch mit dieser Schleimtechnik machen könnte und ich kam auf Blut... viel Blut und zu Blut passe Vampire, also stift und papier her und eine erste Skizze machen.
+Ein Schal mit Biss für Vampirfans. Hmm wie kam es zur Idee für diesen Schal. Ich wachte am 1.1.2019 auf und musste am meine [Monsterschals]() denken und dass ich es schade finde, diese wegegeben zu haben. Joa aber wieder einen Monsterschal wollte ich nicht, ich mache ja nur Unikate. Dann habe ich überlegt was man denn noch mit dieser Schleimtechnik machen könnte und ich kam auf Blut... viel Blut und zu Blut passen Vampire, also Stift und Papier her und eine erste Skizze machen.
 
 ![Skizze](P1210039.jpg)
 
-Die Skizze hat mich nun überzeugt, ob ich das so umgesetzt bekomme ist noch die andere Frage aber erstmal suchte ich die Wolle raus.
+Die Skizze hat mich nun überzeugt, ob ich das so umgesetzt bekomme, ist noch die andere Frage aber erstmal suchte ich die Wolle raus.
 
 ![Wollsuche](P1210038.jpg)
 
@@ -19,7 +19,7 @@ Daraus lässt sich doch was machen. Den Tapeziertisch habe ich auch schon vorber
 
 ![Mein Arbeitsplatz](P1210036.jpg)
 
-Dann ging es ans Auslegen de Wolle, praktischer Weise habe ich noch genug Wolle im Vließ gehabt um damit die Basis zu schaffen. Und so fing es dann an mit der Wollmalerei und dem Umsetzen der Vorlage.
+Dann ging es ans Auslegen der Wolle, praktischer Weise habe ich noch genug Wolle im Vließ gehabt um damit die Basis zu schaffen. Und so fing es dann an mit der Wollmalerei und dem Umsetzen der Vorlage.
 
 ![Frauenhaare 1](_1210050.jpg)
 ![Frauenhaare 2](_1210049.jpg)
@@ -76,7 +76,7 @@ Und langsam reibe ich doller.
 
 ![es schäumt](_1210100.jpg)
 
-Nachdem ich dann endlich beim Walken angekommen war und der Schal fertig gefilzt schien, habe ich ich ihn ausgespült und mit Essig neutralisiert und wieder gut ausgespült. Ganze zwölf Stunden habe ich gebraucht bis der Schal nun feucht vor mir lag. Abends habe ich noch die ersten Perlen befestigt. Über Nacht habe ich den Schal dann trocknen lassen um am nächsten tag die letzten Applikationen auf zu sticken und damit den Schal fertig zu stellen.
+Nachdem ich dann endlich beim Walken angekommen war und der Schal fertig gefilzt schien, habe ich ihn ausgespült und mit Essig neutralisiert und wieder gut ausgespült. Ganze zwölf Stunden habe ich gebraucht bis der Schal nun feucht vor mir lag. Abends habe ich noch die ersten Perlen befestigt. Über Nacht habe ich den Schal dann trocknen lassen um am nächsten Tag die letzten Applikationen aufzusticken und damit den Schal fertigzustellen.
 
 ![Blutstropfen an der Halsbisswunde](_1210110.jpg)
 
