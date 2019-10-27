@@ -7,7 +7,7 @@ image: "heisse-vampirbisse_thumb.jpg"
 excerpt: "Ein Schal mit Biss für Vampirfans."
 ---
 
-Ein Schal mit Biss für Vampirfans. Hmm wie kam es zur Idee für diesen Schal. Ich wachte am 1.1.2019 auf und musste am meine [Monsterschals]() denken und dass ich es schade finde, diese wegegeben zu haben. Joa aber wieder einen Monsterschal wollte ich nicht, ich mache ja nur Unikate. Dann habe ich überlegt was man denn noch mit dieser Schleimtechnik machen könnte und ich kam auf Blut... viel Blut und zu Blut passen Vampire, also Stift und Papier her und eine erste Skizze machen.
+Ein Schal mit Biss für Vampirfans. Hmm wie kam es zur Idee für diesen Schal. Ich wachte am 1.1.2019 auf und musste am meine [Monsterschals](/2015/02/kuschelmonster/) denken und dass ich es schade finde, diese wegegeben zu haben. Joa aber wieder einen Monsterschal wollte ich nicht, ich mache ja nur Unikate. Dann habe ich überlegt was man denn noch mit dieser Schleimtechnik machen könnte und ich kam auf Blut... viel Blut und zu Blut passen Vampire, also Stift und Papier her und eine erste Skizze machen.
 
 ![Skizze](P1210039.jpg)
 
