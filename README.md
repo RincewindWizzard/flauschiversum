@@ -1,6 +1,20 @@
 # Flauschiversum
 Dies ist der Inhalt in die Software, die das Flauschiversum bereitstellt.
 
+
+# Abhängigkeiten
+- nodejs
+- npm
+- [LessCss](http://lesscss.org/)
+
+
+    sudo apt-get -y install nodejs npm
+    npm install -g less
+
+Ausführen mit:
+
+    python3 main.py --dst build --cache .cache 
+
 ## Beschreibung der Ordner
 - blogcompile der Programmcode der die Quellen in deine HTML Seite übersetzt.
     - builder.py hier ist der Einstieg der alle anderen Knöpfe und Hebel betätigt.
