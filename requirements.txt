@@ -5,3 +5,4 @@ python-slugify
 python-frontmatter
 markdown
 jinja2
+requests
