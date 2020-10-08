@@ -1,13 +1,17 @@
+from feedgen.feed import FeedGenerator
 from jinja2 import Environment, FileSystemLoader
 from slugify import slugify
 import os
 import subprocess
 import settings
+from blogcompile.model import Post
 from blogcompile.query import query_images, query_pages, query_posts, filtered_dataset, pagination, only_once, query_static
 from blogcompile.urls import get_url_for_post, get_url_for_pagination, get_url_for
 from datetime import datetime
 from . import urls
 import PIL
+from settings import BLOG_NAME, BLOG_URL, BLOG_DESCRIPTION
+
 
 env = Environment(loader=FileSystemLoader('templates'))
 
@@ -52,3 +56,26 @@ def style():
 @filtered_dataset(query_static)
 def static(static_file):
     return (get_url_for(static_file), static_file.content)
+
+
+def render_rss(dataset):
+    posts = [ post for post in dataset if isinstance(post, Post)]
+
+    fg = FeedGenerator()
+
+    fg.title(BLOG_NAME)
+    fg.link(href=BLOG_URL)
+    fg.description(BLOG_DESCRIPTION)
+
+    for post in posts:
+        post_url = BLOG_URL + get_url_for_post(post)[1:]
+        fe = fg.add_entry()
+        fe.id(post_url)
+        fe.title(post.title)
+        fe.description(post.excerpt)
+        fe.link(href=post_url)
+
+    return [(
+        '/rss.xml',
+        fg.rss_str(pretty=True)
+    )]

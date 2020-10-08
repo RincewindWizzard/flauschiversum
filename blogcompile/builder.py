@@ -17,7 +17,7 @@ def build():
     os.makedirs(settings.BUILD_PATH, exist_ok=True)
 
     dataset = list(sourcewalker.find_sources('src'))
-    view_list = [ views.static, views.style, views.render_pages, views.render_post, views.render_post_index, views.render_image ]
+    view_list = [ views.static, views.style, views.render_pages, views.render_post, views.render_post_index, views.render_rss, views.render_image ]
 
     for view in view_list:
         for url, content in view(dataset):

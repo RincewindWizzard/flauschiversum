@@ -17,7 +17,10 @@ def execute(query, dataset):
     return [ doc for doc in dataset if query(doc)]
 
 def paginate(dataset, pagesize):
-    return [dataset[i:i + pagesize] for i in range(0, len(dataset), pagesize)]
+    if pagesize == 0 or pagesize == None:
+        return dataset
+    else:
+        return [dataset[i:i + pagesize] for i in range(0, len(dataset), pagesize)]
 
 
 query_posts = query_by_class(Post)

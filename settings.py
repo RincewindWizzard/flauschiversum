@@ -11,3 +11,8 @@ OVERLAY_IMG = os.path.join(STATIC_PATH, 'images/Wasserzeichen.png')
 IMAGE_SMALL_WIDTH = 200
 IMAGE_MEDIUM_WIDTH = 700
 IMAGE_LARGE_WIDTH = 1000
+
+
+BLOG_URL = 'https://flauschiversum.de/'
+BLOG_NAME = 'Flauschiversum'
+BLOG_DESCRIPTION = 'Mehr als nur eine Masche'
