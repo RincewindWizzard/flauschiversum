@@ -1,0 +1,13 @@
+Host git.magierdinge.de
+ HostName git.magierdinge.de
+ Port 22
+ User git
+ CheckHostIP no
+ IdentityFile /root/.ssh/git-deploy
+
+Host dfl-server.magierdinge.de
+ HostName dfl-server.magierdinge.de
+ Port 22
+ User www-data
+ CheckHostIP no
+ IdentityFile /root/.ssh/git-deploy

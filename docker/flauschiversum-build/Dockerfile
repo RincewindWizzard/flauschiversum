@@ -1,10 +1,12 @@
 FROM python:alpine3.7
-RUN apk add --update zlib-dev jpeg-dev nodejs-npm nodejs git make openssh
- RUN apk add --no-cache --virtual .build-deps build-base linux-headers
+RUN apk add --update zlib-dev jpeg-dev nodejs-npm nodejs git make openssh libxml2 libxslt-dev rsync bash
+RUN apk add --no-cache --virtual .build-deps build-base linux-headers
 RUN pip3 install pip --upgrade
-RUN pip3 install Pillow htmlmin beautifulsoup4 python-slugify python-frontmatter markdown jinja2
+RUN pip3 install Pillow htmlmin beautifulsoup4 python-slugify python-frontmatter markdown jinja2 feedgen
 RUN npm install -g less
+RUN ssh-keygen -t ed25519 -f /root/.ssh/git-deploy -N "" -C "git-deploy@flauschiversum.de"
 
+ADD update.sh /update.sh
+ADD ssh_config /root/.ssh/config
 WORKDIR /var/share/flauschiversum
-
-CMD (git pull  || git clone --depth 1 https://gitlab.magierdinge.de/nadja/flauschiversum.git /var/share/flauschiversum/) && python main.py --dst /var/www/flauschiversum/ --cache /var/share/flauschiversum-cache/
+CMD bash /update.sh
