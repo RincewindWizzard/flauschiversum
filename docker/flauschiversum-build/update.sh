@@ -23,4 +23,4 @@ git clone --depth 1 $GIT_REMOTE $REPO_PATH && \
 python main.py --dst $WWW_PATH  --cache $CACHE_PATH
 
 # deploy to dfl-server
-rsync -avze ssh /var/www/flauschiversum/ dfl-server.magierdinge.de:/zfs/flauschiversum/
+rsync --delete -avze ssh /var/www/flauschiversum/ dfl-server.magierdinge.de:/zfs/flauschiversum/
