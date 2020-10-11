@@ -16,6 +16,7 @@ Ausführen mit:
     python3 main.py --dst build --cache .cache 
 
 ## Beschreibung der Ordner
+- docker Hier befinden sich Informationen für das Deployment und wie man das Projekt kompiliert
 - blogcompile der Programmcode der die Quellen in deine HTML Seite übersetzt.
     - builder.py hier ist der Einstieg der alle anderen Knöpfe und Hebel betätigt.
     - sourcewalker.py der Source Walker durchsucht das src/ Verzeichnis und erzeug die Model Objekte
@@ -41,3 +42,23 @@ Ausführen mit:
 - main.py Hiermit wird der Blog compiler gestartet
 - settings.py Globale Einstellungen
     
+## Deployment
+Man baut den flauschiversum-deploy container:
+
+    cd docker/flauschiversum-deploy
+    docker build -t flauschiversum-deploy
+    docker run -ti flauschiversum-deploy
+    
+Beim ersten Start wird der neu erzeugte öffentliche SSH-Deploy-Key angezeigt.
+Dieser muss auf dem Repository Host für den user git und dem Deployment Server für den User www-data hinterlegt werden.
+Die öffentlichen Fingerprints der Hosts müssen akzeptiert werden.
+
+Danach legt man auf dem Build Host eine Datei _/opt/flauschiversum-deploy_ mit folgendem Inhalt an:
+
+    #!/bin/bash
+    docker start flauschiversum-deploy
+
+Diese wird nun über visudo für den Benutzer git freigegeben:
+
+    visudo
+    git     ALL = NOPASSWD: /opt/flauschiversum-deploy
