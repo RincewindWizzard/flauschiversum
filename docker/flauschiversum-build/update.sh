@@ -5,6 +5,8 @@ CACHE_PATH="/var/share/flauschiversum-cache/"
 WWW_PATH="/var/www/flauschiversum/"
 FIRST_RUN_PATH="/root/.update.lock"
 
+chmod -R 600 /root/.ssh/
+
 if [[ ! -f "$FIRST_RUN_PATH" ]]; then
     echo "Downloading the latest version of the flauschiversum sources using following key:"
     cat /root/.ssh/git-deploy.pub
