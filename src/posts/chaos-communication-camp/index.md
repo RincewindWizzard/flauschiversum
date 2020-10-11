@@ -13,6 +13,8 @@ Alles geht jetzt schneller, besser und bald gibt es vielleicht sogar ein neues D
 
 Damit ihr auch was davon habt, habe ich ein paar Fotos vom Camp gemacht.
 
+Addendum 2020-10-11: Ein Jahr später gibt es auch eine automatische CI/CD Pipeline. // TODO: Instagram einbinden
+
 
 ![Fairy Dust](fairy_dust.jpg)
 ![Discokugel im Wald](IMG_20190821_234728.jpg)
