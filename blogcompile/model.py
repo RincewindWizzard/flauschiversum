@@ -91,6 +91,10 @@ class Article(AbstractContentObject):
 
 
 class Post(Article):
+    @property
+    def author(self):
+        return self.meta.get('author')
+
     """
     For everything that is considered a blog post.
     """
