@@ -11,7 +11,7 @@ Das war mal ein Monsterprojekt, das nicht nach einem solchen aussieht. Ein weite
 selbstgemischten und gesponnenen Garn. Ich will hier heute mal einen kompletten Prozess vom Wollemischen bis zum fertigen Tuch zeigen. Aber fangen wir am Anfang an.
 
 Angefangen hat alles damit, dass ich wieder Lust hatte Wolle mit meinem Kardiertier zu mischen und mir einen Kammzug mit 
-einem schönen Farbverlauf zu gestalten. Wie man das macht habe ich in meinem Beitrag über die verschiedenen [Vorbereitungen
+einem schönen Farbverlauf zu gestalten. Wie man das macht, habe ich in meinem Beitrag über die verschiedenen [Vorbereitungen
 zum Spinnen](https://flauschiversum.de/2019/03/vlies-kammzug-rolag-fauxlag-punis/) beschrieben.
 
 ![gemischt auf dem Kardiergerät](IMG_20190122_111720.jpg)
@@ -20,8 +20,8 @@ zum Spinnen](https://flauschiversum.de/2019/03/vlies-kammzug-rolag-fauxlag-punis
 Die Farben haben mir Appetit auf mehr gemacht und ich habe an diesem Tag noch einige Farbverläufe gemischt, davon aber 
 in einem anderen Beitrag mehr. Aber diese grün-blaue Mischung hat mich angeregt sie direkt zu verspinnen. Also habe ich 
 mir mein Rädchen genommen und innerhalb kürzester Zeit (etwa 3 Tage) den gasamten Kammzug versponnen und fertig verzwirnt.
-Diesmal habe ich auch ewas experimentiert mit verschiedenen Spinntechniken, so ist hier ein leichtes Flammengarn entstanden.
-Ein Flammengarn ist ein grundsätzlich dünn gesponennenes Garn welches jedoch mit dickeren Stellen versehen wird. Beim Verzwirnen 
+Diesmal habe ich auch etwas experimentiert mit verschiedenen Spinntechniken, so ist hier ein leichtes Flammengarn entstanden.
+Ein Flammengarn ist ein grundsätzlich dünn gesponnenenes Garn welches jedoch mit dickeren Stellen versehen wird. Beim Verzwirnen 
 ergeben sich dadurch kleine "Flämmchen" mit deren Ausprägung man auch gut variieren kann.
 
 Hier sind nun die verschiedenen Fortschritte vom Spinnen.
@@ -30,8 +30,8 @@ Hier sind nun die verschiedenen Fortschritte vom Spinnen.
 ![Inselurlaub 2](_1220036.jpg)
 ![Inselurlaub 3](_1220039.jpg)
 
-Meine spule war von dem Single schon gut gefüllt und obwohl ich weiß, dass beim Verzwirnen das Volumen nochmal wächst,
-habe ich bis zum anschlag die Spule gefüllt. Verzwirnt habe ich dann mit einem weißen Nähgern und einem türkiesen 
+Meine Spule war von dem Single schon gut gefüllt und obwohl ich weiß, dass beim Verzwirnen das Volumen nochmal wächst,
+habe ich bis zum Anschlag die Spule gefüllt. Verzwirnt habe ich dann mit einem weißen Nähgarn und einem türkisen 
 Glitzerfaden, der sich sehr gut mit den Farben der Wolle ergänzt. 
 
 ![Glitzerfaden](_1220054.jpg)
@@ -41,16 +41,16 @@ Auf dem Nähgarn habe ich zusätzlich Perlen aufgezogen, die ich mit verzwirnt h
 ![Perlen auf dem Nähgarn](_1220053.jpg)
 
 So konnte ich meine vermischten Perlen mal 
-minimieren und mein garn wird immer mehr zum Experiment und fordert mich auf vielen Ebenen zum Improvisieren heraus. Da
+minimieren und mein Garn wird immer mehr zum Experiment und fordert mich auf vielen Ebenen zum Improvisieren heraus. Da
 es ein langes Garn ist und ich dementsprechend viele Perlen hatte, musste ich für den Verzwirnvorgang dafür sorgen, dass 
-die perlen nicht direkt am anfang mit in das rad laufen und ich immer gezielt meine Perlen über das garn verteilen kann. 
-Mein Himmelbett bietet sich da dann immer gut an, ich hängte die Perlenschnur über eine der stangen und so rutschten die 
-Perlen am faden herunter und ich konnte wie gewohnt verzwirnen und mit dem Vorrat aus meiner Hand gezielt perlen platzieren.
+die Perlen nicht direkt am Anfang mit in das Rad laufen und ich immer gezielt meine Perlen über das Garn verteilen kann. 
+Mein Himmelbett bietet sich da dann immer gut an, ich hängte die Perlenschnur über eine der Stangen und so rutschten die 
+Perlen am Faden herunter und ich konnte wie gewohnt verzwirnen und mit dem Vorrat aus meiner Hand gezielt Perlen platzieren.
 
 ![Single auf meiner LazyKate](_1220046.jpg)
 ![schlummernde Shubia neben mir](_1220055.jpg)
 
-Und so füllt sich Stück für Stück die Nächste Spule und leert sich die andere.
+Und so füllt sich Stück für Stück die nächste Spule und leert sich die andere.
 
 ![Dunkelblau](_1220040.jpg)
 ![gleich läuft ein oben beschriebenes Flämmchen auf die Spule](_1220043.jpg)
@@ -121,9 +121,9 @@ Und zum Schluss ein paar Detailfotos.
 ![Zacken](P1220612.jpg)
 ![Seite](P1220603.jpg)
 
-Es ist so flauschig und ich kann nun immer etwas Inselurlaub mit mir herumtragen. Warum beschreibe ich das ganze hier?
+Es ist so flauschig und ich kann nun immer etwas Inselurlaub mit mir herumtragen. Warum beschreibe ich das Ganze hier?
 Ich möchte gerne ein Bewusstsein dafür schaffen, wieviel Arbeit in manchen unscheinbaren Werken steckt. Ich nehme deshalb 
-selbst keine Aufträge für andere an, aber ich freue mich immer, wenn jemand von meinem Wissen profitiert und ich evtl neue 
+selbst keine Aufträge für andere an, aber ich freue mich immer, wenn jemand von meinem Wissen profitiert und ich eventuell neue 
 Inspiration bringen kann. 
 
 Einen kuschligen Sonntag wünscht euch eure Ermeline .
