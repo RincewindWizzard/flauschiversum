@@ -7,7 +7,12 @@ image: "kürbis_thumb.jpg"
 excerpt: "Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben."
 ---
 Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben. Da passt es doch ins Bild, dass mich wieder 
-die Muse geküsst hat und ich mir einen neunen orangen Freund geschnitzt habe. Ist stelle hier dann mal Dörte vor. 
+die Muse geküsst hat und ich mir einen neunen orangen Freund geschnitzt habe. 
+Wie ich ein Kürbisgesicht palne, habe ich gemeinsam mit Tomcat schon beschrieben in dem Beitrag 
+[Warum liegt denn hier Kürbis](/2014/10/warum-liegt-denn-hier-kurbis/)
+Ich stelle euch hier und heute dann mal Dörte vor. 
+
+
 
 ![Dörte](P1770019.JPG)
 
