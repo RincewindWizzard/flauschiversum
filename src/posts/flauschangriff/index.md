@@ -1,5 +1,5 @@
 ---
-title: "(F)Lauschangriff"
+title: "Flauschangriff"
 slug: "flauschangriff"
 category: filzen
 author: Ermeline
