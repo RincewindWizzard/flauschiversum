@@ -4,16 +4,16 @@ from slugify import slugify
 import os
 import subprocess
 import settings
-from blogcompile.model import Post
-from blogcompile.query import query_images, query_pages, query_posts, filtered_dataset, pagination, only_once, query_static
-from blogcompile.urls import get_url_for_post, get_url_for_pagination, get_url_for
+from .model import Post
+from .query import query_images, query_pages, query_posts, filtered_dataset, pagination, only_once, query_static
+from .urls import get_url_for_post, get_url_for_pagination, get_url_for
 from datetime import datetime
 from . import urls
 import PIL
 from settings import BLOG_NAME, BLOG_URL, BLOG_DESCRIPTION
 
 
-env = Environment(loader=FileSystemLoader('templates'))
+env = Environment(loader=FileSystemLoader(settings.TEMPLATE_PATH))
 
 
 @pagination(query_posts, sort_key=lambda post: post.date, reverse=True, pagesize=4)

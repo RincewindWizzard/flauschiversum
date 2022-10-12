@@ -1,7 +1,7 @@
 import os
 import argparse
 import settings
-from blogcompile import builder
+from . import builder
 
 
 def main():
@@ -21,6 +21,9 @@ def main():
         builder.clean()
 
     builder.build()
+
+
+
 
 if __name__ == '__main__':
     main()
