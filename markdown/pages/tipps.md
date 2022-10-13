@@ -5,7 +5,7 @@ title: "Tipps und Tricks"
 # Das kreative schwarze Loch
 
 Kennst du das, wenn du einfach gar keine Ahnung hast, was du machen sollst, aber irgendwie Lust hast etwas zu tun?
-Im kreativen schwarzen Loch verschwinden alle Ideen und nichts hat so wirklich die Möglichkeit dich zu begeistern, um es auch in die Tat umzusetzen. Das kennt fast jeder, würde ich sagen und das ist absolut nichts Schlimmes, mir geht es oft genauso. In diesen Fällen kann man sich entweder stundenlang Anregungen suchen oder akzeptieren, dass Langeweile auch mal zum kreativ sein dazu gehört. Das ist dann die beste Gelegenheit etwas mit Freunden zu machen und auf andere Gedanken zu kommen. Oft kommt genau dann die zündende Idee, wenn du nicht damit rechnest und dann macht es umso mehr Spaß sich auch der Umsetzung des Geistesblitzes zu widmen. Gut Ding will Weile haben und manchmal braucht dein Kopf eine Nacht zum Drüberschlafen um dich vollends für etwas überzeugen zu können.
+Im kreativen schwarzen Loch verschwinden alle Ideen und nichts hat so wirklich die Möglichkeit dich zu begeistern, um es auch in die Tat umzusetzen. Das kennt fast jeder, würde ich sagen und das ist absolut nichts Schlimmes, mir geht es oft genauso. In diesen Fällen kann man sich entweder stundenlang Anregungen suchen oder akzeptieren, dass Langeweile auch mal zum kreativ sein dazu gehört. Das ist dann die beste Gelegenheit etwas mit Freunden zu machen und auf andere Gedanken zu kommen. Oft kommt genau dann die zündende Idee, wenn du nicht damit rechnest und dann macht es umso mehr Spaß sich auch der Umsetzung des Geistesblitzes zu widmen. Gut Ding will Weile haben und manchmal braucht dein Kopf eine Nacht zum Drüberschlafen um dich vollends zu etwas überzeugen zu können.
  <br></br>
 
 # Ufo's
@@ -15,7 +15,7 @@ Als Ufo's oder "UnFertige Objekte" bezeichnet man die lustigen kleinen Projekte,
 
 # Good-2-Know
 
-Hier findest du Links zu Beiträgen in denen ich Tipps gebe und Tricks zeige zu ganz bestimmten Problemstellungen.
+Hier findest du Links zu Beiträgen, in denen ich Tipps gebe und Tricks zeige zu ganz bestimmten Problemstellungen.
 
 - Wie man Plüschstoff mit der Nähmaschine näht: [Kuschelkissen](/monstermassiges-kuschelkissen/)
 - Wie man Wolle zum Spinnen vorbereitet: [Spinnvorbereitung](/vlies-kammzug-rolag-fauxlag-punis/)

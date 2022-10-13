@@ -6,7 +6,7 @@ Nadja Bender<br/>
 Greifstraße 16<br/>
 24143 Kiel<br/>
 Deutschland<br/>
-[ermeline@flauschiversum.de](mailto:ermeline@flauschiversum.de?subject=[Flauschiversum]) (Bitte mit "Flauschiversum" im Betreff)<br/>
+[ermeline@flauschiversum.de](mailto:ermeline@flauschiversum.de?subject=[Flauschiversum])<br/>
 
 ## Haftung für Links
 
