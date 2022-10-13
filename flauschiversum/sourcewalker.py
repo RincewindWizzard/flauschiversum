@@ -14,7 +14,7 @@ CONTENT_MODELS = [
 ]
 
 
-def find_sources(path):
+def find_sources(*paths):
     """
     This is a filewalker function which looks at your content repository an finds all content objects in it.
     All content objects found will be yielded.
@@ -22,12 +22,12 @@ def find_sources(path):
     :param path: Path to your content sources
     :return: a yielded list of content objects
     """
-
-    for dirpath, dirnames, filenames in os.walk(path):
-        for filename in filenames:
-            content_object = parse_source(os.path.join(dirpath, filename))
-            if content_object:
-                yield content_object
+    for path in paths:
+        for dirpath, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                content_object = parse_source(os.path.join(dirpath, filename))
+                if content_object:
+                    yield content_object
 
 
 def parse_source(path):

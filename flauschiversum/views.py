@@ -48,11 +48,6 @@ def render_image(img):
 def render_pages(page):
     return (get_url_for(page), env.get_template('page.html').render(page=page, title=page.title).encode('utf-8'))
 
-@only_once
-def style():
-    return ('/style.css',
-            subprocess.run(['lessc', os.path.join(settings.STYLE_PATH, 'main.less')], stdout=subprocess.PIPE).stdout)
-
 @filtered_dataset(query_static)
 def static(static_file):
     return (get_url_for(static_file), static_file.content)
