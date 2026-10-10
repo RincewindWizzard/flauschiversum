@@ -151,7 +151,12 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                     let info = media.get(name)?;
                     Some((urls::absolute(&urls::variant_path(&post.url, 700, name)), info.preview_len, feed::mime_for(name)))
                 });
-                feed::FeedEntry { content_html: abs.html, enclosure }
+                // Auch Textlinks und eingebettete Pfade absolut machen (Feedreader kennen die Basis-URL nicht)
+                let content_html = abs
+                    .html
+                    .replace("href=\"/", &format!("href=\"{BLOG_URL}/"))
+                    .replace("src=\"/", &format!("src=\"{BLOG_URL}/"));
+                feed::FeedEntry { content_html, enclosure }
             })
         })
         .collect();
@@ -251,3 +256,183 @@ pub fn test_options(root: &Path) -> BuildOptions {
     }
 }
 
+
+#[cfg(test)]
+pub mod tests {
+    use super::*;
+    use crate::output;
+    use std::sync::atomic::Ordering;
+
+    fn jpeg(width: u32, height: u32, shade: u8) -> Vec<u8> {
+        let mut out = Vec::new();
+        jpeg_encoder::Encoder::new(&mut out, 90)
+            .encode(&vec![shade; (width * height * 3) as usize], width as u16, height as u16, jpeg_encoder::ColorType::Rgb)
+            .unwrap();
+        out
+    }
+
+    fn png(width: u32, height: u32) -> Vec<u8> {
+        let mut out = Vec::new();
+        image::DynamicImage::new_rgba8(width, height)
+            .write_to(&mut std::io::Cursor::new(&mut out), image::ImageFormat::Png)
+            .unwrap();
+        out
+    }
+
+    fn write(root: &Path, rel: &str, data: impl AsRef<[u8]>) {
+        let p = root.join(rel);
+        fs::create_dir_all(p.parent().unwrap()).unwrap();
+        fs::write(p, data).unwrap();
+    }
+
+    /// Kleine Test-Site: drei veröffentlichte Posts, ein geplanter, eine Seite.
+    pub fn fixture_site(root: &Path) {
+        let repo = Path::new(env!("CARGO_MANIFEST_DIR"));
+        for e in walkdir::WalkDir::new(repo.join("assets")).into_iter().filter_map(Result::ok).filter(|e| e.file_type().is_file()) {
+            write(root, &format!("assets/{}", e.path().strip_prefix(repo.join("assets")).unwrap().display()), fs::read(e.path()).unwrap());
+        }
+        for e in fs::read_dir(repo.join("content/style")).unwrap().filter_map(Result::ok) {
+            write(root, &format!("content/style/{}", e.file_name().to_string_lossy()), fs::read(e.path()).unwrap());
+        }
+        write(root, "content/static/favicon.ico", b"ico");
+        write(root, "content/pages/about.md", "---\ntitle: \"About\"\n---\n\n# Das Flauschiversum\n\nEin Blog über Wolle & Filz.\n\n[Kürbis](/2020/10/kurbis/)\n");
+        write(
+            root,
+            "content/posts/alraune/index.md",
+            "---\ntitle: \"Alraune\"\npermalink: /2014/01/alraune/\nauthor: Ermeline\ndate: 2014-01-04 19:10:28\nimage: \"DSCF0527.jpg\"\nexcerpt: \"Mal wieder etwas für das Hobby LARP.\"\n---\n\n![Alraune oben](DSCF0527.jpg)\n![Alraune nah oben](DSCF0528.jpg)\n![Clip](clip.mp4)\n\nMal wieder etwas für das Hobby LARP.\n\n![Ohrenschützer](DSCF0531.jpg)\n\nSiehe [Kürbis](/2020/10/kurbis/) und [kaputt](/2014/01/gibts-nicht/).\n",
+        );
+        write(root, "content/posts/alraune/DSCF0527.jpg", jpeg(800, 600, 40));
+        write(root, "content/posts/alraune/DSCF0528.jpg", jpeg(600, 800, 90));
+        write(root, "content/posts/alraune/DSCF0531.jpg", jpeg(1200, 900, 150));
+        write(root, "content/posts/alraune/clip.mp4", b"kein echtes Video");
+        write(root, "content/posts/alraune/Stifttextur.xcf", b"ignoriert");
+        write(
+            root,
+            "content/posts/kuerbis/index.md",
+            "---\ntitle: \"Kürbis\"\npermalink: /2020/10/kurbis/\nauthor: Ermeline\ndate: 2020-10-31\nimage: \"kürbis thumb.png\"\nexcerpt: \"Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.\"\n---\n\n![Kürbis](kürbis thumb.png)\n",
+        );
+        write(root, "content/posts/kuerbis/kürbis thumb.png", png(400, 300));
+        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
+        write(root, "content/posts/morgen/index.md", "---\ntitle: \"Morgen\"\ndate: 2099-01-01\nimage: \"bild.jpg\"\n---\n\n![Bild](bild.jpg)\n");
+        write(root, "content/posts/morgen/bild.jpg", jpeg(300, 200, 10));
+    }
+
+    fn build(root: &Path) -> (Diagnostics, Stats, output::WriteStats) {
+        let diag = Diagnostics::default();
+        let stats = Stats::default();
+        let g = generate(&test_options(root), &diag, &stats).unwrap();
+        let ws = output::write(&root.join("dist"), g.outputs.into_map()).unwrap();
+        (diag, stats, ws)
+    }
+
+    fn read(root: &Path, rel: &str) -> String {
+        fs::read_to_string(root.join("dist").join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}"))
+    }
+
+    /// Entfernt build-abhängige Werte (Hashes) für Snapshots.
+    fn stable(html: &str) -> String {
+        let mut out = String::new();
+        let mut rest = html;
+        while let Some(i) = rest.find("?v=") {
+            out.push_str(&rest[..i + 3]);
+            out.push_str("HASH");
+            rest = &rest[i + 3..];
+            rest = &rest[rest.find('"').unwrap_or(0)..];
+        }
+        out.push_str(rest);
+        out
+    }
+
+    #[test]
+    fn builds_fixture_site() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let (diag, stats, ws) = build(root);
+
+        // Geplanter Post: weder Seite noch Medien
+        assert!(!root.join("dist/2099").exists());
+        assert!(!read(root, "rss.xml").contains("Morgen"));
+        assert!(!read(root, "sitemap.xml").contains("2099"));
+        // Neuer Post ohne Permalink: URL aus dem Verzeichnisnamen
+        assert!(root.join("dist/2026/01/gruene-muetze/index.html").is_file());
+        // Medien
+        for f in ["200x/DSCF0527.jpg", "700x/DSCF0527.jpg", "1000x/DSCF0527.jpg", "clip.mp4"] {
+            assert!(root.join("dist/2014/01/alraune").join(f).is_file(), "{f}");
+        }
+        assert_eq!(fs::read(root.join("dist/2014/01/alraune/clip.mp4")).unwrap(), b"kein echtes Video");
+        assert!(!root.join("dist/2014/01/alraune/Stifttextur.xcf").exists());
+        assert!(fs::read(root.join("dist/2020/10/kurbis/700x/kürbis thumb.png")).unwrap().starts_with(b"\x89PNG"));
+        assert_eq!(stats.processed.load(Ordering::Relaxed), 4);
+
+        // Kaputter interner Link wird mit Quelldatei gemeldet
+        let warnings: Vec<_> = diag.all().into_iter().map(|d| format!("{}: {}", d.file, d.message)).collect();
+        assert!(
+            warnings.iter().any(|w| w.starts_with("content/posts/alraune/index.md") && w.contains("/2014/01/gibts-nicht/")),
+            "{warnings:?}"
+        );
+        assert_eq!(ws.deleted, 0);
+
+        insta::assert_snapshot!("post_alraune", stable(&read(root, "2014/01/alraune/index.html")));
+        insta::assert_snapshot!("index", stable(&read(root, "index.html")));
+        insta::assert_snapshot!("page_about", stable(&read(root, "about/index.html")));
+        let rss = read(root, "rss.xml");
+        assert!(rss.contains("<a href=\"https://flauschiversum.de/2020/10/kurbis/\">Kürbis</a>"));
+        insta::assert_snapshot!("rss", rss);
+        insta::assert_snapshot!("sitemap", read(root, "sitemap.xml"));
+    }
+
+    #[test]
+    fn second_build_writes_nothing_and_deleted_post_disappears() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        build(root);
+        let (_, stats, ws) = build(root);
+        assert_eq!((ws.new, ws.changed, ws.deleted), (0, 0, 0));
+        assert_eq!(stats.processed.load(Ordering::Relaxed), 0);
+
+        fs::remove_dir_all(root.join("content/posts/alraune")).unwrap();
+        let (_, _, ws) = build(root);
+        assert!(ws.deleted >= 5, "{ws:?}");
+        assert!(!root.join("dist/2014").exists(), "leere Verzeichnisse entfernt");
+    }
+
+    #[test]
+    fn foreign_output_directory_is_not_touched() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        write(root, "dist/wichtig.txt", "nicht löschen");
+        let g = generate(&test_options(root), &Diagnostics::default(), &Stats::default()).unwrap();
+        assert!(output::write(&root.join("dist"), g.outputs.into_map()).is_err());
+        assert_eq!(fs::read_to_string(root.join("dist/wichtig.txt")).unwrap(), "nicht löschen");
+    }
+
+    #[test]
+    fn page_structure_and_seo() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        build(root);
+        let post = read(root, "2014/01/alraune/index.html");
+        assert_eq!(post.matches("<h1").count(), 1);
+        assert!(post.contains("<h1>Alraune</h1>"));
+        assert!(post.contains("<title>Alraune – Flauschiversum</title>"));
+        assert!(post.contains("<link rel=\"canonical\" href=\"https://flauschiversum.de/2014/01/alraune/\">"));
+        assert!(post.contains("<meta property=\"og:image\" content=\"https://flauschiversum.de/2014/01/alraune/1000x/DSCF0527.jpg\">"));
+        assert!(post.contains("/style.css?v="));
+        let ld_start = post.find("application/ld+json\">").unwrap() + 21;
+        let ld_end = post[ld_start..].find("</script>").unwrap() + ld_start;
+        let ld: serde_json::Value = serde_json::from_str(&post[ld_start..ld_end]).unwrap();
+        assert_eq!(ld["@type"], "BlogPosting");
+        assert_eq!(ld["datePublished"], "2014-01-04T19:10:28+01:00");
+
+        let index = read(root, "index.html");
+        assert!(index.contains("<title>Flauschiversum – Mehr als nur eine Masche</title>"));
+        assert_eq!(index.matches("<h1").count(), 1);
+        let png_src = "/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png";
+        assert!(index.contains(png_src), "kodierte Thumbnail-URL");
+        assert!(read(root, "robots.txt").contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
+    }
+}

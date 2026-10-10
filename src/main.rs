@@ -13,6 +13,7 @@ mod media;
 mod output;
 mod render;
 mod seo;
+mod serve;
 mod site;
 mod urls;
 
@@ -77,7 +78,7 @@ fn print_diagnostics(diag: &diag::Diagnostics) {
 }
 
 /// Führt einen Build aus und gibt eine Zusammenfassung aus. Liefert `false` bei Fehlern.
-pub fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
+fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
     let started = std::time::Instant::now();
     let opts = site::BuildOptions {
         root: paths.root.clone(),
@@ -149,8 +150,12 @@ fn run(cli: Cli) -> Result<ExitCode> {
         }
         Command::Build(paths) => Ok(if build_once(&paths, false)? { ExitCode::SUCCESS } else { ExitCode::FAILURE }),
         Command::Serve { paths, port } => {
-            let _ = (paths, port);
-            anyhow::bail!("noch nicht umgesetzt")
+            // Eigenes Ausgabeverzeichnis, damit `dist/` nicht das Live-Reload-Skript enthält
+            let mut serve_paths = paths.clone();
+            serve_paths.out = paths.resolve(&paths.cache).join("serve");
+            let out = serve_paths.out.clone();
+            serve::run(&paths.root, &out, port, || build_once(&serve_paths, true))?;
+            Ok(ExitCode::SUCCESS)
         }
     }
 }

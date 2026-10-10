@@ -1,0 +1,52 @@
+---
+source: src/site.rs
+expression: rss
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Flauschiversum</title>
+    <link>https://flauschiversum.de/</link>
+    <description>Mehr als nur eine Masche</description>
+    <language>de-DE</language>
+    <lastBuildDate>Mon, 5 Jan 2026 00:00:00 +0100</lastBuildDate>
+    <atom:link href="https://flauschiversum.de/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Grüne Mütze</title>
+      <link>https://flauschiversum.de/2026/01/gruene-muetze/</link>
+      <description><![CDATA[Ohne Bild.]]></description>
+      <guid isPermaLink="false">https://flauschiversum.de/2026/01/gruene-muetze/</guid>
+      <pubDate>Mon, 5 Jan 2026 00:00:00 +0100</pubDate>
+      <content:encoded><![CDATA[<p>Text.</p>
+
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Kürbis</title>
+      <link>https://flauschiversum.de/2020/10/kurbis/</link>
+      <description><![CDATA[Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.]]></description>
+      <enclosure url="https://flauschiversum.de/2020/10/kurbis/700x/k%C3%BCrbis%20thumb.png" length="4818" type="image/png"/>
+      <guid isPermaLink="false">https://flauschiversum.de/2020/10/kurbis/</guid>
+      <pubDate>Sat, 31 Oct 2020 00:00:00 +0100</pubDate>
+      <content:encoded><![CDATA[<figure class="media"><a href="https://flauschiversum.de/2020/10/kurbis/1000x/k%C3%BCrbis%20thumb.png" data-pswp-width="400" data-pswp-height="300"><img src="https://flauschiversum.de/2020/10/kurbis/700x/k%C3%BCrbis%20thumb.png" width="400" height="300" alt="Kürbis" decoding="async"></a><figcaption>Kürbis</figcaption></figure>
+]]></content:encoded>
+      <dc:creator>Ermeline</dc:creator>
+    </item>
+    <item>
+      <title>Alraune</title>
+      <link>https://flauschiversum.de/2014/01/alraune/</link>
+      <description><![CDATA[Mal wieder etwas für das Hobby LARP.]]></description>
+      <enclosure url="https://flauschiversum.de/2014/01/alraune/700x/DSCF0527.jpg" length="7189" type="image/jpeg"/>
+      <guid isPermaLink="false">https://flauschiversum.de/2014/01/alraune/</guid>
+      <pubDate>Sat, 4 Jan 2014 19:10:28 +0100</pubDate>
+      <content:encoded><![CDATA[<div class="carousel" data-count="3"><ul class="carousel-track"><li class="carousel-slide" aria-label="Bild 1 von 3"><figure class="media"><a href="https://flauschiversum.de/2014/01/alraune/1000x/DSCF0527.jpg" data-pswp-width="800" data-pswp-height="600"><img src="https://flauschiversum.de/2014/01/alraune/700x/DSCF0527.jpg" srcset="https://flauschiversum.de/2014/01/alraune/700x/DSCF0527.jpg 700w, https://flauschiversum.de/2014/01/alraune/1000x/DSCF0527.jpg 800w" sizes="(min-width: 760px) 700px, 100vw" width="700" height="525" alt="Alraune oben" decoding="async"></a><figcaption>Alraune oben</figcaption></figure></li><li class="carousel-slide" aria-label="Bild 2 von 3"><figure class="media"><a href="https://flauschiversum.de/2014/01/alraune/1000x/DSCF0528.jpg" data-pswp-width="600" data-pswp-height="800"><img src="https://flauschiversum.de/2014/01/alraune/700x/DSCF0528.jpg" width="600" height="800" alt="Alraune nah oben" loading="lazy" decoding="async"></a><figcaption>Alraune nah oben</figcaption></figure></li><li class="carousel-slide" aria-label="Bild 3 von 3"><figure class="media media-video"><video src="https://flauschiversum.de/2014/01/alraune/clip.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Clip"></video><figcaption>Clip</figcaption></figure></li></ul></div>
+<p>Mal wieder etwas für das Hobby LARP.</p>
+
+<figure class="media"><a href="https://flauschiversum.de/2014/01/alraune/1000x/DSCF0531.jpg" data-pswp-width="1000" data-pswp-height="750"><img src="https://flauschiversum.de/2014/01/alraune/700x/DSCF0531.jpg" srcset="https://flauschiversum.de/2014/01/alraune/700x/DSCF0531.jpg 700w, https://flauschiversum.de/2014/01/alraune/1000x/DSCF0531.jpg 1000w" sizes="(min-width: 760px) 700px, 100vw" width="700" height="525" alt="Ohrenschützer" loading="lazy" decoding="async"></a><figcaption>Ohrenschützer</figcaption></figure>
+<p>Siehe <a href="https://flauschiversum.de/2020/10/kurbis/">Kürbis</a> und <a href="https://flauschiversum.de/2014/01/gibts-nicht/">kaputt</a>.</p>
+
+]]></content:encoded>
+      <dc:creator>Ermeline</dc:creator>
+    </item>
+  </channel>
+</rss>

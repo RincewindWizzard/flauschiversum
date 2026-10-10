@@ -1,0 +1,12 @@
+---
+source: src/site.rs
+expression: "read(root, \"sitemap.xml\")"
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://flauschiversum.de/</loc></url>
+  <url><loc>https://flauschiversum.de/2026/01/gruene-muetze/</loc><lastmod>2026-01-05</lastmod></url>
+  <url><loc>https://flauschiversum.de/2020/10/kurbis/</loc><lastmod>2020-10-31</lastmod></url>
+  <url><loc>https://flauschiversum.de/2014/01/alraune/</loc><lastmod>2014-01-04</lastmod></url>
+  <url><loc>https://flauschiversum.de/about/</loc></url>
+</urlset>

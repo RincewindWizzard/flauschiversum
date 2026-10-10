@@ -56,7 +56,13 @@
 </div>
 {% block scripts %}{% endblock %}
 {%- if head.livereload %}
-<script>new EventSource("/__livereload").onmessage = () => location.reload();</script>
+<script>
+(async () => {
+  const gen = async () => (await fetch("/__livereload", { cache: "no-store" })).text();
+  let last = await gen();
+  setInterval(async () => { try { const g = await gen(); if (g !== last) location.reload(); } catch {} }, 1000);
+})();
+</script>
 {%- endif %}
 </body>
 </html>

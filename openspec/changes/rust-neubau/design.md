@@ -63,7 +63,7 @@ Alle Ausgaben entstehen als `(Pfad, Bytes)` in einer Map. Erst der Writer berüh
 | Parallelität | `rayon` | — |
 | RSS | `rss` (mit Extensions für `dc`, `content`, `atom`) | — |
 | CSS | `lightningcss`, **nur** Bundler + Minifier | Es gibt keinen Präprozessor mehr: Quellen sind Standard-CSS (Custom Properties, Nesting, `color-mix()`, alles in aktuellen Browsern verfügbar). lightningcss löst `@import` auf, minimiert und senkt Nesting für ältere Browser ab. *Alternativen:* Sass mit `grass` (unnötig, die Sprachmittel hat CSS heute selbst), Dateien einzeln ausliefern (mehr Requests, kein Minify). |
-| Vorschau | `tiny_http` + `notify` | Leichtgewichtig. Live-Reload per Server-Sent Events. `axum` wäre für diesen Zweck zu schwer. |
+| Vorschau | `tiny_http` + `notify` | Leichtgewichtig. Live-Reload per Polling eines Build-Zählers. `axum` wäre für diesen Zweck zu schwer. |
 | Tests | `insta`, `tempfile` | Snapshot-Tests für das erzeugte HTML. |
 
 ### 4. Permalinks
@@ -112,7 +112,7 @@ Für jedes Original:
 
 ### 9. Vorschau-Server
 
-`serve` baut in ein temporäres Ausgabeverzeichnis und liefert es mit `tiny_http` aus (inkl. `index.html` für Verzeichnisse). `notify` beobachtet `content/` und `assets/`. Templates sind einkompiliert. Für Arbeit an Templates wird `serve` per `cargo watch -x 'run -- serve'` gestartet, das bei Änderungen neu kompiliert und neu startet. Die Seite lädt danach ebenfalls automatisch neu, weil das Live-Reload-Skript die Verbindung wieder aufnimmt. Nach einem Rebuild (entprellt) geht ein Ereignis über `/__livereload` (SSE) hinaus. Nur im `serve`-Modus wird dafür ein kleines Skript in jede Seite eingefügt.
+`serve` baut in ein temporäres Ausgabeverzeichnis und liefert es mit `tiny_http` aus (inkl. `index.html` für Verzeichnisse). `notify` beobachtet `content/` und `assets/`. Templates sind einkompiliert. Für Arbeit an Templates wird `serve` per `cargo watch -x 'run -- serve'` gestartet, das bei Änderungen neu kompiliert und neu startet. Die Seite lädt danach ebenfalls automatisch neu, weil das Live-Reload-Skript nach dem Neustart einen neuen Zählerstand sieht. Nach einem Rebuild (entprellt) erhöht sich ein Build-Zähler, den die Seite über `/__livereload` jede Sekunde abfragt (Server-Sent Events wurden verworfen, weil `tiny_http` gestreamte Antworten puffert). Nur im `serve`-Modus wird dafür ein kleines Skript in jede Seite eingefügt.
 
 ### 10. Tests
 

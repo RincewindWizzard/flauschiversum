@@ -1,0 +1,104 @@
+---
+source: src/site.rs
+expression: "stable(&read(root, \"index.html\"))"
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flauschiversum – Mehr als nur eine Masche</title>
+<meta name="description" content="Mehr als nur eine Masche">
+<link rel="canonical" href="https://flauschiversum.de/">
+<link rel="stylesheet" href="/style.css?v=HASH">
+<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
+<meta property="og:site_name" content="Flauschiversum">
+<meta property="og:locale" content="de_DE">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flauschiversum – Mehr als nur eine Masche">
+<meta property="og:description" content="Mehr als nur eine Masche">
+<meta property="og:url" content="https://flauschiversum.de/">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="container-fluid">
+<header id="blogheader">
+  <div class="logo">
+    <h1><a href="/">Flauschiversum</a></h1>
+    <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
+  </div>
+  <nav class="center">
+    <a href="/">Beiträge</a>
+    <a href="/tipps-und-tricks/">Tipps und Tricks</a>
+    <a href="/about/">About</a>
+    <a href="/impressum/">Impressum</a>
+    <a href="/rss.xml">Abonnieren</a>
+  </nav>
+  
+</header>
+
+<main id="index">
+  <div class="center">
+  <ul class="pagination">
+    <li><a href="/" class="active" aria-current="page">1</a></li>
+  </ul>
+</div>
+  <div class="center">
+    <article>
+      <header>
+        <p class="date"><time class="date" datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time></p>
+        <a href="/2026/01/gruene-muetze/"><h2>Grüne Mütze</h2></a>
+      </header>
+      <div class="center">
+        <p class="excerpt">
+          Ohne Bild.
+          <a href="/2026/01/gruene-muetze/" class="more">weiterlesen</a>
+        </p>
+      </div>
+    </article>
+  </div>
+  <div class="center">
+    <article>
+      <header>
+        <p class="date"><time class="date" datetime="2020-10-31T00:00:00+01:00">31. Oktober 2020</time></p>
+        <a href="/2020/10/kurbis/"><h2>Kürbis</h2></a>
+      </header>
+      <div class="center">
+        <a href="/2020/10/kurbis/" class="post-image"><img src="/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png" width="200" height="150" alt="Kürbis" class="post-image" loading="lazy"></a>
+        <p class="excerpt">
+          Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.
+          <a href="/2020/10/kurbis/" class="more">weiterlesen</a>
+        </p>
+      </div>
+    </article>
+  </div>
+  <div class="center">
+    <article>
+      <header>
+        <p class="date"><time class="date" datetime="2014-01-04T19:10:28+01:00">4. Januar 2014</time></p>
+        <a href="/2014/01/alraune/"><h2>Alraune</h2></a>
+      </header>
+      <div class="center">
+        <a href="/2014/01/alraune/" class="post-image"><img src="/2014/01/alraune/200x/DSCF0527.jpg" width="200" height="150" alt="Alraune" class="post-image" loading="lazy"></a>
+        <p class="excerpt">
+          Mal wieder etwas für das Hobby LARP.
+          <a href="/2014/01/alraune/" class="more">weiterlesen</a>
+        </p>
+      </div>
+    </article>
+  </div>
+  <div class="center">
+  <ul class="pagination">
+    <li><a href="/" class="active" aria-current="page">1</a></li>
+  </ul>
+</div>
+</main>
+
+<footer class="center">
+  <p>&copy; 2026 Ermeline Wollknoll &mdash;&nbsp;<a href="/impressum/">Impressum</a></p>
+</footer>
+</div>
+
+</body>
+</html>
