@@ -102,7 +102,7 @@ galleries.forEach((gallery) => {
 
   // Zurück-Taste des Browsers schließt das Vollbild
   let closedByHistory = false;
-  lightbox.on('afterInit', () => {
+  lightbox.on('beforeOpen', () => {
     closedByHistory = false;
     history.pushState({ pswp: true }, '');
   });
@@ -110,10 +110,12 @@ galleries.forEach((gallery) => {
     if (!closedByHistory && history.state?.pswp) history.back();
   });
   window.addEventListener('popstate', () => {
-    if (lightbox.pswp) {
-      closedByHistory = true;
-      lightbox.pswp.close();
-    }
+    const pswp = lightbox.pswp;
+    if (!pswp) return;
+    closedByHistory = true;
+    // Während der Öffnungsanimation ignoriert PhotoSwipe close() – dann danach schließen
+    if (pswp.opener?.isOpening) pswp.on('openingAnimationEnd', () => pswp.close());
+    else pswp.close();
   });
 
   lightbox.init();

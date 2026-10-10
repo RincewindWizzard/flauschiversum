@@ -3,19 +3,20 @@ figure.media {
   margin: 1em 0;
   text-align: center;
 
+  /* width/height-Attribute bestimmen das Seitenverhältnis vor dem Laden (kein Springen) */
   & img, & video {
     display: block;
     margin: 0 auto;
     max-width: 100%;
     height: auto;
     max-height: 80vh;
-    width: auto;
+    object-fit: contain;
     border-radius: 3px;
     box-shadow: 0 0 15px 3px rgba(92, 128, 0, 0.66);
   }
 
   & a {
-    display: inline-block;
+    display: block;
     cursor: zoom-in;
   }
 
