@@ -1,0 +1,118 @@
+/* Bilder, Animationen und Videos in Posts */
+figure.media {
+  margin: 1em 0;
+  text-align: center;
+
+  & img, & video {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 80vh;
+    width: auto;
+    border-radius: 3px;
+    box-shadow: 0 0 15px 3px rgba(92, 128, 0, 0.66);
+  }
+
+  & a {
+    display: inline-block;
+    cursor: zoom-in;
+  }
+
+  & figcaption {
+    font-size: 0.85em;
+    font-style: italic;
+    margin-top: 0.4em;
+  }
+}
+
+/* Karussell: ohne JavaScript horizontal wisch-/scrollbar, mit JavaScript Pfeile und Punkte */
+.carousel {
+  position: relative;
+  margin: 1em 0;
+
+  & .carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: thin;
+  }
+
+  & .carousel-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & figure.media {
+      margin: 0.5em 0;
+    }
+  }
+
+  & .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.4em;
+    height: 2.4em;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--acolor);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    &.prev { left: 0.25em; }
+    &.next { right: 0.25em; }
+  }
+
+  & .carousel-dots {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    margin-top: 0.4em;
+
+    & button {
+      width: 0.7em;
+      height: 0.7em;
+      padding: 0;
+      border: 1px solid var(--acolor);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+
+      &[aria-current="true"] {
+        background: var(--theme-green);
+        border-color: var(--theme-green);
+      }
+    }
+  }
+}
+
+/* Auf Touch-Geräten wird gewischt, Pfeile nur bei Maus */
+@media (hover: none) {
+  .carousel .carousel-arrow {
+    display: none;
+  }
+}
+
+figure.media-video .video-toggle {
+  margin-top: 0.4em;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}

@@ -1,79 +1,26 @@
-{% extends "./layout.html" %}
-{% block header %}
-    {{ super() }}
-
-    {#
-    <div class="category-images">
-    {% if  (not category and pagenum == 0) or category == 'basteln' %}
-      <a href="#">
-        <h2>Basteln</h2>
-        <img src="/images/Basteln.jpg" class="category"/>
-        <p>Mit Klebe und Schere bestückt,<br/> wird mit Liebe geschmückt.</p>
-      </a>
-    {% endif %}
-    {% if  (not category and pagenum == 0) or category == 'brandings' %}
-      <a href="#">
-        <h2>Brandings</h2><img src="/images/Brandings.jpg" class="category"/>
-        <p>Die Haut zu dick? Das ist egal,<br/> bebrannt wird auch das Holzregal.</p>
-      </a>
-    {% endif %}
-    {% if  (not category and pagenum == 0) or category == 'filzen' %}
-      <a href="#">
-        <h2>Filzen</h2>
-        <img src="/images/Filzen.jpg" class="category"/>
-        <p>Wasser, Seife, Wolle,<br/> reibe nicht zu dolle.</p>
-      </a>
-    {% endif %}
-    {% if  (not category and pagenum == 0) or category == 'malen' %}
-      <a href="#">
-        <h2>Malen</h2><img src="/images/Malen.jpg" class="category"/>
-        <p>Pinselstrich und Mine, geben mir die Muße,<br/> dem ersten Zug, ein Neuer folgt zum Gruße.</p>
-      </a>
-    {% endif %}
-    {% if  (not category and pagenum == 0) or category == 'nahen' %}
-      <a href="#">
-        <h2>Nähen</h2><img src="/images/Naehen.jpg" class="category"/>
-        <p>Mit Nadel und Faden in den Krieg,<br/> erreichen kannst du nur den Sieg.</p>
-      </a>
-    {% endif %}
-    {% if  (not category and pagenum == 0) or category == 'wolle' %}
-      <a href="#">
-        <h2>Wolle</h2><img src="/images/Wolle.jpg" class="category"/>
-        <p>Spinne, häkel, webe, sticke,<br/> knüpfe dir nur keine Stricke.</p>
-      </a>
-    {% endif %}
-  </div>
-  #}
-{% endblock %}
-
+{% extends "layout.html" %}
 {% block content %}
-    <main id="index">
-        {% include "./lib/pagination.html" %}
-        {% for post in posts %}
-            {% if post.published %}
-                <div class="center">
-                    <article>
-                        <header>
-                            <p class="date"><span class="date">{{ post.datestring }}</span></p>
-                            <a href="{{ post.url }}">
-                                <h2>{{ post.title }}</h2>
-                            </a>
-                        </header>
-                        <div class="center">
-                            {% if  post.thumb %}
-                                <a href="{{ post.url }}" class="post-image">
-                                    <img src="{{ post.thumb }}" class="post-image"/>
-                                </a>
-                            {% endif %}
-                            <p class="excerpt">
-                                {{ post.excerpt }}
-                                <a href="{{ post.url }}" class="more">weiterlesen</a>
-                            </p>
-                        </div>
-                    </article>
-                </div>
-            {% endif %}
-        {% endfor %}
-        {% include "./lib/pagination.html" %}
-    </main>
+<main id="index">
+  {% include "partials/pagination.html" %}
+  {%- for post in posts %}
+  <div class="center">
+    <article>
+      <header>
+        <p class="date"><time class="date" datetime="{{ post.date_iso }}">{{ post.date_human }}</time></p>
+        <a href="{{ post.url }}"><h2>{{ post.title }}</h2></a>
+      </header>
+      <div class="center">
+        {%- if let Some(t) = post.thumb %}
+        <a href="{{ post.url }}" class="post-image"><img src="{{ t.src }}" width="{{ t.width }}" height="{{ t.height }}" alt="{{ post.title }}" class="post-image"{% if !loop.first %} loading="lazy"{% endif %}></a>
+        {%- endif %}
+        <p class="excerpt">
+          {{ post.excerpt }}
+          <a href="{{ post.url }}" class="more">weiterlesen</a>
+        </p>
+      </div>
+    </article>
+  </div>
+  {%- endfor %}
+  {% include "partials/pagination.html" %}
+</main>
 {% endblock %}

@@ -71,10 +71,39 @@ fn normalize_image_destinations(md: &str) -> String {
     out
 }
 
+/// Python-Markdown erkannte `##Titel` (ohne Leerzeichen) als Überschrift, CommonMark nicht.
+/// Außerhalb von Codeblöcken wird deshalb ein Leerzeichen ergänzt.
+fn normalize_atx_headings(md: &str) -> String {
+    let mut out = String::with_capacity(md.len() + 16);
+    let mut in_fence = false;
+    for line in md.split_inclusive('\n') {
+        let trimmed = line.trim_start();
+        if trimmed.starts_with("```") || trimmed.starts_with("~~~") {
+            in_fence = !in_fence;
+        }
+        let hashes = line.bytes().take_while(|b| *b == b'#').count();
+        if !in_fence && (1..=6).contains(&hashes) {
+            let rest = &line[hashes..];
+            if rest.chars().next().is_some_and(|c| !c.is_whitespace() && c != '#') {
+                out.push_str(&line[..hashes]);
+                out.push(' ');
+                out.push_str(rest);
+                continue;
+            }
+        }
+        out.push_str(line);
+    }
+    out
+}
+
+fn normalize(md: &str) -> String {
+    normalize_atx_headings(&normalize_image_destinations(md))
+}
+
 /// Rendert Markdown einer Einzelseite (ohne Medienbehandlung).
 pub fn render_page(md: &str) -> String {
     let mut out = String::new();
-    html::push_html(&mut out, Parser::new_ext(&normalize_image_destinations(md), options()));
+    html::push_html(&mut out, Parser::new_ext(&normalize(md), options()));
     out
 }
 
@@ -84,7 +113,7 @@ fn is_local(dest: &str) -> bool {
 
 /// Rendert Markdown eines Posts. Bilder eines Absatzes werden zu einer Mediengruppe.
 pub fn render_post(md: &str, ctx: &PostContext) -> Rendered {
-    let normalized = normalize_image_destinations(md);
+    let normalized = normalize(md);
     let events: Vec<Event> = Parser::new_ext(&normalized, options()).collect();
     let mut out = String::new();
     let mut missing = Vec::new();
@@ -403,6 +432,13 @@ mod tests {
     #[test]
     fn raw_html_is_kept() {
         assert!(render_page("Nadja Bender<br/>\nZeile").contains("<br/>"));
+    }
+
+    #[test]
+    fn headings_without_space() {
+        let html = render_page("##Kopf\nText\n\n```\n#nicht\n```\n");
+        assert!(html.contains("<h2>Kopf</h2>"), "{html}");
+        assert!(html.contains("#nicht"));
     }
 
     #[test]

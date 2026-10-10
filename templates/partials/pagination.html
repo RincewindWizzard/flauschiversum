@@ -1,0 +1,13 @@
+<div class="center">
+  <ul class="pagination">
+    {%- if let Some(prev) = pagination.prev %}
+    <li><a href="{{ prev }}" rel="prev" aria-label="vorherige Seite">«</a></li>
+    {%- endif %}
+    {%- for p in pagination.pages %}
+    <li><a href="{{ p.url }}"{% if p.current %} class="active" aria-current="page"{% endif %}>{{ p.number }}</a></li>
+    {%- endfor %}
+    {%- if let Some(next) = pagination.next %}
+    <li><a href="{{ next }}" rel="next" aria-label="nächste Seite">»</a></li>
+    {%- endif %}
+  </ul>
+</div>

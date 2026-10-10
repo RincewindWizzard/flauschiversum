@@ -1,32 +1,35 @@
-{% extends "./layout.html" %}
+{% extends "layout.html" %}
 {% block header %}
-  {{super()}}
-  <div class="post-header">
-    <h2>{{title|escape}}</h2>
-    {% if post.thumb %}
-      <div class="center"><img src="{{post.thumb}}"/></div>
-    {% endif %}
-    <p class="author">Von <a href="/about/" class="author">{{post.author|escape}}</a>
-    </p>
-    <div class="center">
-      <small>Schreibe Ihr eine 
-        <a href="mailto:ermeline@flauschiversum.de?subject=[Flauschiversum] {{post.title}}" class="mailto">
-          Nachricht
-        </a>!
-      </small>
-    </div>
+<div class="post-header">
+  <h1>{{ title }}</h1>
+  {%- if let Some(t) = thumb %}
+  <div class="center"><img src="{{ t.src }}" width="{{ t.width }}" height="{{ t.height }}" alt=""></div>
+  {%- endif %}
+  {%- if let Some(a) = author %}
+  <p class="author">Von <a href="/about/" class="author">{{ a }}</a></p>
+  {%- endif %}
+  <div class="center">
+    <small>Schreibe Ihr eine <a href="mailto:ermeline@flauschiversum.de?subject={{ mail_subject }}" class="mailto">Nachricht</a>!</small>
   </div>
+</div>
 {% endblock %}
-
 {% block content %}
-  <main class="page">
-    {{post.html|safe}}
-  </main>
+<main class="page">
+{{ content|safe }}
+</main>
+{%- if prev.is_some() || next.is_some() %}
+<nav class="post-nav" aria-label="Weitere Beiträge">
+  {%- if let Some(n) = next %}
+  <a class="newer" href="{{ n.url }}" rel="next"><span>neuerer Beitrag</span>{{ n.title }}</a>
+  {%- endif %}
+  {%- if let Some(p) = prev %}
+  <a class="older" href="{{ p.url }}" rel="prev"><span>älterer Beitrag</span>{{ p.title }}</a>
+  {%- endif %}
+</nav>
+{%- endif %}
 {% endblock %}
-
-{% block js %}
-  {{super()}}
-  <script src="/script/jquery.js"></script>
-  <script src="/script/responsiveslides.min.js"></script>
-  <script src="/script/slideshow.js"></script>
+{% block scripts %}
+{%- if has_media %}
+<script type="module" src="{{ script_href }}"></script>
+{%- endif %}
 {% endblock %}

@@ -1,0 +1,58 @@
+@font-face {
+  font-family: "Lobster";
+  src: url(/fonts/Lobster.otf) format("opentype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lora";
+  src: url(/fonts/Lora-Regular.ttf) format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lora";
+  src: url(/fonts/Lora-Italic.ttf) format("truetype");
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lora";
+  src: url(/fonts/Lora-Bold.ttf) format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lora";
+  src: url(/fonts/Lora-BoldItalic.ttf) format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Merriweather";
+  src: url(/fonts/Merriweather-Regular.ttf) format("truetype");
+  font-display: swap;
+}
+
+body {
+  font-family: "Lora", serif;
+  font-size: 1.3rem;
+  line-height: 1.52;
+  text-rendering: optimizeLegibility;
+}
+
+.more, .date, a.author, a.mailto {
+  font-family: "Merriweather", serif;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  font-weight: 400;
+  text-rendering: auto;
+  letter-spacing: 1px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+/* Logo und Seitentitel in Lobster (Logo ist auf Indexseiten h1, sonst p.site-title) */
+h1, .site-title {
+  font-family: "Lobster";
+  text-shadow: 1px 1px 51px #fff;
+}

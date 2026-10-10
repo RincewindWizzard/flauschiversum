@@ -1,16 +1,10 @@
-@maxwidth: 1000px;
-@contentwidth: 34em;
-
-@media (min-width: 660px) {
-  #subscribe {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-  }
+:root {
+  --maxwidth: 1000px;
+  --contentwidth: 34em;
 }
 
 div.container-fluid {
-  max-width: @maxwidth;
+  max-width: var(--maxwidth);
   margin: auto;
 }
 

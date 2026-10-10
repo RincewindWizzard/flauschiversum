@@ -1,0 +1,67 @@
+#blogheader {
+  margin: 3em 0 2em;
+
+  /* Blogtitel und Beschreibung */
+  & .logo h1, & .logo .site-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2em;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  & .post-header {
+    max-width: var(--contentwidth);
+    margin: auto;
+
+    /* Post-Titel: sah als h2 so aus, ist jetzt die h1 der Seite */
+    & h1 {
+      text-align: center;
+      font-family: inherit;
+      font-size: 1.5em;
+      line-height: 1.3;
+      text-shadow: none;
+      margin: 0.83em 0;
+    }
+
+    & img {
+      height: 5em;
+      width: auto;
+      margin-bottom: 0.8em;
+      border-radius: 20em;
+    }
+
+    & p {
+      text-align: center;
+    }
+  }
+
+  & p.description {
+    font-size: 1.2em;
+    font-style: italic;
+    text-align: center;
+    margin-top: -0.3em;
+
+    & small {
+      margin-top: -0.2em;
+      display: block;
+    }
+  }
+
+  & nav {
+    & a {
+      color: black;
+      float: left;
+      padding: 0;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 1.2em;
+      font-family: "Lobster";
+      font-size: 1.3em;
+    }
+
+    & a:hover {
+      background-color: var(--pagination-hover);
+    }
+  }
+}

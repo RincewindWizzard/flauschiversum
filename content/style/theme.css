@@ -1,0 +1,34 @@
+/*
+  Farbpalette
+  #bdf239 – helles Grün
+  #82e536 – Grün
+  #eefc3c – Gelb
+  Abgeleitete Farben entsprechen LESS `lighten()` (HSL-Helligkeit + n %).
+*/
+:root {
+  --theme-bright: #bdf239;
+  --theme-green: #82e536;
+  --theme-yellow: #eefc3c;
+
+  --bgcolor: hsl(from var(--theme-bright) h s calc(l + 20));
+  --text-shadow-color: hsl(from var(--theme-bright) h s calc(l + 30));
+  --pagination-hover: hsl(from var(--theme-yellow) h s calc(l + 20));
+  --pagination-active: var(--theme-green);
+  --acolor: #333;
+  --bordercolor: #d2d2d2;
+}
+
+body {
+  background-color: var(--bgcolor);
+}
+
+body, a {
+  color: var(--acolor);
+}
+
+header {
+  & a, & a:hover {
+    text-decoration: none;
+    color: var(--acolor);
+  }
+}

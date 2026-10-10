@@ -1,0 +1,45 @@
+main.page {
+  max-width: var(--contentwidth);
+  margin: auto;
+  padding-left: 1em;
+  padding-right: 1em;
+  margin-bottom: 2em;
+
+  & h2 {
+    padding-top: 1em;
+  }
+
+  & > ul {
+    margin-left: 1em;
+    margin-bottom: 1em;
+  }
+}
+
+/* Links zum älteren und neueren Beitrag */
+nav.post-nav {
+  max-width: var(--contentwidth);
+  margin: 0 auto 2em;
+  padding: 0 1em;
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+
+  & a {
+    flex: 1;
+    text-decoration: none;
+    font-style: italic;
+  }
+
+  & a.older {
+    text-align: right;
+  }
+
+  & span {
+    display: block;
+    font-family: "Merriweather", serif;
+    font-variant: small-caps;
+    font-style: normal;
+    font-size: 0.75em;
+    letter-spacing: 1px;
+  }
+}

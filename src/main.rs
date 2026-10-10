@@ -7,9 +7,13 @@ use std::process::ExitCode;
 mod config;
 mod content;
 mod diag;
+mod feed;
 mod markdown;
 mod media;
 mod output;
+mod render;
+mod seo;
+mod site;
 mod urls;
 
 /// Generator für das Flauschiversum.
@@ -66,28 +70,84 @@ fn main() -> ExitCode {
     }
 }
 
+fn print_diagnostics(diag: &diag::Diagnostics) {
+    for d in diag.all() {
+        eprintln!("{d}");
+    }
+}
+
+/// Führt einen Build aus und gibt eine Zusammenfassung aus. Liefert `false` bei Fehlern.
+pub fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
+    let started = std::time::Instant::now();
+    let opts = site::BuildOptions {
+        root: paths.root.clone(),
+        cache: paths.resolve(&paths.cache),
+        now: site::BuildOptions::now()?,
+        livereload,
+    };
+    let diag = diag::Diagnostics::default();
+    let stats = media::Stats::default();
+    let generated = match site::generate(&opts, &diag, &stats) {
+        Ok(g) => g,
+        Err(e) => {
+            print_diagnostics(&diag);
+            eprintln!("Fehler: {e:#}");
+            return Ok(false);
+        }
+    };
+    let posts = generated.site.posts.len();
+    let scheduled = generated.site.scheduled;
+    let ws = output::write(&paths.resolve(&paths.out), generated.outputs.into_map())?;
+    print_diagnostics(&diag);
+    use std::sync::atomic::Ordering::Relaxed;
+    println!(
+        "{posts} Posts ({scheduled} geplant) · Bilder: {} neu berechnet, {} aus dem Cache",
+        stats.processed.load(Relaxed),
+        stats.cached.load(Relaxed)
+    );
+    println!(
+        "Dateien: {} neu, {} geändert, {} unverändert, {} gelöscht · {} Warnungen · {:.1} s",
+        ws.new,
+        ws.changed,
+        ws.unchanged,
+        ws.deleted,
+        diag.count(diag::Level::Warning),
+        started.elapsed().as_secs_f64()
+    );
+    Ok(true)
+}
+
 fn run(cli: Cli) -> Result<ExitCode> {
     match cli.command {
         Command::Check(paths) => {
-            let now = jiff::Zoned::now().with_time_zone(jiff::tz::TimeZone::get(config::TIME_ZONE)?);
+            let opts = site::BuildOptions {
+                root: paths.root.clone(),
+                cache: paths.resolve(&paths.cache),
+                now: site::BuildOptions::now()?,
+                livereload: false,
+            };
             let diag = diag::Diagnostics::default();
-            let site = content::load(&paths.root, &now, &diag);
-            for d in diag.all() {
-                eprintln!("{d}");
+            let result = site::generate(&opts, &diag, &media::Stats::default());
+            print_diagnostics(&diag);
+            match result {
+                Ok(g) => {
+                    println!(
+                        "{} Posts ({} geplant), {} Seiten, {} Ausgabedateien · {} Warnungen",
+                        g.site.posts.len(),
+                        g.site.scheduled,
+                        g.site.pages.len(),
+                        g.outputs.len(),
+                        diag.count(diag::Level::Warning)
+                    );
+                    Ok(ExitCode::SUCCESS)
+                }
+                Err(e) => {
+                    eprintln!("Fehler: {e:#}");
+                    Ok(ExitCode::FAILURE)
+                }
             }
-            println!(
-                "{} Posts ({} geplant), {} Seiten, {} statische Dateien",
-                site.posts.len(),
-                site.scheduled,
-                site.pages.len(),
-                site.static_files.len()
-            );
-            Ok(if diag.has_errors() { ExitCode::FAILURE } else { ExitCode::SUCCESS })
         }
-        Command::Build(paths) => {
-            let _ = (paths.resolve(&paths.out), paths.resolve(&paths.cache));
-            anyhow::bail!("noch nicht umgesetzt")
-        }
+        Command::Build(paths) => Ok(if build_once(&paths, false)? { ExitCode::SUCCESS } else { ExitCode::FAILURE }),
         Command::Serve { paths, port } => {
             let _ = (paths, port);
             anyhow::bail!("noch nicht umgesetzt")

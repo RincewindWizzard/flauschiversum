@@ -2,19 +2,19 @@
 
 ## 1. Inhalte vorbereiten
 
-- [ ] 1.1 `src/` per `git mv` nach `content/` verschieben (eigener Commit, LESS-Dateien vorerst mit); prüfen: `git show --stat` zeigt nur Umbenennungen
-- [ ] 1.2 Liste der 194 Live-URLs als `tests/fixtures/live-urls.txt` ablegen; prüfen: 194 Zeilen, alle im Format `/JJJJ/MM/slug/`
-- [ ] 1.3 Migrationsskript ausführen, das jedem Post seinen `permalink` aus der Liste als einzelne Zeile nach `title:` einfügt; prüfen: `git diff --numstat` zeigt 194 Dateien mit je `1 0`, jede Live-URL kommt genau einmal vor
-- [ ] 1.4 `category: naehen` in 5 Posts auf `nähen` ändern; prüfen: `grep -r "category: naehen" content/` liefert nichts
-- [ ] 1.5 Bei den 82 Originalen mit veraltetem Orientation-Tag (3, 6, 8) den Wert per Byte-Patch auf 1 setzen; prüfen: dekodierte Pixel vorher und nachher identisch, keine Datei mit Orientation ≠ 1 mehr unter `content/posts`
+- [x] 1.1 `src/` per `git mv` nach `content/` verschieben (eigener Commit, LESS-Dateien vorerst mit); prüfen: `git show --stat` zeigt nur Umbenennungen
+- [x] 1.2 Liste der 194 Live-URLs als `tests/fixtures/live-urls.txt` ablegen; prüfen: 194 Zeilen, alle im Format `/JJJJ/MM/slug/`
+- [x] 1.3 Migrationsskript ausführen, das jedem Post seinen `permalink` aus der Liste als einzelne Zeile nach `title:` einfügt; prüfen: `git diff --numstat` zeigt 194 Dateien mit je `1 0`, jede Live-URL kommt genau einmal vor
+- [x] 1.4 `category: naehen` in 5 Posts auf `nähen` ändern; prüfen: `grep -r "category: naehen" content/` liefert nichts
+- [x] 1.5 Bei den 82 Originalen mit veraltetem Orientation-Tag (3, 6, 8) den Wert per Byte-Patch auf 1 setzen; prüfen: dekodierte Pixel vorher und nachher identisch, keine Datei mit Orientation ≠ 1 mehr unter `content/posts`
 
 ## 2. Projektgerüst und Inhaltsmodell
 
-- [ ] 2.1 Cargo-Projekt `flauschiversum` mit `clap`-CLI (`build`, `check`, `serve`, Optionen `--root`, `--out`, `--cache`) anlegen; prüfen: `cargo run -- --help` listet die drei Befehle
-- [ ] 2.2 Laden von Posts, Seiten und Medien aus `content/` mit Frontmatter-Parsing, Datum in Europe/Berlin, „veröffentlicht“-Logik und Medienklassifizierung (Bild/Animation/Video/ignoriert) umsetzen; prüfen: Unit-Tests für beide Datumsformate, Zeitzone, geplanten Post und alle Dateiendungen
-- [ ] 2.3 Validierung (Pflichtfelder, Format, existierendes `image`, doppelte URLs) mit deutschen Fehlermeldungen samt Pfad und Feld umsetzen; prüfen: Unit-Tests für jeden Fehlerfall prüfen den Meldungstext
-- [ ] 2.4 URL-Bildung (Permalink, Slug aus Verzeichnisname mit `ue`-Transliteration, Medien-URLs, Prozentkodierung) umsetzen; prüfen: Unit-Tests mit `grüne-mütze`, `Schwacher Moment.jpg`, `kürbis_thumb.jpg`
-- [ ] 2.5 `flauschiversum check` auf `content/` ausführbar machen; prüfen: Exit-Code 0, 194 Posts und 3 Seiten erkannt
+- [x] 2.1 Cargo-Projekt `flauschiversum` mit `clap`-CLI (`build`, `check`, `serve`, Optionen `--root`, `--out`, `--cache`) anlegen; prüfen: `cargo run -- --help` listet die drei Befehle
+- [x] 2.2 Laden von Posts, Seiten und Medien aus `content/` mit Frontmatter-Parsing, Datum in Europe/Berlin, „veröffentlicht“-Logik und Medienklassifizierung (Bild/Animation/Video/ignoriert) umsetzen; prüfen: Unit-Tests für beide Datumsformate, Zeitzone, geplanten Post und alle Dateiendungen
+- [x] 2.3 Validierung (Pflichtfelder, Format, existierendes `image`, doppelte URLs) mit deutschen Fehlermeldungen samt Pfad und Feld umsetzen; prüfen: Unit-Tests für jeden Fehlerfall prüfen den Meldungstext
+- [x] 2.4 URL-Bildung (Permalink, Slug aus Verzeichnisname mit `ue`-Transliteration, Medien-URLs, Prozentkodierung) umsetzen; prüfen: Unit-Tests mit `grüne-mütze`, `Schwacher Moment.jpg`, `kürbis_thumb.jpg`
+- [x] 2.5 `flauschiversum check` auf `content/` ausführbar machen; prüfen: Exit-Code 0, 194 Posts und 3 Seiten erkannt
 
 ## 3. Bildverarbeitung
 
