@@ -1,7 +1,7 @@
 ---
 title: "One-Block-Wonder-Quilt"
 permalink: /2017/08/one-block-wonder-quilt/
-category: naehen
+category: nähen
 author: Lucy
 date: 2017-08-06
 image: "one-block-wonder-quilt_thumb.jpg"
