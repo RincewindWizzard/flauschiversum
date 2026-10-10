@@ -1,5 +1,6 @@
 ---
 title: "Schwarzgrüner Zwirbelhut"
+permalink: /2014/07/schwarzgruner-zwirbelhut/
 category: filzen
 author: Ermeline
 date: 2014-07-23 11:07:27

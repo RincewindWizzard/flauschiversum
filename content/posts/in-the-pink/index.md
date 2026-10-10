@@ -1,5 +1,6 @@
 ---
 title: "In the Pink"
+permalink: /2014/01/in-the-pink/
 category: wolle
 author: Ermeline
 date: 2014-01-02 23:19:50

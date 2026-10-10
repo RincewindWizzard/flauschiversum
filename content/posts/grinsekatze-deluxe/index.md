@@ -1,5 +1,6 @@
 ---
 title: "Grinsekatze deluxe"
+permalink: /2015/05/grinsekatze-deluxe/
 category: malen
 author: Ermeline
 date: 2015-05-11 15:09:53

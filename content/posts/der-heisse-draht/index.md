@@ -1,5 +1,6 @@
 ---
 title: "der heisse Draht"
+permalink: /2017/06/der-heisse-draht/
 category: basteln
 author: Ermeline
 date: 2017-06-25

@@ -1,5 +1,6 @@
 ---
 title: "Ein altes Gothic Bild, heut' mal als Quilt"
+permalink: /2016/02/ein-altes-gothic-bild-heut-mal-als-quilt/
 category: nähen
 author: Lucy
 date: 2016-02-28 15:11:47

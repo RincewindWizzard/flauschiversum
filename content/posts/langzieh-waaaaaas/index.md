@@ -1,5 +1,6 @@
 ---
 title: "Langzieh-Waaaaaas??"
+permalink: /2014/05/langzieh-waaaaaas/
 category: wolle
 author: Ermeline
 date: 2014-05-18 17:42:09

@@ -1,5 +1,6 @@
 ---
 title: "für Blumenkinder"
+permalink: /2014/01/fur-blumenkinder/
 category: filzen
 author: Ermeline
 date: 2014-01-02 22:46:33

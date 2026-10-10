@@ -1,5 +1,6 @@
 ---
 title: "Taschen aufhübschen"
+permalink: /2014/01/taschen-aufhubschen/
 category: brandings
 author: Ermeline
 date: 2014-01-04 19:39:45

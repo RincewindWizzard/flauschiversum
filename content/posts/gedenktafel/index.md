@@ -1,5 +1,6 @@
 ---
 title: "Gedenktafel"
+permalink: /2014/05/gedenktafel/
 category: brandings
 author: Ermeline
 date: 2014-05-18 16:21:42

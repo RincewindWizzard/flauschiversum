@@ -1,5 +1,6 @@
 ---
 title: "Crazy Cat Handytasche"
+permalink: /2016/06/crazy-cat-handytasche/
 category: nähen
 author: Ermeline
 date: 2016-06-05 12:30:23

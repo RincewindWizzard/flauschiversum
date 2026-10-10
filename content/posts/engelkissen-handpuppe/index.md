@@ -1,5 +1,6 @@
 ---
 title: "Engelkissen Handpuppe"
+permalink: /2015/12/engelkissen-handpuppe/
 category: nähen
 author: Ermeline
 date: 2015-12-29 00:45:00 

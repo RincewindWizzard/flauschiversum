@@ -1,5 +1,6 @@
 ---
 title: "mobile Monster macht man selbst"
+permalink: /2014/12/mobile-monster-macht-man-selbst/
 category: nähen
 author: Ermeline
 date: 2014-12-02 20:12:00

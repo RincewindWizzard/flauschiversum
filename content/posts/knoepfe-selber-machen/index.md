@@ -1,5 +1,6 @@
 ---
 title: "Knöpfe selber machen"
+permalink: /2014/09/knopfe-selber-machen/
 category: basteln
 author: Ermeline
 date: 2014-09-28 12:26:36

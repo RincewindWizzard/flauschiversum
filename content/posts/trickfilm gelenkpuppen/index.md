@@ -1,5 +1,6 @@
 ---
 title: "Trickfilm Gelenkpuppen"
+permalink: /2016/11/trickfilm-gelenkpuppen/
 category: brandings
 author: Ermeline
 date: 2016-11-20 19:42:16

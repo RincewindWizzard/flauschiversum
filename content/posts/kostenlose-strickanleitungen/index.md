@@ -1,5 +1,6 @@
 ---
 title: "kostenlose Strickanleitungen"
+permalink: /2014/06/kostenlose-strickanleitungen/
 category: wolle
 author: Ermeline
 date: 2014-06-29 15:32:06

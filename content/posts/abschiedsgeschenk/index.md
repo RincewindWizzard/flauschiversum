@@ -1,5 +1,6 @@
 ---
 title: "Abschiedsgeschenk"
+permalink: /2018/04/abschiedsgeschenk/
 category: basteln
 author: Ermeline
 date: 2018-04-01

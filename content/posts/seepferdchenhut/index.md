@@ -1,5 +1,6 @@
 ---
 title: "Seepferdchenhut"
+permalink: /2015/11/seepferdchenhut/
 category: filzen
 author: Ermeline
 date: 2015-11-15 15:00:00

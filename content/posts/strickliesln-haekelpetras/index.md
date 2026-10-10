@@ -1,5 +1,6 @@
 ---
 title: "Stricklies'ln & Häkelpetra's"
+permalink: /2013/07/stricklies-ln-hakelpetra-s/
 category: wolle
 author: Ermeline
 date: 2013-07-27 22:46:08

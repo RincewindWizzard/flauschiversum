@@ -1,5 +1,6 @@
 ---
 title: "Klöppelefeu"
+permalink: /2019/02/kloppelefeu/
 category: wolle
 author: Ermeline
 date: 2019-02-03

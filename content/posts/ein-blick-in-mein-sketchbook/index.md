@@ -1,5 +1,6 @@
 ---
 title: "Ein Blick in mein Sketchbook"
+permalink: /2015/08/ein-blick-in-mein-sketchbook/
 author: Ermeline
 date: 2015-08-26 14:33:00
 image: Drachenauge.jpg

@@ -1,5 +1,6 @@
 ---
 title: "Sockenhase"
+permalink: /2014/11/sockenhase/
 category: nähen
 author: Ermeline
 date: 2014-11-23 18:11:26

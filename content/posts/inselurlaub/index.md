@@ -1,5 +1,6 @@
 ---
 title: "Inselurlaub"
+permalink: /2019/10/inselurlaub/
 category: wolle
 author: Ermeline
 date: 2019-10-27 12:19:50

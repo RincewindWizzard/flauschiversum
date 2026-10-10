@@ -1,5 +1,6 @@
 ---
 title: "Flauschangriff"
+permalink: /2014/04/flauschangriff/
 slug: "flauschangriff"
 category: filzen
 author: Ermeline

@@ -1,5 +1,6 @@
 ---
 title: "Kürbis"
+permalink: /2020/10/kurbis/
 category: basteln
 author: Ermeline
 date: 2020-10-31

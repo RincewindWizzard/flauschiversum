@@ -1,5 +1,6 @@
 ---
 title: "das neue Banner"
+permalink: /2014/08/das-neue-banner/
 category: filzen
 author: Ermeline
 date: 2014-08-31 18:45:53

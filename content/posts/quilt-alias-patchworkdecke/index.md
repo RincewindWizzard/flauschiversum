@@ -1,5 +1,6 @@
 ---
 title: "Quilt alias Patchworkdecke"
+permalink: /2014/01/quilt-alias-patchworkdecke/
 category: nähen
 author: Ermeline
 date: 2014-01-02 23:56:41

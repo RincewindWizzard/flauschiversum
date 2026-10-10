@@ -1,5 +1,6 @@
 ---
 title: "heiße Vampirbisse"
+permalink: /2019/03/heisse-vampirbisse/
 category: filzen
 author: Ermeline
 date: 2019-03-03

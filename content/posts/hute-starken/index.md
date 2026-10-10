@@ -1,5 +1,6 @@
 ---
 title: "Hüte stärken"
+permalink: /2014/01/hute-starken/
 category: filzen
 author: Ermeline
 date: 2014-01-02 22:17:59

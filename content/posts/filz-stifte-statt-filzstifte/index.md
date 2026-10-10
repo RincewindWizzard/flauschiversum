@@ -1,5 +1,6 @@
 ---
 title: "Filz-Stifte statt Filzstifte"
+permalink: /2014/07/filz-stifte-statt-filzstifte/
 category: filzen
 author: Ermeline
 date: 2014-07-23 18:45:51

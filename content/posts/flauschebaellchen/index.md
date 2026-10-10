@@ -1,5 +1,6 @@
 ---
 title: "Flauschebällchen"
+permalink: /2013/07/flauscheballchen/
 category: filzen
 author: Ermeline
 date: 2013-07-28 17:23:39

@@ -1,5 +1,6 @@
 ---
 title: "Quidditch-Schal "
+permalink: /2019/02/quidditch-schal/
 category: wolle
 author: Ermeline
 date: 2019-02-17

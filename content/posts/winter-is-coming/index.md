@@ -1,5 +1,6 @@
 ---
 title: "Winter Is Coming"
+permalink: /2016/09/winter-is-coming/
 category: wolle
 author: Ermeline
 date: 2016-09-25 18:39:18

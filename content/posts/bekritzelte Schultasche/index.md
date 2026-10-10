@@ -1,5 +1,6 @@
 ---
 title: "bekritzelte Schultasche"
+permalink: /2016/05/bekritzelte-schultasche/
 category: brandings
 author: Ermeline
 date: 2016-05-01 18:58:10

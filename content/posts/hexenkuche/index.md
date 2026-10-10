@@ -1,5 +1,6 @@
 ---
 title: "Hexenküche"
+permalink: /2014/08/hexenkuche/
 category: brandings
 author: Ermeline
 date: 2014-08-31 21:18:46

@@ -1,5 +1,6 @@
 ---
 title: "Stifteaufbewahrung"
+permalink: /2018/04/stifteaufbewahrung/
 category: basteln
 author: Ermeline
 date: 2018-04-08

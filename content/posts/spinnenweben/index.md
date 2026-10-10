@@ -1,5 +1,6 @@
 ---
 title: "Spinnenweben"
+permalink: /2015/12/spinnenweben/
 category: filzen
 author: Ermeline
 date: 2015-12-07 18:14:38

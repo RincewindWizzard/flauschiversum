@@ -1,5 +1,6 @@
 ---
 title: "Die Challenge"
+permalink: /2016/05/die-challenge/
 category: nähen
 author: Lucy Ermeline
 date: 2016-05-22 14:30:23

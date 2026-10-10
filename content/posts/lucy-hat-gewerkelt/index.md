@@ -1,5 +1,6 @@
 ---
 title: "Lucy hat gewerkelt"
+permalink: /2017/02/lucy-hat-gewerkelt/
 category: nähen
 author: Lucy
 date: 2017-02-12

@@ -1,5 +1,6 @@
 ---
 title: "XXL Kerze"
+permalink: /2017/04/xxl-kerze/
 category: basteln
 author: Ermeline
 date: 2017-04-09

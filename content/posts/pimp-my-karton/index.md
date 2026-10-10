@@ -1,5 +1,6 @@
 ---
 title: "Pimp-my-Karton"
+permalink: /2016/02/pimp-my-karton/
 category: basteln
 author: Ermeline
 date: 2016-02-14 18:50:11

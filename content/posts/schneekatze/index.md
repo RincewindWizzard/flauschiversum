@@ -1,5 +1,6 @@
 ---
 title: "Schneekatze"
+permalink: /2015/01/schneekatze/
 category: basteln
 author: Ermeline
 date: 2015-01-24 12:07:37

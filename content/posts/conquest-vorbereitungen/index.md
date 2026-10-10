@@ -1,5 +1,6 @@
 ---
 title: "ConQuest-Vorbereitungen"
+permalink: /2016/07/conquest-vorbereitungen/
 category: basteln
 author: Ermeline
 date: 2016-07-31 14:50:11

@@ -1,5 +1,6 @@
 ---
 title: "Sternmütze"
+permalink: /2016/12/sternmutze/
 category: wolle
 author: Ermeline
 date: 2016-12-11 12:25:10

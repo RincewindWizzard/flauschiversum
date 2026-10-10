@@ -1,5 +1,6 @@
 ---
 title: "Klöppelherz"
+permalink: /2018/08/kloppelherz/
 category: wolle
 author: Ermeline
 date: 2018-08-12

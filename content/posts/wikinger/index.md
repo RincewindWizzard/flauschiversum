@@ -1,5 +1,6 @@
 ---
 title: "Wikinger"
+permalink: /2014/01/wikinger/
 category: brandings
 author: Ermeline
 date: 2014-01-04 19:34:32

@@ -1,5 +1,6 @@
 ---
 title: "unterstützte Spindel"
+permalink: /2015/05/unterstutzte-spindel/
 category: wolle
 author: Ermeline
 date: 2015-05-12 16:58:09

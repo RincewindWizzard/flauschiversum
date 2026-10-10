@@ -1,5 +1,6 @@
 ---
 title: "Pfeilraupenvirus"
+permalink: /2017/01/pfeilraupenvirus/
 category: wolle
 author: Ermeline
 date: 2017-01-08

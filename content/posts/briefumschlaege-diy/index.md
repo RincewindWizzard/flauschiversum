@@ -1,5 +1,6 @@
 ---
 title: "Briefumschläge DIY"
+permalink: /2016/03/briefumschlage-diy/
 category: basteln
 author: Ermeline
 date: 2016-03-20 14:50:11

@@ -1,5 +1,6 @@
 ---
 title: "Mäuschen sag mal Piep!"
+permalink: /2014/06/mauschen-sag-mal-piep/
 category: filzen
 author: Ermeline
 date: 2014-06-08 15:28:57

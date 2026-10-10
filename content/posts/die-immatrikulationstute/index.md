@@ -1,5 +1,6 @@
 ---
 title: "die Immatrikulationstüte"
+permalink: /2018/03/die-immatrikulationstute/
 category: basteln
 author: Ermeline
 date: 2018-03-25

@@ -1,5 +1,6 @@
 ---
 title: "Häkelbaumler"
+permalink: /2017/05/hakelbaumler/
 category: wolle
 author: Ermeline
 date: 2017-05-21

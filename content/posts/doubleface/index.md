@@ -1,5 +1,6 @@
 ---
 title: "Doubleface"
+permalink: /2014/01/doubleface/
 category: wolle
 author: Ermeline
 date: 2014-01-02 23:31:40

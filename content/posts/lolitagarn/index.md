@@ -1,5 +1,6 @@
 ---
 title: "Lolitagarn"
+permalink: /2018/08/lolitagarn/
 category: wolle
 author: Ermeline
 date: 2018-08-05

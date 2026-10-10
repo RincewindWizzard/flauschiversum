@@ -1,5 +1,6 @@
 ---
 title: "de Wullstuuv"
+permalink: /2013/07/de-wullstuuv/
 category: filzen
 author: Ermeline
 date: 2013-07-28 00:50:23

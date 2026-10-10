@@ -1,5 +1,6 @@
 ---
 title: "Warum liegt denn hier Kürbis...?"
+permalink: /2014/10/warum-liegt-denn-hier-kurbis/
 category: basteln
 author: Ermeline
 date: 2014-10-25 18:21:13

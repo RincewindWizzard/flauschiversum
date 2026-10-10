@@ -1,5 +1,6 @@
 ---
 title: "Freundschaften knüpfen mal anders"
+permalink: /2014/07/freundschaften-knupfen-mal-anders/
 category: wolle
 author: Ermeline
 date: 2014-07-23 12:52:24

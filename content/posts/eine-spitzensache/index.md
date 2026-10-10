@@ -1,5 +1,6 @@
 ---
 title: "Eine Spitzensache"
+permalink: /2016/01/eine-spitzensache/
 category: nähen
 author: Lucy
 date: 2016-01-31 15:30:23

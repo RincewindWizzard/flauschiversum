@@ -1,5 +1,6 @@
 ---
 title: "Kaninchen-Stirnband"
+permalink: /2015/11/kaninchen-stirnband/
 category: wolle
 author: Ermeline
 date: 2015-11-22 18:40:11

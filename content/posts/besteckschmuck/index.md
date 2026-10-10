@@ -1,5 +1,6 @@
 ---
 title: "Besteckschmuck"
+permalink: /2016/10/besteckschmuck/
 category: basteln
 author: Ermeline
 date: 2016-10-02 21:16:47

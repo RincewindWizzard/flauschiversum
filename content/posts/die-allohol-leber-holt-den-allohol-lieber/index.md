@@ -1,5 +1,6 @@
 ---
 title: "die Allohol-Leber holt den Allohol lieber"
+permalink: /2014/06/die-allohol-leber-holt-den-allohol-lieber/
 category: malen
 author: Ermeline
 date: 2014-06-09 16:36:24

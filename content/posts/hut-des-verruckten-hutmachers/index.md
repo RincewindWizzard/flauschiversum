@@ -1,5 +1,6 @@
 ---
 title: "Hut des verrückten Hutmachers"
+permalink: /2017/02/hut-des-verruckten-hutmachers/
 category: naehen
 author: Ermeline
 date: 2017-02-26

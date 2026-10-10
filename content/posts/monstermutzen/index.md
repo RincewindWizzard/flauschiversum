@@ -1,5 +1,6 @@
 ---
 title: "Monstermützen"
+permalink: /2015/01/monstermutzen/
 category: wolle
 author: Ermeline
 date: 2015-01-04 14:12:55

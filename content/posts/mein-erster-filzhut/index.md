@@ -1,5 +1,6 @@
 ---
 title: "Mein erster Filzhut"
+permalink: /2014/01/mein-erster-filzhut/
 category: filzen
 author: Ermeline
 date: 2014-01-02 21:47:16

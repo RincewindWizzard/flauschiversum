@@ -1,5 +1,6 @@
 ---
 title: "Amigurumi Babyeinhorn"
+permalink: /2018/02/amigurumi-babyeinhorn/
 category: wolle
 author: Ermeline
 date: 2018-02-25

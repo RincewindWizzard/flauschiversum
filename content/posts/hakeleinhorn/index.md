@@ -1,5 +1,6 @@
 ---
 title: "Häkeleinhorn"
+permalink: /2018/02/hakeleinhorn/
 category: wolle
 author: Ermeline
 date: 2018-02-18

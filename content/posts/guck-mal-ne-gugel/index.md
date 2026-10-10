@@ -1,5 +1,6 @@
 ---
 title: "Guck mal ne Gugel"
+permalink: /2016/07/guck-mal-ne-gugel/
 category: nähen
 author: Ermeline
 date: 2016-07-24 15:50:47

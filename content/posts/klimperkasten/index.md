@@ -1,5 +1,6 @@
 ---
 title: "Klimperkasten"
+permalink: /2016/02/klimperkasten/
 category: basteln
 author: Ermeline
 date: 2016-02-21 15:45:57

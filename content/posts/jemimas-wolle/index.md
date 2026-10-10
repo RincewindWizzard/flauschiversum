@@ -1,5 +1,6 @@
 ---
 title: "Jemimas Wolle"
+permalink: /2018/03/jemimas-wolle/
 category: wolle
 author: Ermeline
 date: 2018-03-18

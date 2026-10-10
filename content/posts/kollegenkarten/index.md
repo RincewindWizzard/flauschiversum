@@ -1,5 +1,6 @@
 ---
 title: "Kollegenkarten"
+permalink: /2018/03/kollegenkarten/
 category: malen
 author: Ermeline
 date: 2018-03-04

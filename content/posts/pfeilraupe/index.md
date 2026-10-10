@@ -1,5 +1,6 @@
 ---
 title: "Pfeilraupe"
+permalink: /2016/12/pfeilraupe/
 category: wolle
 author: Lucy
 date: 2016-12-18 13:51:03

@@ -1,5 +1,6 @@
 ---
 title: "Kettenrock"
+permalink: /2014/01/kettenrock/
 category: brandings
 author: Ermeline
 date: 2014-01-04 20:42:50

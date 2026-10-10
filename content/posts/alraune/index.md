@@ -1,5 +1,6 @@
 ---
 title: "Alraune"
+permalink: /2014/01/alraune/
 category: basteln
 author: Ermeline
 date: 2014-01-04 19:10:28

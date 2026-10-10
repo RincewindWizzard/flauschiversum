@@ -1,5 +1,6 @@
 ---
 title: "Marionette "
+permalink: /2017/01/marionette/
 category: basteln
 author: Ermeline
 date: 2017-01-29

@@ -1,5 +1,6 @@
 ---
 title: "Klöppeltardis"
+permalink: /2019/02/kloppeltardis/
 category: wolle
 author: Ermeline
 date: 2019-02-10

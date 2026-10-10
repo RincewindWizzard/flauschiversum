@@ -1,5 +1,6 @@
 ---
 title: "Grinsetasche"
+permalink: /2016/05/grinsetasche/
 category: brandings
 author: Ermeline
 date: 2016-05-29 15:39:45

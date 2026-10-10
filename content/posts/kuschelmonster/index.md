@@ -1,5 +1,6 @@
 ---
 title: "Kuschelmonster"
+permalink: /2015/02/kuschelmonster/
 category: filzen
 author: Ermeline
 date: 2015-02-09 21:50:12

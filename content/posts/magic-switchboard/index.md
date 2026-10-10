@@ -1,5 +1,6 @@
 ---
 title: "Magic Switchboard"
+permalink: /2017/07/magic-switchboard/
 category: basteln
 author: Ehrlich
 date: 2017-07-01

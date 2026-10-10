@@ -1,5 +1,6 @@
 ---
 title: "Mützekatze"
+permalink: /2014/05/mutzekatze/
 category: wolle
 author: Ermeline
 date: 2014-05-18 18:25:10

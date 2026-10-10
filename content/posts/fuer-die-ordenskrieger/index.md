@@ -1,5 +1,6 @@
 ---
 title: "für die Ordenskrieger"
+permalink: /2014/01/fur-die-ordenskrieger/
 category: basteln
 author: Ermeline
 date: 2014-01-02 20:49:25

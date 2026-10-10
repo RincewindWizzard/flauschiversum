@@ -1,5 +1,6 @@
 ---
 title: "Flauschiversum Schild"
+permalink: /2016/01/flauschiversum-schild/
 category: brandings
 author: Ermeline
 date: 2016-01-17 13:18:46

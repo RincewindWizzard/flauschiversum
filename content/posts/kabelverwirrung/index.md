@@ -1,5 +1,6 @@
 ---
 title: "Kabelverwirrung"
+permalink: /2014/04/kabelverwirrung/
 category: basteln
 author: Ermeline
 date: 2014-04-28 21:54:55

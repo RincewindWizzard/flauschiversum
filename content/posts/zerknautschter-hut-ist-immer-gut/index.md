@@ -1,5 +1,6 @@
 ---
 title: "Zerknautschter Hut, ist immer gut."
+permalink: /2014/08/zerknautschter-hut-ist-immer-gut/
 category: filzen
 author: Ermeline
 date: 2014-08-01 14:23:27

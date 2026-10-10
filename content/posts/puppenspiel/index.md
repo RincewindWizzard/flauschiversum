@@ -1,5 +1,6 @@
 ---
 title: "Puppenspiel"
+permalink: /2014/06/puppenspiel/
 category: wolle
 author: Lucy
 date: 2014-06-16 19:22:24

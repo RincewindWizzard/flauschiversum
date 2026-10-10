@@ -1,5 +1,6 @@
 ---
 title: "Gut betucht"
+permalink: /2015/07/gut-betucht/
 category: wolle
 author: Ermeline
 date: 2015-07-20 19:39:18

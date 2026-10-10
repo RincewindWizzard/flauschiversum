@@ -1,5 +1,6 @@
 ---
 title: "Spinnerey"
+permalink: /2013/07/spinnerey/
 category: wolle
 author: Ermeline
 date: 2013-07-27 22:13:00

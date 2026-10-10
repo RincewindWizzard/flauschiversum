@@ -1,5 +1,6 @@
 ---
 title: "Tintenfischhandy"
+permalink: /2017/06/tintenfischhandy/
 category: wolle
 author: Ermeline
 date: 2017-06-11

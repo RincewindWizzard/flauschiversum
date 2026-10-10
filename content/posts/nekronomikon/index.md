@@ -1,5 +1,6 @@
 ---
 title: "Nekronomikon"
+permalink: /2014/01/nekronomikon/
 category: basteln
 author: Ermeline
 date: 2014-01-02 20:25:10

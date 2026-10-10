@@ -1,5 +1,6 @@
 ---
 title: "Kuschelstrick"
+permalink: /2014/06/kuschelstrick/
 category: wolle
 author: Lucy
 date: 2014-06-11 15:51:03

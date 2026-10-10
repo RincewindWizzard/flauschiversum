@@ -1,5 +1,6 @@
 ---
 title: "Einschulungsgeschenk"
+permalink: /2015/08/einschulungsgeschenk/
 category: basteln
 author: Ermeline
 date: 2015-08-30 11:45:00 

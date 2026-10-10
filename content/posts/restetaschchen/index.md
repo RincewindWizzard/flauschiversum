@@ -1,5 +1,6 @@
 ---
 title: "Restetäschchen"
+permalink: /2016/02/restetaschchen/
 category: nähen
 author: Ermeline
 date: 2016-02-07 17:42:16

@@ -1,5 +1,6 @@
 ---
 title: "Zuwachs"
+permalink: /2016/10/zuwachs/
 category: basteln
 author: Ermeline
 date: 2016-10-23 17:41:25

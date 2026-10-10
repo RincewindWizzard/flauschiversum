@@ -1,5 +1,6 @@
 ---
 title: "Rincewind-Hut"
+permalink: /2014/01/rincewind-hut/
 category: filzen
 author: Ermeline
 date: 2014-01-02 22:07:35

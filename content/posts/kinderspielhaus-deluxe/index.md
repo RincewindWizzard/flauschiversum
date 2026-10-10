@@ -1,5 +1,6 @@
 ---
 title: "Kinderspielhaus Deluxe"
+permalink: /2014/06/kinderspielhaus-deluxe/
 category: basteln
 author: Ermeline
 date: 2014-06-05 14:55:18

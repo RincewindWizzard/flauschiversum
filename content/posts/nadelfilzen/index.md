@@ -1,5 +1,6 @@
 ---
 title: "Nadelfilzen"
+permalink: /2016/10/nadelfilzen/
 category: filzen
 author: Ermeline
 date: 2016-10-09 15:28:57

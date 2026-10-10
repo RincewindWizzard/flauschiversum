@@ -1,5 +1,6 @@
 ---
 title: "Leder Flach"
+permalink: /2013/07/leder-flach/
 category: basteln
 author: Ermeline
 date: 2013-07-28 00:54:42

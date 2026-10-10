@@ -1,5 +1,6 @@
 ---
 title: "Gebamsel oder Windspiel"
+permalink: /2017/04/gebamsel-oder-windspiel/
 category: basteln
 author: Lucy
 date: 2017-04-16

@@ -1,5 +1,6 @@
 ---
 title: "NyanCat Stirnband"
+permalink: /2017/01/nyancat-stirnband/
 category: wolle
 author: Ermeline
 date: 2017-01-22

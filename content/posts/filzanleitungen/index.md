@@ -1,5 +1,6 @@
 ---
 title: "Filzanleitungen"
+permalink: /2014/07/filzanleitungen/
 category: filzen
 author: Ermeline
 date: 2014-07-28 20:40:10

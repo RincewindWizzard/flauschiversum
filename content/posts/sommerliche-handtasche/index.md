@@ -1,5 +1,6 @@
 ---
 title: "sommerliche Handtasche"
+permalink: /2017/05/sommerliche-handtasche/
 category: naehen
 author: Lucy
 date: 2017-05-28

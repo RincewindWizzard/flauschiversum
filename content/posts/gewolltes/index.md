@@ -1,5 +1,6 @@
 ---
 title: "Gewolltes"
+permalink: /2016/06/gewolltes/
 category: wolle
 author: Ermeline
 date: 2016-06-19 16:11:47

@@ -1,5 +1,6 @@
 ---
 title: "Der Monet auf dem WC"
+permalink: /2015/01/der-monet-auf-dem-wc/
 category: nähen
 author: Lucy
 date: 2015-01-18 20:30:23

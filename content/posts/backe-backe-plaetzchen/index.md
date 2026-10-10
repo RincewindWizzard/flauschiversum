@@ -1,5 +1,6 @@
 ---
 title: "backe backe Plätzchen"
+permalink: /2016/11/backe-backe-platzchen/
 category: basteln
 author: Ermeline Lucy
 date: 2016-11-27 16:16:47

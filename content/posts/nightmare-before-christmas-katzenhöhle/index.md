@@ -1,5 +1,6 @@
 ---
 title: "Nightmare-Before-Christmas-Katzenhöhle"
+permalink: /2016/10/nightmare-before-christmas-katzenhohle/
 category: filzen
 author: Ermeline
 date: 2016-10-30 15:28:57

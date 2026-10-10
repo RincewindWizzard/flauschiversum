@@ -1,5 +1,6 @@
 ---
 title: "Barett"
+permalink: /2015/07/barett/
 category: filzen
 author: Ermeline
 date: 2015-07-27 13:02:41

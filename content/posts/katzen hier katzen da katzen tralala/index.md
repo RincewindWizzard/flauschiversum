@@ -1,5 +1,6 @@
 ---
 title: "Katzen hier Katzen da Katzen tralala"
+permalink: /2016/09/katzen-hier-katzen-da-katzen-tralala/
 category: nähen
 author: Ermeline
 date: 2016-09-04 12:50:23

@@ -1,5 +1,6 @@
 ---
 title: "Lucys Patchwork"
+permalink: /2016/01/lucys-patchwork/
 category: nähen
 author: Lucy
 date: 2016-01-10 12:03:47

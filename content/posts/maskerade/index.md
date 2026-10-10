@@ -1,5 +1,6 @@
 ---
 title: "Maskerade"
+permalink: /2014/10/maskerade/
 category: basteln
 author: Ermeline
 date: 2014-10-24 20:15:05

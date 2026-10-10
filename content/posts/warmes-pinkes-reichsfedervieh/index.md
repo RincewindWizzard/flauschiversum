@@ -1,5 +1,6 @@
 ---
 title: "Warmes, pinkes Reichsfedervieh..."
+permalink: /2014/07/warmes-pinkes-reichsfedervieh/
 category: basteln
 author: Tomcat
 date: 2014-07-30 19:23:04

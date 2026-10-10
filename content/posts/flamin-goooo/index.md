@@ -1,5 +1,6 @@
 ---
 title: "Flamin-Goooo"
+permalink: /2018/08/flamin-goooo/
 category: wolle
 author: Ermeline
 date: 2018-08-19

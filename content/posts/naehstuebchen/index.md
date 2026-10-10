@@ -1,5 +1,6 @@
 ---
 title: "Nähstübchen"
+permalink: /2013/07/nahstubchen/
 category: nähen
 author: Ermeline
 date: 2013-07-27 22:04:39

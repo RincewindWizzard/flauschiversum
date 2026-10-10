@@ -1,5 +1,6 @@
 ---
 title: "Baumärkte"
+permalink: /2013/07/baumarkte/
 category: basteln
 author: Ermeline
 date: 2013-07-28 01:03:37

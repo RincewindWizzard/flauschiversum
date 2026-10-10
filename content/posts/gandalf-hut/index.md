@@ -1,5 +1,6 @@
 ---
 title: "Gandalf-Hut"
+permalink: /2014/07/gandalf-hut/
 category: filzen
 author: Ermeline
 date: 2014-07-22 15:12:40

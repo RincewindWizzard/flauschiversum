@@ -1,5 +1,6 @@
 ---
 title: "Werke der letzten Woche"
+permalink: /2016/03/werke-der-letzten-woche/
 category: nähen
 author: Ermeline
 date: 2016-03-28 15:42:16

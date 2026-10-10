@@ -1,5 +1,6 @@
 ---
 title: "Autumn Shawl"
+permalink: /2016/09/autumn-shawl/
 category: wolle
 author: Ermeline
 date: 2016-09-11 18:39:18

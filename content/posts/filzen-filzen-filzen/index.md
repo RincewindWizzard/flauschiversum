@@ -1,5 +1,6 @@
 ---
 title: "Filzen Filzen Filzen"
+permalink: /2015/07/filzen-filzen-filzen/
 category: filzen
 author: Ermeline
 date: 2015-07-30 19:21:38

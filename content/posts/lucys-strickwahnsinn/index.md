@@ -1,5 +1,6 @@
 ---
 title: "Lucys Strickwahnsinn"
+permalink: /2015/12/lucys-strickwahnsinn/
 category: wolle
 author: Lucy
 date: 2015-12-13 15:11:47

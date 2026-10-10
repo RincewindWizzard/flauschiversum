@@ -1,5 +1,6 @@
 ---
 title: "Wandbehang"
+permalink: /2016/09/wandbehang/
 category: nähen
 author: Lucy
 date: 2016-09-18 19:03:47

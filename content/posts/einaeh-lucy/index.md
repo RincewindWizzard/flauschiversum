@@ -1,5 +1,6 @@
 ---
 title: "eiNäh Lucy"
+permalink: /2016/06/einah-lucy/
 category: nähen
 author: Lucy
 date: 2016-06-26 19:03:47

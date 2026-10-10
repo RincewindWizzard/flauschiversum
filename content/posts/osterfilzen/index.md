@@ -1,5 +1,6 @@
 ---
 title: "Osterfilzen"
+permalink: /2017/04/osterfilzen/
 category: filzen
 author: Ermeline
 date: 2017-04-23

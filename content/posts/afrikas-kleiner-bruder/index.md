@@ -1,5 +1,6 @@
 ---
 title: "Afrikas kleiner Bruder"
+permalink: /2017/07/afrikas-kleiner-bruder/
 category: naehen
 author: Lucy
 date: 2017-07-30

@@ -1,5 +1,6 @@
 ---
 title: "Strickmantel"
+permalink: /2014/06/strickmantel/
 category: wolle
 author: Lucy
 date: 2014-06-25 16:36:09

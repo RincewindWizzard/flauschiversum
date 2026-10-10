@@ -1,5 +1,6 @@
 ---
 title: "ein wichtiger Hut"
+permalink: /2017/02/ein-wichtiger-hut/
 category: nähen
 author: Ermeline
 date: 2017-02-19

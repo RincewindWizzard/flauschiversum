@@ -1,5 +1,6 @@
 ---
 title: "Ein paar Oldtimer"
+permalink: /2016/01/ein-paar-oldtimer/
 category: basteln
 author: Ermeline
 date: 2016-01-03 21:16:47

@@ -1,5 +1,6 @@
 ---
 title: "Filz and Friends"
+permalink: /2015/11/filz-and-friends/
 category: filzen
 author: Ermeline
 date: 2015-11-29 20:21:36

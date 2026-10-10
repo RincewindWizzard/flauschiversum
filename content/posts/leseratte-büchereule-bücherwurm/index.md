@@ -1,5 +1,6 @@
 ---
 title: "Leseratte Büchereule Bücherwurm"
+permalink: /2016/10/leseratte-buchereule-bucherwurm/
 category: malen
 author: Ermeline
 date: 2016-10-16 20:09:53

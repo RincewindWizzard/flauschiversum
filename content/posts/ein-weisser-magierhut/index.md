@@ -1,5 +1,6 @@
 ---
 title: "ein weißer Magierhut"
+permalink: /2018/02/ein-weisser-magierhut/
 category: filzen
 author: Ermeline
 date: 2018-02-11

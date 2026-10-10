@@ -1,5 +1,6 @@
 ---
 title: "Weihnachtskarten"
+permalink: /2018/12/weihnachtskarten/
 category: basteln
 author: Ermeline
 date: 2018-12-23

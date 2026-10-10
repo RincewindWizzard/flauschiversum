@@ -1,5 +1,6 @@
 ---
 title: "Everybody needs a Niffler"
+permalink: /2018/04/everybody-needs-a-niffler/
 category: basteln
 author: Tomcat
 date: 2018-04-29

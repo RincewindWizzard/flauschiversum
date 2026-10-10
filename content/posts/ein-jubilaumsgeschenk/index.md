@@ -1,5 +1,6 @@
 ---
 title: "ein Jubiläumsgeschenk"
+permalink: /2018/04/ein-jubilaumsgeschenk/
 category: basteln
 author: Ermeline
 date: 2018-04-15

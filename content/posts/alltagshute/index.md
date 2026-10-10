@@ -1,5 +1,6 @@
 ---
 title: "Alltagshüte"
+permalink: /2016/05/alltagshute/
 category: filzen
 author: Ermeline
 date: 2016-05-08 21:00:00

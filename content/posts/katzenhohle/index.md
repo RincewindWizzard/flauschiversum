@@ -1,5 +1,6 @@
 ---
 title: "Katzenhöhle"
+permalink: /2015/07/katzenhohle/
 category: filzen
 author: Ermeline
 date: 2015-07-27 11:01:13

@@ -1,5 +1,6 @@
 ---
 title: "Autoaufkleber"
+permalink: /2014/05/autoaufkleber/
 category: basteln
 author: Ermeline
 date: 2014-05-22 15:05:28

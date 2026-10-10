@@ -1,5 +1,6 @@
 ---
 title: "Ärmelschal"
+permalink: /2017/01/armelschal/
 category: wolle
 author: Ermeline
 date: 2017-01-15

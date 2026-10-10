@@ -1,5 +1,6 @@
 ---
 title: "Grinsekatze"
+permalink: /2014/07/grinsekatze/
 category: basteln
 author: Ermeline
 date: 2014-07-10 22:38:20

@@ -1,5 +1,6 @@
 ---
 title: "Karstadt"
+permalink: /2013/07/karstadt/
 category: basteln
 author: Ermeline
 date: 2013-07-28 01:04:03

@@ -1,5 +1,6 @@
 ---
 title: "verspielte Würfeltasche"
+permalink: /2017/08/verspielte-wurfeltasche/
 category: brandings
 author: Ermeline
 date: 2017-08-20

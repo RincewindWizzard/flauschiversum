@@ -1,5 +1,6 @@
 ---
 title: "Laptoptasche"
+permalink: /2018/04/laptoptasche/
 category: naehen
 author: Ermeline
 date: 2018-04-22

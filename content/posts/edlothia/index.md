@@ -1,5 +1,6 @@
 ---
 title: "Edlothia"
+permalink: /2016/11/edlothia/
 category: wolle
 author: Ermeline
 date: 2016-11-06 19:39:18
