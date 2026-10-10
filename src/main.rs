@@ -7,6 +7,9 @@ use std::process::ExitCode;
 mod config;
 mod content;
 mod diag;
+mod markdown;
+mod media;
+mod output;
 mod urls;
 
 /// Generator für das Flauschiversum.

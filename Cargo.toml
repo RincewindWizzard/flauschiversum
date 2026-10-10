@@ -7,14 +7,28 @@ edition = "2024"
 anyhow = "1.0.104"
 blake3 = "1.8.7"
 clap = { version = "4.6.7", features = ["derive"] }
+crc32fast = "1.5.2"
+fast_image_resize = "6.1.0"
+image = { version = "0.25.10", default-features = false, features = ["jpeg", "png", "webp", "gif"] }
 jiff = { version = "0.2.38", features = ["tzdb-bundle-always"] }
+jpeg-encoder = "0.7.1"
 percent-encoding = "2.3.2"
 pulldown-cmark = "0.13.4"
+pulldown-cmark-escape = "0.11.0"
 rayon = "1.12.0"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.152"
 serde_yaml_ng = "0.10.0"
 walkdir = "2.5.0"
+webp = "0.3.1"
 
 [dev-dependencies]
+kamadak-exif = "0.6.1"
 tempfile = "3.27.0"
+
+# Bildverarbeitung ist ohne Optimierung sehr langsam – auch im Dev-Profil optimieren
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 1
