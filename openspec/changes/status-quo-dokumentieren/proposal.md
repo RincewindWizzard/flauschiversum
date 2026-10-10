@@ -30,7 +30,7 @@ Das Flauschiversum wird seit Jahren nicht mehr gepflegt, und der Python-Generato
 10. `--clean` erwartet ein Argument. Der Build muss aus dem Repo-Wurzelverzeichnis gestartet werden.
 11. Ohne `--clean` bleiben Dateien im Ausgabeverzeichnis liegen, die nicht mehr erzeugt werden, z.B. von gelöschten oder umbenannten Posts. Ein vollständiger Neubau mit `--clean` war wegen der langsamen Bildkonvertierung keine Option. Deshalb gibt es den Bild-Cache.
 12. `category` wird gepflegt (inkl. Doppel `nähen`/`naehen`), aber nicht ausgewertet.
-13. `docker-compose.yml` verweist auf das fehlende Verzeichnis `docker/flauschiversum-build`. Das Basis-Image `python:alpine3.7` ist veraltet.
+13. Das Deployment (`docker/`, `update.sh`, Webhook) funktioniert seit langem nicht mehr. `docker-compose.yml` verweist auf das fehlende Verzeichnis `docker/flauschiversum-build`, und das Basis-Image `python:alpine3.7` ist veraltet. Spezifiziert ist deshalb nur die Auslieferung durch den Webserver, nicht der Weg der Dateien dorthin.
 
 ### Bereits getroffene Entscheidungen für den Folge-Change (nicht Teil dieses Changes)
 
@@ -40,6 +40,8 @@ Festgehalten, damit sie nicht verloren gehen; umgesetzt werden sie im Rust-Neuba
 - Drei Bildformate unter den bestehenden URLs: Thumbnail `200x/`, Preview `700x/`, Full `1000x/`. Full wird nie mehrere MB groß.
 - Ein einzelnes Bild wird als Preview gezeigt, ein Klick öffnet Full im Vollbild. Mehrere aufeinanderfolgende Bilder bilden ein Karussell, das auch auf dem Handy funktioniert (Wischen), mit Vollbildansicht.
 - Neues Wasserzeichen „Badge“ (Lobster-Schrift, Themengrün, halbtransparent). Es wird nach dem Skalieren aufgebracht, und seine Größe richtet sich nach der Ausgabegröße.
+- Der Build ist inkrementell: Bildvarianten werden mit einem Schlüssel aus allen Eingaben gecacht (Original, Wasserzeichen, Größe, Qualität, Verfahrensversion). HTML, Feed und CSS werden jedes Mal neu erzeugt. Geschrieben werden nur geänderte Dateien, und nicht mehr erzeugte Dateien werden entfernt.
+- Das Deployment läuft als GitHub Action, die die gebaute Seite per SSH auf den Server überträgt. Geplant ist dafür ein eigener Change.
 - Rechte-Metadaten (EXIF, XMP, IPTC) lauten pauschal „Flauschiversum / Ermeline Wollknoll“. GPS- und Kameradaten werden nie ausgeliefert. Ein unsichtbares Wasserzeichen ist nicht vorgesehen.
 
 ## Capabilities
@@ -56,7 +58,7 @@ Festgehalten, damit sie nicht verloren gehen; umgesetzt werden sie im Rust-Neuba
 - `image-processing`: Erzeugung der Bildvarianten aus den Originalen (Größen, Wasserzeichen, Format, Metadaten, Cache).
 - `rss-feed`: Der RSS-Feed zum Abonnieren.
 - `build`: Aufruf und Ergebnis des Generators (CLI, Ausgabeverzeichnis, statische Dateien, Stylesheet).
-- `deployment`: Wie die gebaute Seite aktualisiert und ausgeliefert wird.
+- `deployment`: Wie die gebaute Seite durch den Webserver ausgeliefert wird.
 
 ### Modified Capabilities
 
