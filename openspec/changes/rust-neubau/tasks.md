@@ -28,7 +28,7 @@
 ## 4. Markdown und Seiten
 
 - [ ] 4.1 Markdown-Rendering mit Erkennung von Mediengruppen umsetzen (Einzelbild → `figure`, Gruppe → Karussell, Video → `video`, GIF → `img`, Text vor der Gruppe bleibt als Absatz, `srcset`, Breite/Höhe, `loading="lazy"` ab dem zweiten Bild, Warnung bei unbekannter Datei); prüfen: Snapshot-Tests für jeden Fall
-- [ ] 4.2 Templates nach MiniJinja portieren (Layout mit SEO-Kopf, Index, Post mit Vor/Zurück-Navigation, Seite, Paginierung) und `h1`-Struktur umstellen; prüfen: Snapshot-Tests der Mini-Site, genau eine `h1` pro Post- und Einzelseite
+- [ ] 4.2 Templates nach Askama portieren (je Seitentyp ein Struct) (Layout mit SEO-Kopf, Index, Post mit Vor/Zurück-Navigation, Seite, Paginierung) und `h1`-Struktur umstellen; prüfen: Snapshot-Tests der Mini-Site, genau eine `h1` pro Post- und Einzelseite, ein absichtlich falscher Feldname in einem Template lässt `cargo build` scheitern
 - [ ] 4.3 Indexseiten mit Paginierung (nur veröffentlichte Posts, Fenster ±2, kein Phantom, Titel je Seite) erzeugen; prüfen: Unit-Tests für Seite 1, 10 und 49 von 49 sowie für den Fall nur einer Seite
 - [ ] 4.4 RSS-Feed (20 neueste, `pubDate`, `dc:creator`, `content:encoded` mit absoluten URLs, `enclosure`, `atom:link`, stabiles `lastBuildDate`, GUID unverändert) erzeugen; prüfen: Snapshot-Test sowie Prüfung des Feeds der Gesamtseite mit einem RSS-Validator
 - [ ] 4.5 SEO-Ausgaben (Sitemap, robots.txt, Meta-Description mit Kürzung, Canonical, Open Graph, Twitter-Card, JSON-LD `BlogPosting`, Feed-Link im Kopf) erzeugen; prüfen: Snapshot-Tests, Unit-Test der Kürzung an Wortgrenzen, JSON-LD parst als gültiges JSON
@@ -36,7 +36,7 @@
 
 ## 5. Frontend
 
-- [ ] 5.1 LESS nach CSS unter `content/style/` überführen (Variablen, Farben, Nesting) und LESS-Dateien entfernen; Bündeln und Minimieren mit `lightningcss`; prüfen: Screenshot-Vergleich Start-, Post- und About-Seite gegen die Live-Seite
+- [ ] 5.1 LESS nach Standard-CSS unter `content/style/` überführen (Custom Properties, natives Nesting, `color-mix()` statt `lighten()`) und LESS-Dateien entfernen; Bündeln und Minimieren mit `lightningcss`, kein Präprozessor; prüfen: Screenshot-Vergleich Start-, Post- und About-Seite gegen die Live-Seite
 - [ ] 5.2 CSS für `figure.media`, Karussell (Scroll-Snap) und Video ergänzen; prüfen: Karussell ist ohne JavaScript per Wischen und Scrollen bedienbar (Browser-Test mit deaktiviertem JS)
 - [ ] 5.3 `assets/js/carousel.js` (Pfeile, Punkte, Tastatur, Position) schreiben; prüfen: Browser-Test in Handy- und Desktopgröße mit Playwright
 - [ ] 5.4 PhotoSwipe 5 unter `assets/vendor/photoswipe/` einbinden (Lizenzdatei mitliefern), Galerie je Gruppe, Bildunterschriften, Zurück-Taste schließt; prüfen: Playwright-Test öffnet das Vollbild, blättert und schließt es mit Escape und der Zurück-Navigation

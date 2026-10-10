@@ -8,6 +8,7 @@ Der Python-Generator des Flauschiversums läuft mit aktuellen Bibliotheken nicht
 
 - **Neuer Generator in Rust** (`cargo run -- build`). Er ersetzt `blogcompile/`, `main.py`, `settings.py`, `requirements.txt` und die LESS-Toolchain. Diese werden entfernt, ebenso das kaputte `docker/`-Deployment. **BREAKING** für den Aufruf: `python3 main.py …` wird ersetzt durch `flauschiversum build …`.
 - **Inhalte ziehen von `src/` nach `content/`.** Der Rust-Code liegt in `src/`, die Templates bleiben in `templates/`. Die URLs sind davon nicht betroffen.
+- **Templates mit Askama statt Jinja2:** Die HTML-Templates werden beim Kompilieren gegen typisierte Rust-Strukturen geprüft und in Rust-Code übersetzt. Fehler in Templates fallen so schon bei `cargo build` auf, nicht erst beim Rendern.
 - **Permalinks:** Jeder der 194 Posts bekommt im Frontmatter ein Feld `permalink` mit seiner bisherigen Live-URL. Die URL kommt künftig aus diesem Feld. Neue Posts ohne `permalink` erhalten eine URL aus Datum und Verzeichnisname.
 - **Mehr Medienformate:** Als Bilder werden `.jpg`, `.jpeg`, `.png` und `.webp` verarbeitet (in allen Schreibweisen). Animierte `.gif` sowie Kurzvideos `.mp4` und `.webm` werden unverändert ausgeliefert. Im Post erscheinen Videos als stumm laufende Schleife, wie früher GIFs.
 - **Neue Bilddarstellung:** Ein einzelnes Bild wird als Preview gezeigt, ein Klick öffnet Full im Vollbild. Mehrere Bilder hintereinander bilden ein wischbares Karussell, ebenfalls mit Vollbild. Das funktioniert auf dem Handy und ohne jQuery.
@@ -17,7 +18,7 @@ Der Python-Generator des Flauschiversums läuft mit aktuellen Bibliotheken nicht
 - **SEO:** `sitemap.xml`, `robots.txt`, aussagekräftige Seitentitel, genau eine `<h1>` pro Seite, Links zum vorherigen und nächsten Post, Meta-Description, Canonical-URL, Open-Graph-Vorschauen und strukturierte Daten (`BlogPosting`). Interne Links werden beim Build geprüft.
 - **RSS-Feed:** Neueste zuerst, mit `pubDate`, Autor, Vorschaubild und vollem Inhalt. Nicht veröffentlichte Posts erscheinen nicht. Die bisherigen GUIDs bleiben erhalten.
 - **Bugfixes:** Zukünftig datierte Posts werden gar nicht erzeugt. Die Paginierung zeigt keine Phantomseite mehr. Indexseiten haben einen Titel. URLs werden korrekt kodiert. `category` bleibt ohne Wirkung, wird aber vereinheitlicht (`naehen` → `nähen`).
-- **Stylesheet:** Die LESS-Dateien werden einmalig in normales CSS überführt (CSS-Variablen, natives Nesting). Gestaltung und Farben bleiben gleich.
+- **Stylesheet ohne Präprozessor:** Die LESS-Dateien werden einmalig in normales CSS überführt. Variablen werden zu Custom Properties, Verschachtelung bleibt als natives CSS-Nesting, `lighten()` wird zu `color-mix()`. Der Build fasst die Dateien nur noch zusammen und minimiert sie. Gestaltung und Farben bleiben gleich.
 - **Vorschau-Server:** `flauschiversum serve` baut bei jeder Änderung neu und zeigt die Seite lokal an.
 
 Nicht Teil dieses Changes: das neue Deployment als GitHub Action (eigener Change), Kategorieseiten, Suche, Kommentare sowie das Umkodieren von Videos.
@@ -42,7 +43,7 @@ Nicht Teil dieses Changes: das neue Deployment als GitHub Action (eigener Change
 
 ## Impact
 
-- **Code:** `blogcompile/`, `main.py`, `settings.py`, `requirements.txt`, `test/`, `src/style/` (LESS) und `docker/` sowie `docker-compose.yml` entfallen. Neu sind `Cargo.toml` und `src/` (Rust), dazu `templates/` (an MiniJinja angepasst) und `content/` (alle Inhalte, verschoben).
+- **Code:** `blogcompile/`, `main.py`, `settings.py`, `requirements.txt`, `test/`, `src/style/` (LESS) und `docker/` sowie `docker-compose.yml` entfallen. Neu sind `Cargo.toml` und `src/` (Rust), dazu `templates/` (nach Askama portiert) und `content/` (alle Inhalte, verschoben).
 - **Inhalte:** 194 `index.md` erhalten je eine Zeile `permalink:`, sonst bleiben sie unverändert. 5 Posts: `category: naehen` → `nähen`. Bei 82 Originalbildern ist der EXIF-Drehungs-Tag veraltet: Die Pixel sind schon aufrecht, aber der Tag verlangt eine Drehung. Er wird verlustfrei auf „normal“ zurückgesetzt, damit die neue Pipeline Drehungen korrekt anwenden kann, ohne diese Bilder schief darzustellen.
 - **Abhängigkeiten:** Rust-Toolchain (stable) statt Python 3, Pillow und Node/lessc. Zur Laufzeit gibt es keine externen Programme.
 - **Ausgabe:** Alle bestehenden URLs bleiben erhalten. Bildvarianten bekommen unter denselben URLs neuen Inhalt (neues Wasserzeichen, bessere Kompression). Entfernt werden `/script/jquery.js`, `/script/responsiveslides.min.js`, `/script/slideshow.js` und `/images/nav_btn.gif`. Das sind keine Inhalts-URLs. Neu hinzu kommen `/sitemap.xml`, `/robots.txt`, die Originale animierter GIFs und Videos sowie die Skripte für Karussell und Vollbild.

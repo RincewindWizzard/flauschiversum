@@ -28,7 +28,7 @@ Die Motivation steht in `proposal.md`, das heutige Verhalten in den Specs unter 
 ```
 Cargo.toml, Cargo.lock
 src/            Rust-Code (main.rs, cli, content, markdown, media/, render, feed, seo, output, serve)
-templates/      MiniJinja-Templates (layout.html, index.html, post.html, page.html, lib/…)
+templates/      Askama-Templates, beim Kompilieren eingebunden (layout.html, index.html, post.html, page.html, partials/…)
 assets/         vom Generator ausgeliefert: badge.png, js/carousel.js, vendor/photoswipe/…
 content/        posts/, pages/, static/, style/   (per `git mv` aus src/)
 tests/          Integrationstests + fixtures/ (Mini-Site, live-urls.txt)
@@ -53,7 +53,7 @@ Alle Ausgaben entstehen als `(Pfad, Bytes)` in einer Map. Erst der Writer berüh
 | Frontmatter | `serde` + `serde_yaml_ng` | Gepflegter Fork von `serde_yaml`. Datumswerte werden als String gelesen und selbst geparst, damit beide Formate exakt gelten. |
 | Datum/Zeitzone | `jiff` | Zeitzone Europe/Berlin mit eingebauter Zeitzonendatenbank. `chrono-tz` wäre die Alternative. |
 | Markdown | `pulldown-cmark` (+ HTML-Durchreichung) | Event-Stream für die Erkennung von Bildgruppen. `comrak` ist schwerer und bringt hier keinen Vorteil. |
-| Templates | `minijinja` | Jinja2-kompatibel, die Templates lassen sich fast 1:1 übernehmen. `tera` wäre ähnlich, aber weniger kompatibel. |
+| Templates | `askama` | Templates werden beim Kompilieren gegen typisierte Structs geprüft und zu Rust-Code. Das ist schnell, fehlende Felder sind Compilerfehler, und die Syntax ist Jinja-ähnlich, sodass die Templates leicht übertragbar sind. *Alternativen:* `minijinja` und `tera` (zur Laufzeit interpretiert, Fehler erst beim Rendern), `maud` (HTML als Rust-Makro, typsicher, aber für Layouts schlechter lesbar). Nachteil von Askama: Wer ein Template ändert, muss neu kompilieren (siehe Vorschau-Server). |
 | Dekodieren | `image` (jpeg, png, webp, gif) | — |
 | Skalieren | `fast_image_resize` (Lanczos3, SIMD) | Viel schneller als `image::imageops`. |
 | JPEG schreiben | `jpeg-encoder` | Reines Rust, optimierte Huffman-Tabellen. `mozjpeg` ist kleiner in der Ausgabe, braucht aber CMake und NASM. |
@@ -62,7 +62,7 @@ Alle Ausgaben entstehen als `(Pfad, Bytes)` in einer Map. Erst der Writer berüh
 | Hash | `blake3` | Schnell, für Cache-Schlüssel und Ausgabe-Diff. |
 | Parallelität | `rayon` | — |
 | RSS | `rss` (mit Extensions für `dc`, `content`, `atom`) | — |
-| CSS | `lightningcss` (Bundler + Minifier) | Löst `@import` auf und minimiert zuverlässig. Selbstgebaut wäre fehleranfällig. |
+| CSS | `lightningcss`, **nur** Bundler + Minifier | Es gibt keinen Präprozessor mehr: Quellen sind Standard-CSS (Custom Properties, Nesting, `color-mix()`, alles in aktuellen Browsern verfügbar). lightningcss löst `@import` auf, minimiert und senkt Nesting für ältere Browser ab. *Alternativen:* Sass mit `grass` (unnötig, die Sprachmittel hat CSS heute selbst), Dateien einzeln ausliefern (mehr Requests, kein Minify). |
 | Vorschau | `tiny_http` + `notify` | Leichtgewichtig. Live-Reload per Server-Sent Events. `axum` wäre für diesen Zweck zu schwer. |
 | Tests | `insta`, `tempfile` | Snapshot-Tests für das erzeugte HTML. |
 
@@ -105,14 +105,14 @@ Für jedes Original:
 
 ### 8. Frontend
 
-- **CSS:** Die 417 Zeilen LESS werden von Hand in CSS überführt. Variablen werden zu `--custom-properties`, die vier `lighten()`-Aufrufe zu festen Hex-Werten. Neu hinzu kommen die Regeln für `figure.media`, `.carousel` (`scroll-snap-type: x mandatory`) und die neue `h1`-Struktur. Das bisherige Aussehen bleibt erhalten.
+- **CSS:** Die 417 Zeilen LESS werden von Hand in CSS überführt. Variablen werden zu Custom Properties (`--theme-green` …), die vier `lighten()`-Aufrufe zu `color-mix(in oklab, var(--theme-bright), white 40%)` o.ä. (visuell abgeglichen), LESS-Verschachtelung bleibt als natives Nesting. Neu hinzu kommen die Regeln für `figure.media`, `.carousel` (`scroll-snap-type: x mandatory`) und die neue `h1`-Struktur. Das bisherige Aussehen bleibt erhalten.
 - **Karussell:** Ohne JavaScript ist es eine horizontal scrollbare Liste mit Snap. `assets/js/carousel.js` (Vanilla, ca. 100 Zeilen) ergänzt Pfeile, Punkte und Tastatursteuerung und synchronisiert die Punkte per `IntersectionObserver`.
 - **Vollbild:** PhotoSwipe 5 (MIT) wird unter `assets/vendor/photoswipe/` mitgeliefert und als ES-Modul lazy geladen. Eine Galerie entspricht einer Mediengruppe. `data-pswp-width/height` kommen aus der Medienanalyse.
 - **Reduzierte Bewegung:** Bei `prefers-reduced-motion` pausiert ein kleines Skript Videos und blendet die Bedienelemente ein.
 
 ### 9. Vorschau-Server
 
-`serve` baut in ein temporäres Ausgabeverzeichnis und liefert es mit `tiny_http` aus (inkl. `index.html` für Verzeichnisse). `notify` beobachtet `content/`, `templates/` und `assets/`. Nach einem Rebuild (entprellt) geht ein Ereignis über `/__livereload` (SSE) hinaus. Nur im `serve`-Modus wird dafür ein kleines Skript in jede Seite eingefügt.
+`serve` baut in ein temporäres Ausgabeverzeichnis und liefert es mit `tiny_http` aus (inkl. `index.html` für Verzeichnisse). `notify` beobachtet `content/` und `assets/`. Templates sind einkompiliert. Für Arbeit an Templates wird `serve` per `cargo watch -x 'run -- serve'` gestartet, das bei Änderungen neu kompiliert und neu startet. Die Seite lädt danach ebenfalls automatisch neu, weil das Live-Reload-Skript die Verbindung wieder aufnimmt. Nach einem Rebuild (entprellt) geht ein Ereignis über `/__livereload` (SSE) hinaus. Nur im `serve`-Modus wird dafür ein kleines Skript in jede Seite eingefügt.
 
 ### 10. Tests
 

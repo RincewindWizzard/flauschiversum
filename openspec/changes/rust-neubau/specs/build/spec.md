@@ -70,11 +70,25 @@ Der Build SHALL nach dem Schreiben alle Dateien und leeren Verzeichnisse im Ausg
 - **THEN** endet es mit Exit-Code 0
 
 ### Requirement: Vorschau-Server
-`flauschiversum serve` SHALL die Seite bauen, sie unter `http://localhost:<Port>` (Standard 8080) ausliefern und bei jeder Änderung unter `content/` oder `templates/` neu bauen. Seiten im Browser laden danach automatisch neu.
+`flauschiversum serve` SHALL die Seite bauen, sie unter `http://localhost:<Port>` (Standard 8080) ausliefern und bei jeder Änderung unter `content/` oder `assets/` neu bauen. Seiten im Browser laden danach automatisch neu. Änderungen an Templates erfordern ein Neukompilieren.
 
 #### Scenario: Post bearbeiten
 - **WHEN** während `serve` läuft ein Satz in einer `index.md` geändert und gespeichert wird
 - **THEN** zeigt der Browser die geänderte Seite nach wenigen Sekunden ohne manuelles Neuladen
+
+### Requirement: Templates beim Kompilieren geprüft
+Die HTML-Templates SHALL beim Kompilieren des Generators geprüft und eingebunden werden. Ein Syntaxfehler oder ein Verweis auf ein nicht vorhandenes Feld verhindert das Kompilieren, statt erst beim Rendern aufzufallen. Zur Laufzeit liest der Generator keine Template-Dateien.
+
+#### Scenario: Tippfehler im Template
+- **WHEN** im Post-Template `{{ post.titel }}` statt `{{ post.title }}` steht
+- **THEN** schlägt `cargo build` mit einer Fehlermeldung fehl, die das Template nennt
+
+### Requirement: Stylesheet ohne Präprozessor
+Die Stylesheet-Quellen SHALL Standard-CSS sein, ohne LESS, Sass oder einen anderen Präprozessor. Der Build fasst sie nur zusammen (`@import`) und minimiert sie. Ein separates Werkzeug wie Node.js ist dafür nicht nötig.
+
+#### Scenario: Farbe zentral ändern
+- **WHEN** in `content/style/theme.css` der Wert von `--theme-green` geändert wird
+- **THEN** übernehmen alle Stellen, die `var(--theme-green)` oder daraus abgeleitete `color-mix()`-Farben verwenden, nach dem Build die neue Farbe
 
 ### Requirement: Verständliche Fehlermeldungen
 Fehler und Warnungen SHALL die betroffene Datei (relativer Pfad) und, wo möglich, Zeile oder Feld nennen, und zwar auf Deutsch.
