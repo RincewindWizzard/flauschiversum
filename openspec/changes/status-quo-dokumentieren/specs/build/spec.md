@@ -38,13 +38,9 @@ Der Build SHALL `src/style/main.less` samt seinen Importen zu einer einzigen CSS
 - **WHEN** in `src/style/lib/theme.less` eine Farbe geändert und neu gebaut wird
 - **THEN** enthält `<dst>/style.css` die neue Farbe
 
-### Requirement: Inkrementelles Überschreiben
-Ohne `--clean` SHALL der Build vorhandene Dateien im Ausgabeverzeichnis überschreiben. Dateien, die nicht mehr erzeugt werden, bleiben liegen. Mit `--clean` wird das Ausgabeverzeichnis vorher geleert.
+### Requirement: Wiederholter Build
+Ein erneuter Build ohne Änderungen an den Quellen SHALL dieselbe Menge an Dateien im Ausgabeverzeichnis ergeben.
 
 #### Scenario: Erneuter Build
 - **WHEN** zweimal hintereinander ohne Änderungen gebaut wird
 - **THEN** enthält das Ausgabeverzeichnis nach dem zweiten Build dieselben Dateien wie nach dem ersten
-
-#### Scenario: Entfernter Post ohne --clean
-- **WHEN** ein Post aus `src/posts/` gelöscht und ohne `--clean` neu gebaut wird
-- **THEN** bleibt seine bisher erzeugte Seite im Ausgabeverzeichnis erhalten

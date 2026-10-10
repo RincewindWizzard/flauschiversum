@@ -28,8 +28,9 @@ Das Flauschiversum wird seit Jahren nicht mehr gepflegt, und der Python-Generato
 8. Die Größe des Wasserzeichens hängt von der Auflösung des Originals ab: von ca. 50 % der Bildbreite bis praktisch unsichtbar. Auf dunklem Grund ist es nicht lesbar.
 9. Der Bild-Cache ist nur nach dem Inhalt des Originals geschlüsselt. Ändert man Wasserzeichen oder Größen, wird der Cache nicht ungültig.
 10. `--clean` erwartet ein Argument. Der Build muss aus dem Repo-Wurzelverzeichnis gestartet werden.
-11. `category` wird gepflegt (inkl. Doppel `nähen`/`naehen`), aber nicht ausgewertet.
-12. `docker-compose.yml` verweist auf das fehlende Verzeichnis `docker/flauschiversum-build`. Das Basis-Image `python:alpine3.7` ist veraltet.
+11. Ohne `--clean` bleiben Dateien im Ausgabeverzeichnis liegen, die nicht mehr erzeugt werden, z.B. von gelöschten oder umbenannten Posts. Ein vollständiger Neubau mit `--clean` war wegen der langsamen Bildkonvertierung keine Option. Deshalb gibt es den Bild-Cache.
+12. `category` wird gepflegt (inkl. Doppel `nähen`/`naehen`), aber nicht ausgewertet.
+13. `docker-compose.yml` verweist auf das fehlende Verzeichnis `docker/flauschiversum-build`. Das Basis-Image `python:alpine3.7` ist veraltet.
 
 ### Bereits getroffene Entscheidungen für den Folge-Change (nicht Teil dieses Changes)
 
