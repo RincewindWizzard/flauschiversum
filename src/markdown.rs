@@ -233,6 +233,18 @@ fn media_url(ctx: &PostContext, path: &str) -> String {
     }
 }
 
+/// Maximale Anzeigehöhe eines Bildes im Post (Hochformate werden schmaler dargestellt).
+const MAX_DISPLAY_HEIGHT: u32 = 560;
+
+/// Anzeigegröße für `width`/`height`: höchstens `MAX_DISPLAY_HEIGHT` hoch, Seitenverhältnis bleibt.
+fn display_size(width: u32, height: u32) -> (u32, u32) {
+    if height <= MAX_DISPLAY_HEIGHT {
+        (width, height)
+    } else {
+        (((width as u64 * MAX_DISPLAY_HEIGHT as u64 + height as u64 / 2) / height as u64) as u32, MAX_DISPLAY_HEIGHT)
+    }
+}
+
 fn write_figure(out: &mut String, m: &MediaRef, info: &MediaInfo, ctx: &PostContext, count: &mut usize) {
     let alt = esc(&m.alt);
     let caption = if m.alt.trim().is_empty() { String::new() } else { format!("<figcaption>{alt}</figcaption>") };
@@ -247,11 +259,12 @@ fn write_figure(out: &mut String, m: &MediaRef, info: &MediaInfo, ctx: &PostCont
                 String::new()
             };
             let loading = if *count == 0 { "" } else { " loading=\"lazy\"" };
+            let (w, h) = display_size(preview.width, preview.height);
             let _ = write!(
                 out,
                 "<figure class=\"media\"><a href=\"{src_full}\" data-pswp-width=\"{}\" data-pswp-height=\"{}\">\
-                 <img src=\"{src}\"{srcset} width=\"{}\" height=\"{}\" alt=\"{alt}\"{loading} decoding=\"async\"></a>{caption}</figure>",
-                full.width, full.height, preview.width, preview.height
+                 <img src=\"{src}\"{srcset} width=\"{w}\" height=\"{h}\" alt=\"{alt}\"{loading} decoding=\"async\"></a>{caption}</figure>",
+                full.width, full.height
             );
         }
         MediaKind::Animation => {
@@ -439,6 +452,12 @@ mod tests {
         let html = render_page("##Kopf\nText\n\n```\n#nicht\n```\n");
         assert!(html.contains("<h2>Kopf</h2>"), "{html}");
         assert!(html.contains("#nicht"));
+    }
+
+    #[test]
+    fn portrait_images_are_limited_in_height() {
+        assert_eq!(display_size(700, 525), (700, 525));
+        assert_eq!(display_size(562, 750), (420, 560));
     }
 
     #[test]
