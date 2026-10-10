@@ -36,7 +36,7 @@
 
 ## 5. Frontend
 
-- [x] 5.1 LESS nach Standard-CSS unter `content/style/` überführen (Custom Properties, natives Nesting, `color-mix()` statt `lighten()`) und LESS-Dateien entfernen; Bündeln und Minimieren mit `lightningcss`, kein Präprozessor; prüfen: Screenshot-Vergleich Start-, Post- und About-Seite gegen die Live-Seite
+- [x] 5.1 LESS nach Standard-CSS unter `content/style/` überführen (Custom Properties, natives Nesting, relative Farbsyntax statt `lighten()`) und LESS-Dateien entfernen; Bündeln und Minimieren mit `lightningcss`, kein Präprozessor; prüfen: Screenshot-Vergleich Start-, Post- und About-Seite gegen die Live-Seite
 - [x] 5.2 CSS für `figure.media`, Karussell (Scroll-Snap) und Video ergänzen; prüfen: Karussell ist ohne JavaScript per Wischen und Scrollen bedienbar (Browser-Test mit deaktiviertem JS)
 - [x] 5.3 `assets/js/carousel.js` (Pfeile, Punkte, Tastatur, Position) schreiben; prüfen: Browser-Test in Handy- und Desktopgröße mit Playwright
 - [x] 5.4 PhotoSwipe 5 unter `assets/vendor/photoswipe/` einbinden (Lizenzdatei mitliefern), Galerie je Gruppe, Bildunterschriften, Zurück-Taste schließt; prüfen: Playwright-Test öffnet das Vollbild, blättert und schließt es mit Escape und der Zurück-Navigation

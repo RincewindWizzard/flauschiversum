@@ -58,11 +58,11 @@ Alle Ausgaben entstehen als `(Pfad, Bytes)` in einer Map. Erst der Writer berüh
 | Skalieren | `fast_image_resize` (Lanczos3, SIMD) | Viel schneller als `image::imageops`. |
 | JPEG schreiben | `jpeg-encoder` | Reines Rust, optimierte Huffman-Tabellen. `mozjpeg` ist kleiner in der Ausgabe, braucht aber CMake und NASM. |
 | WebP schreiben | `webp` (libwebp über `cc`) | `image` kann nur verlustfreies WebP. Braucht nur einen C-Compiler. |
-| Metadaten einfügen | `img-parts` | Ersetzt oder entfernt Segmente bzw. Chunks. Die EXIF-, XMP- und IPTC-Bytes erzeugen wir selbst (feste kleine Strukturen). |
+| Metadaten einfügen | eigene Implementierung (`src/media/meta.rs`) | EXIF, XMP und IPTC werden als feste kleine Strukturen erzeugt und in die Container geschrieben (JPEG über den Encoder, PNG-Chunks, WebP-RIFF mit VP8X, GIF-Application-Extension). *Ursprünglich geplant war `img-parts`; es kann aber weder XMP noch WebP mit Alpha/VP8L und kein GIF.* |
 | Hash | `blake3` | Schnell, für Cache-Schlüssel und Ausgabe-Diff. |
 | Parallelität | `rayon` | — |
 | RSS | `rss` (mit Extensions für `dc`, `content`, `atom`) | — |
-| CSS | `lightningcss`, **nur** Bundler + Minifier | Es gibt keinen Präprozessor mehr: Quellen sind Standard-CSS (Custom Properties, Nesting, `color-mix()`, alles in aktuellen Browsern verfügbar). lightningcss löst `@import` auf, minimiert und senkt Nesting für ältere Browser ab. *Alternativen:* Sass mit `grass` (unnötig, die Sprachmittel hat CSS heute selbst), Dateien einzeln ausliefern (mehr Requests, kein Minify). |
+| CSS | `lightningcss`, **nur** Bundler + Minifier | Es gibt keinen Präprozessor mehr: Quellen sind Standard-CSS (Custom Properties, Nesting, relativer Farbsyntax, alles in aktuellen Browsern verfügbar). lightningcss löst `@import` auf, minimiert und senkt Nesting für ältere Browser ab. *Alternativen:* Sass mit `grass` (unnötig, die Sprachmittel hat CSS heute selbst), Dateien einzeln ausliefern (mehr Requests, kein Minify). |
 | Vorschau | `tiny_http` + `notify` | Leichtgewichtig. Live-Reload per Polling eines Build-Zählers. `axum` wäre für diesen Zweck zu schwer. |
 | Tests | `insta`, `tempfile` | Snapshot-Tests für das erzeugte HTML. |
 
@@ -105,6 +105,7 @@ Für jedes Original:
 
 ### 8. Frontend
 
+- **Schriften:** Lora und Merriweather wurden im alten CSS verwendet, aber nie per `@font-face` geladen (live sah man die Ersatzschrift). Sie werden jetzt aus `/fonts/` eingebunden, wie es `site-layout` beschreibt.
 - **CSS:** Die 417 Zeilen LESS werden von Hand in CSS überführt. Variablen werden zu Custom Properties (`--theme-green` …), die vier `lighten()`-Aufrufe zu `color-mix(in oklab, var(--theme-bright), white 40%)` o.ä. (visuell abgeglichen), LESS-Verschachtelung bleibt als natives Nesting. Neu hinzu kommen die Regeln für `figure.media`, `.carousel` (`scroll-snap-type: x mandatory`) und die neue `h1`-Struktur. Das bisherige Aussehen bleibt erhalten.
 - **Karussell:** Ohne JavaScript ist es eine horizontal scrollbare Liste mit Snap. `assets/js/carousel.js` (Vanilla, ca. 100 Zeilen) ergänzt Pfeile, Punkte und Tastatursteuerung und synchronisiert die Punkte per `IntersectionObserver`.
 - **Vollbild:** PhotoSwipe 5 (MIT) wird unter `assets/vendor/photoswipe/` mitgeliefert und als ES-Modul lazy geladen. Eine Galerie entspricht einer Mediengruppe. `data-pswp-width/height` kommen aus der Medienanalyse.

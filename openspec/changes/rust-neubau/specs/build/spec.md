@@ -88,7 +88,7 @@ Die Stylesheet-Quellen SHALL Standard-CSS sein, ohne LESS, Sass oder einen ander
 
 #### Scenario: Farbe zentral ändern
 - **WHEN** in `content/style/theme.css` der Wert von `--theme-green` geändert wird
-- **THEN** übernehmen alle Stellen, die `var(--theme-green)` oder daraus abgeleitete `color-mix()`-Farben verwenden, nach dem Build die neue Farbe
+- **THEN** übernehmen alle Stellen, die `var(--theme-green)` oder daraus abgeleitete Farben (relative Farbsyntax) verwenden, nach dem Build die neue Farbe
 
 ### Requirement: Verständliche Fehlermeldungen
 Fehler und Warnungen SHALL die betroffene Datei (relativer Pfad) und, wo möglich, Zeile oder Feld nennen, und zwar auf Deutsch.

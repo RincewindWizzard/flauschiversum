@@ -18,7 +18,7 @@ Der Python-Generator des Flauschiversums läuft mit aktuellen Bibliotheken nicht
 - **SEO:** `sitemap.xml`, `robots.txt`, aussagekräftige Seitentitel, genau eine `<h1>` pro Seite, Links zum vorherigen und nächsten Post, Meta-Description, Canonical-URL, Open-Graph-Vorschauen und strukturierte Daten (`BlogPosting`). Interne Links werden beim Build geprüft.
 - **RSS-Feed:** Neueste zuerst, mit `pubDate`, Autor, Vorschaubild und vollem Inhalt. Nicht veröffentlichte Posts erscheinen nicht. Die bisherigen GUIDs bleiben erhalten.
 - **Bugfixes:** Zukünftig datierte Posts werden gar nicht erzeugt. Die Paginierung zeigt keine Phantomseite mehr. Indexseiten haben einen Titel. URLs werden korrekt kodiert. `category` bleibt ohne Wirkung, wird aber vereinheitlicht (`naehen` → `nähen`).
-- **Stylesheet ohne Präprozessor:** Die LESS-Dateien werden einmalig in normales CSS überführt. Variablen werden zu Custom Properties, Verschachtelung bleibt als natives CSS-Nesting, `lighten()` wird zu `color-mix()`. Der Build fasst die Dateien nur noch zusammen und minimiert sie. Gestaltung und Farben bleiben gleich.
+- **Stylesheet ohne Präprozessor:** Die LESS-Dateien werden einmalig in normales CSS überführt. Variablen werden zu Custom Properties, Verschachtelung bleibt als natives CSS-Nesting, `lighten()` wird zu relativer Farbsyntax (`hsl(from var(--theme-bright) h s calc(l + 20))`). Der Build fasst die Dateien nur noch zusammen und minimiert sie. Gestaltung und Farben bleiben gleich.
 - **Vorschau-Server:** `flauschiversum serve` baut bei jeder Änderung neu und zeigt die Seite lokal an.
 
 Nicht Teil dieses Changes: das neue Deployment als GitHub Action (eigener Change), Kategorieseiten, Suche, Kommentare sowie das Umkodieren von Videos.
