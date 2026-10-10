@@ -1,64 +1,96 @@
 # Flauschiversum
-Dies ist der Inhalt in die Software, die das Flauschiversum bereitstellt.
 
+Quellen und Generator für [flauschiversum.de](https://flauschiversum.de/) – „Mehr als nur eine Masche“.
 
-# Abhängigkeiten
-- nodejs
-- npm
-- [LessCss](http://lesscss.org/)
+Der Generator ist ein einzelnes Rust-Programm. Er baut aus den Inhalten unter `content/` eine statische Webseite,
+die jeder Webserver ausliefern kann. Python, Node.js oder andere Werkzeuge werden nicht benötigt.
 
+## Schnellstart
 
-    sudo apt-get -y install nodejs npm
-    npm install -g less
+Voraussetzung: [Rust](https://rustup.rs/) (stable) und ein C-Compiler (für die WebP-Kodierung).
 
-Ausführen mit:
+```sh
+cargo run --release -- build     # Seite nach dist/ bauen
+cargo run --release -- check     # Inhalte prüfen, ohne etwas zu schreiben
+cargo run --release -- serve     # Vorschau unter http://localhost:8080/ mit Live-Reload
+```
 
-    python3 main.py --dst build --cache .cache 
+Optionen (für alle Befehle): `--root <Pfad>` (Projektverzeichnis, Standard `.`), `--out <Pfad>` (Standard `dist/`),
+`--cache <Pfad>` (Bild-Cache, Standard `.cache/`), bei `serve` zusätzlich `--port <Nummer>`.
 
-## Beschreibung der Ordner
-- docker Hier befinden sich Informationen für das Deployment und wie man das Projekt kompiliert
-- blogcompile der Programmcode der die Quellen in deine HTML Seite übersetzt.
-    - builder.py hier ist der Einstieg der alle anderen Knöpfe und Hebel betätigt.
-    - sourcewalker.py der Source Walker durchsucht das src/ Verzeichnis und erzeug die Model Objekte
-    - model.py hier ist das Datenmodell definiert, mit dem alle arbeiten.
-    - query.py hier werden die Modell Objekte gefiltert und gruppiert
-    - views.py erzeugt aus einem Query die zugehörigen Ausgabe Daten
-    - urls.py gibt an, wo was in der Webseite liegt
-    - markdown_slideshow.py Nerviges Gefrimel im Markdown 
-    - cache.py Zwischenspeichern von skalierten Bildern
-- src
-    - pages Markdown Dokumente für einzelne Seiten
-    - posts Alle Posts liegen hier als Markdown Dokumente vor zusammen mit ihren Bildern.
-    - static Diese Daten werden unbearbeitet in die Webseite übernommen
-    - style Hier liegen die CSS Dateien im [LessCSS Syntax](http://lesscss.org/) vor, wird alles nach style.css exportiert.
-- templates Werden in [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) geschrieben
-    - lib
-        - pagination.html Zuständig für das Blättern in Index Seiten
-    - layout.html Das grundlegende Layout der Seite. Alles was hier drin steht ist überall zu sehen.
-    - index.html Seiten mit Listen von Posts
-    - page.html Page-Seiten z.B. Impressum, Autoren, etc.
-    - post.html Post-Seiten
-- test Hier liegen ein paar Tests (hauptsächlich unwichtiges gefrickel)
-- main.py Hiermit wird der Blog compiler gestartet
-- settings.py Globale Einstellungen
-    
+Der erste Build berechnet alle Bilder (ca. 3200 Originale, rund 20–30 Sekunden auf 4 Kernen). Danach kommen die
+Bilder aus `.cache/`, und ein Build ohne Änderungen dauert unter einer Sekunde. Geschrieben werden nur Dateien,
+deren Inhalt sich geändert hat; was nicht mehr erzeugt wird, wird aus `dist/` gelöscht.
+
+## Einen Post schreiben
+
+Jeder Post ist ein Verzeichnis unter `content/posts/` mit einer `index.md` und den zugehörigen Medien:
+
+```markdown
+---
+title: "Grüne Mütze"
+date: 2026-11-01 10:00:00        # oder nur 2026-11-01; Zeitzone Europe/Berlin
+author: Ermeline
+image: "muetze.jpg"              # Vorschaubild auf der Startseite und beim Teilen
+excerpt: "Kurzer Text für die Startseite, den Feed und Suchmaschinen."
+category: wolle                  # optional, derzeit ohne Wirkung
+---
+
+Text in Markdown …
+
+![Die fertige Mütze](muetze.jpg)
+![Von hinten](hinten.jpg)
+![So sieht das Muster aus](muster.mp4)
+
+![Ein einzelnes Bild](detail.jpg)
+```
+
+- **URL:** Ohne `permalink` lautet sie `/<Jahr>/<Monat>/<Verzeichnisname>/`, z.B. `/2026/11/gruene-muetze/` für das
+  Verzeichnis `grüne-mütze`. Bestehende Posts tragen ihre bisherige URL als `permalink:` – diese Zeile nie ändern.
+- **Veröffentlichung:** Posts mit einem Datum in der Zukunft erscheinen erst beim ersten Build nach diesem Zeitpunkt.
+- **Bilder** (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`) werden in drei Größen ausgeliefert: `200x/` (Vorschau),
+  `700x/` (im Text) und `1000x/` (Vollbild), mit Wasserzeichen-Badge (außer `200x`) und Rechteangaben in den
+  Metadaten. GPS- und Kameradaten werden entfernt. Handyfotos dürfen groß sein; sie werden automatisch verkleinert.
+- **Animierte GIFs und Videos** (`.mp4`, `.webm`) werden unverändert ausgeliefert. Videos laufen stumm in Schleife.
+  Ab 20 MB warnt der Build.
+- **Bildgruppen:** Stehen mehrere Bilder ohne Leerzeile untereinander, entsteht ein wischbares Karussell; ein Klick
+  öffnet das Vollbild. Der Text in `![…]` ist die Bildunterschrift.
+
+Einzelseiten (About, Impressum, Tipps und Tricks) liegen als Markdown unter `content/pages/`; ihre URL ergibt sich
+aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlicht.
+
+## Verzeichnisse
+
+| Pfad | Inhalt |
+|---|---|
+| `content/posts/` | Posts mit ihren Medien |
+| `content/pages/` | Einzelseiten |
+| `content/static/` | unverändert ausgelieferte Dateien (Schriften, Favicon, Bilder der Einzelseiten) |
+| `content/style/` | Gestaltung als normales CSS (`main.css` mit `@import`), wird zu `/style.css` gebündelt |
+| `templates/` | HTML-Templates ([Askama](https://askama.readthedocs.io/)), werden beim Kompilieren geprüft |
+| `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe) und die Badge-Vorlage |
+| `src/` | Rust-Code des Generators |
+| `tests/` | Referenz der Live-URLs und Browser-Tests |
+| `openspec/` | Anforderungen und Änderungen ([OpenSpec](https://github.com/Fission-AI/OpenSpec)) |
+
+Änderungen an `templates/` werden erst nach erneutem Kompilieren sichtbar; für die Arbeit daran
+`cargo watch -x 'run -- serve'` verwenden.
+
+## Tests
+
+```sh
+cargo test                       # Unit- und Integrationstests (Test-Site, Snapshots)
+cargo test --release -- --ignored   # baut die ganze Seite und prüft alle 194 Live-URLs
+```
+
+Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload) brauchen Node.js und Chromium:
+
+```sh
+cargo run --release -- serve --port 8099 &
+npm i playwright-core && node tests/browser/frontend.mjs /pfad/zu/chromium
+```
+
 ## Deployment
-Man baut den flauschiversum-deploy container:
 
-    cd docker/flauschiversum-deploy
-    docker build -t flauschiversum-deploy
-    docker run -ti flauschiversum-deploy
-    
-Beim ersten Start wird der neu erzeugte öffentliche SSH-Deploy-Key angezeigt.
-Dieser muss auf dem Repository Host für den user git und dem Deployment Server für den User www-data hinterlegt werden.
-Die öffentlichen Fingerprints der Hosts müssen akzeptiert werden.
-
-Danach legt man auf dem Build Host eine Datei _/opt/flauschiversum-deploy_ mit folgendem Inhalt an:
-
-    #!/bin/bash
-    docker start flauschiversum-deploy
-
-Diese wird nun über visudo für den Benutzer git freigegeben:
-
-    visudo
-    git     ALL = NOPASSWD: /opt/flauschiversum-deploy
+Das frühere Docker-Deployment wurde entfernt. Die gebaute Seite in `dist/` muss nur auf einen Webserver für
+statische Dateien kopiert werden. Ein automatisches Deployment per GitHub Action ist als eigene Änderung geplant.

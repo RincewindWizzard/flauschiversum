@@ -9,15 +9,18 @@ context: |
   Handarbeits-/Strick-/Häkel-Blog ("Mehr als nur eine Masche").
 
   Tech-Stack:
-  - Eigener statischer Site-Generator in Python 3 (blogcompile/), Einstieg main.py
-    (python3 main.py --dst build --cache .cache)
-  - Inhalte als Markdown mit Frontmatter: src/posts/<slug>/ (Posts inkl. Bilder),
-    src/pages/ (Einzelseiten wie Impressum, Autoren, Tipps)
-  - Templates in Jinja2 (templates/), Styles in LessCSS (src/style/, kompiliert mit lessc)
-  - Bilder werden mit Pillow skaliert und mit Wasserzeichen versehen (Cache in .cache)
-  - RSS-Feed via feedgen, HTML-Minifizierung via htmlmin
-  - Tests in test/ (unittest)
-  - Deployment: Docker (docker/, docker-compose.yml), ausgeliefert über nginx
+  - Statischer Site-Generator in Rust (src/), ein Binary `flauschiversum`
+    mit den Befehlen build, check und serve (Aufruf: cargo run --release -- build)
+  - Inhalte als Markdown mit Frontmatter: content/posts/<verzeichnis>/ (Posts inkl.
+    Medien, URL über `permalink`), content/pages/ (Einzelseiten)
+  - Templates mit Askama (templates/, beim Kompilieren geprüft), Styles als
+    Standard-CSS (content/style/, gebündelt mit lightningcss)
+  - Bilder: drei Größen (200/700/1000), Badge-Wasserzeichen, Rechte-Metadaten,
+    inkrementeller Cache in .cache/, parallel mit rayon
+  - Frontend: Karussell (CSS scroll-snap) und Vollbild (PhotoSwipe 5) in assets/
+  - Tests: cargo test (Unit, Integration, Snapshots mit insta), Browser-Tests mit
+    Playwright in tests/browser/
+  - Grundsatz: Cool URIs don't change – bestehende URLs bleiben erhalten
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

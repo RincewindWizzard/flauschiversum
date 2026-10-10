@@ -1,4 +1,3 @@
-#![allow(dead_code)] // TODO: entfernen, sobald alle Module angebunden sind
 use anyhow::Result;
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;

@@ -435,4 +435,32 @@ pub mod tests {
         assert!(index.contains(png_src), "kodierte Thumbnail-URL");
         assert!(read(root, "robots.txt").contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
     }
+
+    /// Baut die echte Seite aus `content/` (langsam beim ersten Mal, daher `--ignored`).
+    #[test]
+    #[ignore]
+    fn full_site_keeps_all_live_urls() {
+        let repo = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let opts = BuildOptions { root: repo.to_path_buf(), cache: repo.join(".cache"), now: BuildOptions::now().unwrap(), livereload: false };
+        let diag = Diagnostics::default();
+        let g = generate(&opts, &diag, &Stats::default()).unwrap();
+        assert!(!diag.has_errors());
+        let live = fs::read_to_string(repo.join("tests/fixtures/live-urls.txt")).unwrap();
+        let mut count = 0;
+        for url in live.lines().filter(|l| !l.is_empty()) {
+            assert!(g.outputs.contains(url), "Live-URL fehlt: {url}");
+            count += 1;
+        }
+        assert_eq!(count, 194);
+        for page in ["/", "/about/", "/impressum/", "/tipps-und-tricks/", "/rss.xml", "/sitemap.xml", "/robots.txt", "/style.css", "/favicon.ico"] {
+            assert!(g.outputs.contains(page), "{page}");
+        }
+        // Alle Medien-Referenzen lösen auf: Warnungen betreffen nur Seitenlinks in den Inhalten
+        for d in diag.all() {
+            let is_media = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".webm", ".css", ".js"]
+                .iter()
+                .any(|ext| d.message.to_lowercase().contains(ext));
+            assert!(!is_media, "Medium fehlt: {}: {}", d.file, d.message);
+        }
+    }
 }

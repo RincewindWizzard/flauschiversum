@@ -1,13 +1,8 @@
-build/*
-log/*
-node_modules/*
-.cache
-*.pyc
-*.swp
-*~
-__pycache__/*
-__pycache__
-venv
+# Build
 target/
 dist/
 .cache/
+
+# Editoren
+*.swp
+*~

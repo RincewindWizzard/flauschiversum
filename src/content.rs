@@ -30,7 +30,6 @@ pub struct Media {
 pub struct Post {
     /// Relativer Pfad der `index.md` (für Meldungen).
     pub source: String,
-    pub dir: PathBuf,
     pub title: String,
     pub date: Zoned,
     /// URL-Pfad mit `/` am Anfang und Ende (unkodiert).
@@ -40,12 +39,6 @@ pub struct Post {
     pub excerpt: Option<String>,
     pub markdown: String,
     pub media: Vec<Media>,
-}
-
-impl Post {
-    pub fn media(&self, file_name: &str) -> Option<&Media> {
-        self.media.iter().find(|m| m.file_name == file_name)
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -281,7 +274,6 @@ fn load_post(root: &Path, dir: &Path, diag: &Diagnostics) -> Option<Post> {
 
     Some(Post {
         source,
-        dir: dir.to_path_buf(),
         title,
         date,
         url,
@@ -311,11 +303,10 @@ pub fn load(root: &Path, now: &Zoned, diag: &Diagnostics) -> Site {
         let mut dirs: Vec<_> = dirs.filter_map(Result::ok).map(|e| e.path()).filter(|p| p.is_dir()).collect();
         dirs.sort();
         for dir in dirs {
-            if dir.join("index.md").is_file() {
-                if let Some(post) = load_post(root, &dir, diag) {
+            if dir.join("index.md").is_file()
+                && let Some(post) = load_post(root, &dir, diag) {
                     all_posts.push(post);
                 }
-            }
         }
     } else {
         diag.error(rel(root, &content.join("posts")), "Verzeichnis fehlt");

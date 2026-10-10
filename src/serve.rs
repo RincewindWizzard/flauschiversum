@@ -90,11 +90,10 @@ pub fn run(root: &Path, out: &Path, port: u16, rebuild: impl Fn() -> Result<bool
 
     let (tx, rx) = channel();
     let mut watcher = notify::recommended_watcher(move |res: notify::Result<notify::Event>| {
-        if let Ok(event) = res {
-            if !matches!(event.kind, notify::EventKind::Access(_)) {
+        if let Ok(event) = res
+            && !matches!(event.kind, notify::EventKind::Access(_)) {
                 let _ = tx.send(());
             }
-        }
     })?;
     for dir in ["content", "assets"] {
         watcher

@@ -3,10 +3,8 @@
 pub const BLOG_URL: &str = "https://flauschiversum.de";
 pub const BLOG_NAME: &str = "Flauschiversum";
 pub const BLOG_DESCRIPTION: &str = "Mehr als nur eine Masche";
-pub const COPYRIGHT_HOLDER: &str = "Ermeline Wollknoll";
 pub const RIGHTS_CREATOR: &str = "Flauschiversum / Ermeline Wollknoll";
 pub const RIGHTS_WEB_STATEMENT: &str = "https://flauschiversum.de/impressum/";
-pub const CONTACT_EMAIL: &str = "ermeline@flauschiversum.de";
 pub const TIME_ZONE: &str = "Europe/Berlin";
 
 /// Anzahl Posts pro Indexseite.

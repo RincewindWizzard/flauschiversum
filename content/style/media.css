@@ -9,7 +9,7 @@ figure.media {
     margin: 0 auto;
     max-width: 100%;
     height: auto;
-    max-height: 80vh;
+    max-height: min(75vh, 560px);
     object-fit: contain;
     border-radius: 3px;
     box-shadow: 0 0 15px 3px rgba(92, 128, 0, 0.66);
