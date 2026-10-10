@@ -106,7 +106,7 @@ Für jedes Original:
 ### 8. Frontend
 
 - **Schriften:** Lora und Merriweather wurden im alten CSS verwendet, aber nie per `@font-face` geladen (live sah man die Ersatzschrift). Sie werden jetzt aus `/fonts/` eingebunden, wie es `site-layout` beschreibt.
-- **CSS:** Die 417 Zeilen LESS werden von Hand in CSS überführt. Variablen werden zu Custom Properties (`--theme-green` …), die vier `lighten()`-Aufrufe zu `color-mix(in oklab, var(--theme-bright), white 40%)` o.ä. (visuell abgeglichen), LESS-Verschachtelung bleibt als natives Nesting. Neu hinzu kommen die Regeln für `figure.media`, `.carousel` (`scroll-snap-type: x mandatory`) und die neue `h1`-Struktur. Das bisherige Aussehen bleibt erhalten.
+- **CSS:** Die 417 Zeilen LESS werden von Hand in CSS überführt. Variablen werden zu Custom Properties (`--theme-green` …), die vier `lighten()`-Aufrufe zu relativer Farbsyntax `hsl(from var(--theme-bright) h s calc(l + 20))`, die exakt der HSL-Aufhellung von LESS entspricht, LESS-Verschachtelung bleibt als natives Nesting. Neu hinzu kommen die Regeln für `figure.media`, `.carousel` (`scroll-snap-type: x mandatory`) und die neue `h1`-Struktur. Das bisherige Aussehen bleibt erhalten.
 - **Karussell:** Ohne JavaScript ist es eine horizontal scrollbare Liste mit Snap. `assets/js/carousel.js` (Vanilla, ca. 100 Zeilen) ergänzt Pfeile, Punkte und Tastatursteuerung und synchronisiert die Punkte per `IntersectionObserver`.
 - **Vollbild:** PhotoSwipe 5 (MIT) wird unter `assets/vendor/photoswipe/` mitgeliefert und als ES-Modul lazy geladen. Eine Galerie entspricht einer Mediengruppe. `data-pswp-width/height` kommen aus der Medienanalyse.
 - **Reduzierte Bewegung:** Bei `prefers-reduced-motion` pausiert ein kleines Skript Videos und blendet die Bedienelemente ein.
