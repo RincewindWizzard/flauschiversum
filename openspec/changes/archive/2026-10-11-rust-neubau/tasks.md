@@ -51,7 +51,7 @@
 ## 7. Gesamtabnahme und Aufräumen
 
 - [x] 7.1 Gesamtseiten-Test (`cargo test -- --ignored`): alle 194 Live-URLs existieren, alle Medien-Referenzen lösen auf, `check` ohne Fehler; prüfen: Test grün
-- [ ] 7.2 Vergleichsgrafik Wasserzeichen alt/neu und Screenshots alt/neu zur Abnahme vorlegen; prüfen: Freigabe im Gespräch
+- [x] 7.2 Vergleichsgrafik Wasserzeichen alt/neu und Screenshots alt/neu zur Abnahme vorlegen; prüfen: Freigabe im Gespräch
 - [x] 7.3 `blogcompile/`, `main.py`, `settings.py`, `requirements.txt`, `test/`, `docker/`, `docker-compose.yml`, `.dockerignore` und alte Skripte entfernen, `.gitignore` um `dist/` und `.cache/` ergänzen; prüfen: `cargo build --release` und `cargo test` grün, `git ls-files '*.py'` leer
 - [x] 7.4 `README.md` (Aufruf, Verzeichnisse, Inhalte schreiben, Medienformate) und `openspec/config.yaml` (Projektkontext) auf den neuen Stack aktualisieren; prüfen: die Befehle aus der README laufen wie beschrieben
 
