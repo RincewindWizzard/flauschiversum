@@ -22,6 +22,18 @@ context: |
     Playwright in tests/browser/
   - Grundsatz: Cool URIs don't change – bestehende URLs bleiben erhalten
 
+# Zusätzliche Schritte beim Archivieren eines Changes
+operations:
+  archive:
+    guidance:
+      - >-
+        Nach erfolgreichem Archivieren (Archiv-Commit erstellt und gepusht) einen
+        annotierten Git-Tag `changes/<Archivordner-Name>` auf diesen Commit setzen,
+        z.B. `changes/2026-10-11-rust-neubau`, und den Tag pushen. So lässt sich der
+        Stand jedes abgeschlossenen Changes im Review nachvollziehen. Schlägt das
+        Pushen des Tags fehl, den lokalen Tag trotzdem anlegen und dem Nutzer den
+        Befehl zum Nachholen nennen, statt die Sperre zu umgehen.
+
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.
 # Example:
