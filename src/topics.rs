@@ -1,0 +1,181 @@
+//! Themen: Zuordnung der Posts zu Kategorien und Schlagworten.
+
+use crate::content::{Category, Post, Site};
+use crate::diag::Diagnostics;
+use crate::urls;
+use std::collections::HashMap;
+
+/// Eine Kategorie mit ihren veröffentlichten Posts (neueste zuerst).
+pub struct CategoryTopic<'a> {
+    pub category: &'a Category,
+    pub posts: Vec<&'a Post>,
+}
+
+/// Ein Schlagwort mit seinen veröffentlichten Posts (neueste zuerst).
+pub struct TagTopic<'a> {
+    pub name: &'a str,
+    pub slug: String,
+    pub posts: Vec<&'a Post>,
+}
+
+pub struct Topics<'a> {
+    /// In der Reihenfolge von `categories.yaml`; Kategorien ohne Post entfallen.
+    pub categories: Vec<CategoryTopic<'a>>,
+    /// Alphabetisch (deutsche Sortierung); Schlagworte ohne Post entfallen.
+    pub tags: Vec<TagTopic<'a>>,
+}
+
+pub fn category_url(id: &str) -> String {
+    format!("/kategorie/{id}/")
+}
+
+pub fn tag_url(slug: &str) -> String {
+    format!("/tag/{slug}/")
+}
+
+/// Sortierschlüssel nach deutscher Alltagsregel: Umlaute wie ihre Grundbuchstaben, ohne Groß-/Kleinschreibung.
+pub fn sort_key(text: &str) -> String {
+    text.chars()
+        .flat_map(char::to_lowercase)
+        .flat_map(|c| match c {
+            'ä' => vec!['a'],
+            'ö' => vec!['o'],
+            'ü' => vec!['u'],
+            'ß' => vec!['s', 's'],
+            c => vec![c],
+        })
+        .collect()
+}
+
+impl<'a> Topics<'a> {
+    pub fn build(site: &'a Site, diag: &Diagnostics) -> Self {
+        let categories = site
+            .categories
+            .iter()
+            .map(|category| CategoryTopic {
+                category,
+                posts: site.posts.iter().filter(|p| p.category.as_deref() == Some(category.id.as_str())).collect(),
+            })
+            .filter(|c| !c.posts.is_empty())
+            .collect();
+
+        let mut names: Vec<&String> = site.tags.iter().collect();
+        names.sort_by_key(|n| (sort_key(n), n.to_string()));
+        let mut slugs: HashMap<String, &str> = HashMap::new();
+        let mut tags = Vec::new();
+        for name in names {
+            let slug = urls::slugify(name);
+            if slug.is_empty() {
+                diag.error("content/tags.yaml", format!("Schlagwort `{name}` ergibt keine gültige Adresse"));
+                continue;
+            }
+            if let Some(other) = slugs.insert(slug.clone(), name) {
+                diag.error("content/tags.yaml", format!("Schlagworte `{other}` und `{name}` ergeben dieselbe Adresse `{}`", tag_url(&slug)));
+                continue;
+            }
+            let posts: Vec<&Post> = site.posts.iter().filter(|p| p.tags.contains(name)).collect();
+            if !posts.is_empty() {
+                tags.push(TagTopic { name, slug, posts });
+            }
+        }
+        Topics { categories, tags }
+    }
+
+    pub fn category(&self, id: &str) -> Option<&CategoryTopic<'a>> {
+        self.categories.iter().find(|c| c.category.id == id)
+    }
+
+    pub fn tag(&self, name: &str) -> Option<&TagTopic<'a>> {
+        self.tags.iter().find(|t| t.name == name)
+    }
+
+    /// Schlagworte der Posts einer Kategorie mit Anzahl, absteigend nach Anzahl, dann alphabetisch.
+    pub fn tags_in(&self, posts: &[&Post]) -> Vec<(&TagTopic<'a>, usize)> {
+        let mut out: Vec<_> = self
+            .tags
+            .iter()
+            .map(|t| (t, posts.iter().filter(|p| p.tags.iter().any(|x| x == t.name)).count()))
+            .filter(|(_, n)| *n > 0)
+            .collect();
+        out.sort_by(|a, b| b.1.cmp(&a.1)); // stabil: bleibt sonst alphabetisch
+        out
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::content::{self, Site};
+    use std::fs;
+    use std::path::Path;
+
+    fn site(root: &Path, posts: &[(&str, &str)], tags: &str) -> Site {
+        let c = root.join("content");
+        fs::create_dir_all(c.join("static/images")).unwrap();
+        fs::write(c.join("static/images/f.jpg"), b"x").unwrap();
+        fs::write(
+            c.join("categories.yaml"),
+            "- {id: filzen, name: Filzen, image: /images/f.jpg, motto: a}\n- {id: wolle, name: Wolle, image: /images/f.jpg, motto: b}\n- {id: malen, name: Malen, image: /images/f.jpg, motto: c}\n",
+        )
+        .unwrap();
+        fs::write(c.join("tags.yaml"), tags).unwrap();
+        for (dir, fm) in posts {
+            let d = c.join("posts").join(dir);
+            fs::create_dir_all(&d).unwrap();
+            fs::write(d.join("index.md"), format!("---\ntitle: {dir}\n{fm}---\nText\n")).unwrap();
+        }
+        let now = "2026-10-10T12:00[Europe/Berlin]".parse().unwrap();
+        content::load(root, &now, &Diagnostics::default())
+    }
+
+    #[test]
+    fn groups_counts_and_sorts() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(
+            root.path(),
+            &[
+                ("a", "date: 2020-01-01\ncategory: filzen\ntags: [Katzen, Hüte]\n"),
+                ("b", "date: 2021-01-01\ncategory: filzen\ntags: [Katzen]\n"),
+                ("c", "date: 2022-01-01\ntags: [Taschen, Katzen]\n"),
+                ("geplant", "date: 2099-01-01\ncategory: malen\ntags: [Taschen]\n"),
+            ],
+            "- name: Taschen\n- name: Katzen\n- name: Hüte\n- name: Leer\n",
+        );
+        let diag = Diagnostics::default();
+        let t = Topics::build(&s, &diag);
+        assert!(!diag.has_errors());
+        // Kategorien: Reihenfolge der Liste, leere (malen: nur geplant) entfallen
+        let ids: Vec<_> = t.categories.iter().map(|c| c.category.id.as_str()).collect();
+        assert_eq!(ids, ["filzen"]);
+        assert!(t.category("wolle").is_none());
+        // Posts neueste zuerst
+        let titles: Vec<_> = t.category("filzen").unwrap().posts.iter().map(|p| p.title.as_str()).collect();
+        assert_eq!(titles, ["b", "a"]);
+        // Schlagworte alphabetisch mit deutscher Sortierung, leere entfallen, geplanter Post zählt nicht
+        let names: Vec<_> = t.tags.iter().map(|x| (x.name, x.posts.len())).collect();
+        assert_eq!(names, [("Hüte", 1), ("Katzen", 3), ("Taschen", 1)]);
+        // Schlagworte innerhalb der Kategorie: absteigend nach Anzahl
+        let inside: Vec<_> = t.tags_in(&t.category("filzen").unwrap().posts).iter().map(|(x, n)| (x.name, *n)).collect();
+        assert_eq!(inside, [("Katzen", 2), ("Hüte", 1)]);
+        // Post ohne Kategorie steht nur bei den Schlagworten
+        assert!(t.tag("Taschen").unwrap().posts.iter().any(|p| p.title == "c"));
+    }
+
+    #[test]
+    fn colliding_tag_slugs_are_an_error() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(root.path(), &[("a", "date: 2020-01-01\ntags: [Hüte]\n")], "- name: Hüte\n- name: Huete\n");
+        let diag = Diagnostics::default();
+        Topics::build(&s, &diag);
+        let m = diag.all();
+        assert_eq!(m.len(), 1);
+        assert!(m[0].message.contains("`Huete`") && m[0].message.contains("`Hüte`") && m[0].message.contains("/tag/huete/"), "{}", m[0].message);
+    }
+
+    #[test]
+    fn umlauts_sort_like_their_base_letters() {
+        let mut v = vec!["Taschen", "Äpfel", "Hüte", "Zebra", "Handyhüllen", "Häkeln"];
+        v.sort_by_key(|x| sort_key(x));
+        assert_eq!(v, ["Äpfel", "Häkeln", "Handyhüllen", "Hüte", "Taschen", "Zebra"]);
+    }
+}

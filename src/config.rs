@@ -24,3 +24,6 @@ pub const FULL_WIDTH: u32 = 1000;
 pub const FULL_MAX_BYTES: usize = 1024 * 1024;
 /// Ab dieser Größe warnt der Build bei Animationen und Videos.
 pub const MEDIA_WARN_BYTES: u64 = 20 * 1024 * 1024;
+
+/// Erste Pfadsegmente, die der Generator selbst belegt (Posts und Einzelseiten dürfen sie nicht verwenden).
+pub const RESERVED_PATHS: [&str; 6] = ["themen", "suche", "beitraege", "kategorie", "tag", "pagefind"];

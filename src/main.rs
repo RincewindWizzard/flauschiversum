@@ -14,6 +14,7 @@ mod render;
 mod seo;
 mod serve;
 mod site;
+mod topics;
 mod urls;
 
 /// Generator für das Flauschiversum.

@@ -8,10 +8,10 @@
 
 ## 2. Inhaltsmodell und Prüfung
 
-- [ ] 2.1 Das Frontmatter um `tags` (YAML-Liste oder kommagetrennter Text) erweitern und `category` als optionales Feld mit festem Wertevorrat prüfen; prüfen: Unit-Tests für Liste, Text, fehlende Kategorie (gültig) und unbekannte Kategorie (Meldung mit Pfad, Wert und erlaubten Werten)
-- [ ] 2.2 Die Listen laden und prüfen (unbekannte Kategorie oder Schlagwort mit „Meintest du …“, doppelte Schlagworte, fehlendes Kategoriebild, Schlagwort mit weniger als zwei Beiträgen als Warnung); prüfen: Unit-Tests für jeden Fall prüfen den Meldungstext
-- [ ] 2.3 `src/topics.rs`: Zuordnung, Zählung, Sortierung (neueste zuerst, Schlagworte alphabetisch mit deutscher Sortierung), nur veröffentlichte Beiträge, leere Themen entfallen; prüfen: Unit-Tests inkl. geplantem Beitrag und Slug-Kollision zweier Schlagworte
-- [ ] 2.4 Reservierte Pfade (`themen`, `suche`, `beitraege`, `kategorie`, `tag`, `pagefind`) gegen Posts und Einzelseiten prüfen; prüfen: Test mit einer Einzelseite „Themen“ bricht mit Datei und URL ab
+- [x] 2.1 Das Frontmatter um `tags` (YAML-Liste oder kommagetrennter Text) erweitern und `category` als optionales Feld mit festem Wertevorrat prüfen; prüfen: Unit-Tests für Liste, Text, fehlende Kategorie (gültig) und unbekannte Kategorie (Meldung mit Pfad, Wert und erlaubten Werten)
+- [x] 2.2 Die Listen laden und prüfen (unbekannte Kategorie oder Schlagwort mit „Meintest du …“, doppelte Schlagworte, fehlendes Kategoriebild, Schlagwort mit weniger als zwei Beiträgen als Warnung); prüfen: Unit-Tests für jeden Fall prüfen den Meldungstext
+- [x] 2.3 `src/topics.rs`: Zuordnung, Zählung, Sortierung (neueste zuerst, Schlagworte alphabetisch mit deutscher Sortierung), nur veröffentlichte Beiträge, leere Themen entfallen; prüfen: Unit-Tests inkl. geplantem Beitrag und Slug-Kollision zweier Schlagworte
+- [x] 2.4 Reservierte Pfade (`themen`, `suche`, `beitraege`, `kategorie`, `tag`, `pagefind`) gegen Posts und Einzelseiten prüfen; prüfen: Test mit einer Einzelseite „Themen“ bricht mit Datei und URL ab
 
 ## 3. Seiten und Navigation
 
