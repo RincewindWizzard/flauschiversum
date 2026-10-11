@@ -2,7 +2,7 @@
 
 ## 1. Zuordnung der Beiträge
 
-- [ ] 1.1 Alle 194 Beiträge lesen (Titel, Kurztext, Textanfang) und in `openspec/changes/handbuch-navigation/zuordnung.md` je Beitrag Kategorie und 1–4 Schlagworte vorschlagen, dazu die Liste der Schlagworte mit Anzahl; prüfen: die Tabelle hat 194 Zeilen, jede Kategorie stammt aus den sechs vorhandenen, jedes Schlagwort kommt mindestens zweimal vor
+- [x] 1.1 Alle 194 Beiträge lesen (Titel, Kurztext, Textanfang) und in `openspec/changes/handbuch-navigation/zuordnung.md` je Beitrag Kategorie und 1–4 Schlagworte vorschlagen, dazu die Liste der Schlagworte mit Anzahl; prüfen: die Tabelle hat 194 Zeilen, jede Kategorie stammt aus den sechs vorhandenen, jedes Schlagwort kommt mindestens zweimal vor
 - [ ] 1.2 Die Zuordnung von der Seitenbetreiberin prüfen und korrigieren lassen; prüfen: Freigabe im Gespräch, bevor Inhalte geändert werden
 - [ ] 1.3 `content/categories.yaml` (sechs Kategorien mit Bild und Reim aus der alten Navigation) und `content/tags.yaml` anlegen und per Skript `category:` und `tags:` als eingefügte Zeilen in die `index.md` aller Beiträge eintragen; prüfen: `git diff --numstat` zeigt für die Beiträge nur Einfügungen, und die Kategorie ist nur dort ergänzt, wo sie in der Zuordnung steht („Relaunch aus der Hackermatte“ bleibt ohne Kategorie)
 
