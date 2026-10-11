@@ -12,7 +12,7 @@ Das Seitengerüst ist ein einspaltiger `div.container-fluid` mit `max-width: 100
 - Ein gestalteter Footer auf jeder Seite mit Seitenlinks, Kontakt und Social-Icons.
 - Eine kleinere, ruhigere Kopfnavigation (Start, Themen, Beiträge).
 - Kontaktlinks, die durch Spamfilter kommen (Betreff mit „Flauschiversum“).
-- Bessere Platznutzung auf dem Desktop: zweispaltig mit Sidebar (Kategorien, Tag-Cloud); lesbare Zeilenlänge bleibt.
+- Bessere Platznutzung auf dem Desktop: dreispaltig mit Navigationsspalte links und Sidebar rechts, auf mittleren Fenstern zweispaltig; lesbare Zeilenlänge bleibt.
 - Der Autor am Ende des Beitrags.
 
 **Non-Goals:**
@@ -46,15 +46,22 @@ Die Profil-URLs und die Kontaktadresse stehen in `src/config.rs` (`CONTACT_EMAIL
 
 *Alternative:* Adressen in `content/` als Daten (YAML). Verworfen: Es sind drei feste Werte; eine Datei mehr und ein Ladeschritt bringen nichts.
 
-### 4. Zweispaltiges Layout und Sidebar
+### 4. Drei Spalten, Navigationsspalte und Sidebar
 
-`layout.html` bekommt zwischen Kopf und Footer ein `div.page-layout`, das `{% block content %}` und, außer auf der Suchseite und `/themen/`, `<aside class="sidebar" aria-label="Themen">` enthält (steuerbar über `head.sidebar: bool`, wie `search_form`). Quellreihenfolge: Inhalt, dann Sidebar, damit Screenreader und der Handy-Aufbau (einspaltig, Sidebar unter dem Inhalt) ohne CSS-Umordnung stimmen. Ab `64em` ist `page-layout` ein Grid mit `grid-template-columns: minmax(0, 1fr) 17em`, Lücke `2em`; der Seitenrahmen wächst von 1000 px auf `--maxwidth: 1200px`. Beitragstext (`main.page`) bleibt bei `--contentwidth` (34 em → 40 em), zentriert in der Inhaltsspalte; die Listen (`ul.entries`, Kacheln) füllen die Spalte (Kachelraster `repeat(auto-fill, minmax(11em, 1fr))` bleibt). Die Sidebar ist `position: sticky` mit `top: 1em`, solange sie nicht höher als das Fenster ist (`max-height` mit Scrollen), damit sie beim Lesen langer Beiträge erreichbar bleibt.
+`layout.html` bekommt zwischen Kopf und Footer ein `div.page-layout` mit `{% block content %}` und, außer auf der Suchseite und `/themen/`, zwei Seitenelemente nach dem Inhalt (Steuerung über `head.sidebar: bool`, wie `search_form`):
 
-Die Sidebar-Daten (Kategorien mit Anzahl, Tags mit Anzahl und Größenstufe) berechnet `Topics` einmal je Build (`topics.sidebar()`), werden in `Common` abgelegt und von jedem Template gerendert; es gibt eine Partial-Datei `partials/sidebar.html`. Größenstufe: `level = 1 + round(4 * (ln(n) - ln(min)) / (ln(max) - ln(min)))`, bei `max == min` Stufe 3; CSS-Klassen `cloud-1` … `cloud-5` mit `font-size` 0.85, 1.0, 1.2, 1.4, 1.6 em. Die Tag-Cloud ist eine Liste (`ul`) mit Links, bei der die Kategorien-Liste davor steht.
+- `<nav class="sitenav" aria-label="Navigation">` (Suchfeld, Links Start/Themen/Beiträge, Kategorienliste mit Anzahl) und
+- `<aside class="sidebar" aria-label="Themen">` (Kategorienliste, Tag-Cloud, „Alle Themen“).
 
-Die Themenübersicht `/themen/` und die Suchseite bleiben einspaltig; dort wäre die Sidebar doppelt bzw. sie würde den Filter der Suche beschneiden. Die Startseite verliert den Abschnitt „Häufige Themen“ und die Konstante `HOME_TOPICS`.
+Die Quellreihenfolge ist Inhalt, `sitenav`, `sidebar`, damit Screenreader den Inhalt zuerst erreichen und der Handy-Aufbau ohne CSS-Umordnung stimmt. Per CSS-Grid und `grid-template-areas` stehen die Elemente ab `80em` als `"nav content side"` (Spalten `13em minmax(0, 1fr) 16em`, Lücke `2em`, Rahmen `--maxwidth: 1400px`), zwischen `64em` und `80em` als `"content side"` (`minmax(0, 1fr) 17em`, Rahmen 1200 px) und darunter einspaltig. Beitragstext (`main.page`) bleibt auf `--contentwidth` (40 em) begrenzt und mittig in der Mittelspalte; Listen und Kacheln füllen sie. Die Navigationsspalte ist `position: sticky; top: 1em` mit `max-height` und eigenem Scrollen, die Sidebar bleibt normal.
 
-*Alternativen:* (a) Sidebar links: Der Haupttext beginnt dann weiter rechts, am Handy ungeordnet. Rechts entspricht üblichen Blog-Layouts. (b) Tag-Cloud auch auf Handy ausklappbar (`<details>`): zusätzliche Interaktion; zunächst reicht die einfache Liste unter dem Inhalt. (c) Cloud mit JavaScript berechnen: unnötig, der Build kennt alle Zahlen.
+**Doppelte Markup-Teile statt Umbauen per JavaScript:** Navigationsleiste im Kopf (`header nav`) und Navigationsspalte (`nav.sitenav`) bzw. Suchfeld im Kopf und in der Spalte sowie Kategorienliste in Spalte und Sidebar kommen beide im HTML vor und werden per Media Query mit `display: none` ausgeblendet. Ausgeblendete Elemente sind auch für Screenreader unsichtbar, es gibt also nie zwei sichtbare Fassungen. Ein Test prüft das bei 1440, 1000 und 360 px. Die Suchfelder erhalten verschiedene `id`s (`q`, `q-side`).
+
+Die Sidebar-Daten (Kategorien mit Anzahl, Tags mit Anzahl und Größenstufe) berechnet `Topics` einmal je Build (`topics.sidebar()`), werden in `Common` abgelegt und von jedem Template gerendert; Partials `partials/sidebar.html` und `partials/sitenav.html`. Größenstufe: `level = 1 + round(4 * (ln(n) - ln(min)) / (ln(max) - ln(min)))`, bei `max == min` Stufe 3; CSS-Klassen `cloud-1` … `cloud-5` mit 0.85, 1.0, 1.2, 1.4, 1.6 em.
+
+Die Themenübersicht `/themen/` und die Suchseite bleiben einspaltig mit Navigationsleiste und Suchfeld im Kopf. Die Startseite verliert den Abschnitt „Häufige Themen“ und die Konstante `HOME_TOPICS`.
+
+*Alternativen:* (a) Eine einzige Navigation, die per CSS-Grid zwischen Kopf und Spalte wandert (`display: contents`, Umordnung): weniger Markup, aber die Navigation im Kopf und die Spalte stehen an verschiedenen Stellen im DOM; Umordnung per Grid auf ein Element, das nicht im Gridcontainer liegt, ist nicht möglich. (b) Navigationsspalte links und Sidebar rechts per JavaScript verschieben: ohne JavaScript wäre das Layout kaputt. (c) Tag-Cloud links, Navigation rechts: Navigation steht üblicherweise links. Gewählt ist doppeltes Markup, weil es ohne JavaScript, ohne Layoutsprünge und mit einfachen Tests auskommt.
 
 ### 5. Autor am Ende
 
@@ -76,6 +83,8 @@ Eine kleine Funktion `mailto(subject)` in `render.rs` erzeugt alle `mailto:`-Adr
 - [Markenlogos und deren Nutzungsregeln] → Nur als Verweis auf die eigenen Profile, in einfarbiger Standardform; kein Hinweis auf Zugehörigkeit. Pfade aus einem CC0-Satz.
 - [Eigene Pfade der Icons weichen optisch von den Originalen ab] → Pfade unverändert aus dem Satz übernehmen und im Test (Snapshot) festhalten.
 - [Fester Betreff „Flauschiversum“ ist schon in Beiträgen enthalten, aber ein künftiger Link ohne Wort fällt nicht auf] → Test über alle gebauten Seiten schlägt dann fehl.
+- [Drei Spalten wirken auf einem 1440-px-Bildschirm eng] → Rahmen 1400 px, Spalten 13 und 16 em, Lesetext höchstens 40 em; Vergleichsbilder zur Abnahme, Schwelle von 80 em bleibt als Konstante einstellbar.
+- [Doppeltes Markup (Navigation, Suchfeld, Kategorien) driftet auseinander] → Beide Fassungen entstehen aus denselben Partials und Daten; ein Test vergleicht Ziele und Zahlen und prüft, dass bei jeder Breite genau eine Fassung sichtbar ist.
 - [Sidebar macht den Seitenaufbau am Desktop unruhig oder zu hoch] → `sticky` nur bei passender Höhe, Sidebar kompakt (Kategorien klein, Cloud in einer Zeile umbrechend); Vergleichsbilder zur Abnahme.
 - [Tag-Cloud wird als Spielerei empfunden oder ist schwer lesbar] → Größenbereich begrenzt (0,85–1,6 em), alphabetisch, hoher Kontrast; Nutzerwunsch ist ausdrücklich eine Cloud.
 - [Platz bleibt auf sehr breiten Bildschirmen ungenutzt] → Rahmen auf 1200 px begrenzt; breitere Layouts sind Lesbarkeit zuliebe nicht vorgesehen.

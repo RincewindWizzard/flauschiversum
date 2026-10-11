@@ -2,12 +2,13 @@
 
 ## Why
 
-Das Layout nutzt den Platz auf dem Desktop schlecht: Alles steht in einer schmalen mittleren Spalte, links und rechts bleibt Leerraum, und die Schlagworte erscheinen als kleine Liste mitten auf der Startseite. Der Seitenkopf trägt sieben Navigationseinträge, von denen vier (Tipps und Tricks, About, Impressum, Abonnieren) selten gebraucht werden; die Fußzeile besteht nur aus Copyright und einem Impressum-Link. Kontakt und Social-Media-Profile fehlen auf der Seite ganz, bis auf den E-Mail-Hinweis in Beiträgen. Und der Autor steht am Anfang jedes Beitrags, wo er vom eigentlichen Inhalt ablenkt. Ein besseres Layout mit Sidebar und Footer macht das Handbuch auf großen Bildschirmen übersichtlicher und die Kontaktwege auffindbar.
+Das Layout nutzt den Platz auf dem Desktop schlecht: Alles steht in einer schmalen mittleren Spalte, links und rechts bleibt Leerraum, die Navigation liegt als Leiste im Kopf und die Schlagworte erscheinen als kleine Liste mitten auf der Startseite. Der Seitenkopf trägt sieben Navigationseinträge, von denen vier (Tipps und Tricks, About, Impressum, Abonnieren) selten gebraucht werden; die Fußzeile besteht nur aus Copyright und einem Impressum-Link. Kontakt und Social-Media-Profile fehlen auf der Seite ganz, bis auf den E-Mail-Hinweis in Beiträgen. Und der Autor steht am Anfang jedes Beitrags, wo er vom eigentlichen Inhalt ablenkt. Ein besseres Layout mit Navigationsspalte, Sidebar und Footer macht das Handbuch auf großen Bildschirmen übersichtlicher und die Kontaktwege auffindbar.
 
 ## What Changes
 
-- **Sidebar mit Tag-Cloud:** Auf dem Desktop steht rechts neben dem Inhalt eine Sidebar mit der Tag-Cloud (alle Schlagworte alphabetisch, Schriftgröße nach Zahl der Beiträge) und darüber den Kategorien mit Anzahl. Am Handy steht sie unter dem Inhalt. Sie erscheint auf allen Seiten außer der Suche und der Themenübersicht (dort steht dasselbe im Inhalt). Der Abschnitt „Häufige Themen“ auf der Startseite entfällt, die Cloud ersetzt ihn.
-- **Platz auf dem Desktop:** Die Seite wird breiter und zweispaltig (Inhalt und Sidebar); der Lesetext in Beiträgen behält eine angenehme Zeilenlänge, Kacheln und Listen nutzen die gewonnene Breite.
+- **Dreispaltig auf dem Desktop (ab 80 em, Rahmen bis 1400 px):** Links eine Navigationsspalte wie ein Inhaltsverzeichnis mit Suchfeld, „Start“, „Themen“, „Beiträge“ und den Kategorien mit Anzahl; in der Mitte der Inhalt (Lesetext bleibt bei etwa 40 em); rechts eine Sidebar mit der Tag-Cloud (alle Schlagworte alphabetisch, Schriftgröße nach Zahl der Beiträge). Der Kopf zeigt dann nur das Logo.
+- **Mittlere und schmale Fenster:** Zwischen 64 und 80 em stehen Inhalt und Sidebar nebeneinander, die Navigation bleibt als Leiste im Kopf, und die Sidebar zeigt zusätzlich die Kategorien. Darunter steht die Sidebar unter dem Inhalt.
+- **Ausnahmen:** Auf der Suchseite und der Themenübersicht gibt es keine Seitenspalten (dort steht dasselbe im Inhalt bzw. würde der Filter beschnitten). Der Abschnitt „Häufige Themen“ auf der Startseite entfällt, die Cloud ersetzt ihn.
 - **Autor am Ende:** Auf Beitragsseiten steht „Von <Autor>“ nach dem Beitragstext statt im Kopf. Titel, Vorschaubild, Kategorie und Schlagworte bleiben oben.
 - **Footer:** Jede Seite bekommt eine gestaltete Fußzeile mit den Links „Tipps und Tricks“, „About“, „Impressum“ und „Abonnieren“, dem Kontakt per E-Mail, den Social-Media-Profilen und dem Copyright.
 - **Kopfnavigation schrumpft:** Im Kopf bleiben nur „Start“, „Themen“ und „Beiträge“. Die vier anderen Einträge wandern in den Footer; ihre URLs ändern sich nicht.
@@ -20,11 +21,11 @@ Das Layout nutzt den Platz auf dem Desktop schlecht: Alles steht in einer schmal
 ### New Capabilities
 
 - `contact-links`: Die Kontaktwege der Seite: E-Mail mit Pflichtwort im Betreff und die Social-Media-Profile als Icons, einheitlich auf jeder Seite.
-- `sidebar`: Die Sidebar mit Kategorienliste und Tag-Cloud (Inhalt, Skalierung, Reihenfolge, Zählung).
+- `sidebar`: Die Seitenspalten mit Kategorienliste und Tag-Cloud (Inhalt, Skalierung, Reihenfolge, Zählung).
 
 ### Modified Capabilities
 
-- `site-layout`: Hauptnavigation im Kopf mit drei Einträgen; neue Fußzeile mit Seitenlinks, Kontakt, Socials und Copyright; breiteres zweispaltiges Layout mit Sidebar.
+- `site-layout`: Hauptnavigation mit drei Einträgen (Leiste im Kopf, ab 80 em linke Spalte); neue Fußzeile mit Seitenlinks, Kontakt, Socials und Copyright; dreispaltiges Layout auf dem Desktop, zweispaltig auf mittleren Fenstern.
 - `home-page`: Aufbau der Startseite ohne „Häufige Themen“ (die Sidebar übernimmt).
 - `post-page`: Autor am Ende des Beitrags statt im Kopf; Einordnung steht unter dem Vorschaubild.
 

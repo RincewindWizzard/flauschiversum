@@ -2,23 +2,27 @@
 
 ## Purpose
 
-Beschreibt die Sidebar des Flauschiversums: eine Kategorienliste und die Tag-Cloud, mit denen Besucher von jeder Seite aus zu Themen springen können.
+Beschreibt die Seitenspalten des Flauschiversums: Kategorienliste und Tag-Cloud, mit denen Besucher von jeder Seite aus zu Themen springen können.
 
 ## ADDED Requirements
 
-### Requirement: Kategorien in der Sidebar
-Die Sidebar SHALL oben die Kategorien aus `content/categories.yaml` in der Reihenfolge der Datei als Liste mit Links auf `/kategorie/<name>/` und der Anzahl der veröffentlichten Beiträge zeigen. Kategorien ohne veröffentlichten Beitrag fehlen.
+### Requirement: Kategorien in der Seitenspalte
+Die Seitenspalten SHALL die Kategorien aus `content/categories.yaml` in der Reihenfolge der Datei als Liste mit Links auf `/kategorie/<name>/` und der Anzahl der veröffentlichten Beiträge zeigen: ab 80 em in der linken Navigationsspalte unter den Seitenlinks, darunter in der Sidebar vor der Tag-Cloud. Es ist stets genau eine Liste sichtbar. Kategorien ohne veröffentlichten Beitrag fehlen.
 
 #### Scenario: Kategorie mit Anzahl
 - **WHEN** die Kategorie „Filzen“ 37 veröffentlichte Beiträge hat
-- **THEN** zeigt die Sidebar „Filzen (37)“ als Link auf `/kategorie/filzen/`
+- **THEN** zeigt die Kategorienliste „Filzen (37)“ als Link auf `/kategorie/filzen/`
 
 #### Scenario: Kategorie ohne Beiträge
 - **WHEN** eine Kategorie nur geplante Beiträge hat
-- **THEN** fehlt sie in der Sidebar
+- **THEN** fehlt sie in der Seitenspalte
+
+#### Scenario: Links auf dem Desktop, in der Sidebar auf kleineren Fenstern
+- **WHEN** dieselbe Seite bei 1440 px und bei 1000 px Breite geöffnet wird
+- **THEN** steht die Kategorienliste bei 1440 px links unter der Navigation und bei 1000 px in der Sidebar, und nie doppelt sichtbar
 
 ### Requirement: Tag-Cloud
-Die Sidebar SHALL darunter alle Schlagworte mit mindestens einem veröffentlichten Beitrag als Tag-Cloud zeigen: alphabetisch nach deutscher Sortierung (Umlaute wie ihre Grundbuchstaben, ohne Beachtung der Groß-/Kleinschreibung), jedes als Link auf `/tag/<name>/`, mit der Anzahl im Titel des Links („Hüte: 21 Beiträge“). Am Ende steht ein Link „Alle Themen“ auf `/themen/`.
+Die Sidebar SHALL alle Schlagworte mit mindestens einem veröffentlichten Beitrag als Tag-Cloud zeigen: alphabetisch nach deutscher Sortierung (Umlaute wie ihre Grundbuchstaben, ohne Beachtung der Groß-/Kleinschreibung), jedes als Link auf `/tag/<name>/`, mit der Anzahl im Titel des Links („Hüte: 21 Beiträge“). Am Ende steht ein Link „Alle Themen“ auf `/themen/`.
 
 #### Scenario: Alphabetische Reihenfolge
 - **WHEN** die Schlagworte „Taschen“, „Hüte“ und „Katzen“ existieren
