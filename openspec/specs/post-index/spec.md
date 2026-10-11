@@ -7,15 +7,15 @@ Beschreibt die Startseite und ihre Folgeseiten: die chronologische Liste aller v
 ## Requirements
 
 ### Requirement: Reihenfolge und Seitengröße
-Die Indexseiten SHALL alle veröffentlichten Posts nach Datum absteigend (neueste zuerst) zeigen, mit 4 Posts pro Seite. Die erste Seite enthält die neuesten Posts.
+Die chronologische Liste unter `/beitraege/` und `/page/<N>/` SHALL alle veröffentlichten Posts nach Datum absteigend (neueste zuerst) zeigen, mit 4 Posts pro Seite. Die erste Seite `/beitraege/` enthält die neuesten Posts.
 
 #### Scenario: Neuester Post zuerst
 - **WHEN** der neueste Post „Kürbis“ vom 31. Oktober 2020 ist
-- **THEN** steht er als erster Eintrag auf `/`
+- **THEN** steht er als erster Eintrag auf `/beitraege/`
 
 #### Scenario: Letzte Seite unvollständig
 - **WHEN** es 194 veröffentlichte Posts gibt
-- **THEN** gibt es 49 Indexseiten, und die letzte enthält 2 Posts
+- **THEN** gibt es 49 Seiten der Liste, und die letzte enthält 2 Posts
 
 ### Requirement: Veröffentlichungsdatum
 Ein Post mit einem Datum in der Zukunft (bezogen auf den Zeitpunkt des Builds) SHALL weder auf den Indexseiten erscheinen noch bei Seitenzahl und Verteilung der Posts auf die Seiten mitzählen.

@@ -25,11 +25,15 @@ Jede Seite SHALL oben das Logo „Flauschiversum“ zeigen, in der Schrift Lobst
 - **THEN** öffnet sich die Startseite `/`
 
 ### Requirement: Hauptnavigation
-Jede Seite SHALL eine Navigation mit diesen Einträgen in dieser Reihenfolge haben: „Beiträge“ (`/`), „Tipps und Tricks“ (`/tipps-und-tricks/`), „About“ (`/about/`), „Impressum“ (`/impressum/`), „Abonnieren“ (`/rss.xml`).
+Jede Seite SHALL eine Navigation mit diesen Einträgen in dieser Reihenfolge haben: „Start“ (`/`), „Themen“ (`/themen/`), „Beiträge“ (`/beitraege/`), „Tipps und Tricks“ (`/tipps-und-tricks/`), „About“ (`/about/`), „Impressum“ (`/impressum/`), „Abonnieren“ (`/rss.xml`).
 
 #### Scenario: Feed abonnieren
 - **WHEN** „Abonnieren“ angeklickt wird
 - **THEN** wird `/rss.xml` geöffnet
+
+#### Scenario: Themen finden
+- **WHEN** „Themen“ angeklickt wird
+- **THEN** wird `/themen/` geöffnet
 
 ### Requirement: Fußzeile
 Jede Seite SHALL eine Fußzeile mit „© <Jahr> Ermeline Wollknoll — Impressum“ haben, wobei „Impressum“ auf `/impressum/` verlinkt. Das Jahr ist das Jahr des Builds.
@@ -39,7 +43,7 @@ Jede Seite SHALL eine Fußzeile mit „© <Jahr> Ermeline Wollknoll — Impressu
 - **THEN** steht in der Fußzeile „© 2021 Ermeline Wollknoll“
 
 ### Requirement: Seitentitel
-Jede HTML-Seite SHALL einen nicht leeren `<title>` mit korrekt maskierten Sonderzeichen tragen. Post-Seiten und Einzelseiten heißen „<Titel> – Flauschiversum“, die erste Indexseite „Flauschiversum – Mehr als nur eine Masche“, und Folgeseiten heißen „Flauschiversum – Seite <N>“, wobei N die angezeigte Seitennummer ist.
+Jede HTML-Seite SHALL einen nicht leeren `<title>` mit korrekt maskierten Sonderzeichen tragen. Post-Seiten, Einzelseiten, Kategorie- und Schlagwortseiten heißen „<Titel> – Flauschiversum“, die Startseite „Flauschiversum – Mehr als nur eine Masche“, die Liste „Alle Beiträge – Flauschiversum“ mit Folgeseiten „Alle Beiträge – Seite <N> – Flauschiversum“, die Übersicht „Themen – Flauschiversum“ und die Suche „Suche – Flauschiversum“.
 
 #### Scenario: Titel eines Posts
 - **WHEN** die Seite des Posts „Alraune“ geöffnet wird
@@ -51,7 +55,11 @@ Jede HTML-Seite SHALL einen nicht leeren `<title>` mit korrekt maskierten Sonder
 
 #### Scenario: Titel einer Folgeseite
 - **WHEN** `/page/1/` geöffnet wird
-- **THEN** lautet der Dokumenttitel „Flauschiversum – Seite 2“
+- **THEN** lautet der Dokumenttitel „Alle Beiträge – Seite 2 – Flauschiversum“
+
+#### Scenario: Titel einer Kategorie
+- **WHEN** `/kategorie/filzen/` geöffnet wird
+- **THEN** lautet der Dokumenttitel „Filzen – Flauschiversum“
 
 ### Requirement: Keine Ressourcen von Drittanbietern
 Seiten SHALL keine Skripte, Stylesheets, Schriften oder Bilder von fremden Servern laden. Schriften (Lobster, Lora, Merriweather) und Skripte werden von der eigenen Domain ausgeliefert. Links auf fremde Seiten im Inhalt sind erlaubt.
@@ -66,3 +74,10 @@ Alle Texte, Bilder, Links und die Navigation SHALL auch ohne JavaScript sichtbar
 #### Scenario: JavaScript deaktiviert
 - **WHEN** eine Post-Seite mit Karussell bei deaktiviertem JavaScript geöffnet wird
 - **THEN** sind alle Bilder des Karussells durch Wischen oder Scrollen erreichbar, und der Text ist vollständig lesbar
+
+### Requirement: Suchfeld im Kopf
+Jede Seite außer der Startseite und der Suchseite SHALL im Kopf ein Suchfeld mit Beschriftung „Suchen“ haben. Das Abschicken öffnet `/suche/?q=<Begriff>`.
+
+#### Scenario: Suche aus einem Beitrag
+- **WHEN** auf einer Post-Seite „Mütze“ eingegeben und abgeschickt wird
+- **THEN** öffnet sich `/suche/?q=M%C3%BCtze`

@@ -31,7 +31,7 @@
 
 - [x] 5.1 Gesamtseitentest erweitern: jeder veröffentlichte Beitrag mit Kategorie steht auf genau einer Kategorieseite, jeder Beitrag auf den Seiten seiner Schlagworte und in der Suche, alle Live-URLs und alle `/page/<N>/` existieren weiter; prüfen: `cargo test --release -- --ignored` grün
 - [x] 5.2 Browser-Tests für Startseite (Kachel führt auf die Kategorieseite, Schlagwort führt auf die Schlagwortseite) und Handy-Ansicht ohne waagerechtes Scrollen; prüfen: Tests grün
-- [ ] 5.3 Vergleichsbilder (Startseite, Kategorieseite, Beitrag mit Einordnung, Suchergebnis, Handy) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch
+- [x] 5.3 Vergleichsbilder (Startseite, Kategorieseite, Beitrag mit Einordnung, Suchergebnis, Handy) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch
 - [x] 5.4 `README.md` (Kategorien und Schlagworte pflegen, Suche) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Schritte funktionieren wie angegeben
 
 ## Workflow follow-up
