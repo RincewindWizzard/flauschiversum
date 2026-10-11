@@ -125,7 +125,7 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
     const docH = await page.evaluate(() => document.documentElement.scrollHeight);
     assert.ok(Math.abs(fb.y + fb.height - docH) < 60, 'Footer steht am Seitenende');
     for (const name of ['Tipps und Tricks', 'About', 'Impressum', 'Abonnieren']) {
-      assert.ok(await footer.getByRole('link', { name }).isVisible(), name);
+      assert.ok(await footer.getByRole('link', { name, exact: true }).isVisible(), name);
     }
     for (const [name, href] of [['Instagram', 'https://www.instagram.com/ermelinewollknoll/'], ['Mastodon', 'https://chaos.social/@ErmelineWollknoll']]) {
       const link = footer.getByRole('link', { name });
@@ -158,6 +158,36 @@ await test('Footer: Tastatur erreicht die Icons, Fokus ist sichtbar', async () =
   assert.ok(outline[0] !== 'none' && outline[1] > 0, `Fokusrahmen ${outline}`);
   await page.close();
 });
+
+for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
+  await test(`RSS-Icon ${label}: sichtbar nach Mastodon, Klickfläche, Tastatur, öffnet den Feed`, async () => {
+    const page = await open(POST, width, 800, width < 500 ? { hasTouch: true, isMobile: true } : {});
+    const footer = page.locator('#blogfooter');
+    const rss = footer.getByRole('link', { name: 'RSS-Feed abonnieren' });
+    assert.ok(await rss.isVisible());
+    assert.equal(await rss.getAttribute('href'), '/rss.xml');
+    assert.equal(await rss.getAttribute('type'), 'application/rss+xml');
+    const [m, r] = [await footer.getByRole('link', { name: 'Mastodon' }).boundingBox(), await rss.boundingBox()];
+    assert.ok(r.x > m.x, 'RSS steht nach Mastodon');
+    assert.ok(r.width >= 44 && r.height >= 44, `Klickfläche ${r.width}×${r.height}`);
+    // Tastatur: von Mastodon ein Tab weiter, Fokusrahmen sichtbar
+    await footer.getByRole('link', { name: 'Mastodon' }).focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('aria-label')), 'RSS-Feed abonnieren');
+    const outline = await page.evaluate(() => { const s = getComputedStyle(document.activeElement); return [s.outlineStyle, parseFloat(s.outlineWidth)]; });
+    assert.ok(outline[0] !== 'none' && outline[1] > 0, `Fokusrahmen ${outline}`);
+    const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+    assert.ok(sw <= cw, 'kein waagerechtes Scrollen');
+    const res = await page.request.get(BASE + '/rss.xml');
+    assert.equal(res.status(), 200);
+    assert.match(await res.text(), /<rss[ >]/);
+    // Der Textlink „Abonnieren“ bleibt
+    assert.equal(await footer.getByRole('link', { name: 'Abonnieren', exact: true }).getAttribute('href'), '/rss.xml');
+    if (width > 500) await footer.screenshot({ path: '/tmp/flausch-footer-rss.png' });
+    else await footer.screenshot({ path: '/tmp/flausch-footer-rss-handy.png' });
+    await page.close();
+  });
+}
 
 await test('Footer: Mastodon-Link trägt rel=me, externe Links rel=noopener', async () => {
   const page = await open('/', 1280);

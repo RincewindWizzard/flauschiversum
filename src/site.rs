@@ -628,7 +628,13 @@ pub mod tests {
             assert!(!visible.contains("ermeline@"), "{path}: Adresse als Text");
             assert!(footer.contains("href=\"https://www.instagram.com/ermelinewollknoll/\" rel=\"noopener\" aria-label=\"Instagram\""), "{path}");
             assert!(footer.contains("href=\"https://chaos.social/@ErmelineWollknoll\" rel=\"me noopener\" aria-label=\"Mastodon\""), "{path}");
-            assert_eq!(footer.matches("<svg").count(), 3, "drei Icons als inline SVG: {path}");
+            assert_eq!(footer.matches("<svg").count(), 4, "vier Icons als inline SVG: {path}");
+            // RSS-Icon: einmal, nach Mastodon, mit Namen und Feed-Attributen; der Textlink „Abonnieren“ bleibt
+            let rss = "<a href=\"/rss.xml\" rel=\"alternate\" type=\"application/rss+xml\" aria-label=\"RSS-Feed abonnieren\" title=\"RSS-Feed abonnieren\">";
+            assert_eq!(footer.matches(rss).count(), 1, "{path}");
+            assert!(footer.find(rss).unwrap() > footer.find("aria-label=\"Mastodon\"").unwrap(), "{path}: RSS nach Mastodon");
+            assert!(footer.find("aria-label=\"Instagram\"").unwrap() > footer.find("aria-label=\"E-Mail schreiben\"").unwrap(), "{path}: Reihenfolge E-Mail, Instagram");
+            assert_eq!(footer.matches("href=\"/rss.xml\"").count(), 2, "Textlink und Icon: {path}");
             assert!(footer.contains("&copy; 2026 Ermeline Wollknoll"), "{path}");
             assert!(!footer.contains("http-equiv") && !html.contains("fonts.googleapis"), "{path}");
             // Jeder mailto-Link hat einen Betreff mit „Flauschiversum“
