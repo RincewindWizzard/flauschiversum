@@ -7,11 +7,11 @@ Beschreibt die Seite eines einzelnen Posts: Kopf mit Titel, Vorschaubild, Autor 
 ## Requirements
 
 ### Requirement: Post-Kopf
-Unter dem gemeinsamen Kopfbereich SHALL die Post-Seite den Titel des Posts als Überschrift zeigen, darunter das Vorschaubild (Größe `200x`, nur wenn `image` gesetzt ist) und die Zeile „Von <author>“. Der Autorenname verlinkt auf `/about/`.
+Unter dem gemeinsamen Kopfbereich SHALL die Post-Seite den Titel des Posts als Überschrift zeigen, darunter das Vorschaubild (Größe `200x`, nur wenn `image` gesetzt ist). Der Autor steht nicht im Kopf, sondern am Ende des Beitrags.
 
 #### Scenario: Post mit Autor und Bild
 - **WHEN** die Seite des Posts „Gib´s mir!… - Audrey II“ mit `author: Tomcat` und `image: "Audrey1.jpg"` geöffnet wird
-- **THEN** zeigt sie die Überschrift „Gib´s mir!… - Audrey II“, das Bild `200x/Audrey1.jpg` und „Von Tomcat“ mit Link auf `/about/`
+- **THEN** zeigt der Kopf die Überschrift „Gib´s mir!… - Audrey II“ und das Bild `200x/Audrey1.jpg`, aber nicht „Von Tomcat“
 
 ### Requirement: Kontakt per E-Mail
 Die Post-Seite SHALL den Hinweis „Schreibe Ihr eine Nachricht!“ zeigen. „Nachricht“ ist dabei ein `mailto:`-Link an `ermeline@flauschiversum.de` mit dem Betreff „[Flauschiversum] <Titel des Posts>“.
@@ -53,7 +53,7 @@ Unter dem Inhalt SHALL die Post-Seite Links auf den nächstälteren und den näc
 - **THEN** gibt es einen Link auf den nächstälteren Post und keinen auf einen neueren
 
 ### Requirement: Einordnung des Beitrags
-Die Post-Seite SHALL im Kopf unter dem Autor die Kategorie (falls vorhanden) als Link auf `/kategorie/<name>/` und die Schlagworte (falls vorhanden) als Links auf `/tag/<name>/` zeigen.
+Die Post-Seite SHALL im Kopf unter dem Vorschaubild bzw. dem Titel die Kategorie (falls vorhanden) als Link auf `/kategorie/<name>/` und die Schlagworte (falls vorhanden) als Links auf `/tag/<name>/` zeigen.
 
 #### Scenario: Kategorie und Schlagworte
 - **WHEN** der Post „Alraune“ in der Kategorie „Basteln“ liegt und die Schlagworte „LARP“ und „Hexen“ trägt
@@ -70,3 +70,14 @@ Die Post-Seite SHALL im Kopf unter dem Autor die Kategorie (falls vorhanden) als
 #### Scenario: Ohne Einordnung
 - **WHEN** ein Post weder Kategorie noch Schlagworte hat
 - **THEN** zeigt der Kopf keine Zeile zur Einordnung
+
+### Requirement: Autor am Ende des Beitrags
+Hat der Post einen Autor, SHALL die Seite nach dem Beitragstext die Zeile „Von <Autor>“ zeigen, wobei der Name auf `/about/` verlinkt. Die Zeile steht nach dem Inhalt und vor den Links zum älteren und neueren Beitrag. Hat der Post keinen Autor, gibt es die Zeile nicht.
+
+#### Scenario: Autor nach dem Text
+- **WHEN** die Seite des Posts „Alraune“ mit `author: Ermeline` geöffnet wird
+- **THEN** steht „Von Ermeline“ mit Link auf `/about/` nach dem letzten Absatz und vor „älterer Beitrag“
+
+#### Scenario: Ohne Autor
+- **WHEN** ein Post kein Feld `author` hat
+- **THEN** zeigt die Seite keine Zeile „Von …“

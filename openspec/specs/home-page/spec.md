@@ -7,11 +7,11 @@ Beschreibt die Startseite des Flauschiversums als Einstieg in das Handbuch: Besu
 ## Requirements
 
 ### Requirement: Handbuch-Startseite
-Die Startseite SHALL unter `/` und `/index.html` erreichbar sein und, in dieser Reihenfolge, zeigen: das Suchfeld, die Kategoriekacheln, die häufigsten Themen und den Abschnitt „Neu im Flauschiversum“. Sie enthält keine chronologische Liste aller Beiträge und keine Paginierung.
+Die Startseite SHALL unter `/` und `/index.html` erreichbar sein und, in dieser Reihenfolge, zeigen: das Suchfeld, die Kategoriekacheln und den Abschnitt „Neu im Flauschiversum“. Die häufigen Themen stehen als Tag-Cloud in der Sidebar. Sie enthält keine chronologische Liste aller Beiträge und keine Paginierung.
 
 #### Scenario: Aufbau der Startseite
 - **WHEN** `/` geöffnet wird
-- **THEN** erscheinen nacheinander Suchfeld, Kategoriekacheln, häufige Themen und „Neu im Flauschiversum“
+- **THEN** erscheinen nacheinander Suchfeld, Kategoriekacheln und „Neu im Flauschiversum“, daneben bzw. darunter die Sidebar mit der Tag-Cloud
 
 #### Scenario: Keine Blätterliste
 - **WHEN** `/` geöffnet wird
@@ -27,17 +27,6 @@ Für jede Kategorie aus `content/categories.yaml` SHALL die Startseite eine Kach
 #### Scenario: Kategorie ohne Beiträge
 - **WHEN** eine Kategorie keinen veröffentlichten Beitrag hat
 - **THEN** erscheint für sie keine Kachel
-
-### Requirement: Häufige Themen
-Die Startseite SHALL die bis zu 12 Schlagworte mit den meisten veröffentlichten Beiträgen als Links auf ihre Schlagwortseiten zeigen, absteigend nach Anzahl und bei gleicher Anzahl alphabetisch, jeweils mit der Anzahl. Ein Link „Alle Themen“ führt auf `/themen/`.
-
-#### Scenario: Reihenfolge der Themen
-- **WHEN** „Katzen“ 54 und „Hüte“ 37 Beiträge haben und kein anderes Schlagwort mehr
-- **THEN** steht „Katzen (54)“ vor „Hüte (37)“
-
-#### Scenario: Mehr als 12 Schlagworte
-- **WHEN** es 20 Schlagworte gibt
-- **THEN** zeigt die Startseite die 12 häufigsten und den Link „Alle Themen“
 
 ### Requirement: Neu im Flauschiversum
 Der Abschnitt „Neu im Flauschiversum“ SHALL die 4 neuesten veröffentlichten Beiträge zeigen, jeweils mit Vorschaubild, Titel als Link und Datum, sowie einen Link „Alle Beiträge“ auf `/beitraege/`.

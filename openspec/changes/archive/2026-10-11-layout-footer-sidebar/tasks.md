@@ -21,7 +21,7 @@
 
 - [x] 4.1 Test über die gesamte gebaute Seite: jeder `mailto:`-Link (Footer, Beiträge, Einzelseiten) hat einen Betreff mit „Flauschiversum“, und beim Laden einer Seite gehen alle Anfragen an die eigene Domain; prüfen: `cargo test --release -- --ignored` grün und Playwright-Test zu den Anfragen
 - [x] 4.2 Snapshots und bestehende Tests an Navigation, Spalten und Autorenzeile anpassen (Seitenstruktur, Staging-Leiste, Suchseite, `navigation.mjs`: Locator für das Suchfeld und die Navigation nur für das sichtbare Element); prüfen: `cargo test` und alle Playwright-Skripte in `tests/browser/` grün
-- [ ] 4.3 Vergleichsbilder (nach der Überarbeitung 4.4–4.7 erneut) (Desktop 1440 px, Tablet 1100 px und Handy, Startseite, Beitrag, Kategorieseite, mit und ohne Staging-Leiste) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
+- [x] 4.3 Vergleichsbilder (nach der Überarbeitung 4.4–4.7 erneut) (Desktop 1440 px, Tablet 1100 px und Handy, Startseite, Beitrag, Kategorieseite, mit und ohne Staging-Leiste) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
 
 ## 4b. Überarbeitung nach der Sichtprüfung
 
