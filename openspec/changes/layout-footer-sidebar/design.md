@@ -4,12 +4,16 @@
 
 `templates/layout.html` rendert Kopf (Logo, `<nav class="center">` mit sieben Links, Suchfeld) und eine einzeilige Fußzeile (`<footer class="center">` mit Copyright und Impressum-Link; CSS in `layout.css`). Alle Seiten erben das Layout, auch die Suchseite und die Staging-Leiste. Die Navigationslinks sind `float: left` mit der Schrift „Lobster“ (`header.css`). Die E-Mail-Adresse steht in `post.html` (Betreff „[Flauschiversum] <Titel>“, per `mail_subject` kodiert) und im Impressum (Betreff „[Flauschiversum]“); beide enthalten das Wort bereits. Die Seite lädt nichts von Dritten (Spec `site-layout`), also kommen keine Icon-Schriften oder CDN-Skripte in Frage. Siehe proposal.md für Motivation und Umfang.
 
+Das Seitengerüst ist ein einspaltiger `div.container-fluid` mit `max-width: 1000px` (`layout.css`), Beitragstext und Listen stehen in schmalen Blöcken (`--contentwidth: 34em`, `main#index article` 31 em), links und rechts bleibt auf dem Desktop viel Leerraum. Die Schlagwortliste kommt aus `Topics` (`src/topics.rs`) und wird nur für die Startseite (12 häufigste) und `/themen/` gerendert. Der Autor steht in `post.html` im Kopfblock `post-header`, vor Einordnung und Kontakt.
+
 ## Goals / Non-Goals
 
 **Goals:**
 - Ein gestalteter Footer auf jeder Seite mit Seitenlinks, Kontakt und Social-Icons.
 - Eine kleinere, ruhigere Kopfnavigation (Start, Themen, Beiträge).
 - Kontaktlinks, die durch Spamfilter kommen (Betreff mit „Flauschiversum“).
+- Bessere Platznutzung auf dem Desktop: zweispaltig mit Sidebar (Kategorien, Tag-Cloud); lesbare Zeilenlänge bleibt.
+- Der Autor am Ende des Beitrags.
 
 **Non-Goals:**
 - Allgemeine Neugestaltung von Kopf, Typografie, Farben oder Beitragsseiten.
@@ -42,9 +46,23 @@ Die Profil-URLs und die Kontaktadresse stehen in `src/config.rs` (`CONTACT_EMAIL
 
 *Alternative:* Adressen in `content/` als Daten (YAML). Verworfen: Es sind drei feste Werte; eine Datei mehr und ein Ladeschritt bringen nichts.
 
-### 4. Gestaltung
+### 4. Zweispaltiges Layout und Sidebar
 
-Neue Datei `content/style/footer.css` (in `main.css` importiert): oberer gestrichelter Rand wie die Beitragslisten (`1px dashed var(--bordercolor)`), „Lobster“ nur für die Linkgruppe wie in der Kopfnavigation, Link-Hover mit `var(--pagination-hover)` wie bei der Paginierung, Icons in `var(--acolor)` und beim Hover in einem dunkleren Ton. Abstände in `em`, damit es mit der Schriftgröße skaliert. Die Staging-Leiste bleibt oberhalb der Seite und ist vom Footer unabhängig.
+`layout.html` bekommt zwischen Kopf und Footer ein `div.page-layout`, das `{% block content %}` und, außer auf der Suchseite und `/themen/`, `<aside class="sidebar" aria-label="Themen">` enthält (steuerbar über `head.sidebar: bool`, wie `search_form`). Quellreihenfolge: Inhalt, dann Sidebar, damit Screenreader und der Handy-Aufbau (einspaltig, Sidebar unter dem Inhalt) ohne CSS-Umordnung stimmen. Ab `64em` ist `page-layout` ein Grid mit `grid-template-columns: minmax(0, 1fr) 17em`, Lücke `2em`; der Seitenrahmen wächst von 1000 px auf `--maxwidth: 1200px`. Beitragstext (`main.page`) bleibt bei `--contentwidth` (34 em → 40 em), zentriert in der Inhaltsspalte; die Listen (`ul.entries`, Kacheln) füllen die Spalte (Kachelraster `repeat(auto-fill, minmax(11em, 1fr))` bleibt). Die Sidebar ist `position: sticky` mit `top: 1em`, solange sie nicht höher als das Fenster ist (`max-height` mit Scrollen), damit sie beim Lesen langer Beiträge erreichbar bleibt.
+
+Die Sidebar-Daten (Kategorien mit Anzahl, Tags mit Anzahl und Größenstufe) berechnet `Topics` einmal je Build (`topics.sidebar()`), werden in `Common` abgelegt und von jedem Template gerendert; es gibt eine Partial-Datei `partials/sidebar.html`. Größenstufe: `level = 1 + round(4 * (ln(n) - ln(min)) / (ln(max) - ln(min)))`, bei `max == min` Stufe 3; CSS-Klassen `cloud-1` … `cloud-5` mit `font-size` 0.85, 1.0, 1.2, 1.4, 1.6 em. Die Tag-Cloud ist eine Liste (`ul`) mit Links, bei der die Kategorien-Liste davor steht.
+
+Die Themenübersicht `/themen/` und die Suchseite bleiben einspaltig; dort wäre die Sidebar doppelt bzw. sie würde den Filter der Suche beschneiden. Die Startseite verliert den Abschnitt „Häufige Themen“ und die Konstante `HOME_TOPICS`.
+
+*Alternativen:* (a) Sidebar links: Der Haupttext beginnt dann weiter rechts, am Handy ungeordnet. Rechts entspricht üblichen Blog-Layouts. (b) Tag-Cloud auch auf Handy ausklappbar (`<details>`): zusätzliche Interaktion; zunächst reicht die einfache Liste unter dem Inhalt. (c) Cloud mit JavaScript berechnen: unnötig, der Build kennt alle Zahlen.
+
+### 5. Autor am Ende
+
+`post.html`: Die Zeile „Von <Autor>“ wandert aus dem Kopf (`post-header`) hinter `{{ content|safe }}` und vor `nav.post-nav`, als `<p class="author">` in `main.page`. Die Einordnung (Kategorie, Schlagworte) und der E-Mail-Hinweis bleiben im Kopf. Das Markup-Fragment und die Klasse `author` bleiben, damit `autoren.css` weiter greift (zu prüfen).
+
+### 6. Gestaltung
+
+Neue Dateien `content/style/footer.css` und `content/style/sidebar.css` (in `main.css` importiert): oberer gestrichelter Rand wie die Beitragslisten (`1px dashed var(--bordercolor)`), „Lobster“ nur für die Linkgruppe wie in der Kopfnavigation, Link-Hover mit `var(--pagination-hover)` wie bei der Paginierung, Icons in `var(--acolor)` und beim Hover in einem dunkleren Ton. Abstände in `em`, damit es mit der Schriftgröße skaliert. Die Staging-Leiste bleibt oberhalb der Seite und ist vom Footer unabhängig.
 
 Kopfnavigation: Mit drei Einträgen bleibt `float: left` mit zentriertem Block möglich; die vorhandene Mobil-Regel (kleinere Ränder unter 40 em) bleibt.
 
@@ -58,6 +76,10 @@ Eine kleine Funktion `mailto(subject)` in `render.rs` erzeugt alle `mailto:`-Adr
 - [Markenlogos und deren Nutzungsregeln] → Nur als Verweis auf die eigenen Profile, in einfarbiger Standardform; kein Hinweis auf Zugehörigkeit. Pfade aus einem CC0-Satz.
 - [Eigene Pfade der Icons weichen optisch von den Originalen ab] → Pfade unverändert aus dem Satz übernehmen und im Test (Snapshot) festhalten.
 - [Fester Betreff „Flauschiversum“ ist schon in Beiträgen enthalten, aber ein künftiger Link ohne Wort fällt nicht auf] → Test über alle gebauten Seiten schlägt dann fehl.
+- [Sidebar macht den Seitenaufbau am Desktop unruhig oder zu hoch] → `sticky` nur bei passender Höhe, Sidebar kompakt (Kategorien klein, Cloud in einer Zeile umbrechend); Vergleichsbilder zur Abnahme.
+- [Tag-Cloud wird als Spielerei empfunden oder ist schwer lesbar] → Größenbereich begrenzt (0,85–1,6 em), alphabetisch, hoher Kontrast; Nutzerwunsch ist ausdrücklich eine Cloud.
+- [Platz bleibt auf sehr breiten Bildschirmen ungenutzt] → Rahmen auf 1200 px begrenzt; breitere Layouts sind Lesbarkeit zuliebe nicht vorgesehen.
+- [Autor nach dem Text wird bei kurzen Beiträgen übersehen] → Gewollt; er steht unmittelbar vor den Links zum älteren und neueren Beitrag.
 - [Footer bricht am Handy unschön um] → Browser-Test bei 360 px mit Blick auf waagerechtes Scrollen und Mindestgröße der Klickflächen; Vergleichsbilder zur Abnahme.
 
 ## Migration Plan
