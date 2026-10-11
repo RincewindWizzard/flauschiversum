@@ -16,7 +16,7 @@ Wer sich noch erinnert, ich hatte bei Facebook diese Glasperlen gepostet.
 ![Katzenperle](Katzenperle.jpg)
 ![Geckoperle](Geckoperle.jpg)
 
-Ich hatte mir eine Katze an einem Wollknäul gewünscht in der Art der Perle mit dem Gecko. Das folgende kleine Werk müsste demnach in die Kategorie [Basteln](/basteln/), es ist mein erster Versuch mit Fimo zu arbeiten. 
+Ich hatte mir eine Katze an einem Wollknäul gewünscht in der Art der Perle mit dem Gecko. Das folgende kleine Werk müsste demnach in die Kategorie [Basteln](/kategorie/basteln/), es ist mein erster Versuch mit Fimo zu arbeiten. 
 ![Fimo Katze](DSCF4869.JPG)
 ![Fimo Katze rechts](DSCF4874.JPG)
 ![Fimo Katze links](DSCF4872.JPG)
@@ -56,7 +56,7 @@ Wenn du dich jetzt fragst, wo hier die Katze bleibt, auf den nächsten Bildern w
 ![knabbert am Faden](DSCF48622.JPG) 
 
 ## Spinnrad
-Apropos Spinnen, ich habe letzte Woche ein Spinnrad erstanden, ein Louét S10. Nachdem ich mich um eine Grundreinigung gekümmert, das Holz eingeölt und das Pedal repariert habe, konnte ich es mir nicht nehmen lassen das Spinnrad mit einem Brandzeichen zu versehen. Also auch von der Kategorie [Brandings](/brandings/) ist hier heute was vertreten. Ich fand die Idee einfach zu lustig, dass während meines Spinnens ein Katze das Wollknäul jagt. Wenn man mein oben stehendes Spinn-Projekt betrachtet, bin ich froh, dass diese Katze nur aufgebrannt ist.
+Apropos Spinnen, ich habe letzte Woche ein Spinnrad erstanden, ein Louét S10. Nachdem ich mich um eine Grundreinigung gekümmert, das Holz eingeölt und das Pedal repariert habe, konnte ich es mir nicht nehmen lassen das Spinnrad mit einem Brandzeichen zu versehen. Also auch von der Kategorie [Brandings](/kategorie/brandings/) ist hier heute was vertreten. Ich fand die Idee einfach zu lustig, dass während meines Spinnens ein Katze das Wollknäul jagt. Wenn man mein oben stehendes Spinn-Projekt betrachtet, bin ich froh, dass diese Katze nur aufgebrannt ist.
 ![Spinnrad](DSCF4832.JPG)
 ![Pedal](DSCF4833.JPG)
 ![Rückseite](DSCF4834.JPG)

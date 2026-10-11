@@ -17,6 +17,10 @@ context: |
     Standard-CSS (content/style/, gebündelt mit lightningcss)
   - Bilder: drei Größen (200/700/1000), Badge-Wasserzeichen, Rechte-Metadaten,
     inkrementeller Cache in .cache/, parallel mit rayon
+  - Themen und Suche: feste Listen content/categories.yaml und content/tags.yaml;
+    Seiten /themen/, /kategorie/<name>/, /tag/<name>/, /suche/; Startseite ist
+    der Handbuch-Einstieg, die chronologische Liste liegt unter /beitraege/;
+    Suchindex mit dem Crate `pagefind` (Bibliothek) unter /pagefind/
   - Frontend: Karussell (CSS scroll-snap) und Vollbild (PhotoSwipe 5) in assets/
   - Tests: cargo test (Unit, Integration, Snapshots mit insta), Browser-Tests mit
     Playwright in tests/browser/

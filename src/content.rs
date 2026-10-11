@@ -251,10 +251,10 @@ pub fn load_vocabulary(root: &Path, diag: &Diagnostics) -> Vocabulary {
         match serde_yaml_ng::from_str::<Vec<Category>>(&text) {
             Ok(list) => {
                 for c in list {
-                    if c.id.is_empty() || c.id != urls::slugify(&c.id) {
-                        diag.error(cat_source, format!("Kategorie `{}`: `id` muss aus Kleinbuchstaben, Ziffern und `-` bestehen (z.B. `{}`)", c.id, urls::slugify(&c.id)));
-                    } else if vocab.categories.iter().any(|o| o.id == c.id) {
-                        diag.error(cat_source, format!("Kategorie `{}` kommt mehrfach vor", c.id));
+                    if urls::slugify(&c.id).is_empty() {
+                        diag.error(cat_source, format!("Kategorie `{}`: `id` ergibt keine gültige Adresse (erlaubt sind Buchstaben und Ziffern)", c.id));
+                    } else if let Some(o) = vocab.categories.iter().find(|o| urls::slugify(&o.id) == urls::slugify(&c.id)) {
+                        diag.error(cat_source, format!("Kategorie `{}` ergibt dieselbe Adresse wie `{}`", c.id, o.id));
                     } else if c.name.trim().is_empty() {
                         diag.error(cat_source, format!("Kategorie `{}`: `name` fehlt", c.id));
                     } else {

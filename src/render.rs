@@ -146,6 +146,13 @@ pub struct TopicsTemplate {
 }
 
 #[derive(Template)]
+#[template(path = "search.html")]
+pub struct SearchTemplate {
+    pub head: Head,
+    pub script_href: String,
+}
+
+#[derive(Template)]
 #[template(path = "post.html")]
 pub struct PostTemplate {
     pub head: Head,
@@ -291,6 +298,19 @@ pub fn render_topic(input: TopicPageInput, common: &Common) -> String {
     }
     .render()
     .expect("Themen-Template")
+}
+
+pub fn render_search(script_href: String, common: &Common) -> String {
+    let mut head = base_head(
+        common,
+        format!("Suche – {BLOG_NAME}"),
+        "Suche".to_string(),
+        format!("Suche in den Anleitungen und Ideen des {BLOG_NAME}s."),
+        urls::absolute("/suche/"),
+    );
+    head.search_form = false;
+    head.noindex = true;
+    SearchTemplate { head, script_href }.render().expect("Such-Template")
 }
 
 pub fn render_topics(categories: Vec<TopicLink>, tags: Vec<TopicLink>, common: &Common) -> String {

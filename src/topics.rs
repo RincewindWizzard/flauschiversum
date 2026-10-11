@@ -8,6 +8,8 @@ use std::collections::HashMap;
 /// Eine Kategorie mit ihren veröffentlichten Posts (neueste zuerst).
 pub struct CategoryTopic<'a> {
     pub category: &'a Category,
+    /// Adressteil der Seite (`/kategorie/<slug>/`).
+    pub slug: String,
     pub posts: Vec<&'a Post>,
 }
 
@@ -25,8 +27,8 @@ pub struct Topics<'a> {
     pub tags: Vec<TagTopic<'a>>,
 }
 
-pub fn category_url(id: &str) -> String {
-    format!("/kategorie/{id}/")
+pub fn category_url(slug: &str) -> String {
+    format!("/kategorie/{slug}/")
 }
 
 pub fn tag_url(slug: &str) -> String {
@@ -54,6 +56,7 @@ impl<'a> Topics<'a> {
             .iter()
             .map(|category| CategoryTopic {
                 category,
+                slug: urls::slugify(&category.id),
                 posts: site.posts.iter().filter(|p| p.category.as_deref() == Some(category.id.as_str())).collect(),
             })
             .filter(|c| !c.posts.is_empty())
@@ -115,7 +118,7 @@ mod tests {
         fs::write(c.join("static/images/f.jpg"), b"x").unwrap();
         fs::write(
             c.join("categories.yaml"),
-            "- {id: filzen, name: Filzen, image: /images/f.jpg, motto: a}\n- {id: wolle, name: Wolle, image: /images/f.jpg, motto: b}\n- {id: malen, name: Malen, image: /images/f.jpg, motto: c}\n",
+            "- {id: filzen, name: Filzen, image: /images/f.jpg, motto: a}\n- {id: wolle, name: Wolle, image: /images/f.jpg, motto: b}\n- {id: nähen, name: Nähen, image: /images/f.jpg, motto: c}\n",
         )
         .unwrap();
         fs::write(c.join("tags.yaml"), tags).unwrap();
@@ -137,7 +140,7 @@ mod tests {
                 ("a", "date: 2020-01-01\ncategory: filzen\ntags: [Katzen, Hüte]\n"),
                 ("b", "date: 2021-01-01\ncategory: filzen\ntags: [Katzen]\n"),
                 ("c", "date: 2022-01-01\ntags: [Taschen, Katzen]\n"),
-                ("geplant", "date: 2099-01-01\ncategory: malen\ntags: [Taschen]\n"),
+                ("geplant", "date: 2099-01-01\ncategory: nähen\ntags: [Taschen]\n"),
             ],
             "- name: Taschen\n- name: Katzen\n- name: Hüte\n- name: Leer\n",
         );
@@ -148,6 +151,8 @@ mod tests {
         let ids: Vec<_> = t.categories.iter().map(|c| c.category.id.as_str()).collect();
         assert_eq!(ids, ["filzen"]);
         assert!(t.category("wolle").is_none());
+        assert!(t.category("nähen").is_none(), "nur geplanter Beitrag");
+        assert_eq!(t.category("filzen").unwrap().slug, "filzen");
         // Posts neueste zuerst
         let titles: Vec<_> = t.category("filzen").unwrap().posts.iter().map(|p| p.title.as_str()).collect();
         assert_eq!(titles, ["b", "a"]);
@@ -159,6 +164,15 @@ mod tests {
         assert_eq!(inside, [("Katzen", 2), ("Hüte", 1)]);
         // Post ohne Kategorie steht nur bei den Schlagworten
         assert!(t.tag("Taschen").unwrap().posts.iter().any(|p| p.title == "c"));
+    }
+
+    #[test]
+    fn category_with_umlaut_gets_ascii_address() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(root.path(), &[("a", "date: 2020-01-01\ncategory: nähen\n")], "- name: Katzen\n");
+        let t = Topics::build(&s, &Diagnostics::default());
+        assert_eq!(t.categories[0].slug, "naehen");
+        assert_eq!(category_url(&t.categories[0].slug), "/kategorie/naehen/");
     }
 
     #[test]

@@ -1,0 +1,72 @@
+---
+source: src/site.rs
+expression: "stable(&read(root, \"suche/index.html\"))"
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suche – Flauschiversum</title>
+<meta name="description" content="Suche in den Anleitungen und Ideen des Flauschiversums.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://flauschiversum.de/suche/">
+<link rel="stylesheet" href="/style.css?v=HASH">
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
+<meta property="og:site_name" content="Flauschiversum">
+<meta property="og:locale" content="de_DE">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Suche">
+<meta property="og:description" content="Suche in den Anleitungen und Ideen des Flauschiversums.">
+<meta property="og:url" content="https://flauschiversum.de/suche/">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="container-fluid">
+<header id="blogheader">
+  <div class="logo">
+    <p class="site-title"><a href="/">Flauschiversum</a></p>
+    <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
+  </div>
+  <nav class="center">
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
+    <a href="/tipps-und-tricks/">Tipps und Tricks</a>
+    <a href="/about/">About</a>
+    <a href="/impressum/">Impressum</a>
+    <a href="/rss.xml">Abonnieren</a>
+  </nav>
+  
+</header>
+
+<main class="topic search-page">
+  <header class="topic-head">
+    <h1>Suche</h1>
+  </header>
+  <form class="search big" id="search-form" action="/suche/" method="get" role="search">
+    <label for="q">Was möchtest du machen?</label>
+    <div class="search-row">
+      <input type="search" id="q" name="q" placeholder="z.B. Mütze, Katze, Filz …" autocomplete="off">
+      <button type="submit">Suchen</button>
+    </div>
+  </form>
+  <div id="search" hidden></div>
+  <noscript>
+    <p class="notice">Die Suche braucht JavaScript. Ohne kannst du stöbern: in den <a href="/themen/">Themen</a> oder in <a href="/beitraege/">allen Beiträgen</a>.</p>
+  </noscript>
+  <p class="browse">Lieber stöbern? <a href="/themen/">Themen</a> &middot; <a href="/beitraege/">Alle Beiträge</a></p>
+</main>
+
+<footer class="center">
+  <p>&copy; 2026 Ermeline Wollknoll &mdash;&nbsp;<a href="/impressum/">Impressum</a></p>
+</footer>
+</div>
+
+<script src="/pagefind/pagefind-ui.js"></script>
+<script type="module" src="/assets/js/search.js?v=HASH"></script>
+
+</body>
+</html>

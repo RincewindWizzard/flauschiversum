@@ -33,7 +33,8 @@ date: 2026-11-01 10:00:00        # oder nur 2026-11-01; Zeitzone Europe/Berlin
 author: Ermeline
 image: "muetze.jpg"              # Vorschaubild auf der Startseite und beim Teilen
 excerpt: "Kurzer Text für die Startseite, den Feed und Suchmaschinen."
-category: wolle                  # optional, derzeit ohne Wirkung
+category: wolle                  # optional: eine Kategorie aus content/categories.yaml (die `id`)
+tags: [Mützen und Stirnbänder, Häkeln]   # optional: Schlagworte aus content/tags.yaml
 ---
 
 Text in Markdown …
@@ -56,6 +57,23 @@ Text in Markdown …
 - **Bildgruppen:** Stehen mehrere Bilder ohne Leerzeile untereinander, entsteht ein wischbares Karussell; ein Klick
   öffnet das Vollbild. Der Text in `![…]` ist die Bildunterschrift.
 
+### Kategorien, Schlagworte und Suche
+
+Besucher finden Beiträge über die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro Kategorie
+(`/kategorie/<name>/`) und Schlagwort (`/tag/<name>/`) sowie die Suche (`/suche/`). Die chronologische Liste liegt
+unter `/beitraege/`.
+
+- **Kategorie:** höchstens eine, optional. Die erlaubten stehen in `content/categories.yaml` (`id`, `name`, `image`
+  als Pfad unter `content/static/`, `motto`). Neue Kategorie = neuer Eintrag dort; sie erscheint dann als Kachel.
+- **Schlagworte:** beliebig viele, optional, als Liste oder durch Komma getrennt. Erlaubt sind nur die aus
+  `content/tags.yaml`; ein Tippfehler bricht den Build ab und nennt das ähnlichste Schlagwort („Meintest du …?“).
+  Ein neues Schlagwort zuerst dort eintragen. Ein Schlagwort mit weniger als zwei Beiträgen erzeugt eine Warnung.
+- **Suche:** Der Index entsteht beim Build mit [Pagefind](https://pagefind.app/) (als Rust-Bibliothek, kein
+  zusätzliches Programm) und liegt unter `/pagefind/`. Durchsucht werden Titel, Text, Kategorie und Schlagworte aller
+  Beiträge und Einzelseiten; die Suche läuft im Browser, ohne Dienste von Dritten. Das Ergebnis des Index wird in
+  `.cache/` zu den Eingaben gemerkt, damit ein Build ohne Änderungen nichts neu schreibt.
+- Die Pfade `/themen/`, `/suche/`, `/beitraege/`, `/kategorie/`, `/tag/` und `/pagefind/` sind reserviert.
+
 Einzelseiten (About, Impressum, Tipps und Tricks) liegen als Markdown unter `content/pages/`; ihre URL ergibt sich
 aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlicht.
 
@@ -65,10 +83,11 @@ aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlic
 |---|---|
 | `content/posts/` | Posts mit ihren Medien |
 | `content/pages/` | Einzelseiten |
+| `content/categories.yaml`, `content/tags.yaml` | erlaubte Kategorien und Schlagworte |
 | `content/static/` | unverändert ausgelieferte Dateien (Schriften, Favicon, Bilder der Einzelseiten) |
 | `content/style/` | Gestaltung als normales CSS (`main.css` mit `@import`), wird zu `/style.css` gebündelt |
 | `templates/` | HTML-Templates ([Askama](https://askama.readthedocs.io/)), werden beim Kompilieren geprüft |
-| `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe) und die Badge-Vorlage |
+| `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite) und die Badge-Vorlage |
 | `src/` | Rust-Code des Generators |
 | `tests/` | Referenz der Live-URLs und Browser-Tests |
 | `openspec/` | Anforderungen und Änderungen ([OpenSpec](https://github.com/Fission-AI/OpenSpec)) |
@@ -83,11 +102,13 @@ cargo test                       # Unit- und Integrationstests (Test-Site, Snaps
 cargo test --release -- --ignored   # baut die ganze Seite und prüft alle 194 Live-URLs
 ```
 
-Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload) brauchen Node.js und Chromium:
+Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload, Startseite, Suche) brauchen Node.js und Chromium:
 
 ```sh
 cargo run --release -- serve --port 8099 &
-npm i playwright-core && node tests/browser/frontend.mjs /pfad/zu/chromium
+npm i playwright-core
+node tests/browser/frontend.mjs /pfad/zu/chromium
+node tests/browser/navigation.mjs /pfad/zu/chromium
 ```
 
 ## Deployment

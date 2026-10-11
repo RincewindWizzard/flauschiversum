@@ -11,6 +11,7 @@ mod markdown;
 mod media;
 mod output;
 mod render;
+mod search;
 mod seo;
 mod serve;
 mod site;

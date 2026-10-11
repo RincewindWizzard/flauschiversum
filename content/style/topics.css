@@ -41,6 +41,10 @@ form.search {
   }
 }
 
+form.search[hidden] {
+  display: none;
+}
+
 /* Großes Suchfeld auf der Startseite */
 form.search.big {
   flex-direction: column;
@@ -208,6 +212,15 @@ ul.entries {
     border-top: 1px dashed var(--bordercolor);
   }
 
+  & .entry-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  & .entry-image {
+    flex-shrink: 0;
+  }
+
   & .entry-image img {
     display: block;
     height: 5em;
@@ -275,5 +288,30 @@ h1.list-title {
   #blogheader nav a {
     margin: 0.5em 0.6em;
     font-size: 1.15em;
+  }
+}
+
+/* Suchseite */
+.search-page {
+  --pagefind-ui-primary: #333;
+  --pagefind-ui-text: #333;
+  --pagefind-ui-background: transparent;
+  --pagefind-ui-border: var(--bordercolor);
+  --pagefind-ui-tag: var(--pagination-hover);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 12px;
+  --pagefind-ui-image-border-radius: 20em;
+  --pagefind-ui-image-box-ratio: 1;
+  --pagefind-ui-font: inherit;
+
+  & .notice {
+    text-align: center;
+    margin: 1em 0;
+  }
+
+  & .browse {
+    text-align: center;
+    margin-top: 2em;
+    font-style: italic;
   }
 }

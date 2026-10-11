@@ -122,3 +122,13 @@ Sitemap, Titel, Meta-Beschreibung und kanonische URL der neuen Seiten entstehen 
 3. Generator, Templates, Styles und Suche umsetzen; Gesamtseitentest und Browser-Tests.
 4. Vergleichsbilder (Startseite, Kategorieseite, Beitrag, Suche, Handy) zur Abnahme vorlegen.
 5. **Rollback:** Bis zum Deployment ist die Live-Seite unberührt; ein Zurück ist ein Git-Revert. Die neuen Frontmatter-Felder stören den alten Stand nicht.
+
+## Ergebnis des Probelaufs (Aufgabe 4.1)
+
+Pagefind 1.5.2 lässt sich als Bibliothek einbinden und bestand den Browser-Test („katze“, „kuerbis“, „kürbis“, „filz“, Wortanfänge und Kategoriefilter). Abweichungen vom ursprünglichen Plan:
+
+- **Abhängigkeiten:** `pagefind` mit `default-features = false` kompiliert nur, wenn zusätzlich `tokio` mit dem Feature `io-util` eingebunden wird (sonst fehlt `AsyncWriteExt`); die Kompilierzeit steigt um etwa eine Minute.
+- **Indexeingabe:** Statt die Templates mit `data-pagefind-*` zu markieren, baut `src/search.rs` je Beitrag ein kleines Such-Dokument (Titel, gerenderter Text, Kategorie als Filter und Meta „Kategorie“, Vorschaubild als Meta, Schlagworte als zusätzlicher Text). Die veröffentlichten Seiten bleiben frei von Such-Markierungen, und die Ausschnitte enthalten weder Navigation noch Fußzeile.
+- **Reproduzierbarkeit:** Wortindex und Fragmente sind byte-gleich, die Filterdatei (und damit die Metadatei) aber nicht: Pagefind legt sie über eine Hash-Tabelle mit zufälliger Reihenfolge an (im Pagefind-Quelltext als TODO vermerkt). Deshalb merkt sich `.cache/search-<Hash>.bin` das Ergebnis zu den Eingaben; ändert sich kein Dokument, kommen byte-gleiche Dateien heraus und der Build schreibt nichts. Ohne Cache (frischer Checkout) unterscheiden sich nur Filter- und Metadatei.
+- **Umfang:** Ausgeliefert werden nur die benötigten Dateien (ca. 1,4 MB für alle 194 Beiträge: Oberfläche und WebAssembly rund 280 kB, Fragmente 800 kB, Index 220 kB); ein Suchlauf lädt davon nur Index-Teile und die Fragmente der angezeigten Treffer. Der Index kostet beim kalten Build etwa 1 s.
+- **Wortanfang:** „filz“ findet Wörter, die mit „filz“ beginnen („Filz“, „Filzen“, „Filzstift“), nicht aber „gefilzt“; das Szenario der Spec wurde entsprechend präzisiert.

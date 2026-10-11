@@ -79,7 +79,7 @@ pub fn sitemap(site: &Site, topics: &Topics) -> String {
     let topic_urls = topics
         .categories
         .iter()
-        .map(|c| topics::category_url(&c.category.id))
+        .map(|c| topics::category_url(&c.slug))
         .chain(topics.tags.iter().map(|t| topics::tag_url(&t.slug)));
     for url in topic_urls {
         let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&urls::absolute(&url)));

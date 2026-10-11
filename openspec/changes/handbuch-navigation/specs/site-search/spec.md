@@ -49,7 +49,7 @@ Die Suche SHALL Groß- und Kleinschreibung ignorieren, Umlaute und ihre Umschrei
 
 #### Scenario: Wortanfang
 - **WHEN** nach „filz“ gesucht wird
-- **THEN** erscheinen Beiträge, die „Filzen“ oder „gefilzt“ enthalten
+- **THEN** erscheinen Beiträge, die „Filz“, „Filzen“ oder „Filzstift“ enthalten
 
 ### Requirement: Filter nach Kategorie
 Die Suchseite SHALL die Treffer nach Kategorie einschränken können. Die Auswahl zeigt jede Kategorie mit der Zahl der Treffer.

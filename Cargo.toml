@@ -15,6 +15,7 @@ jiff = { version = "0.2.38", features = ["tzdb-bundle-always"] }
 jpeg-encoder = "0.7.1"
 lightningcss = "1.0.0-alpha.72"
 notify = "8.2.0"
+pagefind = { version = "1.5.2", default-features = false }
 percent-encoding = "2.3.2"
 pulldown-cmark = "0.13.4"
 pulldown-cmark-escape = "0.11.0"
@@ -24,6 +25,7 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.152"
 serde_yaml_ng = "0.10.0"
 tiny_http = "0.12.0"
+tokio = { version = "1.53.2", default-features = false, features = ["rt", "io-util"] }
 walkdir = "2.5.0"
 webp = "0.3.1"
 

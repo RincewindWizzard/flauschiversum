@@ -8,6 +8,7 @@ use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
 use crate::render::{self, Common, Entry, PostCard, PostPageInput, Thumb, Tile, TopicLink, TopicPageInput};
+use crate::search::{self, SearchDoc};
 use crate::seo;
 use crate::topics::{self, Topics};
 use crate::urls;
@@ -78,6 +79,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     // Generator-Assets (ohne Badge-Vorlage) unter /assets/
     let assets = assets_dir(&opts.root);
     let mut script_href = String::from("/assets/js/media.js");
+    let mut search_script_href = String::from("/assets/js/search.js");
     for entry in walkdir::WalkDir::new(&assets).into_iter().filter_map(Result::ok).filter(|e| e.file_type().is_file()) {
         let rel = entry.path().strip_prefix(&assets).unwrap().to_string_lossy().replace('\\', "/");
         if rel == "badge.png" {
@@ -85,6 +87,9 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         }
         if rel == "js/media.js" {
             script_href = format!("/assets/js/media.js?v={}", short_hash(&fs::read(entry.path())?));
+        }
+        if rel == "js/search.js" {
+            search_script_href = format!("/assets/js/search.js?v={}", short_hash(&fs::read(entry.path())?));
         }
         outputs.insert(format!("/assets/{rel}"), Content::File(entry.path().to_path_buf()));
     }
@@ -122,7 +127,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     let category_name = |id: &str| site.categories.iter().find(|c| c.id == id).map(|c| c.name.clone());
     let category_link = |post: &content::Post| -> Option<TopicLink> {
         let id = post.category.as_deref()?;
-        Some(TopicLink { url: topics::category_url(id), name: category_name(id)?, count: None })
+        Some(TopicLink { url: topics::category_url(&urls::slugify(id)), name: category_name(id)?, count: None })
     };
     let tag_links = |post: &content::Post| -> Vec<TopicLink> {
         post.tags
@@ -142,7 +147,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
 
     // Post-Seiten
     let posts = &site.posts;
-    let feed_parts: Vec<Option<feed::FeedEntry>> = posts
+    let post_parts: Vec<(Option<feed::FeedEntry>, SearchDoc)> = posts
         .par_iter()
         .enumerate()
         .map(|(i, post)| {
@@ -157,6 +162,14 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                 Some((urls::absolute(&urls::variant_path(&post.url, 1000, name)), size))
             });
             let has_media = rendered.html.contains("<figure class=\"media");
+            let search_doc = SearchDoc {
+                url: post.url.clone(),
+                title: post.title.clone(),
+                image: thumb_of(post).map(|t| t.src),
+                category: post.category.as_deref().and_then(category_name),
+                tags: post.tags.clone(),
+                body_html: rendered.html.clone(),
+            };
             let html = render::render_post(
                 PostPageInput {
                     post,
@@ -173,7 +186,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
             );
             outputs.insert(post.url.clone(), Content::Bytes(html.into_bytes()));
 
-            (i < crate::config::FEED_ENTRIES).then(|| {
+            let feed_entry = (i < crate::config::FEED_ENTRIES).then(|| {
                 let abs = markdown::render_post(&post.markdown, &PostContext { url: &post.url, media, absolute: true });
                 let enclosure = post.image.as_ref().and_then(|name| {
                     let info = media.get(name)?;
@@ -185,9 +198,11 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                     .replace("href=\"/", &format!("href=\"{BLOG_URL}/"))
                     .replace("src=\"/", &format!("src=\"{BLOG_URL}/"));
                 feed::FeedEntry { content_html, enclosure }
-            })
+            });
+            (feed_entry, search_doc)
         })
         .collect();
+    let (feed_parts, mut search_docs): (Vec<_>, Vec<_>) = post_parts.into_iter().unzip();
 
     // Indexseiten
     let count = render::page_count(posts.len());
@@ -214,7 +229,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         .categories
         .iter()
         .map(|c| Tile {
-            url: topics::category_url(&c.category.id),
+            url: topics::category_url(&c.slug),
             name: c.category.name.clone(),
             image: urls::encode_path(&c.category.image),
             motto: c.category.motto.trim().to_string(),
@@ -232,13 +247,13 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     outputs.insert("/", Content::Bytes(render::render_home(tiles, popular, news, &common).into_bytes()));
 
     let link_of = |url: String, name: &str, n: usize| TopicLink { url, name: name.to_string(), count: Some(n) };
-    let overview_categories = topics.categories.iter().map(|c| link_of(topics::category_url(&c.category.id), &c.category.name, c.posts.len())).collect();
+    let overview_categories = topics.categories.iter().map(|c| link_of(topics::category_url(&c.slug), &c.category.name, c.posts.len())).collect();
     let overview_tags = topics.tags.iter().map(|t| link_of(topics::tag_url(&t.slug), t.name, t.posts.len())).collect();
     outputs.insert("/themen/", Content::Bytes(render::render_topics(overview_categories, overview_tags, &common).into_bytes()));
 
     for c in &topics.categories {
         let subtopics = topics.tags_in(&c.posts).into_iter().map(|(t, n)| link_of(topics::tag_url(&t.slug), t.name, n)).collect();
-        let url = topics::category_url(&c.category.id);
+        let url = topics::category_url(&c.slug);
         let html = render::render_topic(
             TopicPageInput {
                 url: url.clone(),
@@ -272,7 +287,21 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     for page in &site.pages {
         let html = markdown::render_page(&page.markdown);
         let desc = markdown::first_paragraph_text(&page.markdown);
+        search_docs.push(SearchDoc {
+            url: page.url.clone(),
+            title: page.title.clone(),
+            image: None,
+            category: None,
+            tags: Vec::new(),
+            body_html: html.clone(),
+        });
         outputs.insert(page.url.clone(), Content::Bytes(render::render_page(page, html, desc, &common).into_bytes()));
+    }
+
+    // Suche: Seite und Index
+    outputs.insert("/suche/", Content::Bytes(render::render_search(search_script_href, &common).into_bytes()));
+    for (path, data) in search::build(search_docs, &opts.cache).context("Suchindex")? {
+        outputs.insert(path, Content::Bytes(data));
     }
 
     // Feed, Sitemap, robots.txt
@@ -474,6 +503,7 @@ pub mod tests {
         insta::assert_snapshot!("category_basteln", stable(&read(root, "kategorie/basteln/index.html")));
         insta::assert_snapshot!("tag_huete", stable(&read(root, "tag/huete/index.html")));
         insta::assert_snapshot!("topics", stable(&read(root, "themen/index.html")));
+        insta::assert_snapshot!("search", stable(&read(root, "suche/index.html")));
         insta::assert_snapshot!("page_about", stable(&read(root, "about/index.html")));
         let rss = read(root, "rss.xml");
         assert!(rss.contains("<a href=\"https://flauschiversum.de/2020/10/kurbis/\">Kürbis</a>"));
@@ -491,9 +521,21 @@ pub mod tests {
         assert_eq!((ws.new, ws.changed, ws.deleted), (0, 0, 0));
         assert_eq!(stats.processed.load(Ordering::Relaxed), 0);
 
+        assert!(root.join("dist/pagefind/pagefind.js").is_file());
+        let fragments = |root: &Path| -> Vec<String> {
+            let mut v: Vec<_> = fs::read_dir(root.join("dist/pagefind/fragment")).unwrap().filter_map(Result::ok).map(|e| e.file_name().to_string_lossy().into_owned()).collect();
+            v.sort();
+            v
+        };
+        let before = fragments(root);
+        assert_eq!(before.len(), 4, "drei Posts und eine Seite: {before:?}");
+
         fs::remove_dir_all(root.join("content/posts/alraune")).unwrap();
         let (_, _, ws) = build(root);
         assert!(ws.deleted >= 5, "{ws:?}");
+        let after = fragments(root);
+        assert_eq!(after.len(), 3, "Fragment des gelöschten Beitrags entfernt: {after:?}");
+        assert!(before.iter().filter(|f| !after.contains(f)).count() == 1);
         assert!(!root.join("dist/2014").exists(), "leere Verzeichnisse entfernt");
     }
 
@@ -552,6 +594,18 @@ pub mod tests {
         // Schlagwort nur am geplanten Beitrag: Kategorie „Wolle“ und ihre Seite entfallen
         assert!(!root.join("dist/kategorie/wolle").exists());
         assert!(read(root, "tag/halloween/index.html").contains("1 Beitrag"));
+        // Suchseite: noindex, kein Suchfeld im Kopf, eine h1, Index ausgeliefert
+        let search = read(root, "suche/index.html");
+        assert!(search.contains("<meta name=\"robots\" content=\"noindex\">"));
+        assert!(search.contains("<title>Suche – Flauschiversum</title>"));
+        assert_eq!(search.matches("<h1").count(), 1);
+        assert_eq!(search.matches("name=\"q\"").count(), 1);
+        assert!(!read(root, "robots.txt").contains("suche"));
+        assert!(!post.contains("noindex") && !home.contains("noindex"));
+        assert!(!read(root, "sitemap.xml").contains("/suche/"));
+        for f in ["pagefind/pagefind.js", "pagefind/pagefind-ui.js", "pagefind/pagefind-ui.css", "assets/js/search.js"] {
+            assert!(root.join("dist").join(f).is_file(), "{f}");
+        }
         // Themenübersicht alphabetisch
         let themen = read(root, "themen/index.html");
         assert!(themen.find("Halloween").unwrap() < themen.find("Hüte").unwrap() && themen.find("Hüte").unwrap() < themen.find("LARP").unwrap());
@@ -579,6 +633,42 @@ pub mod tests {
         }
         assert_eq!(count, 194);
         for page in ["/", "/about/", "/impressum/", "/tipps-und-tricks/", "/rss.xml", "/sitemap.xml", "/robots.txt", "/style.css", "/favicon.ico"] {
+            assert!(g.outputs.contains(page), "{page}");
+        }
+        // Themen: jeder Beitrag mit Kategorie steht auf genau einer Kategorieseite, jeder auf den Seiten seiner Schlagworte
+        let pages: HashMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
+        let page = |url: &str| -> String {
+            pages.get(&format!("{url}index.html")).unwrap_or_else(|| panic!("Seite fehlt: {url}")).clone()
+        };
+        let site = &g.site;
+        let mut pages_of_category: HashMap<&str, usize> = HashMap::new();
+        for c in &site.categories {
+            let html = page(&format!("/kategorie/{}/", urls::slugify(&c.id)));
+            for p in &site.posts {
+                let linked = html.contains(&format!("href=\"{}\"", urls::encode_path(&p.url)));
+                if p.category.as_deref() == Some(c.id.as_str()) {
+                    assert!(linked, "{} fehlt auf Kategorie {}", p.url, c.id);
+                    *pages_of_category.entry(p.url.as_str()).or_default() += 1;
+                } else {
+                    assert!(!linked, "{} gehört nicht zu {}", p.url, c.id);
+                }
+            }
+        }
+        for p in site.posts.iter().filter(|p| p.category.is_some()) {
+            assert_eq!(pages_of_category.get(p.url.as_str()), Some(&1), "{}", p.url);
+        }
+        for p in &site.posts {
+            for t in &p.tags {
+                let html = page(&format!("/tag/{}/", urls::slugify(t)));
+                assert!(html.contains(&format!("href=\"{}\"", urls::encode_path(&p.url))), "{} fehlt bei Schlagwort {t}", p.url);
+            }
+        }
+        // Chronologische Liste: alle bisherigen /page/<N>/ bleiben, erste Seite unter /beitraege/
+        assert!(g.outputs.contains("/beitraege/"));
+        for n in 1..49 {
+            assert!(g.outputs.contains(&format!("/page/{n}/")), "/page/{n}/");
+        }
+        for page in ["/themen/", "/suche/", "/pagefind/pagefind.js", "/pagefind/pagefind-entry.json"] {
             assert!(g.outputs.contains(page), "{page}");
         }
         // Alle Medien-Referenzen lösen auf: Warnungen betreffen nur Seitenlinks in den Inhalten
