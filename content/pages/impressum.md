@@ -3,8 +3,8 @@ title: "Impressum"
 ---
 
 Nadja Bender<br/>
-Greifstraße 16<br/>
-24143 Kiel<br/>
+Saarbrückenstraße 26<br/>
+24114 Kiel<br/>
 Deutschland<br/>
 [ermeline@flauschiversum.de](mailto:ermeline@flauschiversum.de?subject=[Flauschiversum]) (Bitte mit "Flauschiversum" im Betreff)<br/>
 
