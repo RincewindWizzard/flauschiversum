@@ -18,7 +18,7 @@ Unter `/sitemap.xml` SHALL eine XML-Sitemap nach sitemaps.org stehen. Sie enthä
 - **THEN** enthält die Sitemap `https://flauschiversum.de/kategorie/filzen/` und `https://flauschiversum.de/tag/huete/`
 
 ### Requirement: Strukturierte Daten
-Jede Post-Seite SHALL ein JSON-LD-Objekt vom Typ `BlogPosting` enthalten, mit `headline`, `datePublished` (ISO 8601 mit Zeitzone), `author` (Person mit dem Namen aus `author`), `image` (falls vorhanden), `mainEntityOfPage` (kanonische URL), `articleSection` (Name der Kategorie), `keywords` (Namen der Schlagworte, falls vorhanden) und `publisher` (Organisation „Flauschiversum“).
+Jede Post-Seite SHALL ein JSON-LD-Objekt vom Typ `BlogPosting` enthalten, mit `headline`, `datePublished` (ISO 8601 mit Zeitzone), `author` (Person mit dem Namen aus `author`), `image` (falls vorhanden), `mainEntityOfPage` (kanonische URL), `articleSection` (Name der Kategorie, falls vorhanden), `keywords` (Namen der Schlagworte, falls vorhanden) und `publisher` (Organisation „Flauschiversum“).
 
 #### Scenario: Rich-Results-Test
 - **WHEN** eine Post-Seite mit dem Google-Test für Rich-Suchergebnisse geprüft wird

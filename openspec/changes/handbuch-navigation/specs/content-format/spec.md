@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Felder eines Posts
-Die `index.md` eines Posts SHALL mit einem YAML-Frontmatter beginnen. Pflichtfelder sind `title`, `date` (`YYYY-MM-DD` oder `YYYY-MM-DD HH:MM:SS`, Ortszeit Europe/Berlin) und `category`. Optional sind `permalink`, `author`, `image`, `excerpt` und `tags` (Liste von Schlagworten). Fehlt ein Pflichtfeld oder ist ein Feld ungültig, bricht der Build mit Datei und Feld ab.
+Die `index.md` eines Posts SHALL mit einem YAML-Frontmatter beginnen. Pflichtfelder sind `title` und `date` (`YYYY-MM-DD` oder `YYYY-MM-DD HH:MM:SS`, Ortszeit Europe/Berlin). Optional sind `permalink`, `author`, `image`, `excerpt`, `category` (höchstens eine) und `tags` (Liste von Schlagworten). Fehlt ein Pflichtfeld oder ist ein Feld ungültig, bricht der Build mit Datei und Feld ab.
 
 #### Scenario: Datum mit Uhrzeit
 - **WHEN** das Frontmatter `date: 2014-01-04 19:10:28` enthält
@@ -21,9 +21,9 @@ Die `index.md` eines Posts SHALL mit einem YAML-Frontmatter beginnen. Pflichtfel
 - **WHEN** `image` einen Dateinamen nennt, der im Post-Verzeichnis nicht als Bild existiert
 - **THEN** bricht der Build ab und nennt Post und Dateinamen
 
-#### Scenario: Fehlende Kategorie
+#### Scenario: Post ohne Kategorie
 - **WHEN** eine `index.md` kein Feld `category` hat
-- **THEN** bricht der Build ab und nennt den Pfad der Datei, das fehlende Feld `category` und die erlaubten Kategorien
+- **THEN** ist der Post gültig, erscheint auf keiner Kategorieseite und bleibt in der chronologischen Liste, in der Suche und auf den Seiten seiner Schlagworte
 
 #### Scenario: Schlagworte als Liste
 - **WHEN** das Frontmatter `tags: [Katzen, Hüte]` oder dieselbe Liste in YAML-Listenschreibweise enthält
@@ -43,5 +43,5 @@ Erlaubte Kategorien SHALL in `content/categories.yaml` stehen (je Eintrag `id`, 
 ## REMOVED Requirements
 
 ### Requirement: Frontmatter eines Posts
-**Reason**: Ersetzt durch „Felder eines Posts“. `category` ist jetzt Pflicht und hat Wirkung, neu ist `tags`.
-**Migration**: Alle Posts erhalten `category` (5 fehlen bisher) und `tags`; beides wird vorgeschlagen und vor dem Eintragen geprüft.
+**Reason**: Ersetzt durch „Felder eines Posts“. `category` hat jetzt Wirkung und einen festen Wertevorrat, neu ist `tags`.
+**Migration**: Alle Posts erhalten `tags`; fehlende Kategorien werden nur ergänzt, wo eine klar passt. Beides wird vorgeschlagen und vor dem Eintragen geprüft.

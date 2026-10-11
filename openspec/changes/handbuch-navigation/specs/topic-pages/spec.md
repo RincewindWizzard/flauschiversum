@@ -18,7 +18,7 @@ Für jede Kategorie mit mindestens einem veröffentlichten Beitrag SHALL es unte
 - **THEN** steht er auf `/kategorie/wolle/` unten in der Liste
 
 ### Requirement: Eintrag in einer Themenliste
-Jeder Eintrag auf Kategorie- und Schlagwortseiten SHALL das Vorschaubild (falls vorhanden), den Titel als Link auf den Beitrag, den Kurztext und das Datum im Format „<Tag>. <Monatsname> <Jahr>“ zeigen. Auf Schlagwortseiten steht zusätzlich die Kategorie als Link.
+Jeder Eintrag auf Kategorie- und Schlagwortseiten SHALL das Vorschaubild (falls vorhanden), den Titel als Link auf den Beitrag, den Kurztext und das Datum im Format „<Tag>. <Monatsname> <Jahr>“ zeigen. Auf Schlagwortseiten steht zusätzlich die Kategorie als Link, falls der Beitrag eine hat.
 
 #### Scenario: Eintrag mit Bild
 - **WHEN** der Beitrag „Kürbis“ (Kategorie „Basteln“) in einer Liste steht
@@ -56,6 +56,13 @@ Unter `/themen/` SHALL eine Übersicht stehen: zuerst alle Kategorien in der Rei
 #### Scenario: Alphabetische Schlagworte
 - **WHEN** die Schlagworte „Taschen“, „Hüte“ und „Katzen“ existieren
 - **THEN** stehen sie in der Reihenfolge „Hüte“, „Katzen“, „Taschen“
+
+### Requirement: Beiträge ohne Kategorie
+Ein Beitrag ohne Kategorie SHALL auf keiner Kategorieseite und in keiner Kachelzahl erscheinen, wohl aber auf den Seiten seiner Schlagworte, in der chronologischen Liste und in der Suche.
+
+#### Scenario: Meta-Beitrag
+- **WHEN** der Beitrag „Relaunch aus der Hackermatte“ keine Kategorie, aber das Schlagwort „Blog“ trägt
+- **THEN** steht er auf `/tag/blog/` und `/beitraege/`, aber auf keiner Kategorieseite
 
 ### Requirement: Zählung nur veröffentlichter Beiträge
 Alle Anzahlen und Listen der Themenseiten SHALL nur veröffentlichte Beiträge berücksichtigen. Geplante Beiträge erscheinen weder in Listen noch in Zählungen.

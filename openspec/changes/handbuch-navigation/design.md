@@ -45,7 +45,7 @@ Motivation und Umfang stehen in `proposal.md`, das gewünschte Verhalten in den 
 
 ### 2. Datenmodell und Themenberechnung
 
-`Post` erhält `category: String` (die `id`) und `tags: Vec<String>` (kanonische Namen aus der Liste). `Site` erhält `categories` und `tags` (Listeneinträge). Neues Modul `src/topics.rs` berechnet aus den **veröffentlichten** Posts die Zuordnungen, Zählungen und Sortierungen (neueste zuerst; Schlagworte alphabetisch mit deutscher Sortierung, `ä` wie `a`) und liefert reine Datenstrukturen für die Templates. Dadurch ist alles ohne Dateisystem testbar, und geplante Posts können nirgends durchrutschen.
+`Post` erhält `category: Option<String>` (die `id`) und `tags: Vec<String>` (kanonische Namen aus der Liste). `Site` erhält `categories` und `tags` (Listeneinträge). Neues Modul `src/topics.rs` berechnet aus den **veröffentlichten** Posts die Zuordnungen, Zählungen und Sortierungen (neueste zuerst; Schlagworte alphabetisch mit deutscher Sortierung, `ä` wie `a`) und liefert reine Datenstrukturen für die Templates. Dadurch ist alles ohne Dateisystem testbar, und geplante Posts können nirgends durchrutschen.
 
 Slugs entstehen mit der vorhandenen Funktion `urls::slugify` (`ä`→`ae`). Zwei Namen mit demselben Slug sind ein Fehler. Seiten für leere Kategorien oder Schlagworte entfallen.
 
@@ -90,11 +90,11 @@ Der Suchindex entsteht mit dem Rust-Crate `pagefind` (MIT, v1.5.2) als Bibliothe
 
 ### 6. Zuordnung der 194 Beiträge: Vorschlag, Prüfung, Eintragen
 
-1. Claude liest für jeden Beitrag Titel, Kurztext und Textanfang und schlägt vor: `category` (bei den 5 fehlenden, sonst die bestehende) und 1–4 Schlagworte aus einer **vorgeschlagenen Liste** von etwa 20 Schlagworten. Startpunkt dafür, abgeleitet aus Titeln und Texten: *Techniken* Häkeln, Stricken, Spinnen, Quilten, Amigurumi, Papier; *Gegenstände* Hüte, Mützen, Taschen, Kissen, Schals; *Anlässe und Themen* Katzen, Geschenke, LARP, Halloween, Weihnachten, Einhörner, Recycling. Die endgültige Liste entsteht in der Prüfung.
+1. Claude liest für jeden Beitrag Titel, Kurztext und Textanfang und schlägt vor: `category` (nur für die 5 Beiträge ohne Kategorie, und nur wenn eine klar passt; sonst bleibt sie leer) und 1–4 Schlagworte aus einer **vorgeschlagenen Liste** von etwa 20 Schlagworten. Startpunkt dafür, abgeleitet aus Titeln und Texten: *Techniken* Häkeln, Stricken, Spinnen, Quilten, Amigurumi, Papier; *Gegenstände* Hüte, Mützen, Taschen, Kissen, Schals; *Anlässe und Themen* Katzen, Geschenke, LARP, Halloween, Weihnachten, Einhörner, Recycling und Blog (für Beiträge über das Flauschiversum selbst, die in keine Kategorie passen). Die endgültige Liste entsteht in der Prüfung.
 2. Das Ergebnis steht als Tabelle (`Beitrag | Kategorie | Schlagworte`, nach Kategorie sortiert) in `openspec/changes/handbuch-navigation/zuordnung.md`, zusammen mit der Schlagwortliste und der Zahl der Beiträge je Schlagwort. Du korrigierst direkt in dieser Datei.
 3. Erst nach deiner Freigabe schreibt ein einmaliges Skript `category:` und `tags:` in die `index.md` jedes Beitrags, **nur als eingefügte Zeilen** (keine Neuserialisierung des YAML; Prüfung: `git diff --numstat` zeigt je Beitrag nur eingefügte Zeilen) und legt `content/tags.yaml` an.
 
-*Annahme für die fünf Beiträge ohne Kategorie:* „Amigurumi Häkeldrache“ → wolle, „gefilzte Kapuzenweste“ → filzen, „Gib´s mir!… – Audrey II“ → basteln, „Spinne“ → basteln. Der Beitrag „Relaunch aus der Hackermatte“ (ein Blog-interner Beitrag) passt zu keiner Kategorie; er erhält vorläufig `basteln` und wird in der Prüfung ausdrücklich zur Entscheidung gestellt. Eine siebte Kategorie wird nur angelegt, wenn du es in der Prüfung willst (dann braucht sie ein Bild).
+*Beiträge ohne Kategorie sind erlaubt:* Passt ein Beitrag in keine Kategorie, bleibt `category` leer; er ist dann über seine Schlagworte, die Suche und `/beitraege/` zu finden. Das gilt ausdrücklich für „Relaunch aus der Hackermatte“, einen Blog-internen Beitrag. Für die übrigen vier Beiträge ohne Kategorie schlägt Claude eine vor, wenn sie klar passt (z.B. „Amigurumi Häkeldrache“ → wolle, „gefilzte Kapuzenweste“ → filzen), sonst bleibt das Feld leer. Die Kategorieliste bleibt bei den sechs vorhandenen.
 
 ### 7. SEO und Feed
 
@@ -103,7 +103,7 @@ Sitemap, Titel, Meta-Beschreibung und kanonische URL der neuen Seiten entstehen 
 ### 8. Tests
 
 - **Einheit:** `topics.rs` (Zählungen, Sortierung, geplante Posts, Slug-Kollisionen, deutsche Sortierung), Listen laden, Prüfmeldungen (inkl. Vorschlag „Meintest du …“), Tags als YAML-Liste und als Text.
-- **Integration:** Die Test-Site bekommt Kategorien, Schlagworte und einen geplanten Beitrag. Snapshots für Startseite, Kategorieseite, Schlagwortseite, Themenübersicht und Beitragskopf. Ein zweiter Build schreibt 0 Dateien (auch unter `pagefind/`). Gesamtseitentest: alle Beiträge erscheinen auf genau einer Kategorieseite, jede Schlagwortseite ist verlinkt, alle Live-URLs existieren weiter.
+- **Integration:** Die Test-Site bekommt Kategorien, Schlagworte und einen geplanten Beitrag. Snapshots für Startseite, Kategorieseite, Schlagwortseite, Themenübersicht und Beitragskopf. Ein zweiter Build schreibt 0 Dateien (auch unter `pagefind/`). Gesamtseitentest: jeder Beitrag mit Kategorie erscheint auf genau einer Kategorieseite, jede Schlagwortseite ist verlinkt, alle Live-URLs existieren weiter.
 - **Browser (Playwright):** Suche von der Startseite aus, Treffer für „katze“ (Wortform), „kuerbis“ (Umlaut) und „filz“ (Wortanfang), Kategoriefilter, Hinweis ohne JavaScript, Kachelklick führt auf die Kategorieseite, Handy-Layout ohne waagerechtes Scrollen.
 
 ## Risks / Trade-offs
@@ -122,7 +122,3 @@ Sitemap, Titel, Meta-Beschreibung und kanonische URL der neuen Seiten entstehen 
 3. Generator, Templates, Styles und Suche umsetzen; Gesamtseitentest und Browser-Tests.
 4. Vergleichsbilder (Startseite, Kategorieseite, Beitrag, Suche, Handy) zur Abnahme vorlegen.
 5. **Rollback:** Bis zum Deployment ist die Live-Seite unberührt; ein Zurück ist ein Git-Revert. Die neuen Frontmatter-Felder stören den alten Stand nicht.
-
-## Open Questions
-
-- Ob der Beitrag „Relaunch aus der Hackermatte“ in `basteln` bleibt oder eine eigene Kategorie bekommt, entscheidet sich in der Prüfung der Zuordnung; die Umsetzung bleibt in beiden Fällen gleich.

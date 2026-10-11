@@ -58,6 +58,10 @@ Die Suchseite SHALL die Treffer nach Kategorie einschränken können. Die Auswah
 - **WHEN** nach „Mütze“ gesucht und die Kategorie „Wolle“ gewählt wird
 - **THEN** bleiben nur Treffer der Kategorie „Wolle“ übrig
 
+#### Scenario: Beitrag ohne Kategorie
+- **WHEN** ein Beitrag keine Kategorie hat
+- **THEN** erscheint er in der Suche ohne Filter, aber in keiner Kategorieauswahl
+
 ### Requirement: Suchfeld auf der Startseite
 Die Startseite SHALL das Suchfeld deutlich sichtbar zeigen. Eine abgeschickte Suche öffnet `/suche/?q=<Begriff>`.
 
