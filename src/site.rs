@@ -622,6 +622,10 @@ pub mod tests {
                 assert!(footer.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
             }
             assert!(footer.contains("href=\"mailto:ermeline@flauschiversum.de?subject=Flauschiversum\""), "{path}");
+            assert!(footer.contains("aria-label=\"E-Mail schreiben\""), "{path}");
+            // Die Adresse steht nicht als sichtbarer Text im Footer, nur im Link und im Tooltip
+            let visible = footer.replace("mailto:ermeline@flauschiversum.de", "").replace("title=\"ermeline@flauschiversum.de\"", "");
+            assert!(!visible.contains("ermeline@"), "{path}: Adresse als Text");
             assert!(footer.contains("href=\"https://www.instagram.com/ermelinewollknoll/\" rel=\"noopener\" aria-label=\"Instagram\""), "{path}");
             assert!(footer.contains("href=\"https://chaos.social/@ErmelineWollknoll\" rel=\"me noopener\" aria-label=\"Mastodon\""), "{path}");
             assert_eq!(footer.matches("<svg").count(), 3, "drei Icons als inline SVG: {path}");
@@ -650,12 +654,12 @@ pub mod tests {
         for (path, html) in &pages {
             let single = path == "/suche/index.html" || path == "/themen/index.html";
             assert_eq!(html.contains("<aside class=\"sidebar\""), !single, "{path}");
-            assert_eq!(html.contains("<nav class=\"sitenav\""), !single, "{path}");
+            assert_eq!(html.contains("<nav class=\"sitenav card\""), !single, "{path}");
             assert_eq!(html.contains("class=\"has-side\""), !single, "{path}");
             if !single {
                 sidebars.insert(between(html, "<aside class=\"sidebar\"", "</aside>").to_string());
                 // Navigationsspalte ohne das Suchfeld, das auf der Startseite fehlt
-                let nav = between(html, "<nav class=\"sitenav\"", "</nav>");
+                let nav = between(html, "<nav class=\"sitenav card\"", "</nav>");
                 navs.insert(nav[nav.find("<ul class=\"sitenav-links\"").unwrap()..].to_string());
             }
         }
@@ -681,6 +685,10 @@ pub mod tests {
         // Andere Seiten: Suchfeld im Kopf und in der Navigationsspalte, mit verschiedenen ids
         let post = &pages["/2014/01/alraune/index.html"];
         assert_eq!(post.matches("type=\"search\"").count(), 2);
+        // Lupe im Feld: Knopf mit Namen „Suchen“ im selben .searchbox, kein sichtbarer Text „Suchen“ als Knopfbeschriftung
+        assert_eq!(post.matches("<div class=\"searchbox\">").count(), 2);
+        assert!(post.contains("<button type=\"submit\" aria-label=\"Suchen\" title=\"Suchen\"><svg"), "Lupe als Icon");
+        assert!(!post.contains(">Suchen</button>"));
         assert!(post.contains("id=\"q\"") && post.contains("id=\"q-side\""));
 
         // Autor: nicht im Kopf, sondern nach dem Text und vor „älterer Beitrag“

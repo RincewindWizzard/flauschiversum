@@ -24,6 +24,7 @@ for (const path of ['/', '/2020/10/kurbis/', '/kategorie/filzen/', '/suche/?q=ka
     assert.equal((await bar.textContent()).trim(), `Staging: ${BRANCH}`);
     const top = await bar.evaluate((el) => el.getBoundingClientRect().top + scrollY);
     assert.equal(top, 0, 'Leiste ist das erste Element');
+    assert.equal(await bar.evaluate((el) => getComputedStyle(el).backgroundColor), 'rgb(179, 38, 30)', 'Leiste bleibt rot');
     assert.match(await page.locator('meta[name=robots]').getAttribute('content'), /noindex/);
     await page.close();
   });

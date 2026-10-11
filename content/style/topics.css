@@ -1,81 +1,5 @@
 /* Startseite, Themenübersicht, Kategorie- und Schlagwortseiten, Suchfeld, Einordnung im Beitrag */
 
-/* Suchfeld im Kopf */
-form.search {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5em;
-  margin: 0 1em 1em;
-
-  & label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-
-  & input[type="search"] {
-    font: inherit;
-    padding: 0.35em 0.7em;
-    border: 1px solid var(--bordercolor);
-    border-radius: 20em;
-    min-width: 0;
-    width: 16em;
-    max-width: 100%;
-  }
-
-  & button {
-    font: inherit;
-    padding: 0.35em 1em;
-    border: 0;
-    border-radius: 20em;
-    background-color: var(--pagination-active);
-    color: black;
-    cursor: pointer;
-  }
-
-  & button:hover {
-    background-color: var(--theme-yellow);
-  }
-}
-
-form.search[hidden] {
-  display: none;
-}
-
-/* Großes Suchfeld auf der Startseite */
-form.search.big {
-  flex-direction: column;
-  margin-bottom: 0;
-
-  & label {
-    position: static;
-    width: auto;
-    height: auto;
-    clip-path: none;
-    font-family: "Lobster";
-    font-size: 1.5em;
-  }
-
-  & .search-row {
-    display: flex;
-    gap: 0.5em;
-    width: 100%;
-    justify-content: center;
-  }
-
-  & input[type="search"] {
-    font-size: 1.15em;
-    width: 20em;
-  }
-
-  & button {
-    font-size: 1.15em;
-  }
-}
-
 /* Abschnitte der Startseite und der Themenseiten */
 main#home, main.topic {
   max-width: 52em;
@@ -83,7 +7,7 @@ main#home, main.topic {
   padding: 0 1em;
 
   & h2 {
-    font-family: "Lobster";
+    font-family: var(--font-display);
     font-weight: 400;
     font-size: 1.5em;
     text-align: center;
@@ -107,12 +31,14 @@ ul.tiles {
     padding: 0.6em;
     text-align: center;
     text-decoration: none;
-    border: 1px dashed var(--bordercolor);
-    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    box-shadow: var(--card-shadow);
   }
 
   & a.tile:hover, & a.tile:focus-visible {
-    background-color: var(--pagination-hover);
+    background-color: var(--accent-soft);
   }
 
   & img {
@@ -123,7 +49,7 @@ ul.tiles {
   }
 
   & .tile-name {
-    font-family: "Lobster";
+    font-family: var(--font-display);
     font-size: 1.4em;
     margin-top: 0.3em;
   }
@@ -160,7 +86,7 @@ ul.taglist {
   }
 
   & a:hover, & a:focus-visible {
-    background-color: var(--pagination-hover);
+    background-color: var(--accent-soft);
   }
 
   & .count {
@@ -180,7 +106,7 @@ header.topic-head {
   text-align: center;
 
   & h1 {
-    font-family: "Lobster";
+    font-family: var(--font-display);
     font-weight: 400;
     font-size: 2em;
     line-height: 1.2;
@@ -253,7 +179,7 @@ p.all-posts {
 /* Titel der chronologischen Liste */
 h1.list-title {
   text-align: center;
-  font-family: "Lobster";
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.8em;
   text-shadow: none;
@@ -275,29 +201,34 @@ h1.list-title {
   }
 
   & a.category {
-    background-color: var(--pagination-active);
-    border-color: var(--pagination-active);
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+  }
+
+  & a.category:hover {
+    background-color: #86ad74;
   }
 
   & a:hover {
-    background-color: var(--pagination-hover);
+    background-color: var(--accent-soft);
   }
 }
 
 @media (max-width: 40em) {
-  #blogheader nav a {
-    margin: 0.5em 0.6em;
-    font-size: 1.15em;
+  #blogheader .topnav a {
+    padding: 0.3em 0.8em;
   }
 }
 
 /* Suchseite */
 .search-page {
-  --pagefind-ui-primary: #333;
-  --pagefind-ui-text: #333;
-  --pagefind-ui-background: transparent;
+  --pagefind-ui-primary: #2f5d3a;
+  --pagefind-ui-text: #2b2b2b;
+  --pagefind-ui-background: #ffffff;
   --pagefind-ui-border: var(--bordercolor);
-  --pagefind-ui-tag: var(--pagination-hover);
+  --pagefind-ui-tag: var(--accent-soft);
   --pagefind-ui-border-width: 1px;
   --pagefind-ui-border-radius: 12px;
   --pagefind-ui-image-border-radius: 20em;

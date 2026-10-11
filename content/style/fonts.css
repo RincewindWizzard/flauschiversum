@@ -34,7 +34,7 @@
 }
 
 body {
-  font-family: "Lora", serif;
+  font-family: var(--font-text);
   font-size: 1.3rem;
   line-height: 1.52;
   text-rendering: optimizeLegibility;
@@ -53,6 +53,5 @@ body {
 
 /* Logo und Seitentitel in Lobster (Logo ist auf Indexseiten h1, sonst p.site-title) */
 h1, .site-title {
-  font-family: "Lobster";
-  text-shadow: 1px 1px 51px #fff;
+  font-family: var(--font-display);
 }

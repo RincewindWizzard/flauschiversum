@@ -131,8 +131,13 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
       const b = await link.boundingBox();
       assert.ok(b.width >= 44 && b.height >= 44, `Klickfläche ${name}: ${b.width}×${b.height}`);
     }
-    const mail = await footer.locator('a.mail').getAttribute('href');
-    assert.equal(mail, 'mailto:ermeline@flauschiversum.de?subject=Flauschiversum');
+    const mailLink = footer.getByRole('link', { name: 'E-Mail schreiben' });
+    assert.ok(await mailLink.isVisible());
+    assert.equal(await mailLink.getAttribute('href'), 'mailto:ermeline@flauschiversum.de?subject=Flauschiversum');
+    assert.equal(await mailLink.getAttribute('title'), 'ermeline@flauschiversum.de');
+    assert.ok(!(await footer.textContent()).includes('@'), 'Adresse nicht als Text');
+    const mb = await mailLink.boundingBox();
+    assert.ok(mb.width >= 44 && mb.height >= 44, `Klickfläche E-Mail: ${mb.width}×${mb.height}`);
     const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
     assert.ok(sw <= cw, 'kein waagerechtes Scrollen');
     if (width > 500) await footer.screenshot({ path: '/tmp/flausch-footer.png' });
@@ -178,6 +183,110 @@ await test('Alle mailto-Links haben „Flauschiversum“ im Betreff', async () =
     for (const h of hrefs) assert.match(decodeURIComponent(h.split('subject=')[1] ?? ''), /Flauschiversum/, `${path}: ${h}`);
     await page.close();
   }
+});
+
+// ---------- Karten, Suchfeld, Typografie, Farben ----------
+const cardStyle = (page, sel) =>
+  page.locator(sel).first().evaluate((el) => {
+    const s = getComputedStyle(el);
+    const alpha = (c) => (c.startsWith('rgba') ? parseFloat(c.split(',')[3]) : c === 'rgba(0, 0, 0, 0)' ? 0 : 1);
+    return { alpha: alpha(s.backgroundColor), radius: parseFloat(s.borderTopLeftRadius), pad: parseFloat(s.paddingLeft) };
+  });
+
+await test('Karten: Navigationsspalte und Sidebar liegen auf hellen, abgerundeten Karten (1440 px)', async () => {
+  const page = await open(POST, 1440);
+  for (const sel of ['.sitenav', '.sidebar .sidebar-cloud']) {
+    const c = await cardStyle(page, sel);
+    assert.ok(c.alpha > 0 && c.radius >= 8 && c.pad >= 8, `${sel}: ${JSON.stringify(c)}`);
+  }
+  await page.close();
+});
+
+await test('Karten: Sidebar-Blöcke auf dem Handy, ohne waagerechtes Scrollen', async () => {
+  const page = await open(POST, 360, 740, { hasTouch: true, isMobile: true });
+  for (const sel of ['.sidebar .sidebar-cats', '.sidebar .sidebar-cloud']) {
+    const c = await cardStyle(page, sel);
+    assert.ok(c.alpha > 0 && c.radius >= 8, `${sel}: ${JSON.stringify(c)}`);
+  }
+  const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+  assert.ok(sw <= cw);
+  await page.close();
+});
+
+const searchBoxChecks = async (page, root) => {
+  const input = await page.locator(`${root} input[type=search]`).first().boundingBox();
+  const button = await page.locator(`${root} .searchbox button`).first().boundingBox();
+  assert.ok(button.x >= input.x && button.x + button.width <= input.x + input.width + 1, `Lupe liegt im Feld (${root})`);
+  assert.ok(button.y >= input.y && button.y + button.height <= input.y + input.height + 1, `Lupe liegt vertikal im Feld (${root})`);
+  assert.ok(input.height < 70, `Feld ist einzeilig (${root})`);
+  assert.equal(await page.locator(`${root} .searchbox button`).first().getAttribute('aria-label'), 'Suchen');
+};
+
+await test('Suchfeld: Lupe im Feld in der 13-em-Spalte und im Kopf, ein Zeile', async () => {
+  const page = await open(POST, 1440);
+  await searchBoxChecks(page, '.sitenav');
+  await page.close();
+  const small = await open(POST, 360, 740, { hasTouch: true, isMobile: true });
+  await searchBoxChecks(small, '.topsearch');
+  await small.close();
+  const home = await open('/', 1440);
+  await searchBoxChecks(home, '.home-search');
+  await home.close();
+});
+
+await test('Suchfeld: Lupe und Enter öffnen /suche/?q=', async () => {
+  const page = await open(POST, 1440);
+  await page.locator('.sitenav input[type=search]').fill('Katze');
+  await page.locator('.sitenav .searchbox button').click();
+  await page.waitForURL('**/suche/?q=Katze');
+  await page.close();
+  const p2 = await open('/', 1440);
+  await p2.locator('.home-search input[type=search]').fill('Filz');
+  await p2.keyboard.press('Enter');
+  await p2.waitForURL('**/suche/?q=Filz');
+  await p2.close();
+});
+
+await test('Typografie: Navigation und Footer in Textschrift, Logo und Titel in Lobster', async () => {
+  const page = await open('/', 1440);
+  const font = (sel) => page.locator(sel).first().evaluate((el) => { const s = getComputedStyle(el); return [s.fontFamily, parseFloat(s.fontSize), s.fontWeight]; });
+  for (const sel of ['.sitenav .sitenav-links a', '#blogfooter .footer-links a', '.sidebar .cloud a', '.sitenav .cats a']) {
+    const [family, size] = await font(sel);
+    assert.ok(!/lobster/i.test(family), `${sel}: ${family}`);
+    assert.ok(size >= 0.9 * 16, `${sel}: ${size}px`);
+  }
+  for (const sel of ['#blogheader .logo h1', '#kategorien', '#neu']) assert.match((await font(sel))[0], /lobster/i, sel);
+  assert.ok(Number((await font('#blogfooter .footer-links a'))[2]) >= 600, 'Footer-Links halbfett');
+  await page.close();
+  const mid = await open(POST, 1100);
+  const fam = await mid.locator('#blogheader .topnav a').first().evaluate((el) => getComputedStyle(el).fontFamily);
+  assert.ok(!/lobster/i.test(fam), `Kopfnavigation: ${fam}`);
+  await mid.close();
+});
+
+// Kontrast nach WCAG
+const contrast = (page, sel, bgSel) =>
+  page.evaluate(([sel, bgSel]) => {
+    const parse = (c) => c.match(/[\d.]+/g).map(Number);
+    const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+    const bgOf = (el) => { for (let e = el; e; e = e.parentElement) { const c = parse(getComputedStyle(e).backgroundColor); if ((c[3] ?? 1) > 0.9) return c.slice(0, 3); } return [255, 255, 255]; };
+    const el = document.querySelector(sel);
+    const fg = parse(getComputedStyle(el).color).slice(0, 3);
+    const bg = bgSel ? bgOf(document.querySelector(bgSel)) : bgOf(el);
+    const [a, b] = [lum(fg), lum(bg)].sort((x, y) => y - x);
+    return (a + 0.05) / (b + 0.05);
+  }, [sel, bgSel]);
+
+await test('Farben: Hintergrund Cremeweiß, Kontrast von Text, Links, Knopf und Tag mindestens 4,5 : 1', async () => {
+  const page = await open(POST, 1440);
+  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 247, 240)');
+  for (const [sel, name] of [['main.page p', 'Text'], ['main.page a', 'Link im Text'], ['.sidebar .cloud a', 'Cloud'], ['.sitenav .sitenav-links a', 'Navigation'], ['.searchbox button', 'Lupe'], ['.post-header a.category', 'Kategorie-Tag'], ['.post-header a.tag', 'Schlagwort-Tag'], ['#blogfooter .footer-links a', 'Footer'], ['#blogfooter .copyright', 'Copyright']]) {
+    const c = await contrast(page, sel);
+    assert.ok(c >= 4.5, `${name}: Kontrast ${c.toFixed(2)}`);
+  }
+  await page.close();
+  const css = await (await fetch(BASE + '/style.css')).text();
+  for (const neon of ['#bdf239', '#82e536', '#eefc3c']) assert.ok(!css.toLowerCase().includes(neon), `Neongrün ${neon} im Stylesheet`);
 });
 
 await browser.close();

@@ -11,7 +11,7 @@ figure.media {
     max-width: 100%;
     height: auto;
     border-radius: 3px;
-    box-shadow: 0 0 15px 3px rgba(92, 128, 0, 0.66);
+    box-shadow: 0 2px 12px rgb(60 50 30 / 0.3);
   }
 
   & a {
@@ -96,8 +96,8 @@ figure.media {
       cursor: pointer;
 
       &[aria-current="true"] {
-        background: var(--theme-green);
-        border-color: var(--theme-green);
+        background: var(--accent);
+        border-color: var(--accent);
       }
     }
   }

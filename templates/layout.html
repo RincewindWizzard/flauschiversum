@@ -54,9 +54,11 @@
   </nav>
   {%- if head.search_form %}
   <form class="search topsearch" action="/suche/" method="get" role="search">
-    <label for="q">Suchen</label>
-    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
-    <button type="submit">Suchen</button>
+    <label class="sr-only" for="q">Suchen</label>
+    <div class="searchbox">
+      <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+      <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
+    </div>
   </form>
   {%- endif %}
 </header>
@@ -66,12 +68,14 @@
     {% block content %}{% endblock %}
   </div>
   {%- if let Some(side) = head.side %}
-  <nav class="sitenav" aria-label="Navigation">
+  <nav class="sitenav card" aria-label="Navigation">
     {%- if head.search_form %}
     <form class="search sidesearch" action="/suche/" method="get" role="search">
-      <label for="q-side">Suchen</label>
-      <input type="search" id="q-side" name="q" placeholder="Anleitung suchen …" autocomplete="off">
-      <button type="submit">Suchen</button>
+      <label class="sr-only" for="q-side">Suchen</label>
+      <div class="searchbox">
+        <input type="search" id="q-side" name="q" placeholder="Suchen …" autocomplete="off">
+        <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
+      </div>
     </form>
     {%- endif %}
     <ul class="sitenav-links">
@@ -87,7 +91,7 @@
     </ul>
   </nav>
   <aside class="sidebar" aria-label="Themen">
-    <div class="sidebar-cats">
+    <div class="sidebar-cats card">
       <p class="side-title">Kategorien</p>
       <ul class="cats">
         {%- for c in side.categories %}
@@ -95,6 +99,7 @@
         {%- endfor %}
       </ul>
     </div>
+    <div class="sidebar-cloud card">
     <p class="side-title">Themen</p>
     <ul class="cloud">
       {%- for t in side.tags %}
@@ -102,6 +107,7 @@
       {%- endfor %}
     </ul>
     <p class="all-topics"><a href="/themen/">Alle Themen</a></p>
+    </div>
   </aside>
   {%- endif %}
 </div>
@@ -113,8 +119,8 @@
     <a href="/rss.xml">Abonnieren</a>
   </nav>
   <div class="footer-contact">
-    <a class="mail" href="{{ head.mail_href }}">{% include "partials/icon-mail.html" %}<span>{{ head.mail_address }}</span></a>
     <ul class="socials">
+      <li><a class="mail" href="{{ head.mail_href }}" aria-label="E-Mail schreiben" title="{{ head.mail_address }}">{% include "partials/icon-mail.html" %}</a></li>
       <li><a href="{{ head.instagram_url }}" rel="noopener" aria-label="Instagram" title="Instagram">{% include "partials/icon-instagram.html" %}</a></li>
       <li><a href="{{ head.mastodon_url }}" rel="me noopener" aria-label="Mastodon" title="Mastodon">{% include "partials/icon-mastodon.html" %}</a></li>
     </ul>

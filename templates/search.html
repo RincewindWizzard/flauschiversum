@@ -9,9 +9,9 @@
   </header>
   <form class="search big" id="search-form" action="/suche/" method="get" role="search">
     <label for="q">Was möchtest du machen?</label>
-    <div class="search-row">
+    <div class="searchbox">
       <input type="search" id="q" name="q" placeholder="z.B. Mütze, Katze, Filz …" autocomplete="off">
-      <button type="submit">Suchen</button>
+      <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
     </div>
   </form>
   <div id="search" hidden></div>

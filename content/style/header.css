@@ -22,20 +22,23 @@
     }
   }
 
-  & nav {
+  /* Navigationsleiste: Textschrift, halbfett, Pillen beim Hover */
+  & .topnav {
+    gap: 0.3em;
+    margin: 1.2em 1em 0.8em;
+
     & a {
-      color: black;
-      float: left;
-      padding: 0;
+      color: var(--acolor);
+      padding: 0.35em 1em;
       text-decoration: none;
-      border-radius: 5px;
-      margin: 1.2em 0.9em;
-      font-family: "Lobster";
-      font-size: 1.25em;
+      border-radius: 20em;
+      font-family: var(--font-text);
+      font-weight: 700;
+      font-size: var(--fs-ui);
     }
 
-    & a:hover {
-      background-color: var(--pagination-hover);
+    & a:hover, & a:focus-visible {
+      background-color: var(--accent-soft);
     }
   }
 }

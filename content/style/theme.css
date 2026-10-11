@@ -1,29 +1,48 @@
 /*
-  Farbpalette
-  #bdf239 – helles Grün
-  #82e536 – Grün
-  #eefc3c – Gelb
-  Abgeleitete Farben entsprechen LESS `lighten()` (HSL-Helligkeit + n %).
+  Farbschema: gedämpftes Salbeigrün auf Cremeweiß.
+  Alle Farben der Seite stehen hier; Kontrast Text/Link auf Hintergrund und Karte mindestens 4,5 : 1.
+    #faf7f0  Seitenhintergrund (Cremeweiß)
+    #ffffff  Karten
+    #2b2b2b  Text
+    #2f5d3a  Links (dunkelgrün)
+    #6f9a5b  Akzent (Salbeigrün) für Knöpfe und aktive Elemente, darauf dunkle Schrift #121a12
+    #e4eedc  helle Tönung des Akzents (Hover, Tags)
 */
 :root {
-  --theme-bright: #bdf239;
-  --theme-green: #82e536;
-  --theme-yellow: #eefc3c;
+  --bgcolor: #faf7f0;
+  --card-bg: #ffffff;
+  --card-border: rgb(0 0 0 / 0.07);
+  --card-shadow: 0 1px 3px rgb(60 50 30 / 0.08);
+  --acolor: #2b2b2b;
+  --link: #2f5d3a;
+  --accent: #6f9a5b;
+  --accent-ink: #121a12;
+  --accent-soft: #e4eedc;
+  --bordercolor: #e2dccf;
 
-  --bgcolor: hsl(from var(--theme-bright) h s calc(l + 20));
-  --text-shadow-color: hsl(from var(--theme-bright) h s calc(l + 30));
-  --pagination-hover: hsl(from var(--theme-yellow) h s calc(l + 20));
-  --pagination-active: var(--theme-green);
-  --acolor: #333;
-  --bordercolor: #d2d2d2;
+  /* Typografie: Lobster für Logo und Titel, Lora für alles andere */
+  --font-display: "Lobster", cursive;
+  --font-text: "Lora", Georgia, serif;
+  --fs-title: 2em;
+  --fs-section: 1.5em;
+  --fs-ui: 1em;
+  --fs-small: 0.875em;
+
+  /* Alte Namen, auf die das Stylesheet noch verweist */
+  --pagination-hover: var(--accent-soft);
+  --pagination-active: var(--accent);
 }
 
 body {
   background-color: var(--bgcolor);
 }
 
-body, a {
+body {
   color: var(--acolor);
+}
+
+a {
+  color: var(--link);
 }
 
 header {
@@ -31,4 +50,13 @@ header {
     text-decoration: none;
     color: var(--acolor);
   }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
