@@ -39,7 +39,7 @@ Der Generator (Rust) erzeugt heute eine Seite für den Wurzelpfad von `https://f
 
 ### 4. Workflow `.github/workflows/staging.yml`
 
-Auslöser: `push` auf `dev` und `workflow_dispatch`. Berechtigungen: `contents: read`, `pages: write`, `id-token: write`. `concurrency: { group: pages-staging, cancel-in-progress: true }`, damit der neueste Stand gewinnt.
+Auslöser: `push` auf `dev` und auf `claude/**` und `workflow_dispatch`. Berechtigungen: `contents: read`, `pages: write`, `id-token: write`. `concurrency: { group: pages-staging, cancel-in-progress: true }` für alle Branches gemeinsam, damit der neueste Stand gewinnt; es gibt nur eine Pages-Seite. Ein Schritt schreibt Branch und Commit nach `dist/staging.txt`, damit sichtbar ist, welcher Stand online ist.
 
 Jobs:
 1. **test** (parallel zum Bauen): Rust-Toolchain (stable), `Swatinem/rust-cache`, `cargo test`.
@@ -54,11 +54,19 @@ Aktionen werden auf Hauptversionen oder Commit-SHAs festgelegt; beim Anlegen wer
 
 `actions/cache` mit Schlüssel `images-${{ github.run_id }}` und `restore-keys: images-`, Pfad `.cache/`. So wird immer der letzte Stand geladen und nach dem Lauf ein neuer gespeichert. Der Cache ist 1,1 GB groß (Limit je Repository 10 GB); er wird nur im Job `build` genutzt. Fällt der Cache aus, rechnet der Build alle Bilder neu (ca. 25 s auf 4 Kernen, auf Actions-Runnern mit 4 Kernen ähnlich), die Seite bleibt korrekt.
 
-### 6. Einmalige Einrichtung bleibt manuell
+### 6. Claude-Branches veröffentlichen mit
 
-Drei Schritte kann der Workflow nicht selbst erledigen und die Aufgaben nennen sie als Anleitung an den Nutzer: Branch `dev` aus `master` anlegen, Settings → Pages → Source „GitHub Actions“, und in Settings → Environments → `github-pages` den Branch `dev` als erlaubten Deployment-Branch hinzufügen (voreingestellt ist nur der Default-Branch). Ohne den letzten Schritt scheitert `deploy` mit einer Schutzmeldung der Umgebung.
+`claude/**` löst denselben Workflow aus wie `dev`, damit Änderungen aus Claude-Sitzungen ohne manuelles Anstoßen sichtbar werden. Das Muster `claude/**` passt auf alle Sitzungsbranches. Der Workflow läuft nur für Pushes in dieses Repository (nicht für Forks), und `contents: read` plus Pages-Schreibrecht reichen aus.
+
+*Alternative:* nur `dev` veröffentlichen und Claude-Branches per Pull Request nach `dev` bringen. Verworfen: Jede Änderung bräuchte einen manuellen Schritt, bevor man sie sehen kann.
+
+### 7. Einmalige Einrichtung bleibt manuell
+
+Zwei Schritte kann der Workflow nicht selbst erledigen; die Aufgaben nennen sie als Anleitung an die Nutzerin: Settings → Pages → Source „GitHub Actions“, und in Settings → Environments → `github-pages` die Deployment-Branches `dev` und `claude/*` hinzufügen (voreingestellt ist nur der Default-Branch; die Umgebung erlaubt Namensmuster mit `*`). Ohne den letzten Schritt scheitert `deploy` mit einer Schutzmeldung der Umgebung. Der Branch `dev` ist bereits angelegt.
 
 ## Risks / Trade-offs
+
+- [Mehrere Branches überschreiben sich gegenseitig auf der einen Staging-Seite] → Bewusst so; `staging.txt` und das Protokoll zeigen den Stand. Ein Zustand von `dev` wird nicht automatisch wiederhergestellt, wenn ein Claude-Branch danach pusht; ein manueller Lauf auf `dev` (`workflow_dispatch`) holt ihn zurück.
 
 - [Pages-Limit: 1 GB je Seite, 550 MB heute; weiteres Wachstum durch neue Posts] → Smoke-Test und Build melden die Größe; bei Annäherung an 800 MB Warnung im Workflow-Log. Langfristig die 1000x-Varianten oder Videos auslagern (eigener Change).
 - [Hochladen von 10.000 Dateien dauert] → `upload-pages-artifact` packt ein Tar; ein Lauf soll unter ca. 10 Minuten bleiben, andernfalls Bilder-Varianten prüfen.
@@ -71,7 +79,7 @@ Drei Schritte kann der Workflow nicht selbst erledigen und die Aufgaben nennen s
 
 1. Code für Basis-URL und Staging-Modus umsetzen und lokal mit `build --base-url http://localhost:8099/flauschiversum --staging` und `serve` prüfen; Produktiv-Ausgabe ohne Optionen bleibt byte-gleich (Gesamtseitentest).
 2. Workflow anlegen und auf einem Test-Branch mit `workflow_dispatch` prüfen, soweit die Umgebungsregeln das zulassen; sonst direkt auf `dev`.
-3. Nutzer legt `dev` an, stellt Pages und Umgebung ein (Entscheidung 6) und löst den ersten Lauf aus.
+3. Nutzerin stellt Pages und Umgebung ein (Entscheidung 7); der erste Push auf einen Claude-Branch oder `dev` löst den ersten Lauf aus.
 4. Rollback: Workflow deaktivieren oder löschen; die zuletzt veröffentlichte Seite bleibt, bis Pages ausgeschaltet wird. Produktivseite unberührt.
 
 ## Open Questions

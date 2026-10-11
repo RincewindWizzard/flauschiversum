@@ -12,14 +12,15 @@
 
 ## 2. Pipeline
 
-- [ ] 2.1 `.github/workflows/staging.yml` mit Auslöser `push` auf `dev` und `workflow_dispatch`, minimalen Berechtigungen, `concurrency` und den Jobs `test`, `build` und `deploy` (Entscheidung 4); Rust-Cache und Bild-Cache (Entscheidung 5); prüfen: YAML-Syntax mit `actionlint` (oder `python -c yaml.safe_load`) und Durchsicht gegen die aktuellen Versionen der verwendeten Aktionen
+- [ ] 2.1 `.github/workflows/staging.yml` mit Auslöser `push` auf `dev` und `claude/**` und `workflow_dispatch`, minimalen Berechtigungen, `concurrency` und den Jobs `test`, `build` und `deploy` (Entscheidung 4); Rust-Cache und Bild-Cache (Entscheidung 5); prüfen: YAML-Syntax mit `actionlint` (oder `python -c yaml.safe_load`) und Durchsicht gegen die aktuellen Versionen der verwendeten Aktionen
 - [ ] 2.2 Smoke-Test im Job `deploy` (Startseite, `/suche/`, `/pagefind/pagefind.js`, `/style.css`, ein fester Beitrag, `noindex` auf der Startseite), mit klarer Fehlermeldung je URL; prüfen: das Skript läuft lokal gegen `serve --base-url …` grün und gegen eine absichtlich falsche Basis rot
-- [ ] 2.3 Größenwarnung: Der Build-Job gibt die Größe von `dist/` aus und warnt ab 800 MB; prüfen: Ausgabe im Lauf (lokal mit dem Skript nachgestellt)
+- [ ] 2.3 `dist/staging.txt` mit Branch und Commit schreiben und im Protokoll ausgeben; prüfen: Lauf zeigt beides, die Datei ist unter der Staging-Adresse abrufbar
+- [ ] 2.4 Größenwarnung: Der Build-Job gibt die Größe von `dist/` aus und warnt ab 800 MB; prüfen: Ausgabe im Lauf (lokal mit dem Skript nachgestellt)
 
 ## 3. Einrichtung und Dokumentation
 
 - [ ] 3.1 `README.md`: Abschnitt „Staging“ (Auslöser, Adresse, Optionen `--base-url` und `--staging`, lokale Vorschau im Unterpfad) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Befehle funktionieren wie angegeben
-- [ ] 3.2 Einmalige Einrichtung mit der Nutzerin klären und durchführen: `dev` anlegen, Pages-Quelle „GitHub Actions“, Umgebung `github-pages` für `dev` freigeben; prüfen: erster Lauf auf `dev` ist grün, `https://rincewindwizzard.github.io/flauschiversum/` antwortet mit der Startseite
+- [ ] 3.2 Einmalige Einrichtung mit der Nutzerin klären und durchführen: Pages-Quelle „GitHub Actions“, Umgebung `github-pages` für `dev` und `claude/*` freigeben (`dev` existiert bereits); prüfen: der erste Lauf nach einem Push ist grün, `https://rincewindwizzard.github.io/flauschiversum/` antwortet mit der Startseite
 - [ ] 3.3 Abnahme am veröffentlichten Staging: Navigation, Suche, Karussell, Vollbild, ein Beitrag, Feed-Adresse; prüfen: Freigabe im Gespräch
 
 ## Workflow follow-up

@@ -6,26 +6,34 @@ Beschreibt, wie das Flauschiversum nach jeder Änderung am Branch `dev` automati
 
 ## ADDED Requirements
 
-### Requirement: Veröffentlichung bei Änderungen an dev
-Jeder Push auf den Branch `dev`, auch durch einen Merge, SHALL die Seite neu bauen und auf GitHub Pages veröffentlichen. Pushes auf andere Branches veröffentlichen nichts. Der Lauf kann zusätzlich von Hand gestartet werden.
+### Requirement: Veröffentlichung bei Änderungen an dev und an Claude-Branches
+Jeder Push auf den Branch `dev`, auch durch einen Merge, und jeder Push auf einen Branch, dessen Name mit `claude/` beginnt, SHALL die Seite neu bauen und auf GitHub Pages veröffentlichen. Pushes auf andere Branches, auch `main` und `master`, veröffentlichen nichts. Der Lauf kann zusätzlich von Hand gestartet werden. Es gibt eine einzige Staging-Seite; sie zeigt den Stand des zuletzt veröffentlichten Laufs.
 
 #### Scenario: Merge nach dev
 - **WHEN** ein Pull Request nach `dev` gemergt wird
 - **THEN** startet ein Lauf, und die Staging-Seite zeigt danach den Stand von `dev`
 
+#### Scenario: Push auf einen Claude-Branch
+- **WHEN** auf `claude/beautiful-darwin-66rwab` gepusht wird
+- **THEN** startet ein Lauf, und die Staging-Seite zeigt danach den Stand dieses Branches
+
 #### Scenario: Anderer Branch
-- **WHEN** auf einen Branch außer `dev` gepusht wird
+- **WHEN** auf einen Branch außer `dev` und `claude/**` gepusht wird
 - **THEN** wird die Staging-Seite nicht verändert
 
 #### Scenario: Zwei Pushes kurz nacheinander
-- **WHEN** während eines laufenden Deployments ein weiterer Push auf `dev` folgt
+- **WHEN** während eines laufenden Deployments ein weiterer Push auf `dev` oder einen Claude-Branch folgt
 - **THEN** wird der ältere Lauf abgebrochen oder übersprungen, und am Ende ist der neueste Stand veröffentlicht
+
+#### Scenario: Herkunft sichtbar
+- **WHEN** die Staging-Seite veröffentlicht wurde
+- **THEN** nennt der Lauf Branch und Commit im Protokoll, und die Datei `/staging.txt` der Seite enthält beides, damit erkennbar ist, welcher Stand gerade online ist
 
 ### Requirement: Prüfung vor der Veröffentlichung
 Vor der Veröffentlichung SHALL die Pipeline die Inhalte prüfen und die Tests ausführen. Schlägt eine Prüfung fehl, wird nichts veröffentlicht, und die zuletzt veröffentlichte Staging-Seite bleibt unverändert.
 
 #### Scenario: Fehler im Frontmatter
-- **WHEN** ein Post auf `dev` ein unbekanntes Schlagwort trägt
+- **WHEN** ein Post auf dem gepushten Branch ein unbekanntes Schlagwort trägt
 - **THEN** bricht der Lauf mit der Meldung des Builds ab, und die Staging-Seite zeigt weiter den vorigen Stand
 
 #### Scenario: Fehlschlagender Test
