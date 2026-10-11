@@ -14,8 +14,8 @@ Im Staging-Modus SHALL jede HTML-Seite `<meta name="robots" content="noindex">` 
 - **THEN** lautet `robots.txt` „User-agent: *“ und „Disallow: /“, und `/sitemap.xml` existiert nicht
 
 #### Scenario: Kanonische URL im Staging
-- **WHEN** mit der Staging-Basis `https://rincewindwizzard.github.io/flauschiversum` gebaut wird
-- **THEN** zeigt `canonical` einer Seite auf `https://rincewindwizzard.github.io/flauschiversum/…` und nicht auf `flauschiversum.de`
+- **WHEN** mit der Staging-Basis `https://staging.flauschiversum.de` gebaut wird
+- **THEN** zeigt `canonical` einer Seite auf `https://staging.flauschiversum.de/…` und nicht auf `flauschiversum.de`
 
 #### Scenario: Produktiv unverändert
 - **WHEN** ohne Staging-Modus gebaut wird

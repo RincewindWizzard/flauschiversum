@@ -2,7 +2,7 @@
 
 ## Context
 
-Der Generator (Rust) erzeugt heute eine Seite für den Wurzelpfad von `https://flauschiversum.de`: Die Konstante `BLOG_URL` steckt in `urls::absolute`, `seo`, `feed` und `render`; interne Links sind wurzelbezogen (`/themen/`, `/style.css`) in Templates, im gerenderten Markdown, in `fonts.css` (`url(/fonts/…)`), in `media.js` (statische und dynamische Importe) und in der Suchseite (Pagefind liefert wurzelbezogene Ergebnis-URLs). Es gibt keine CI (`.github/` fehlt); der Default-Branch heißt `master`, `dev` existiert noch nicht. Die gebaute Seite hat rund 10.000 Dateien und 546 MB, der Bild-Cache 1,1 GB, ein kalter Build dauert etwa 25 s auf 4 Kernen. GitHub Pages liefert ein Projekt-Repository unter `https://<user>.github.io/<repo>/`, also im Unterpfad. Der Nutzer hat diesen Unterpfad gewählt (keine eigene Domain) und das Staging als nicht indexierbar gewünscht.
+Der Generator (Rust) erzeugt heute eine Seite für den Wurzelpfad von `https://flauschiversum.de`: Die Konstante `BLOG_URL` steckt in `urls::absolute`, `seo`, `feed` und `render` (kanonische Verweise, Open Graph, Feed, Sitemap). Interne Links sind wurzelbezogen (`/themen/`, `/style.css`). Es gibt keine CI (`.github/` fehlt); der Default-Branch heißt `master`, `dev` ist inzwischen angelegt. Die gebaute Seite hat rund 10.000 Dateien und 546 MB, der Bild-Cache 1,1 GB, ein kalter Build dauert etwa 25 s auf 4 Kernen. Das Staging bekommt die eigene Domain `staging.flauschiversum.de`, liegt also wie Produktion im Wurzelpfad; ein Pfadpräfix für interne Links ist nicht nötig (und würde das Testen erschweren). Das Staging soll nicht indexierbar sein und den Branchnamen oben zeigen.
 
 ## Goals / Non-Goals
 
@@ -18,24 +18,21 @@ Der Generator (Rust) erzeugt heute eine Seite für den Wurzelpfad von `https://f
 
 ## Decisions
 
-### 1. Basis-URL als Laufzeitwert, Pfade beim Rendern präfixen
+### 1. Basis-URL als Laufzeitwert (nur Schema und Host)
 
-`BLOG_URL` wird zu einem Wert `Base { origin, path }` (aus `--base-url` bzw. `FLAUSCHI_BASE_URL`, Standard `https://flauschiversum.de`), der in `Common` und in `urls` zur Verfügung steht. Internes Linken läuft über eine Funktion `urls::href(pfad)`, die `path` voranstellt; Templates erhalten `{{ base }}` (Pfadanteil ohne Schrägstrich am Ende, leer im Normalfall). Markdown-Ziele, die mit `/` beginnen, und Bildpfade werden in `markdown.rs` beim Rendern präfixiert (dort werden Ziele bereits umgeschrieben). Die Dateien im Ausgabeverzeichnis bleiben an denselben Stellen; nur der Inhalt der Verweise ändert sich.
+`BLOG_URL` wird zu einem Wert, der aus `--base-url` bzw. `FLAUSCHI_BASE_URL` stammt (Standard `https://flauschiversum.de`), geprüft auf `http(s)://host` ohne Pfad und ohne `/` am Ende, und in `Common`/`urls` bereitsteht. Er ersetzt die Konstante in `urls::absolute`, `seo`, `feed` und `render`. Interne Verweise, Skripte, Schriften und Suche bleiben unverändert; alle Browser-Tests laufen weiter gegen `serve` im Wurzelpfad.
 
-*Alternativen:* (a) Ein Nachbearbeitungsschritt, der fertige HTML-Seiten per Textsuche nach `href="/`, `src="/` usw. umschreibt: wenig Eingriff, aber unzuverlässig bei rohem HTML im Markdown, `srcset`, Inline-Skripten und doppelt umschriebenen Verweisen. (b) Relative Verweise (`../../themen/`): braucht je Seite die Tiefe, ändert alle Ausgaben und bricht den Feed. Gewählt ist das zentrale Präfixieren, weil es genau eine Stelle je Verweisart gibt und die Link-Prüfung (`check_links`) die Basis kennen kann.
+*Alternative:* Unterpfad auf `github.io/flauschiversum/` mit Pfadpräfix für alle Links, `media.js`, Schriften und Suche. Verworfen: großer Eingriff in Templates, Markdown, Skripte und Suche, und jede Prüfung bräuchte eine zweite Konfiguration. Die eigene Domain vermeidet das vollständig.
 
-### 2. Schriften, Skripte und Suche ohne feste Pfade
+### 2. Domain über Pages „Custom domain“
 
-- `fonts.css`: `url(fonts/Lobster.otf)` relativ zu `/style.css`, das im Wurzelverzeichnis der Seite liegt, funktioniert in jeder Basis und braucht keine Umschreibung.
-- `media.js`: statische und dynamische Importe sowie der Stylesheet-Verweis werden relativ zum Modul aufgelöst (`new URL('../vendor/…', import.meta.url)`), nicht mehr wurzelbezogen.
-- Suchseite: Das Template übergibt die Basis per `data-base` am Suchcontainer. `search.js` setzt Pagefinds `baseUrl` darauf; Ergebnis-Links und -Bilder erhalten das Präfix. Ob `baseUrl` Bilder und Links vollständig abdeckt, klärt die erste Aufgabe der Suche mit einem Browser-Test im Unterpfad; reicht es nicht, setzt `search.js` das Präfix selbst auf die Ergebnisse (die Oberfläche bietet dafür `processResult`).
-- Live-Reload (`/__livereload`) und der Vorschau-Server (`serve`) kennen die Basis: Der Server liefert die Seite unter dem Pfadanteil aus und nimmt ihn von der Anfrage ab.
+DNS: `CNAME staging → rincewindwizzard.github.io`. In den Pages-Einstellungen wird `staging.flauschiversum.de` eingetragen und „Enforce HTTPS“ aktiviert; da per Actions deployt wird, braucht es keine `CNAME`-Datei im Artefakt. `actions/configure-pages` liefert die Custom domain als `base_url`, der Workflow übergibt sie an `--base-url`. Empfohlen ist die Domain-Verifizierung im GitHub-Konto (TXT `_github-pages-challenge-…`), um Übernahmen bei verwaistem CNAME zu verhindern.
 
 ### 3. Staging-Modus als eigener Schalter
 
-`--staging <Branch>` ist unabhängig von der Basis-URL und trägt den Branchnamen als Wert: Es setzt `noindex` in `layout.html` (das Feld `Head.noindex` gibt es bereits für die Suchseite), liefert `robots.txt` mit `Disallow: /` und lässt die Sitemap weg und blendet über `layout.html` eine Leiste „Staging: <Branch>“ vor dem Seitenkopf ein (einfaches Element mit eigener Farbe in `topics.css`/`layout.css`, ohne JavaScript, `overflow-wrap: anywhere` für lange Namen). Der Name wird HTML-maskiert. Feed und kanonische URLs folgen der Basis. Produktion nutzt den Schalter nie; so kann der spätere Prod-Workflow denselben Build mit `--base-url https://flauschiversum.de` ohne `--staging` aufrufen.
+`--staging <Branch>` ist unabhängig von der Basis-URL und trägt den Branchnamen als Wert: Es setzt `noindex` in `layout.html` (das Feld `Head.noindex` gibt es bereits für die Suchseite), liefert `robots.txt` mit `Disallow: /` und lässt die Sitemap weg und blendet über `layout.html` eine Leiste „Staging: <Branch>“ vor dem Seitenkopf ein (einfaches Element mit eigener Farbe in `topics.css`/`layout.css`, ohne JavaScript, `overflow-wrap: anywhere` für lange Namen). Der Name wird HTML-maskiert. Feed und kanonische URLs folgen der Basis. Produktion nutzt den Schalter nie; so kann der spätere Prod-Workflow denselben Build ohne `--staging` aufrufen.
 
-*Alternative:* `noindex` automatisch aus „Basis ≠ flauschiversum.de“ ableiten. Verworfen: zu implizit, und eine künftige Produktiv-Domain-Änderung würde die Seite unbemerkt aus dem Index nehmen.
+*Alternative:* `noindex` automatisch aus „Basis ≠ flauschiversum.de“ ableiten (Staging wäre dann an die Domain gebunden). Verworfen: zu implizit, und eine künftige Produktiv-Domain-Änderung würde die Seite unbemerkt aus dem Index nehmen.
 
 ### 4. Workflow `.github/workflows/staging.yml`
 
@@ -62,7 +59,7 @@ Aktionen werden auf Hauptversionen oder Commit-SHAs festgelegt; beim Anlegen wer
 
 ### 7. Einmalige Einrichtung bleibt manuell
 
-Zwei Schritte kann der Workflow nicht selbst erledigen; die Aufgaben nennen sie als Anleitung an die Nutzerin: Settings → Pages → Source „GitHub Actions“, und in Settings → Environments → `github-pages` die Deployment-Branches `dev` und `claude/*` hinzufügen (voreingestellt ist nur der Default-Branch; die Umgebung erlaubt Namensmuster mit `*`). Ohne den letzten Schritt scheitert `deploy` mit einer Schutzmeldung der Umgebung. Der Branch `dev` ist bereits angelegt.
+Zwei Schritte kann der Workflow nicht selbst erledigen; die Aufgaben nennen sie als Anleitung an die Nutzerin: DNS-Eintrag `staging`, Settings → Pages → Source „GitHub Actions“ und Custom domain, und in Settings → Environments → `github-pages` die Deployment-Branches `dev` und `claude/*` hinzufügen (voreingestellt ist nur der Default-Branch; die Umgebung erlaubt Namensmuster mit `*`). Ohne den letzten Schritt scheitert `deploy` mit einer Schutzmeldung der Umgebung. Der Branch `dev` ist bereits angelegt.
 
 ## Risks / Trade-offs
 
@@ -70,14 +67,13 @@ Zwei Schritte kann der Workflow nicht selbst erledigen; die Aufgaben nennen sie 
 
 - [Pages-Limit: 1 GB je Seite, 550 MB heute; weiteres Wachstum durch neue Posts] → Smoke-Test und Build melden die Größe; bei Annäherung an 800 MB Warnung im Workflow-Log. Langfristig die 1000x-Varianten oder Videos auslagern (eigener Change).
 - [Hochladen von 10.000 Dateien dauert] → `upload-pages-artifact` packt ein Tar; ein Lauf soll unter ca. 10 Minuten bleiben, andernfalls Bilder-Varianten prüfen.
+- [DNS oder Zertifikat noch nicht bereit: Pages meldet „DNS check unsuccessful“, HTTPS ist erst nach einigen Minuten bis Stunden verfügbar] → Die Einrichtung (Aufgabe 3.2) erfolgt vor dem ersten Lauf; bis dahin ist die Seite unter `https://rincewindwizzard.github.io/flauschiversum/` mit kaputten Links erreichbar, was für den Smoke-Test nicht zählt.
 - [Private Repositories: Pages braucht je nach Tarif einen bezahlten Plan] → Der Lauf meldet beim ersten Deployment einen klaren Fehler; Sichtbarkeit des Repositories vorab prüfen.
-- [Unterpfad-Umschreibung übersieht einen Verweis] → Der Build prüft interne Verweise gegen die Basis (`check_links`), ein Test baut die Fixture-Site mit Unterpfad und prüft, dass kein `href="/…"` ohne Präfix übrig bleibt, und Browser-Tests laufen gegen `serve --base-url`.
-- [Pagefind-Ergebnisse ohne Präfix] → Siehe Entscheidung 2; der Browser-Test im Unterpfad deckt das ab.
 - [Gebrochene Aktionen/Versionen] → Festgelegte Versionen, `workflow_dispatch` zum erneuten Starten.
 
 ## Migration Plan
 
-1. Code für Basis-URL und Staging-Modus umsetzen und lokal mit `build --base-url http://localhost:8099/flauschiversum --staging` und `serve` prüfen; Produktiv-Ausgabe ohne Optionen bleibt byte-gleich (Gesamtseitentest).
+1. Code für Basis-URL und Staging-Modus umsetzen und lokal mit `build --base-url https://staging.flauschiversum.de --staging <Branch>` und `serve --staging <Branch>` prüfen; Produktiv-Ausgabe ohne Optionen bleibt byte-gleich (Gesamtseitentest).
 2. Workflow anlegen und auf einem Test-Branch mit `workflow_dispatch` prüfen, soweit die Umgebungsregeln das zulassen; sonst direkt auf `dev`.
-3. Nutzerin stellt Pages und Umgebung ein (Entscheidung 7); der erste Push auf einen Claude-Branch oder `dev` löst den ersten Lauf aus.
+3. Nutzerin setzt DNS und stellt Pages, Custom domain und Umgebung ein (Entscheidungen 2 und 7); der erste Push auf einen Claude-Branch oder `dev` löst den ersten Lauf aus.
 4. Rollback: Workflow deaktivieren oder löschen; die zuletzt veröffentlichte Seite bleibt, bis Pages ausgeschaltet wird. Produktivseite unberührt.

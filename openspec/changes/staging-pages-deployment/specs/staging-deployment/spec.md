@@ -44,19 +44,23 @@ Vor der Veröffentlichung SHALL die Pipeline die Inhalte prüfen und die Tests a
 - **WHEN** ein Test fehlschlägt
 - **THEN** wird nicht veröffentlicht
 
-### Requirement: Staging unter dem Pages-Unterpfad
-Die Staging-Seite SHALL unter `https://rincewindwizzard.github.io/flauschiversum/` erreichbar sein, und alle internen Verweise SHALL dort funktionieren, einschließlich Bilder, Stylesheet, Schriften, Karussell, Vollbild und Suche.
+### Requirement: Staging unter eigener Domain
+Die Staging-Seite SHALL unter `https://staging.flauschiversum.de/` im Wurzelpfad erreichbar sein, über HTTPS mit gültigem Zertifikat. Die Adresse `https://rincewindwizzard.github.io/flauschiversum/` leitet GitHub darauf um. Die Domain wird einmalig über einen DNS-Eintrag `staging` (CNAME auf `rincewindwizzard.github.io`) und die Pages-Einstellung „Custom domain“ eingerichtet.
 
-#### Scenario: Navigation im Unterpfad
-- **WHEN** auf der Staging-Startseite „Themen“ angeklickt wird
-- **THEN** öffnet sich `https://rincewindwizzard.github.io/flauschiversum/themen/`
+#### Scenario: Startseite des Stagings
+- **WHEN** `https://staging.flauschiversum.de/` abgerufen wird
+- **THEN** wird die Startseite mit Status 200 über eine gültige TLS-Verbindung ausgeliefert
 
-#### Scenario: Suche im Unterpfad
+#### Scenario: Suche im Staging
 - **WHEN** auf der Staging-Seite nach „Katze“ gesucht wird
-- **THEN** erscheinen Treffer, und ihre Links führen auf Seiten unter `/flauschiversum/`
+- **THEN** erscheinen Treffer, und ihre Links führen auf Seiten unter `https://staging.flauschiversum.de/`
+
+#### Scenario: Absolut-URLs zeigen auf das Staging
+- **WHEN** die Staging-Seite gebaut wird
+- **THEN** zeigen kanonische Verweise, Feed und Open Graph auf `https://staging.flauschiversum.de/…`
 
 ### Requirement: Smoke-Test nach dem Deployment
-Nach der Veröffentlichung SHALL die Pipeline die veröffentlichte Seite abrufen und prüfen, dass die Startseite, die Suchseite, der Suchindex, das Stylesheet und ein Beitrag mit Status 200 antworten und die Startseite `noindex` enthält. Schlägt das fehl, ist der Lauf rot.
+Nach der Veröffentlichung SHALL die Pipeline die veröffentlichte Seite abrufen und prüfen, dass die Startseite, die Suchseite, der Suchindex, das Stylesheet und ein Beitrag mit Status 200 antworten und die Startseite `noindex` und die Staging-Leiste enthält. Schlägt das fehl, ist der Lauf rot.
 
 #### Scenario: Seite erreichbar
 - **WHEN** das Deployment abgeschlossen ist
