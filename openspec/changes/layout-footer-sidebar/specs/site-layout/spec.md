@@ -139,7 +139,7 @@ Die Schrift „Lobster“ SHALL nur für das Logo und für Titel (Überschriften
 - **THEN** haben ihre Links mindestens 0,9 em Schriftgröße und die Textschrift
 
 ### Requirement: Farbschema
-Die Seite SHALL ein gedämpftes Farbschema mit Salbeigrün als Akzent verwenden: Seitenhintergrund warmes Cremeweiß (`#faf7f0`), Karten weiß bzw. fast weiß, Text fast schwarz (`#2b2b2b`), Links dunkelgrün (`#2f5d3a`), Akzentfarbe Salbeigrün (`#6f9a5b`) für Knöpfe, aktive Elemente und Hover-Flächen in einer hellen Tönung. Alle Farben sind an einer Stelle als Variablen definiert. Text und Links erreichen mindestens das Kontrastverhältnis 4,5 : 1 zu ihrem Hintergrund, Text auf der Akzentfarbe ebenfalls. Das Neongrün des früheren Designs entfällt.
+Die Seite SHALL ein gedämpftes Schema mit Salbeigrün als Akzent verwenden: Hintergrund Cremeweiß (`#faf7f0`), Karten weiß, Text `#2b2b2b`, Links dunkelgrün (`#2f5d3a`), Akzent `#6f9a5b` für Knöpfe und aktive Elemente, in heller Tönung für Hover. Alle Farben sind als Variablen an einer Stelle definiert, Text und Links erreichen mindestens 4,5 : 1 Kontrast, das frühere Neongrün entfällt.
 
 #### Scenario: Hintergrund und Karten
 - **WHEN** eine beliebige Seite geöffnet wird
