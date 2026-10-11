@@ -32,6 +32,8 @@
 
 - [x] 4.8 Neues Farbschema: Variablen in `theme.css` (Cremeweiß, Karten, Salbeigrün, dunkelgrüne Links), Hover, Tags, Pagination, Knöpfe, Karussell-Punkte und Leuchteffekte umstellen; prüfen: Playwright-Test: Kontrast von Text, Links, Knopf und Tag mit der berechneten Farbe mindestens 4,5 : 1, kein Neongrün (`#bdf239`, `#82e536`, `#eefc3c`) im ausgelieferten Stylesheet, Staging-Leiste bleibt rot
 
+- [x] 4.9 Tag-Cloud beruhigen: Chips mit neutraler Textfarbe, Zahl der Beiträge im Chip, Größenstufen nur 0,9–1,1 em mit schwacher Tönung; prüfen: Playwright-Test (Größen 0,9–1,1 em, einheitliche Textfarbe, Zahl sichtbar, alphabetisch) und Vergleichsbild zur Abnahme
+
 ## 5. Dokumentation
 
 - [x] 5.1 `README.md` (Kontaktdaten und Social-Links ändern: nur `src/config.rs`; Sidebar entsteht automatisch aus Kategorien und Schlagworten) aktualisieren; prüfen: der beschriebene Weg funktioniert (Änderung der URL erscheint im Footer)

@@ -132,9 +132,9 @@ expression: "stable(&read(root, \"beitraege/index.html\"))"
     <div class="sidebar-cloud card">
     <p class="side-title">Themen</p>
     <ul class="cloud">
-      <li><a class="cloud-1" href="/tag/halloween/" title="Halloween: 1 Beitrag">Halloween</a></li>
-      <li><a class="cloud-5" href="/tag/huete/" title="Hüte: 3 Beiträge">Hüte</a></li>
-      <li><a class="cloud-4" href="/tag/larp/" title="LARP: 2 Beiträge">LARP</a></li>
+      <li><a class="cloud-1" href="/tag/halloween/" title="Halloween: 1 Beitrag">Halloween <span class="count">1</span></a></li>
+      <li><a class="cloud-5" href="/tag/huete/" title="Hüte: 3 Beiträge">Hüte <span class="count">3</span></a></li>
+      <li><a class="cloud-4" href="/tag/larp/" title="LARP: 2 Beiträge">LARP <span class="count">2</span></a></li>
     </ul>
     <p class="all-topics"><a href="/themen/">Alle Themen</a></p>
     </div>

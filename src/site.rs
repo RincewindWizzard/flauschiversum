@@ -673,8 +673,8 @@ pub mod tests {
         let names: Vec<_> = cloud.match_indices("class=\"cloud-").map(|(i, _)| &cloud[i..i + 20]).collect();
         assert_eq!(names.len(), 3, "{cloud}");
         let pos = |n: &str| cloud.find(n).unwrap_or_else(|| panic!("{n}"));
-        assert!(pos(">Halloween<") < pos(">Hüte<") && pos(">Hüte<") < pos(">LARP<"));
-        assert!(cloud.contains("<a class=\"cloud-5\" href=\"/tag/huete/\" title=\"Hüte: 3 Beiträge\">Hüte</a>"), "{cloud}");
+        assert!(pos(">Halloween ") < pos(">Hüte ") && pos(">Hüte ") < pos(">LARP "));
+        assert!(cloud.contains("<a class=\"cloud-5\" href=\"/tag/huete/\" title=\"Hüte: 3 Beiträge\">Hüte <span class=\"count\">3</span></a>"), "{cloud}");
         assert!(cloud.contains("title=\"Halloween: 1 Beitrag\""), "{cloud}");
         assert!(side.contains("<a href=\"/themen/\">Alle Themen</a>"));
 

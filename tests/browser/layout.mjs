@@ -90,14 +90,17 @@ await test('Suche und Themenübersicht: einspaltig ohne Seitenspalten', async ()
 
 await test('Tag-Cloud: Größe nach Häufigkeit, Link führt auf die Schlagwortseite', async () => {
   const page = await open('/', 1440);
-  const size = async (name) => page.locator('.cloud a', { hasText: new RegExp(`^${name}$`) }).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  const size = async (name) => page.locator('.cloud a', { hasText: new RegExp(`^${name}\\s*\\d+$`) }).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   const base = await page.locator('.cloud').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   assert.ok((await size('Hüte')) > (await size('Weihnachten')), 'häufiger = größer');
   const all = await page.locator('.cloud a').evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).fontSize)));
-  assert.ok(Math.min(...all) / base >= 0.84 && Math.max(...all) / base <= 1.61, `Größen zwischen etwa 0,85 und 1,6 em (${Math.min(...all) / base}–${Math.max(...all) / base})`);
-  const names = await page.locator('.cloud a').allTextContents();
+  assert.ok(Math.min(...all) / base >= 0.89 && Math.max(...all) / base <= 1.11, `Größen zwischen 0,9 und 1,1 em (${Math.min(...all) / base}–${Math.max(...all) / base})`);
+  const names = (await page.locator('.cloud a').evaluateAll((els) => els.map((e) => e.childNodes[0].textContent.trim())));
   assert.deepEqual(names, [...names].sort((a, b) => a.localeCompare(b, 'de')), 'alphabetisch');
-  await page.locator('.cloud a', { hasText: /^Hüte$/ }).click();
+  assert.ok(await page.locator('.cloud a .count').first().isVisible(), 'Zahl der Beiträge sichtbar');
+  const colors = await page.locator('.cloud a').evaluateAll((els) => [...new Set(els.map((e) => getComputedStyle(e).color))]);
+  assert.equal(colors.length, 1, `einheitliche Textfarbe in der Cloud: ${colors}`);
+  await page.locator('.cloud a', { hasText: /^Hüte\s*\d+$/ }).click();
   await page.waitForURL('**/tag/huete/');
   await page.close();
 });

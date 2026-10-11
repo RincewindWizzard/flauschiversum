@@ -103,7 +103,7 @@
     <p class="side-title">Themen</p>
     <ul class="cloud">
       {%- for t in side.tags %}
-      <li><a class="cloud-{{ t.level }}" href="{{ t.url }}" title="{{ t.name }}: {{ t.count }} {% if t.count == 1 %}Beitrag{% else %}Beiträge{% endif %}">{{ t.name }}</a></li>
+      <li><a class="cloud-{{ t.level }}" href="{{ t.url }}" title="{{ t.name }}: {{ t.count }} {% if t.count == 1 %}Beitrag{% else %}Beiträge{% endif %}">{{ t.name }} <span class="count">{{ t.count }}</span></a></li>
       {%- endfor %}
     </ul>
     <p class="all-topics"><a href="/themen/">Alle Themen</a></p>
