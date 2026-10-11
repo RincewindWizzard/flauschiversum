@@ -7,11 +7,15 @@ Beschreibt die Kontaktwege des Flauschiversums auf jeder Seite: die E-Mail-Adres
 ## ADDED Requirements
 
 ### Requirement: E-Mail-Kontakt mit Pflichtwort im Betreff
-Jede Seite SHALL in der Fußzeile einen `mailto:`-Link an `ermeline@flauschiversum.de` zeigen. Jeder `mailto:`-Link der Seite, auch in Beiträgen und Einzelseiten, SHALL einen Betreff haben, der das Wort „Flauschiversum“ enthält. Der Link in der Fußzeile hat den Betreff „Flauschiversum“.
+Jede Seite SHALL in der Fußzeile einen `mailto:`-Link an `ermeline@flauschiversum.de` als Briefumschlag-Icon zeigen; die Adresse steht nicht als Text daneben. Der Link hat den zugänglichen Namen „E-Mail schreiben“ und die Adresse als Tooltip. Jeder `mailto:`-Link der Seite, auch in Beiträgen und Einzelseiten, SHALL einen Betreff haben, der das Wort „Flauschiversum“ enthält. Der Link in der Fußzeile hat den Betreff „Flauschiversum“.
 
 #### Scenario: Kontakt aus der Fußzeile
-- **WHEN** in der Fußzeile der E-Mail-Link angeklickt wird
+- **WHEN** in der Fußzeile das Briefumschlag-Icon angeklickt wird
 - **THEN** öffnet sich eine E-Mail an `ermeline@flauschiversum.de` mit dem Betreff „Flauschiversum“
+
+#### Scenario: Nur das Icon
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** zeigt die Fußzeile das Briefumschlag-Icon ohne ausgeschriebene Adresse, und ein Screenreader liest „E-Mail schreiben“
 
 #### Scenario: Betreff bei Beiträgen
 - **WHEN** auf der Seite des Posts „Alraune“ „Nachricht“ angeklickt wird

@@ -21,7 +21,16 @@
 
 - [x] 4.1 Test über die gesamte gebaute Seite: jeder `mailto:`-Link (Footer, Beiträge, Einzelseiten) hat einen Betreff mit „Flauschiversum“, und beim Laden einer Seite gehen alle Anfragen an die eigene Domain; prüfen: `cargo test --release -- --ignored` grün und Playwright-Test zu den Anfragen
 - [x] 4.2 Snapshots und bestehende Tests an Navigation, Spalten und Autorenzeile anpassen (Seitenstruktur, Staging-Leiste, Suchseite, `navigation.mjs`: Locator für das Suchfeld und die Navigation nur für das sichtbare Element); prüfen: `cargo test` und alle Playwright-Skripte in `tests/browser/` grün
-- [ ] 4.3 Vergleichsbilder (Desktop 1440 px, Tablet 1100 px und Handy, Startseite, Beitrag, Kategorieseite, mit und ohne Staging-Leiste) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
+- [ ] 4.3 Vergleichsbilder (nach der Überarbeitung 4.4–4.7 erneut) (Desktop 1440 px, Tablet 1100 px und Handy, Startseite, Beitrag, Kategorieseite, mit und ohne Staging-Leiste) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
+
+## 4b. Überarbeitung nach der Sichtprüfung
+
+- [ ] 4.4 Karten für Navigationsspalte und Sidebar-Blöcke (`.card`), angepasst an Kopf, Cloud und Kategorien; prüfen: Playwright-Test: die Spalten haben einen hellen Hintergrund (`background-color` mit Alpha > 0), `border-radius` > 8 px und Innenabstand > 8 px, bei 1440 und 360 px, ohne waagerechtes Scrollen
+- [ ] 4.5 Suchfeld mit eingebauter Lupe (`partials/icon-search.html`, `.searchbox`) für Kopf, Navigationsspalte, Startseite und Suchseite (ohne JavaScript); prüfen: Playwright-Test: Lupe liegt innerhalb des Feldes am rechten Rand, Feld und Knopf bleiben in der 13-em-Spalte und bei 360 px in einer Zeile, Enter und Klick auf die Lupe öffnen `/suche/?q=…`, der Knopf hat den Namen „Suchen“
+- [ ] 4.6 Footer: E-Mail nur als Icon mit `aria-label="E-Mail schreiben"` und Tooltip mit der Adresse; prüfen: Test über alle Seiten (kein Text mit der Adresse im Footer, `mailto:` mit Betreff „Flauschiversum“) und Playwright-Test der Klickfläche (mindestens 44 px)
+- [ ] 4.7 Typografie: Variablen und Skala einführen, Lobster nur für Logo und Titel, Navigation, Footer, Cloud, Kategorien, Knöpfe und Beschriftungen in Lora (halbfett für Navigationslinks, mindestens 0,9 em); prüfen: Playwright-Test: berechnete `font-family` der Links in Kopf, Spalte und Footer enthält nicht „Lobster“, Logo und Abschnittstitel schon; Vergleichsbilder zur erneuten Abnahme
+
+- [ ] 4.8 Neues Farbschema: Variablen in `theme.css` (Cremeweiß, Karten, Salbeigrün, dunkelgrüne Links), Hover, Tags, Pagination, Knöpfe, Karussell-Punkte und Leuchteffekte umstellen; prüfen: Playwright-Test: Kontrast von Text, Links, Knopf und Tag mit der berechneten Farbe mindestens 4,5 : 1, kein Neongrün (`#bdf239`, `#82e536`, `#eefc3c`) im ausgelieferten Stylesheet, Staging-Leiste bleibt rot
 
 ## 5. Dokumentation
 

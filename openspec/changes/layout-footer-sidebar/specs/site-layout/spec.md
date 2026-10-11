@@ -96,3 +96,59 @@ Ab 80 em SHALL das Suchfeld in der linken Spalte stehen statt im Kopf (außer au
 #### Scenario: Ein Suchfeld
 - **WHEN** eine Beitragsseite bei 1440 px oder bei 360 px Breite geöffnet wird
 - **THEN** ist genau ein Suchfeld sichtbar und eine Suche öffnet `/suche/?q=<Begriff>`
+
+### Requirement: Seitenspalten auf Karten
+Die Navigationsspalte und die Blöcke der Sidebar (Kategorien, Tag-Cloud) SHALL auf Karten liegen: ein heller, leicht durchscheinender Hintergrund, abgerundete Ecken, ein feiner Rand oder Schatten und Innenabstand, sodass sie sich vom grünen Seitenhintergrund abheben. Der Kontrast von Text und Kartenhintergrund bleibt ausreichend.
+
+#### Scenario: Karten sichtbar
+- **WHEN** eine Beitragsseite bei 1440 px Breite geöffnet wird
+- **THEN** liegen die Navigationsspalte links und die Tag-Cloud rechts jeweils auf einer Karte mit abgerundeten Ecken und hellem Hintergrund
+
+#### Scenario: Karten auf dem Handy
+- **WHEN** eine Seite bei 360 px Breite geöffnet wird
+- **THEN** liegen die Blöcke der Sidebar unter dem Inhalt auf Karten, und die Seite scrollt nicht waagerecht
+
+### Requirement: Suchfeld mit eingebauter Lupe
+Jedes Suchfeld der Seite (Kopf, Navigationsspalte, Startseite, Suchseite ohne JavaScript) SHALL aus einem einzigen Eingabefeld bestehen, in dem der Suchknopf mit Lupen-Icon am rechten Rand integriert ist. Eingabefeld und Knopf werden nie getrennt umgebrochen. Der Knopf hat den zugänglichen Namen „Suchen“, und Enter schickt die Suche ab.
+
+#### Scenario: Lupe im Feld
+- **WHEN** ein Suchfeld bei beliebiger Breite angezeigt wird
+- **THEN** sitzt die Lupe innerhalb des abgerundeten Feldes am rechten Rand, und es gibt keinen separaten Knopf daneben oder darunter
+
+#### Scenario: Schmale Spalte
+- **WHEN** das Suchfeld in der linken Spalte (13 em) oder auf einem Handy mit 360 px Breite angezeigt wird
+- **THEN** bleiben Feld und Lupe in einer Zeile
+
+#### Scenario: Suche abschicken
+- **WHEN** Text eingegeben und Enter gedrückt oder die Lupe angeklickt wird
+- **THEN** öffnet sich `/suche/?q=<Begriff>`
+
+### Requirement: Typografie
+Die Schrift „Lobster“ SHALL nur für das Logo und für Titel (Überschriften der Seiten, Abschnitte, Kacheln und Karten) verwendet werden. Navigationslinks, Tag-Cloud, Kategorienlisten, Knöpfe und Feldbeschriftungen SHALL in der Textschrift „Lora“ stehen, mindestens 0,9 em groß und, wo sie Navigation sind, halbfett statt in Zierschrift. Es gibt eine gemeinsame Skala mit festen Größen für Titel, Zwischentitel, Fließtext und Kleintext.
+
+#### Scenario: Navigation in Textschrift
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** sind die Links in Kopfnavigation, linker Spalte und Fußzeile nicht in Lobster gesetzt
+
+#### Scenario: Titel in Lobster
+- **WHEN** die Startseite geöffnet wird
+- **THEN** sind Logo und die Abschnittstitel „Kategorien“ und „Neu im Flauschiversum“ in Lobster gesetzt
+
+#### Scenario: Lesbarkeit im Footer
+- **WHEN** die Fußzeile angezeigt wird
+- **THEN** haben ihre Links mindestens 0,9 em Schriftgröße und die Textschrift
+
+### Requirement: Farbschema
+Die Seite SHALL ein gedämpftes Farbschema mit Salbeigrün als Akzent verwenden: Seitenhintergrund warmes Cremeweiß (`#faf7f0`), Karten weiß bzw. fast weiß, Text fast schwarz (`#2b2b2b`), Links dunkelgrün (`#2f5d3a`), Akzentfarbe Salbeigrün (`#6f9a5b`) für Knöpfe, aktive Elemente und Hover-Flächen in einer hellen Tönung. Alle Farben sind an einer Stelle als Variablen definiert. Text und Links erreichen mindestens das Kontrastverhältnis 4,5 : 1 zu ihrem Hintergrund, Text auf der Akzentfarbe ebenfalls. Das Neongrün des früheren Designs entfällt.
+
+#### Scenario: Hintergrund und Karten
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** ist der Seitenhintergrund Cremeweiß, Karten sind heller als der Hintergrund, und es gibt keinen leuchtend grünen Hintergrund
+
+#### Scenario: Kontrast
+- **WHEN** Fließtext, Links, Knöpfe und Tags auf ihren Hintergründen geprüft werden
+- **THEN** beträgt das Kontrastverhältnis mindestens 4,5 : 1
+
+#### Scenario: Staging-Leiste bleibt auffällig
+- **WHEN** eine Staging-Seite geöffnet wird
+- **THEN** hebt sich die Staging-Leiste mit ihrer roten Farbe weiterhin deutlich vom neuen Schema ab
