@@ -18,7 +18,7 @@
 
 - [x] 3.1 `README.md`: Abschnitt „Staging“ (Auslöser, Adresse, Optionen `--base-url` und `--staging`, lokale Vorschau mit Leiste) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Befehle funktionieren wie angegeben
 - [x] 3.2 Einrichtung mit der Nutzerin abstimmen und durchführen: DNS `CNAME staging → rincewindwizzard.github.io`, Pages-Quelle „GitHub Actions“, Custom domain `staging.flauschiversum.de` mit „Enforce HTTPS“, Umgebung `github-pages` für `dev` und `claude/*` (bereits freigegeben); prüfen: der erste Lauf nach einem Push ist grün und `https://staging.flauschiversum.de/` antwortet mit der Startseite samt Staging-Leiste
-- [ ] 3.3 Abnahme am veröffentlichten Staging: Navigation, Suche, Karussell, Vollbild, ein Beitrag, Feed-Adresse, Branchname in der Leiste; prüfen: Freigabe im Gespräch
+- [x] 3.3 Abnahme am veröffentlichten Staging: Navigation, Suche, Karussell, Vollbild, ein Beitrag, Feed-Adresse, Branchname in der Leiste; prüfen: Freigabe im Gespräch
 
 ## Workflow follow-up
 
