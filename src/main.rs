@@ -53,6 +53,17 @@ struct PathArgs {
     /// Verzeichnis für den Bild-Cache (relativ zum Projektverzeichnis).
     #[arg(long, default_value = ".cache")]
     cache: PathBuf,
+    /// Basis-URL für Absolut-URLs (kanonische Verweise, Feed, Sitemap), nur Schema und Host.
+    #[arg(long, env = "FLAUSCHI_BASE_URL", value_parser = urls::Base::parse, default_value = "https://flauschiversum.de")]
+    base_url: urls::Base,
+    /// Staging-Modus: noindex, robots.txt sperrt alles, keine Sitemap, Leiste mit dem Branchnamen.
+    #[arg(long, value_name = "BRANCH", value_parser = branch_name)]
+    staging: Option<String>,
+}
+
+fn branch_name(value: &str) -> Result<String, String> {
+    let value = value.trim();
+    if value.is_empty() { Err("ein Branchname wird erwartet".to_string()) } else { Ok(value.to_string()) }
 }
 
 impl PathArgs {
@@ -86,6 +97,8 @@ fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
         cache: paths.resolve(&paths.cache),
         now: site::BuildOptions::now()?,
         livereload,
+        base: paths.base_url.clone(),
+        staging: paths.staging.clone(),
     };
     let diag = diag::Diagnostics::default();
     let stats = media::Stats::default();
@@ -127,6 +140,8 @@ fn run(cli: Cli) -> Result<ExitCode> {
                 cache: paths.resolve(&paths.cache),
                 now: site::BuildOptions::now()?,
                 livereload: false,
+                base: paths.base_url.clone(),
+                staging: paths.staging.clone(),
             };
             let diag = diag::Diagnostics::default();
             let result = site::generate(&opts, &diag, &media::Stats::default());

@@ -2,7 +2,7 @@
 
 use crate::content::MediaKind;
 use crate::media::MediaInfo;
-use crate::urls;
+use crate::urls::{self, Base};
 use pulldown_cmark::{CowStr, Event, Options, Parser, Tag, TagEnd, html};
 use std::collections::HashMap;
 use std::fmt::Write;
@@ -19,8 +19,8 @@ pub struct PostContext<'a> {
     pub url: &'a str,
     /// Medien des Posts nach Dateiname.
     pub media: &'a HashMap<String, MediaInfo>,
-    /// URLs absolut (für den Feed) statt relativ ausgeben.
-    pub absolute: bool,
+    /// Mit Basis-URL: Medien-URLs absolut (für den Feed) statt relativ ausgeben.
+    pub base: Option<&'a Base>,
 }
 
 /// Ergebnis des Renderns.
@@ -226,8 +226,8 @@ fn esc(s: &str) -> String {
 }
 
 fn media_url(ctx: &PostContext, path: &str) -> String {
-    if ctx.absolute {
-        urls::absolute(&format!("{}{}", ctx.url, path))
+    if let Some(base) = ctx.base {
+        base.absolute(&format!("{}{}", ctx.url, path))
     } else {
         urls::encode_path(path)
     }
@@ -363,7 +363,7 @@ mod tests {
 
     fn render(md: &str) -> Rendered {
         let media = media();
-        render_post(md, &PostContext { url: "/2014/01/alraune/", media: &media, absolute: false })
+        render_post(md, &PostContext { url: "/2014/01/alraune/", media: &media, base: None })
     }
 
     #[test]
@@ -438,7 +438,7 @@ mod tests {
     #[test]
     fn absolute_urls_for_feed() {
         let media = media();
-        let r = render_post("![X](a.jpg)", &PostContext { url: "/2014/01/alraune/", media: &media, absolute: true });
+        let r = render_post("![X](a.jpg)", &PostContext { url: "/2014/01/alraune/", media: &media, base: Some(&urls::Base::default()) });
         assert!(r.html.contains("src=\"https://flauschiversum.de/2014/01/alraune/700x/a.jpg\""));
     }
 

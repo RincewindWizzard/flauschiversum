@@ -1,6 +1,6 @@
 //! Ablauf eines Builds: Laden → Medien → Rendern → Ausgaben (ohne zu schreiben).
 
-use crate::config::{BLOG_URL, HOME_NEWS, HOME_TOPICS, POSTS_PER_PAGE, TIME_ZONE};
+use crate::config::{HOME_NEWS, HOME_TOPICS, POSTS_PER_PAGE, TIME_ZONE};
 use crate::content::{self, Site};
 use crate::diag::Diagnostics;
 use crate::feed;
@@ -23,6 +23,10 @@ pub struct BuildOptions {
     pub cache: PathBuf,
     pub now: jiff::Zoned,
     pub livereload: bool,
+    /// Basis-URL für Absolut-URLs (Standard `https://flauschiversum.de`).
+    pub base: urls::Base,
+    /// Staging-Modus mit Branchname.
+    pub staging: Option<String>,
 }
 
 impl BuildOptions {
@@ -101,6 +105,8 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         script_href,
         year: opts.now.year(),
         livereload: opts.livereload,
+        base: opts.base.clone(),
+        staging: opts.staging.clone(),
     };
     outputs.insert("/style.css", Content::Bytes(css.into_bytes()));
 
@@ -152,14 +158,14 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         .enumerate()
         .map(|(i, post)| {
             let media = media_of(&post.url);
-            let ctx = PostContext { url: &post.url, media, absolute: false };
+            let ctx = PostContext { url: &post.url, media, base: None };
             let rendered = markdown::render_post(&post.markdown, &ctx);
             for m in &rendered.missing {
                 diag.warning(&post.source, format!("verweist auf `{m}`, das nicht als Medium im Post-Verzeichnis existiert"));
             }
             let og_image = post.image.as_ref().and_then(|name| {
                 let size = media.get(name)?.full?;
-                Some((urls::absolute(&urls::variant_path(&post.url, 1000, name)), size))
+                Some((common.base.absolute(&urls::variant_path(&post.url, 1000, name)), size))
             });
             let has_media = rendered.html.contains("<figure class=\"media");
             let search_doc = SearchDoc {
@@ -187,16 +193,16 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
             outputs.insert(post.url.clone(), Content::Bytes(html.into_bytes()));
 
             let feed_entry = (i < crate::config::FEED_ENTRIES).then(|| {
-                let abs = markdown::render_post(&post.markdown, &PostContext { url: &post.url, media, absolute: true });
+                let abs = markdown::render_post(&post.markdown, &PostContext { url: &post.url, media, base: Some(&common.base) });
                 let enclosure = post.image.as_ref().and_then(|name| {
                     let info = media.get(name)?;
-                    Some((urls::absolute(&urls::variant_path(&post.url, 700, name)), info.preview_len, feed::mime_for(name)))
+                    Some((common.base.absolute(&urls::variant_path(&post.url, 700, name)), info.preview_len, feed::mime_for(name)))
                 });
                 // Auch Textlinks und eingebettete Pfade absolut machen (Feedreader kennen die Basis-URL nicht)
                 let content_html = abs
                     .html
-                    .replace("href=\"/", &format!("href=\"{BLOG_URL}/"))
-                    .replace("src=\"/", &format!("src=\"{BLOG_URL}/"));
+                    .replace("href=\"/", &format!("href=\"{}/", common.base.as_str()))
+                    .replace("src=\"/", &format!("src=\"{}/", common.base.as_str()));
                 feed::FeedEntry { content_html, enclosure }
             });
             (feed_entry, search_doc)
@@ -305,10 +311,12 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     }
 
     // Feed, Sitemap, robots.txt
-    let feed_xml = feed::render(&site, feed_parts.into_iter().flatten().collect());
+    let feed_xml = feed::render(&site, feed_parts.into_iter().flatten().collect(), &common.base);
     outputs.insert("/rss.xml", Content::Bytes(feed_xml.into_bytes()));
-    outputs.insert("/sitemap.xml", Content::Bytes(seo::sitemap(&site, &topics).into_bytes()));
-    outputs.insert("/robots.txt", Content::Bytes(seo::robots().into_bytes()));
+    if opts.staging.is_none() {
+        outputs.insert("/sitemap.xml", Content::Bytes(seo::sitemap(&site, &topics, &common.base).into_bytes()));
+    }
+    outputs.insert("/robots.txt", Content::Bytes(seo::robots(&common.base, opts.staging.is_some()).into_bytes()));
 
     let mut sources: HashMap<String, String> = HashMap::new();
     for p in &site.posts {
@@ -317,12 +325,12 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     for p in &site.pages {
         sources.insert(format!("{}index.html", p.url), p.source.clone());
     }
-    check_links(&outputs, &sources, diag);
+    check_links(&outputs, &sources, &common.base, diag);
     Ok(Generated { outputs, site })
 }
 
 /// Prüft `href`- und `src`-Verweise aller HTML-Seiten auf interne Ziele.
-fn check_links(outputs: &Outputs, sources: &HashMap<String, String>, diag: &Diagnostics) {
+fn check_links(outputs: &Outputs, sources: &HashMap<String, String>, site_base: &urls::Base, diag: &Diagnostics) {
     let map = outputs.snapshot_html();
     let exists = |path: &str| outputs.contains(path) || (!path.ends_with('/') && outputs.contains(&format!("{path}/")));
     map.par_iter().for_each(|(page_path, html)| {
@@ -333,7 +341,7 @@ fn check_links(outputs: &Outputs, sources: &HashMap<String, String>, diag: &Diag
                 let rest = &html[pos + attr.len()..];
                 let Some(end) = rest.find('"') else { continue };
                 let raw = rest[..end].replace("&amp;", "&");
-                let target = if let Some(t) = raw.strip_prefix(BLOG_URL) {
+                let target = if let Some(t) = raw.strip_prefix(site_base.as_str()) {
                     t.to_string()
                 } else if raw.starts_with("http://flauschiversum.de") || raw.starts_with("https://www.flauschiversum.de") || raw.starts_with("http://www.flauschiversum.de") {
                     raw.split_once(".de").map(|x| x.1.to_string()).unwrap_or_default()
@@ -369,6 +377,8 @@ pub fn test_options(root: &Path) -> BuildOptions {
         cache: root.join(".cache"),
         now: "2026-10-10T12:00[Europe/Berlin]".parse().unwrap(),
         livereload: false,
+        base: urls::Base::default(),
+        staging: None,
     }
 }
 
@@ -511,6 +521,73 @@ pub mod tests {
         insta::assert_snapshot!("sitemap", read(root, "sitemap.xml"));
     }
 
+    fn generate_with(root: &Path, base: &str, staging: Option<&str>) -> (Generated, Diagnostics) {
+        let mut opts = test_options(root);
+        opts.base = urls::Base::parse(base).unwrap();
+        opts.staging = staging.map(String::from);
+        let diag = Diagnostics::default();
+        let g = generate(&opts, &diag, &Stats::default()).unwrap();
+        (g, diag)
+    }
+
+    #[test]
+    fn staging_build_is_marked_and_uses_staging_base() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let branch = "claude/beautiful-darwin-66rwab";
+        let (g, diag) = generate_with(root, "https://staging.flauschiversum.de", Some(branch));
+        let html = g.outputs.snapshot_html();
+        assert!(html.len() > 10);
+        for (path, page) in &html {
+            assert!(page.contains("<meta name=\"robots\" content=\"noindex\">"), "noindex fehlt: {path}");
+            let bar = format!("<div class=\"staging-bar\" role=\"note\">Staging: {branch}</div>");
+            assert!(page.contains(&bar), "Leiste fehlt: {path}");
+            assert!(page.find("staging-bar").unwrap() < page.find("<header").unwrap(), "Leiste nicht oben: {path}");
+            assert_eq!(page.matches("class=\"staging-bar\"").count(), 1, "{path}");
+            assert!(page.contains("canonical\" href=\"https://staging.flauschiversum.de/"), "{path}");
+            // Absolute Verweise auf die Produktivseite gibt es nur als E-Mail-Adresse
+            assert!(!page.replace("ermeline@flauschiversum.de", "").contains("https://flauschiversum.de"), "{path}");
+        }
+        assert!(!g.outputs.contains("/sitemap.xml"));
+        let robots = std::str::from_utf8(g.outputs.snapshot_bytes("/robots.txt").as_slice()).unwrap().to_string();
+        assert_eq!(robots, "User-agent: *\nDisallow: /\n");
+        let post = html.iter().find(|(p, _)| p == "/2014/01/alraune/index.html").unwrap().1.clone();
+        assert!(post.contains("href=\"https://staging.flauschiversum.de/rss.xml\""));
+        assert!(post.contains("\"mainEntityOfPage\":\"https://staging.flauschiversum.de/2014/01/alraune/\""));
+        assert!(post.contains("href=\"/themen/\""), "interne Links bleiben wurzelbezogen");
+        let feed = String::from_utf8(g.outputs.snapshot_bytes("/rss.xml")).unwrap();
+        assert!(feed.contains("https://staging.flauschiversum.de/2020/10/kurbis/") && !feed.contains("https://flauschiversum.de"));
+        // Keine zusätzlichen Warnungen durch die andere Basis
+        let (_, prod_diag) = generate_with(root, "https://flauschiversum.de", None);
+        assert_eq!(diag.all().len(), prod_diag.all().len());
+    }
+
+    #[test]
+    fn staging_branch_name_is_escaped() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let (g, _) = generate_with(root, "https://flauschiversum.de", Some("<b>&x"));
+        let home = g.outputs.snapshot_html().into_iter().find(|(p, _)| p == "/index.html").unwrap().1;
+        assert!(home.contains("Staging: &#60;b&#62;&#38;x</div>"), "{}", &home[home.find("staging-bar").unwrap()..][..120]);
+    }
+
+    #[test]
+    fn production_build_has_no_staging_markers() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        for (path, page) in g.outputs.snapshot_html() {
+            assert!(!page.contains("staging-bar"), "{path}");
+            assert_eq!(page.contains("noindex"), path == "/suche/index.html", "{path}");
+        }
+        assert!(g.outputs.contains("/sitemap.xml"));
+        let robots = String::from_utf8(g.outputs.snapshot_bytes("/robots.txt")).unwrap();
+        assert!(robots.contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
+    }
+
     #[test]
     fn second_build_writes_nothing_and_deleted_post_disappears() {
         let dir = tempfile::tempdir().unwrap();
@@ -621,7 +698,7 @@ pub mod tests {
     #[ignore]
     fn full_site_keeps_all_live_urls() {
         let repo = Path::new(env!("CARGO_MANIFEST_DIR"));
-        let opts = BuildOptions { root: repo.to_path_buf(), cache: repo.join(".cache"), now: BuildOptions::now().unwrap(), livereload: false };
+        let opts = BuildOptions { root: repo.to_path_buf(), cache: repo.join(".cache"), now: BuildOptions::now().unwrap(), livereload: false, base: urls::Base::default(), staging: None };
         let diag = Diagnostics::default();
         let g = generate(&opts, &diag, &Stats::default()).unwrap();
         assert!(!diag.has_errors());

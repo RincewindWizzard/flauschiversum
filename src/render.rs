@@ -1,10 +1,10 @@
 //! HTML-Seiten über Askama-Templates (beim Kompilieren geprüft).
 
-use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, BLOG_URL, PAGINATION_WINDOW, POSTS_PER_PAGE};
+use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, PAGINATION_WINDOW, POSTS_PER_PAGE};
 use crate::content::{Page, Post};
 use crate::media::Size;
 use crate::seo;
-use crate::urls;
+use crate::urls::{self, Base};
 use askama::Template;
 
 const MONTHS: [&str; 12] = [
@@ -33,6 +33,9 @@ pub struct Head {
     /// Suchfeld im Kopf (nicht auf Startseite und Suchseite).
     pub search_form: bool,
     pub noindex: bool,
+    /// Branchname im Staging-Modus (zeigt die Staging-Leiste).
+    pub staging: Option<String>,
+    pub feed_url: String,
 }
 
 pub struct OgImage {
@@ -48,6 +51,9 @@ pub struct Common {
     pub script_href: String,
     pub year: i16,
     pub livereload: bool,
+    pub base: Base,
+    /// Staging-Modus mit Branchname: noindex und Staging-Leiste auf jeder Seite.
+    pub staging: Option<String>,
 }
 
 pub struct Thumb {
@@ -227,7 +233,9 @@ fn base_head(common: &Common, title: String, og_title: String, description: Stri
         year: common.year,
         livereload: common.livereload,
         search_form: true,
-        noindex: false,
+        noindex: common.staging.is_some(),
+        staging: common.staging.clone(),
+        feed_url: format!("{}/rss.xml", common.base.as_str()),
     }
 }
 
@@ -247,7 +255,7 @@ pub fn render_index(index: usize, count: usize, cards: Vec<PostCard>, common: &C
         title.clone(),
         title,
         "Alle Beiträge des Flauschiversums, die neuesten zuerst.".to_string(),
-        format!("{BLOG_URL}{}", index_url(index)),
+        format!("{}{}", common.base.as_str(), index_url(index)),
     );
     IndexTemplate { head, posts: cards, pagination: pagination(index, count) }.render().expect("Index-Template")
 }
@@ -259,7 +267,7 @@ pub fn render_home(tiles: Vec<Tile>, topics: Vec<TopicLink>, news: Vec<Entry>, c
         title.clone(),
         title,
         "Anleitungen und Ideen rund um Wolle, Filz, Nähen und Basteln – zum Suchen, Stöbern und Nachmachen.".to_string(),
-        format!("{BLOG_URL}/"),
+        format!("{}/", common.base.as_str()),
     );
     head.logo_is_h1 = true;
     head.search_form = false;
@@ -286,7 +294,7 @@ pub fn render_topic(input: TopicPageInput, common: &Common) -> String {
         format!("{} – {BLOG_NAME}", input.name),
         input.name.clone(),
         seo::meta_description(&description),
-        urls::absolute(&input.url),
+        common.base.absolute(&input.url),
     );
     TopicTemplate {
         head,
@@ -306,7 +314,7 @@ pub fn render_search(script_href: String, common: &Common) -> String {
         format!("Suche – {BLOG_NAME}"),
         "Suche".to_string(),
         format!("Suche in den Anleitungen und Ideen des {BLOG_NAME}s."),
-        urls::absolute("/suche/"),
+        common.base.absolute("/suche/"),
     );
     head.search_form = false;
     head.noindex = true;
@@ -315,7 +323,7 @@ pub fn render_search(script_href: String, common: &Common) -> String {
 
 pub fn render_topics(categories: Vec<TopicLink>, tags: Vec<TopicLink>, common: &Common) -> String {
     let description = format!("Alle Kategorien und Schlagworte im {BLOG_NAME}: {} Kategorien, {} Schlagworte.", categories.len(), tags.len());
-    let head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, urls::absolute("/themen/"));
+    let head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, common.base.absolute("/themen/"));
     TopicsTemplate { head, categories, tags }.render().expect("Themenübersicht-Template")
 }
 
@@ -338,7 +346,7 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         title: format!("{} – {BLOG_NAME}", post.title),
         og_title: post.title.clone(),
         description: seo::meta_description(post.excerpt.as_deref().unwrap_or(BLOG_DESCRIPTION)),
-        canonical: urls::absolute(&post.url),
+        canonical: common.base.absolute(&post.url),
         og_type: "article",
         og_image: input.og_image.as_ref().map(|(url, size)| OgImage {
             url: url.clone(),
@@ -347,13 +355,15 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
             alt: post.title.clone(),
         }),
         published_time: Some(seo::iso(post)),
-        json_ld: Some(seo::blog_posting(post, image_url, input.category.as_ref().map(|c| c.name.as_str()))),
+        json_ld: Some(seo::blog_posting(post, image_url, input.category.as_ref().map(|c| c.name.as_str()), &common.base)),
         style_href: common.style_href.clone(),
         logo_is_h1: false,
         year: common.year,
         livereload: common.livereload,
         search_form: true,
-        noindex: false,
+        noindex: common.staging.is_some(),
+        staging: common.staging.clone(),
+        feed_url: format!("{}/rss.xml", common.base.as_str()),
     };
     let link = |p: &Post| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() };
     PostTemplate {
@@ -380,7 +390,7 @@ pub fn render_page(page: &Page, content: String, description: String, common: &C
         format!("{} – {BLOG_NAME}", page.title),
         page.title.clone(),
         seo::meta_description(&description),
-        urls::absolute(&page.url),
+        common.base.absolute(&page.url),
     );
     PageTemplate { head, title: page.title.clone(), content }.render().expect("Seiten-Template")
 }

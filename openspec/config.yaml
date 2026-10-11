@@ -21,6 +21,9 @@ context: |
     Seiten /themen/, /kategorie/<name>/, /tag/<name>/, /suche/; Startseite ist
     der Handbuch-Einstieg, die chronologische Liste liegt unter /beitraege/;
     Suchindex mit dem Crate `pagefind` (Bibliothek) unter /pagefind/
+  - Staging: GitHub Actions (.github/workflows/staging.yml) baut bei Push auf `dev` und
+    `claude/**` mit `--staging <Branch>` und `--base-url` und veröffentlicht auf GitHub Pages
+    (https://staging.flauschiversum.de/); Produktiv-Deployment ist ein eigener Change
   - Frontend: Karussell (CSS scroll-snap) und Vollbild (PhotoSwipe 5) in assets/
   - Tests: cargo test (Unit, Integration, Snapshots mit insta), Browser-Tests mit
     Playwright in tests/browser/

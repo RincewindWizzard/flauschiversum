@@ -1,0 +1,97 @@
+# Staging: baut die Seite bei jedem Push auf `dev` und auf Claude-Branches und veröffentlicht sie
+# auf GitHub Pages (https://staging.flauschiversum.de/). Das Produktiv-Deployment ist nicht Teil davon.
+name: Staging
+
+on:
+  push:
+    branches:
+      - dev
+      - 'claude/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Es gibt nur eine Staging-Seite: der neueste Stand gewinnt
+concurrency:
+  group: pages-staging
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Tests
+        run: cargo test --locked
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      # Basis-URL der Pages-Seite (die eingetragene Custom domain)
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      # Bild-Cache: immer den letzten Stand laden und nach dem Lauf einen neuen speichern
+      - name: Bild-Cache laden
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: images-${{ github.run_id }}
+          restore-keys: images-
+
+      - name: Inhalte prüfen
+        run: |
+          cargo run --release --locked -- check \
+            --base-url "${{ steps.pages.outputs.origin }}" --staging "$GITHUB_REF_NAME"
+
+      - name: Seite bauen
+        run: |
+          cargo run --release --locked -- build \
+            --base-url "${{ steps.pages.outputs.origin }}" --staging "$GITHUB_REF_NAME"
+
+      - name: Herkunft festhalten
+        run: |
+          {
+            echo "branch: $GITHUB_REF_NAME"
+            echo "commit: $GITHUB_SHA"
+            echo "run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } | tee dist/staging.txt
+
+      - name: Größe prüfen
+        run: scripts/dist-size.sh dist
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
+
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts
+
+      - name: Smoke-Test der veröffentlichten Seite
+        env:
+          SMOKE_RETRIES: '6'
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: scripts/smoke-test.sh "${PAGE_URL%/}"

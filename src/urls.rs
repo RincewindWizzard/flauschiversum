@@ -71,9 +71,35 @@ pub fn encode_path(path: &str) -> String {
     out
 }
 
-/// Absolute, kodierte URL für einen URL-Pfad.
-pub fn absolute(path: &str) -> String {
-    format!("{BLOG_URL}{}", encode_path(path))
+/// Basis-URL der Seite (Schema und Host, ohne Pfad und ohne `/` am Ende) für alle Absolut-URLs.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Base(String);
+
+impl Default for Base {
+    fn default() -> Self {
+        Base(BLOG_URL.to_string())
+    }
+}
+
+impl Base {
+    /// Prüft das Format `http(s)://host[:port]`.
+    pub fn parse(value: &str) -> Result<Base, String> {
+        let err = || format!("Ungültige Basis-URL `{value}`: erwartet wird Schema und Host ohne Pfad und ohne `/` am Ende, z.B. `https://staging.flauschiversum.de`");
+        let rest = value.strip_prefix("https://").or_else(|| value.strip_prefix("http://")).ok_or_else(err)?;
+        if rest.is_empty() || rest.contains(['/', '?', '#', ' ', '@']) {
+            return Err(err());
+        }
+        Ok(Base(value.to_string()))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    /// Absolute, kodierte URL für einen URL-Pfad.
+    pub fn absolute(&self, path: &str) -> String {
+        format!("{}{}", self.0, encode_path(path))
+    }
 }
 
 /// Dekodiert Prozentkodierung (für die Prüfung interner Links).
@@ -105,6 +131,18 @@ mod tests {
     fn default_url_uses_directory_name() {
         let date: Zoned = "2026-11-01T00:00[Europe/Berlin]".parse().unwrap();
         assert_eq!(default_post_url(&date, "grüne-mütze"), "/2026/11/gruene-muetze/");
+    }
+
+    #[test]
+    fn base_url_is_validated() {
+        assert_eq!(Base::default().as_str(), "https://flauschiversum.de");
+        let b = Base::parse("https://staging.flauschiversum.de").unwrap();
+        assert_eq!(b.absolute("/2020/10/kürbis/"), "https://staging.flauschiversum.de/2020/10/k%C3%BCrbis/");
+        assert!(Base::parse("http://localhost:8099").is_ok());
+        for bad in ["staging.flauschiversum.de", "https://x.de/", "https://x.de/pfad", "ftp://x.de", "https://", ""] {
+            let e = Base::parse(bad).unwrap_err();
+            assert!(e.contains(&format!("`{bad}`")) && e.contains("Schema und Host"), "{e}");
+        }
     }
 
     #[test]

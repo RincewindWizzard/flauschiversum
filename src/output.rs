@@ -51,6 +51,15 @@ impl Outputs {
             .collect()
     }
 
+    /// Bytes einer Ausgabe (nur für Tests).
+    #[cfg(test)]
+    pub fn snapshot_bytes(&self, url_path: &str) -> Vec<u8> {
+        match self.files.lock().unwrap().get(url_path) {
+            Some(Content::Bytes(b)) => b.clone(),
+            _ => panic!("keine Bytes-Ausgabe: {url_path}"),
+        }
+    }
+
     pub fn into_map(self) -> BTreeMap<String, Content> {
         self.files.into_inner().unwrap()
     }

@@ -21,3 +21,14 @@ div.container-fluid {
 footer {
   margin: 2em;
 }
+
+/* Staging-Leiste: nur auf der Staging-Seite, mit dem Namen des gebauten Branches */
+.staging-bar {
+  background-color: #b3261e;
+  color: #fff;
+  text-align: center;
+  font-family: monospace;
+  font-weight: 700;
+  padding: 0.4em 1em;
+  overflow-wrap: anywhere;
+}

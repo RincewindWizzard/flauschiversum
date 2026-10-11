@@ -1,6 +1,6 @@
 //! RSS-2.0-Feed mit den neuesten veröffentlichten Posts.
 
-use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, BLOG_URL, FEED_ENTRIES};
+use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, FEED_ENTRIES};
 use crate::content::Site;
 use crate::urls;
 use rss::extension::atom::{AtomExtensionBuilder, Link};
@@ -24,14 +24,14 @@ pub fn mime_for(file_name: &str) -> &'static str {
 }
 
 /// Erzeugt den Feed. `entries` enthält Inhalt und Enclosure der neuesten Posts in derselben Reihenfolge.
-pub fn render(site: &Site, entries: Vec<FeedEntry>) -> String {
+pub fn render(site: &Site, entries: Vec<FeedEntry>, base: &urls::Base) -> String {
     let items: Vec<_> = site
         .posts
         .iter()
         .take(FEED_ENTRIES)
         .zip(entries)
         .map(|(post, entry)| {
-            let url = urls::absolute(&post.url);
+            let url = base.absolute(&post.url);
             let mut item = ItemBuilder::default();
             item.title(Some(post.title.clone()))
                 .link(Some(url.clone()))
@@ -56,7 +56,7 @@ pub fn render(site: &Site, entries: Vec<FeedEntry>) -> String {
     namespaces.insert("dc".to_string(), "http://purl.org/dc/elements/1.1/".to_string());
     let channel = ChannelBuilder::default()
         .title(BLOG_NAME)
-        .link(format!("{BLOG_URL}/"))
+        .link(format!("{}/", base.as_str()))
         .description(BLOG_DESCRIPTION)
         .language(Some("de-DE".to_string()))
         .last_build_date(last_build)
@@ -64,7 +64,7 @@ pub fn render(site: &Site, entries: Vec<FeedEntry>) -> String {
         .atom_ext(Some(
             AtomExtensionBuilder::default()
                 .links(vec![Link {
-                    href: format!("{BLOG_URL}/rss.xml"),
+                    href: format!("{}/rss.xml", base.as_str()),
                     rel: "self".into(),
                     mime_type: Some("application/rss+xml".into()),
                     ..Default::default()

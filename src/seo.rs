@@ -1,9 +1,9 @@
 //! Suchmaschinen und Vorschauen: Meta-Beschreibung, JSON-LD, Sitemap, robots.txt.
 
-use crate::config::{BLOG_NAME, BLOG_URL, META_DESCRIPTION_MAX};
+use crate::config::{BLOG_NAME, META_DESCRIPTION_MAX};
 use crate::content::{Post, Site};
 use crate::topics::{self, Topics};
-use crate::urls;
+use crate::urls::Base;
 use serde_json::json;
 use std::fmt::Write;
 
@@ -34,8 +34,8 @@ pub fn iso(post: &Post) -> String {
 }
 
 /// JSON-LD `BlogPosting` für eine Post-Seite.
-pub fn blog_posting(post: &Post, image: Option<&str>, section: Option<&str>) -> String {
-    let url = urls::absolute(&post.url);
+pub fn blog_posting(post: &Post, image: Option<&str>, section: Option<&str>, base: &Base) -> String {
+    let url = base.absolute(&post.url);
     let mut v = json!({
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -44,7 +44,7 @@ pub fn blog_posting(post: &Post, image: Option<&str>, section: Option<&str>) -> 
         "mainEntityOfPage": url,
         "url": url,
         "inLanguage": "de-DE",
-        "publisher": { "@type": "Organization", "name": BLOG_NAME, "url": format!("{BLOG_URL}/") },
+        "publisher": { "@type": "Organization", "name": BLOG_NAME, "url": format!("{}/", base.as_str()) },
     });
     if let Some(a) = &post.author {
         v["author"] = json!({ "@type": "Person", "name": a });
@@ -70,37 +70,42 @@ fn xml_escape(s: &str) -> String {
 }
 
 /// Sitemap mit Startseite, Themenseiten, allen veröffentlichten Posts und Einzelseiten.
-pub fn sitemap(site: &Site, topics: &Topics) -> String {
+pub fn sitemap(site: &Site, topics: &Topics, base: &Base) -> String {
     let mut out = String::from(
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n",
     );
-    let _ = writeln!(out, "  <url><loc>{BLOG_URL}/</loc></url>");
-    let _ = writeln!(out, "  <url><loc>{BLOG_URL}/themen/</loc></url>");
+    let _ = writeln!(out, "  <url><loc>{}/</loc></url>", base.as_str());
+    let _ = writeln!(out, "  <url><loc>{}/themen/</loc></url>", base.as_str());
     let topic_urls = topics
         .categories
         .iter()
         .map(|c| topics::category_url(&c.slug))
         .chain(topics.tags.iter().map(|t| topics::tag_url(&t.slug)));
     for url in topic_urls {
-        let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&urls::absolute(&url)));
+        let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&base.absolute(&url)));
     }
     for post in &site.posts {
         let _ = writeln!(
             out,
             "  <url><loc>{}</loc><lastmod>{}</lastmod></url>",
-            xml_escape(&urls::absolute(&post.url)),
+            xml_escape(&base.absolute(&post.url)),
             post.date.date()
         );
     }
     for page in &site.pages {
-        let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&urls::absolute(&page.url)));
+        let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&base.absolute(&page.url)));
     }
     out.push_str("</urlset>\n");
     out
 }
 
-pub fn robots() -> String {
-    format!("User-agent: *\nAllow: /\n\nSitemap: {BLOG_URL}/sitemap.xml\n")
+/// `robots.txt`; im Staging-Modus wird alles gesperrt und keine Sitemap genannt.
+pub fn robots(base: &Base, staging: bool) -> String {
+    if staging {
+        "User-agent: *\nDisallow: /\n".to_string()
+    } else {
+        format!("User-agent: *\nAllow: /\n\nSitemap: {}/sitemap.xml\n", base.as_str())
+    }
 }
 
 #[cfg(test)]
@@ -125,6 +130,7 @@ mod tests {
 
     #[test]
     fn robots_points_to_sitemap() {
-        assert!(robots().contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
+        assert!(robots(&Base::default(), false).contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
+        assert_eq!(robots(&Base::default(), true), "User-agent: *\nDisallow: /\n");
     }
 }

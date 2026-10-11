@@ -16,7 +16,8 @@ cargo run --release -- serve     # Vorschau unter http://localhost:8080/ mit Liv
 ```
 
 Optionen (für alle Befehle): `--root <Pfad>` (Projektverzeichnis, Standard `.`), `--out <Pfad>` (Standard `dist/`),
-`--cache <Pfad>` (Bild-Cache, Standard `.cache/`), bei `serve` zusätzlich `--port <Nummer>`.
+`--cache <Pfad>` (Bild-Cache, Standard `.cache/`), `--base-url <URL>` (Standard `https://flauschiversum.de`, siehe
+[Staging](#staging)) und `--staging <Branch>`; bei `serve` zusätzlich `--port <Nummer>`.
 
 Der erste Build berechnet alle Bilder (ca. 3200 Originale, rund 20–30 Sekunden auf 4 Kernen). Danach kommen die
 Bilder aus `.cache/`, und ein Build ohne Änderungen dauert unter einer Sekunde. Geschrieben werden nur Dateien,
@@ -90,6 +91,8 @@ aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlic
 | `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite) und die Badge-Vorlage |
 | `src/` | Rust-Code des Generators |
 | `tests/` | Referenz der Live-URLs und Browser-Tests |
+| `scripts/` | Smoke-Test der Staging-Seite, Größenprüfung von `dist/` |
+| `.github/workflows/` | Staging-Pipeline |
 | `openspec/` | Anforderungen und Änderungen ([OpenSpec](https://github.com/Fission-AI/OpenSpec)) |
 
 Änderungen an `templates/` werden erst nach erneutem Kompilieren sichtbar; für die Arbeit daran
@@ -109,9 +112,38 @@ cargo run --release -- serve --port 8099 &
 npm i playwright-core
 node tests/browser/frontend.mjs /pfad/zu/chromium
 node tests/browser/navigation.mjs /pfad/zu/chromium
+# Staging-Leiste: Vorschau mit `serve --port 8098 --staging <langer Branchname>` starten
+node tests/browser/staging.mjs /pfad/zu/chromium <Branchname>
 ```
+
+## Staging
+
+Jeder Push auf `dev` und auf Branches `claude/**` baut die Seite und veröffentlicht sie auf GitHub Pages unter
+**https://staging.flauschiversum.de/** (Workflow `.github/workflows/staging.yml`). Es gibt eine einzige Staging-Seite:
+der zuletzt gepushte Stand gewinnt. Vorher laufen `cargo test` und die Inhaltsprüfung; schlägt eine fehl, wird nichts
+veröffentlicht. Danach prüft `scripts/smoke-test.sh` die veröffentlichte Seite. Von Hand starten: Actions → Staging →
+„Run workflow“ (z.B. auf `dev`, um dessen Stand zurückzuholen).
+
+Die Staging-Seite ist erkennbar und nicht indexierbar:
+
+- ganz oben eine rote Leiste „Staging: <Branch>“, dazu `/staging.txt` mit Branch, Commit und Lauf,
+- `noindex` auf jeder Seite, `robots.txt` sperrt alles, keine Sitemap,
+- kanonische Verweise, Feed und Open Graph zeigen auf `https://staging.flauschiversum.de`.
+
+Lokal nachstellen:
+
+```sh
+cargo run --release -- build --base-url https://staging.flauschiversum.de --staging mein-branch
+cargo run --release -- serve --staging mein-branch      # Vorschau mit Leiste
+scripts/smoke-test.sh http://localhost:8080             # gegen die laufende Vorschau
+```
+
+Einmalige Einrichtung (GitHub und DNS): `CNAME staging → rincewindwizzard.github.io`, Settings → Pages → Source
+„GitHub Actions“ und Custom domain `staging.flauschiversum.de` mit „Enforce HTTPS“, Settings → Environments →
+`github-pages` → Deployment-Branches `dev` und `claude/*`. Die Seite ist rund 550 MB groß; das Pages-Limit liegt bei
+1 GB (der Workflow warnt ab 800 MB).
 
 ## Deployment
 
 Das frühere Docker-Deployment wurde entfernt. Die gebaute Seite in `dist/` muss nur auf einen Webserver für
-statische Dateien kopiert werden. Ein automatisches Deployment per GitHub Action ist als eigene Änderung geplant.
+statische Dateien kopiert werden. Das Produktiv-Deployment aus `main` ist als eigene Änderung geplant.

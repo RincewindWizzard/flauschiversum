@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="{{ head.style_href }}">
 {%- block head %}{% endblock %}
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
-<link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="{{ head.feed_url }}">
 <meta property="og:site_name" content="Flauschiversum">
 <meta property="og:locale" content="de_DE">
 <meta property="og:type" content="{{ head.og_type }}">
@@ -34,6 +34,9 @@
 {%- endif %}
 </head>
 <body>
+{%- if let Some(branch) = head.staging %}
+<div class="staging-bar" role="note">Staging: {{ branch }}</div>
+{%- endif %}
 <div class="container-fluid">
 <header id="blogheader">
   <div class="logo">
