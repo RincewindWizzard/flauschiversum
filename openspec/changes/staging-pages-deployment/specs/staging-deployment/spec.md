@@ -27,7 +27,11 @@ Jeder Push auf den Branch `dev`, auch durch einen Merge, und jeder Push auf eine
 
 #### Scenario: Herkunft sichtbar
 - **WHEN** die Staging-Seite veröffentlicht wurde
-- **THEN** nennt der Lauf Branch und Commit im Protokoll, und die Datei `/staging.txt` der Seite enthält beides, damit erkennbar ist, welcher Stand gerade online ist
+- **THEN** nennt der Lauf Branch und Commit im Protokoll, die Datei `/staging.txt` der Seite enthält beides, und jede Seite zeigt ganz oben den Branchnamen
+
+#### Scenario: Branchname bei Merge nach dev
+- **WHEN** nach einem Merge auf `dev` gebaut wird
+- **THEN** zeigt die Leiste `dev`, nicht den Namen des gemergten Branches
 
 ### Requirement: Prüfung vor der Veröffentlichung
 Vor der Veröffentlichung SHALL die Pipeline die Inhalte prüfen und die Tests ausführen. Schlägt eine Prüfung fehl, wird nichts veröffentlicht, und die zuletzt veröffentlichte Staging-Seite bleibt unverändert.

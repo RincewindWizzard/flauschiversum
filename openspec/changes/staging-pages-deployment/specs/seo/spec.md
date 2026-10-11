@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Staging-Modus ohne Indexierung
-Im Staging-Modus SHALL jede HTML-Seite `<meta name="robots" content="noindex">` tragen, `robots.txt` SHALL `Disallow: /` ohne Verweis auf eine Sitemap enthalten, und es SHALL keine Sitemap ausgeliefert werden. Kanonische URLs, Open Graph und Feed richten sich nach der Basis-URL des Stagings, damit sie nicht auf die Produktivseite zeigen.
+Im Staging-Modus SHALL jede HTML-Seite `<meta name="robots" content="noindex">` tragen, `robots.txt` SHALL `Disallow: /` ohne Verweis auf eine Sitemap enthalten, und es SHALL keine Sitemap ausgeliefert werden. Kanonische URLs, Open Graph und Feed richten sich nach der Basis-URL des Stagings, damit sie nicht auf die Produktivseite zeigen. Die Staging-Leiste mit dem Branchnamen ist in `site-layout` beschrieben.
 
 #### Scenario: Seite im Staging
 - **WHEN** im Staging-Modus gebaut wird

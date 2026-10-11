@@ -33,13 +33,13 @@ Der Generator (Rust) erzeugt heute eine Seite für den Wurzelpfad von `https://f
 
 ### 3. Staging-Modus als eigener Schalter
 
-`--staging` ist unabhängig von der Basis-URL: Es setzt `noindex` in `layout.html` (das Feld `Head.noindex` gibt es bereits für die Suchseite), liefert `robots.txt` mit `Disallow: /` und lässt die Sitemap weg. Feed und kanonische URLs folgen der Basis. Produktion nutzt den Schalter nie; so kann der spätere Prod-Workflow denselben Build mit `--base-url https://flauschiversum.de` ohne `--staging` aufrufen.
+`--staging <Branch>` ist unabhängig von der Basis-URL und trägt den Branchnamen als Wert: Es setzt `noindex` in `layout.html` (das Feld `Head.noindex` gibt es bereits für die Suchseite), liefert `robots.txt` mit `Disallow: /` und lässt die Sitemap weg und blendet über `layout.html` eine Leiste „Staging: <Branch>“ vor dem Seitenkopf ein (einfaches Element mit eigener Farbe in `topics.css`/`layout.css`, ohne JavaScript, `overflow-wrap: anywhere` für lange Namen). Der Name wird HTML-maskiert. Feed und kanonische URLs folgen der Basis. Produktion nutzt den Schalter nie; so kann der spätere Prod-Workflow denselben Build mit `--base-url https://flauschiversum.de` ohne `--staging` aufrufen.
 
 *Alternative:* `noindex` automatisch aus „Basis ≠ flauschiversum.de“ ableiten. Verworfen: zu implizit, und eine künftige Produktiv-Domain-Änderung würde die Seite unbemerkt aus dem Index nehmen.
 
 ### 4. Workflow `.github/workflows/staging.yml`
 
-Auslöser: `push` auf `dev` und auf `claude/**` und `workflow_dispatch`. Berechtigungen: `contents: read`, `pages: write`, `id-token: write`. `concurrency: { group: pages-staging, cancel-in-progress: true }` für alle Branches gemeinsam, damit der neueste Stand gewinnt; es gibt nur eine Pages-Seite. Ein Schritt schreibt Branch und Commit nach `dist/staging.txt`, damit sichtbar ist, welcher Stand online ist.
+Auslöser: `push` auf `dev` und auf `claude/**` und `workflow_dispatch`. Berechtigungen: `contents: read`, `pages: write`, `id-token: write`. `concurrency: { group: pages-staging, cancel-in-progress: true }` für alle Branches gemeinsam, damit der neueste Stand gewinnt; es gibt nur eine Pages-Seite. Der Branchname kommt aus `github.ref_name` (bei `workflow_dispatch` der gewählte Branch) und wird an `--staging` übergeben; ein Schritt schreibt Branch und Commit nach `dist/staging.txt`, damit sichtbar ist, welcher Stand online ist.
 
 Jobs:
 1. **test** (parallel zum Bauen): Rust-Toolchain (stable), `Swatinem/rust-cache`, `cargo test`.
@@ -81,7 +81,3 @@ Zwei Schritte kann der Workflow nicht selbst erledigen; die Aufgaben nennen sie 
 2. Workflow anlegen und auf einem Test-Branch mit `workflow_dispatch` prüfen, soweit die Umgebungsregeln das zulassen; sonst direkt auf `dev`.
 3. Nutzerin stellt Pages und Umgebung ein (Entscheidung 7); der erste Push auf einen Claude-Branch oder `dev` löst den ersten Lauf aus.
 4. Rollback: Workflow deaktivieren oder löschen; die zuletzt veröffentlichte Seite bleibt, bis Pages ausgeschaltet wird. Produktivseite unberührt.
-
-## Open Questions
-
-- Soll die Staging-Seite zusätzlich ein sichtbares Banner „Staging“ tragen? Betrifft nur das Aussehen und kann später ergänzt werden.

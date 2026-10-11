@@ -8,7 +8,7 @@
 - [ ] 1.4 Suche im Unterpfad: `data-base` am Suchcontainer, `search.js` setzt `baseUrl` (bzw. `processResult`), sodass Ergebnis-Links und -Bilder das Präfix tragen; prüfen: Browser-Test im Unterpfad sucht „katze“ und klickt einen Treffer, der unter `/<Unterpfad>/…` öffnet
 - [ ] 1.5 `serve` mit Basis: Server liefert unter dem Pfadanteil aus, nimmt ihn von Anfragen ab, Live-Reload und Weiterleitung von Verzeichnissen kennen ihn; prüfen: `serve --base-url http://localhost:8099/flauschiversum` antwortet auf `/flauschiversum/` mit 200 und auf `/` mit 404, Unit-Test für die Pfadauflösung
 - [ ] 1.6 Link-Prüfung (`check_links`) kennt die Basis; prüfen: Fixture-Build mit Unterpfad meldet keine zusätzlichen Warnungen, ein absichtlich kaputter Link wird weiter gemeldet
-- [ ] 1.7 Staging-Modus (`--staging`): `noindex` auf jeder HTML-Seite, `robots.txt` mit `Disallow: /` ohne Sitemap-Zeile, keine `sitemap.xml`; prüfen: Snapshot-/Integrationstests für Staging und für Produktion; Produktiv-Build ohne Optionen ist byte-gleich zu vorher (`cargo test --release -- --ignored` und Vergleich der Ausgabe vor/nach der Änderung)
+- [ ] 1.7 Staging-Modus (`--staging <Branch>`, Wert Pflicht): `noindex` auf jeder HTML-Seite, Leiste „Staging: <Branch>“ ganz oben auf jeder Seite (maskiert, umbrechend), `robots.txt` mit `Disallow: /` ohne Sitemap-Zeile, keine `sitemap.xml`; prüfen: Snapshot-/Integrationstests für Staging (Leiste mit Branchname auf Start-, Beitrags- und Suchseite) und für Produktion (keine Leiste); Browser-Test: Leiste am Handy ohne waagerechtes Scrollen bei einem langen Branchnamen; Produktiv-Build ohne Optionen ist byte-gleich zu vorher (`cargo test --release -- --ignored` und Vergleich der Ausgabe vor/nach der Änderung)
 
 ## 2. Pipeline
 

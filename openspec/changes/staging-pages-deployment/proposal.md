@@ -8,7 +8,8 @@
 
 - **Pipeline:** Ein GitHub-Actions-Workflow baut die Seite bei jedem Push auf den Branch `dev` (auch durch Merge) und auf Branches `claude/**` und veröffentlicht sie auf GitHub Pages. So ist die Arbeit von Claude sofort sichtbar, ohne dass jemand von Hand ein Deployment anstößt. Es gibt nur eine Staging-Seite: Der zuletzt gepushte Stand gewinnt. Vorher laufen die Inhaltsprüfung (`check`) und `cargo test`; schlägt eine fehl, wird nichts veröffentlicht. Nach dem Deployment prüft ein Smoke-Test die wichtigsten URLs der veröffentlichten Seite.
 - **Unterpfad:** Das Staging liegt unter `https://rincewindwizzard.github.io/flauschiversum/` und damit nicht im Wurzelpfad. Der Generator bekommt dafür die Option `--base-url`; alle internen Verweise (Links, Bilder, Stylesheet, Schriften, Skripte, Suche) tragen dann den Pfadanteil der Basis-URL. Ohne die Option bleibt alles wie heute (`https://flauschiversum.de`, Wurzelpfad).
-- **Nicht indexierbar:** Mit der Option `--staging` trägt jede Seite `noindex`, `robots.txt` sperrt alles und die Sitemap entfällt, damit das Staging nicht neben der Produktivseite in Suchmaschinen auftaucht. Canonical-URLs, Feed und Sitemap-Verweise zeigen auf die Basis-URL des Stagings.
+- **Branchname sichtbar:** Mit `--staging <Branch>` zeigt jede Seite ganz oben eine Leiste „Staging: <Branch>“, damit sofort erkennbar ist, welcher Stand online ist.
+- **Nicht indexierbar:** Der Staging-Modus (`--staging`) setzt außerdem auf jeder Seite `noindex`, `robots.txt` sperrt alles und die Sitemap entfällt, damit das Staging nicht neben der Produktivseite in Suchmaschinen auftaucht. Canonical-URLs, Feed und Sitemap-Verweise zeigen auf die Basis-URL des Stagings.
 - **Cache:** Der Bild-Cache (`.cache/`) wird zwischen den Läufen im GitHub-Actions-Cache gehalten, damit nicht bei jedem Push 3200 Bilder neu berechnet werden.
 - **Einmalige Einrichtung im Repository (nicht per Code möglich):** Pages-Quelle auf „GitHub Actions“ stellen und in der Umgebung `github-pages` die Branches `dev` und `claude/**` für Deployments erlauben (`dev` ist bereits angelegt).
 
@@ -23,8 +24,9 @@ Nicht Teil dieses Changes: Produktiv-Deployment aus `main` (per SSH auf den Serv
 ### Modified Capabilities
 
 - `url-scheme`: Eine konfigurierbare Basis-URL mit Pfadanteil; alle internen Verweise und Absolut-URLs richten sich danach.
+- `site-layout`: Staging-Leiste mit Branchname am Seitenanfang.
 - `seo`: Staging-Modus ohne Indexierung (noindex, robots.txt, keine Sitemap) und Basis-URL in kanonischen Verweisen.
-- `build`: Die Optionen `--base-url` und `--staging` für `build`, `check` und `serve`.
+- `build`: Die Optionen `--base-url` und `--staging <Branch>` für `build`, `check` und `serve`.
 
 ## Impact
 
