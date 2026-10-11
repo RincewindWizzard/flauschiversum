@@ -11,13 +11,13 @@
 
 - [x] 2.1 `.github/workflows/staging.yml` mit Auslöser `push` auf `dev` und `claude/**` und `workflow_dispatch`, minimalen Berechtigungen, `concurrency` und den Jobs `test`, `build` und `deploy` (Entscheidung 4); Rust-Cache und Bild-Cache (Entscheidung 5); `--staging "$GITHUB_REF_NAME"` und `--base-url` aus `configure-pages`; prüfen: YAML-Syntax mit `actionlint` (oder `python -c yaml.safe_load`) und Durchsicht gegen die aktuellen Versionen der verwendeten Aktionen
 - [x] 2.2 Smoke-Test im Job `deploy` (Startseite, `/suche/`, `/pagefind/pagefind.js`, `/style.css`, ein fester Beitrag, `noindex` und Staging-Leiste auf der Startseite), mit klarer Fehlermeldung je URL; prüfen: das Skript läuft lokal gegen `serve --staging …` grün und gegen eine absichtlich falsche Adresse rot
-- [ ] 2.3 `dist/staging.txt` mit Branch und Commit schreiben und im Protokoll ausgeben; prüfen: Lauf zeigt beides, die Datei ist unter der Staging-Adresse abrufbar
+- [x] 2.3 `dist/staging.txt` mit Branch und Commit schreiben und im Protokoll ausgeben; prüfen: Lauf zeigt beides, die Datei ist unter der Staging-Adresse abrufbar
 - [x] 2.4 Größenwarnung: Der Build-Job gibt die Größe von `dist/` aus und warnt ab 800 MB; prüfen: Ausgabe im Lauf (lokal mit dem Skript nachgestellt)
 
 ## 3. Einrichtung und Dokumentation
 
 - [x] 3.1 `README.md`: Abschnitt „Staging“ (Auslöser, Adresse, Optionen `--base-url` und `--staging`, lokale Vorschau mit Leiste) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Befehle funktionieren wie angegeben
-- [ ] 3.2 Einrichtung mit der Nutzerin abstimmen und durchführen: DNS `CNAME staging → rincewindwizzard.github.io`, Pages-Quelle „GitHub Actions“, Custom domain `staging.flauschiversum.de` mit „Enforce HTTPS“, Umgebung `github-pages` für `dev` und `claude/*` (bereits freigegeben); prüfen: der erste Lauf nach einem Push ist grün und `https://staging.flauschiversum.de/` antwortet mit der Startseite samt Staging-Leiste
+- [x] 3.2 Einrichtung mit der Nutzerin abstimmen und durchführen: DNS `CNAME staging → rincewindwizzard.github.io`, Pages-Quelle „GitHub Actions“, Custom domain `staging.flauschiversum.de` mit „Enforce HTTPS“, Umgebung `github-pages` für `dev` und `claude/*` (bereits freigegeben); prüfen: der erste Lauf nach einem Push ist grün und `https://staging.flauschiversum.de/` antwortet mit der Startseite samt Staging-Leiste
 - [ ] 3.3 Abnahme am veröffentlichten Staging: Navigation, Suche, Karussell, Vollbild, ein Beitrag, Feed-Adresse, Branchname in der Leiste; prüfen: Freigabe im Gespräch
 
 ## Workflow follow-up
