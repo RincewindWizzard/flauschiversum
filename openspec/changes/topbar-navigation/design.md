@@ -41,6 +41,12 @@ Titel und Menüs sind in einer Flex-Leiste (`position: sticky; top: 0`, heller H
 
 *Alternativen:* (a) Nur `<details>` für Dropdowns: der Eintrag „Beiträge“ ist zugleich Link, das verträgt sich nicht mit `summary`. (b) Menüs nur mit JavaScript: ohne JS wäre „Kategorien“ nicht erreichbar. (c) Mega-Menü mit Vorschaubildern: für zehn Titel unnötig.
 
+### 1a. Maskottchen im Markenzeichen
+
+`<a class="brand" href="/">` enthält zuerst ein Feld `span.mascot` mit zwei `<img>` (`/images/flauschi_normal.svg`, `/images/flauschi_surprised.svg`, beide `alt=""`, weil der Link durch den Titeltext benannt ist) und danach den Titel. Beide Bilder liegen im selben Grid-Feld übereinander; das Feld hat feste Maße (Höhe 2,5 em, Breite aus dem Seitenverhältnis 478 : 425 = 1,125, also 2,8 em), jedes Bild füllt es mit `object-fit: contain; object-position: center bottom`. Dadurch ändert der Wechsel nichts am Layout, auch wenn die Quellen leicht unterschiedlich hoch sind (419 und 425 px). Der Wechsel passiert nur über `opacity` (`.brand:hover` und `.brand:focus-visible`), ohne Verschiebung; bei `prefers-reduced-motion` ohne Übergang. Beide Bilder sind immer im DOM, damit beim ersten Mouse-over nichts nachlädt. Die SVG-Dateien kommen bereinigt (ohne Inkscape-Metadaten und `sodipodi`-Attribute, mit `viewBox="0 0 478.19 424.96"` und gleicher Zeichenfläche) nach `content/static/images/`; die Originale liegen unter `assets/` in diesem Change. Auf dem Handy bleibt das Maskottchen sichtbar (Höhe 2 em), der Titel kürzt sich nicht.
+
+*Alternativen:* (a) Inline-SVG: verdoppelt Markup in jeder Seite, nicht cachebar. (b) CSS-`background-image`-Wechsel: lädt das zweite Bild erst beim Hover, Flackern.
+
 ### 2. Handy-Menü
 
 Unter 48 em zeigt die Topbar Titel, Suche (Lupe als Knopf, klappt das Feld auf bzw. führt auf `/suche/`) und einen Menü-Knopf. Der Knopf ist das `summary` eines `details`; dessen Inhalt ist dieselbe Liste wie am Desktop, aber mit allen Untermenüs offen und in Spalte. Ohne JavaScript bleibt die Bedienung durch `details`; Desktop-Dropdown-CSS und Handy-Liste teilen sich Markup per Media Query (kein doppeltes HTML).

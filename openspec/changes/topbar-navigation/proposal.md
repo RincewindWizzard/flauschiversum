@@ -6,7 +6,7 @@ Das Layout hat zuletzt drei Spalten bekommen (Navigation links, Inhalt, Sidebar 
 
 ## What Changes
 
-- **Topbar statt Sidebars:** Oben steht eine Leiste. Links der Titel „Flauschiversum“ (Link auf die Startseite), rechtsbündig die Menüs **About me**, **Beiträge** und **Kategorien** und das Suchfeld. Die linke Navigationsspalte und die rechte Sidebar entfallen; Kopfnavigation und Kopfbereich gehen in der Topbar auf.
+- **Topbar statt Sidebars:** Oben steht eine Leiste. Ganz links das Maskottchen Flauschi (normal, bei Mouse-over „überrascht“) und daneben der Titel „Flauschiversum“ (Link auf die Startseite), rechtsbündig die Menüs **About me**, **Beiträge** und **Kategorien** und das Suchfeld. Die linke Navigationsspalte und die rechte Sidebar entfallen; Kopfnavigation und Kopfbereich gehen in der Topbar auf.
 - **About me:** Ein einfacher Link auf die Seite über die Autorin (`/about/`), ohne Untermenü.
 - **Beiträge:** Das Menü klappt die zehn neuesten Beiträge als Auswahl auf (plus „Alle Beiträge“). Ein Klick auf „Beiträge“ selbst öffnet `/beitraege/`.
 - **Seite Beiträge (`/beitraege/`):** Zeigt die zehn neuesten Beiträge und daneben ein **Archiv**: alle Beiträge nach Jahr und Monat, jede Gruppe ein- und ausklappbar, jeder Beitrag ein Link. Die bisherige Blätterliste (`/page/<N>/`) bleibt unter ihren Adressen erreichbar, wird aber nicht mehr verlinkt.

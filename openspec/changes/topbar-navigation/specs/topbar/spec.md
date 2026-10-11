@@ -21,6 +21,25 @@ Jede Seite SHALL oben eine Topbar zeigen. Links steht der Titel „Flauschiversu
 - **WHEN** auf einer langen Seite gescrollt wird
 - **THEN** bleibt die Topbar am oberen Rand sichtbar
 
+### Requirement: Maskottchen im Markenzeichen
+Links neben dem Titel in der Topbar SHALL das Maskottchen Flauschi stehen und zusammen mit dem Titel ein einziger Link auf `/` sein. Normal zeigt es `flauschi_normal.svg`, bei Mouse-over und Tastaturfokus `flauschi_surprised.svg`. Beide Bilder SHALL denselben Platz mit gleichen Maßen einnehmen, sodass der Wechsel nichts im Layout verschiebt. Das Maskottchen ist dekorativ (`alt=""`).
+
+#### Scenario: Normal und Mouse-over
+- **WHEN** die Maus über Maskottchen oder Titel fährt
+- **THEN** erscheint das überraschte Bild an derselben Stelle und in derselben Größe, und Titel, Menüs und Suchfeld bleiben an ihrem Platz
+
+#### Scenario: Position
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** steht das Maskottchen ganz links in der Topbar vor dem Titel „Flauschiversum“
+
+#### Scenario: Tastaturfokus
+- **WHEN** der Titel per Tab fokussiert wird
+- **THEN** zeigt die Topbar das überraschte Bild
+
+#### Scenario: Handy
+- **WHEN** die Seite bei 360 px Breite geöffnet wird
+- **THEN** sind Maskottchen und Titel sichtbar, und es entsteht kein waagerechtes Scrollen
+
 ### Requirement: About me
 „About me“ SHALL ein einfacher Link auf `/about/` sein, ohne Untermenü. Die Seite enthält nur die Informationen über die Autorin.
 

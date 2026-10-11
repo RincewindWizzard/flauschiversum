@@ -10,6 +10,7 @@
 ## 2. Topbar
 
 - [ ] 2.1 Topbar in `layout.html` (Titel links, Menüs About me, Beiträge, Kategorien rechtsbündig, Suchfeld mit Lupe), Untermenüs mit Knopf (`aria-expanded`, `aria-controls`), Handy-Menü mit `details`; Kopf, Kopfnavigation, `sitenav` und allgemeine Sidebar entfernen; prüfen: Fixture-Test über alle Seiten: Topbar mit den drei Menüs und dem Suchfeld, Untermenü Beiträge mit zehn Links und „Alle Beiträge“, Untermenü Kategorien mit den Kategorien, keine `sitenav` und kein `aside.sidebar` außer der Cloud-Karte der Startseite
+- [ ] 2.1a Maskottchen: SVGs aus `openspec/changes/topbar-navigation/assets/` bereinigt nach `content/static/images/flauschi_normal.svg` und `flauschi_surprised.svg` (gleiche `viewBox`), in `.brand` links vor dem Titel einbauen, beide Bilder im DOM und übereinander; prüfen: Playwright-Test: beide Bilder gleich groß (Bounding Box identisch), Position des Titels und der Menüs bei Mouse-over unverändert, `alt=""`, Wechsel bei Hover und Tastaturfokus, Dateien kleiner als 60 KB, Link-Prüfung ohne Warnung
 - [ ] 2.2 `content/style/topbar.css` (sticky, Karten für Untermenüs, rechtsbündig, Schatten, Typografie Lora halbfett, Titel Lobster; Handy unter 48 em) und `assets/js/topbar.js` (Knopf, Escape, Klick außerhalb, höchstens ein Menü offen, Pfeiltasten); Platzierung der Skripte mit Versionshash; prüfen: Playwright-Test für Maus-Hover, Klick, Tastatur (Tab, Enter, Pfeile, Escape), Touch am Handy, ohne JavaScript (Hover öffnet das Untermenü), kein waagerechtes Scrollen bei 360 px, Klickflächen mindestens 44 px
 
 ## 3. Seiten
