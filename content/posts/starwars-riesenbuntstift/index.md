@@ -1,7 +1,7 @@
 ---
 title: "StarWars Riesenbuntstift"
 permalink: /2017/07/starwars-riesenbuntstift/
-category: malen
+category: basteln
 tags: [Geschenke]
 author: Ermeline
 date: 2017-07-23

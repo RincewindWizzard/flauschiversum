@@ -2,7 +2,7 @@
 title: "Diensteplan"
 permalink: /2017/07/diensteplan/
 category: brandings
-tags: [Schule und Ausbildung]
+tags: [Schule und Ausbildung, Holz]
 author: Ermeline
 date: 2017-07-09
 image: "diensteplan_thumb.jpg"

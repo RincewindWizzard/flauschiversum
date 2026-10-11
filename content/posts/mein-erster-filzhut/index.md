@@ -1,8 +1,8 @@
 ---
 title: "Mein erster Filzhut"
 permalink: /2014/01/mein-erster-filzhut/
-category: filzen
-tags: [Hüte, LARP]
+category: wolle
+tags: [Hüte, LARP, Filzen]
 author: Ermeline
 date: 2014-01-02 21:47:16
 image: DSCF0503-e1423513550725.jpg

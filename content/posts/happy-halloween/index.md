@@ -1,7 +1,7 @@
 ---
 title: "Happy Halloween"
 permalink: /2014/10/happy-halloween/
-category: basteln
+category: feste
 tags: [Halloween]
 author: Ermeline
 date: 2014-10-16 17:41:01

@@ -5,15 +5,18 @@ Auswahl ähnlicher Beiträge für jede Beitragsseite anhand von Schlagworten und
 ## ADDED Requirements
 
 ### Requirement: Ähnlichkeit über Schlagworte
-Für jeden veröffentlichten Beitrag SHALL der Build bis zu 6 andere veröffentlichte Beiträge als ähnlich auswählen. Der Wert eines Kandidaten ist die Summe über alle gemeinsamen Schlagworte von `1 / Anzahl der Beiträge mit diesem Schlagwort`, plus 0,25 bei gleicher Kategorie. Kandidaten mit Wert 0 zählen nicht. Die Reihenfolge ist Wert absteigend, dann Datum absteigend, dann URL aufsteigend. Der Beitrag selbst und nicht veröffentlichte Beiträge sind ausgeschlossen.
+Für jeden veröffentlichten Beitrag SHALL der Build bis zu 6 andere veröffentlichte Beiträge als ähnlich auswählen. Der Wert eines Kandidaten ist die Summe über alle gemeinsamen Schlagworte von `1 / Anzahl der Beiträge mit diesem Schlagwort`, plus 0,25 bei gleicher Kategorie, sofern mindestens ein Schlagwort gemeinsam ist. Kandidaten ohne gemeinsames Schlagwort zählen nicht. Der Beitrag selbst und nicht veröffentlichte Beiträge sind ausgeschlossen.
 
 #### Scenario: Seltenes Schlagwort zählt mehr
 - **WHEN** Beitrag A mit B nur das häufige Schlagwort „Wolle“ (50 Beiträge) und mit C das seltene „Gelenkpuppen“ (2 Beiträge) teilt
 - **THEN** steht C in der Auswahl von A vor B
 
 #### Scenario: Höchstens sechs
-- **WHEN** mehr als 6 Kandidaten Wert über 0 haben
+- **WHEN** mehr als 6 Kandidaten ein gemeinsames Schlagwort haben
 - **THEN** zeigt die Auswahl nur die 6 mit dem höchsten Wert
+
+### Requirement: Feste Reihenfolge
+Die ähnlichen Beiträge SHALL nach Wert absteigend, dann nach Datum absteigend, dann nach URL aufsteigend geordnet sein, sodass wiederholte Builds dasselbe Ergebnis liefern.
 
 #### Scenario: Deterministische Reihenfolge
 - **WHEN** zwei Kandidaten denselben Wert haben
@@ -24,7 +27,7 @@ Für jeden veröffentlichten Beitrag SHALL der Build bis zu 6 andere veröffentl
 - **THEN** erscheint er nicht in der Auswahl
 
 ### Requirement: Auffüllen aus der Kategorie
-Bleiben weniger als 6 Kandidaten mit Wert über 0, SHALL die Auswahl mit den neuesten Beiträgen derselben Kategorie aufgefüllt werden, die noch nicht enthalten sind. Hat ein Beitrag keine Schlagworte, besteht die Auswahl nur daraus.
+Bleiben weniger als 6 Kandidaten mit gemeinsamem Schlagwort, SHALL die Auswahl mit den neuesten Beiträgen derselben Kategorie aufgefüllt werden, die noch nicht enthalten sind. Hat ein Beitrag keine Schlagworte, besteht die Auswahl nur daraus.
 
 #### Scenario: Beitrag ohne Schlagworte
 - **WHEN** ein Beitrag keine Schlagworte hat und seine Kategorie weitere Beiträge enthält

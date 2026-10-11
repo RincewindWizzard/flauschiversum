@@ -1,7 +1,8 @@
 ---
 title: "gefilzte Kapuzenweste"
 permalink: /2015/05/gefilzte-kapuzenweste/
-category: filzen
+category: wolle
+tags: [Filzen]
 author: Ermeline
 date: 2015-05-03 18:59:13
 image: "DSCF2770f.jpg"

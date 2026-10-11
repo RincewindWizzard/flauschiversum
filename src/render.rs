@@ -134,6 +134,13 @@ pub struct NavLink {
     pub title: String,
 }
 
+/// Ähnlicher Beitrag mit den gemeinsamen Schlagworten (leer bei aufgefüllten Einträgen).
+pub struct RelatedLink {
+    pub url: String,
+    pub title: String,
+    pub shared: Vec<TopicLink>,
+}
+
 #[derive(Template)]
 #[template(path = "index.html")]
 pub struct IndexTemplate {
@@ -199,8 +206,9 @@ pub struct PostTemplate {
     pub next: Option<NavLink>,
     pub has_media: bool,
     pub script_href: String,
-    pub category: Option<TopicLink>,
+    pub category: TopicLink,
     pub tags: Vec<TopicLink>,
+    pub related: Vec<RelatedLink>,
 }
 
 #[derive(Template)]
@@ -387,8 +395,9 @@ pub struct PostPageInput<'a> {
     pub newer: Option<&'a Post>,
     pub older: Option<&'a Post>,
     pub has_media: bool,
-    pub category: Option<TopicLink>,
+    pub category: TopicLink,
     pub tags: Vec<TopicLink>,
+    pub related: Vec<RelatedLink>,
 }
 
 pub fn render_post(input: PostPageInput, common: &Common) -> String {
@@ -409,7 +418,7 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         alt: post.title.clone(),
     });
     head.published_time = Some(seo::iso(post));
-    head.json_ld = Some(seo::blog_posting(post, image_url, input.category.as_ref().map(|c| c.name.as_str()), &common.base));
+    head.json_ld = Some(seo::blog_posting(post, image_url, Some(input.category.name.as_str()), &common.base));
     let link = |p: &Post| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() };
     PostTemplate {
         head,
@@ -424,6 +433,7 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         script_href: common.script_href.clone(),
         category: input.category,
         tags: input.tags,
+        related: input.related,
     }
     .render()
     .expect("Post-Template")

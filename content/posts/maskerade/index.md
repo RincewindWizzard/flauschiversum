@@ -1,7 +1,7 @@
 ---
 title: "Maskerade"
 permalink: /2014/10/maskerade/
-category: basteln
+category: feste
 tags: [Fasching]
 author: Ermeline
 date: 2014-10-24 20:15:05

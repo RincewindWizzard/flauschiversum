@@ -1,8 +1,8 @@
 ---
 title: "Filz and Friends"
 permalink: /2015/11/filz-and-friends/
-category: filzen
-tags: [Puppen]
+category: wolle
+tags: [Puppen, Filzen]
 author: Ermeline
 date: 2015-11-29 20:21:36
 image: "DSCF3486.JPG"

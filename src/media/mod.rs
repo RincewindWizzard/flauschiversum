@@ -217,7 +217,10 @@ mod tests {
     fn site_with_image(root: &Path) -> Site {
         let dir = root.join("content/posts/test");
         fs::create_dir_all(&dir).unwrap();
-        fs::write(dir.join("index.md"), "---\ntitle: Test\ndate: 2020-01-01\n---\n").unwrap();
+        fs::write(dir.join("index.md"), "---\ntitle: Test\ndate: 2020-01-01\ncategory: wolle\n---\n").unwrap();
+        fs::create_dir_all(root.join("content/static/images")).unwrap();
+        fs::write(root.join("content/static/images/w.jpg"), b"x").unwrap();
+        fs::write(root.join("content/categories.yaml"), "- id: wolle\n  name: Wolle\n  image: /images/w.jpg\n  motto: x\n").unwrap();
         let mut jpg = Vec::new();
         jpeg_encoder::Encoder::new(&mut jpg, 90)
             .encode(&vec![90u8; 800 * 600 * 3], 800, 600, jpeg_encoder::ColorType::Rgb)

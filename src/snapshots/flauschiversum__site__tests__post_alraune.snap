@@ -78,7 +78,8 @@ expression: "stable(&read(root, \"2014/01/alraune/index.html\"))"
 <div class="post-header">
   <h1>Alraune</h1>
   <div class="center"><img src="/2014/01/alraune/200x/DSCF0527.jpg" width="200" height="150" alt=""></div>
-  <p class="classification"><a class="category" href="/kategorie/basteln/">Basteln</a><a class="tag" href="/tag/larp/">LARP</a><a class="tag" href="/tag/huete/">Hüte</a>
+  <p class="classification">
+    <a class="category" href="/kategorie/basteln/">Basteln</a><a class="tag" href="/tag/larp/">LARP</a><a class="tag" href="/tag/huete/">Hüte</a>
   </p>
   <div class="center">
     <small>Schreibe Ihr eine <a href="mailto:ermeline@flauschiversum.de?subject=%5BFlauschiversum%5D%20Alraune" class="mailto">Nachricht</a>!</small>
@@ -98,6 +99,19 @@ expression: "stable(&read(root, \"2014/01/alraune/index.html\"))"
 
 <p class="author">Von <a href="/about/" class="author">Ermeline</a></p>
 </main>
+<aside class="related card" aria-labelledby="aehnlich-titel">
+  <h2 class="side-title" id="aehnlich-titel">Ähnliche Beiträge</h2>
+  <ul>
+    <li>
+      <a href="/2026/01/gruene-muetze/">Grüne Mütze</a>
+      <span class="shared"><a class="tag" href="/tag/larp/">LARP</a><a class="tag" href="/tag/huete/">Hüte</a></span>
+    </li>
+    <li>
+      <a href="/2020/10/kurbis/">Kürbis</a>
+      <span class="shared"><a class="tag" href="/tag/huete/">Hüte</a></span>
+    </li>
+  </ul>
+</aside>
 <nav class="post-nav" aria-label="Weitere Beiträge">
   <a class="newer" href="/2020/10/kurbis/" rel="next"><span>neuerer Beitrag</span>Kürbis</a>
 </nav>

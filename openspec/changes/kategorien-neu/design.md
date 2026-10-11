@@ -32,7 +32,7 @@ Ein einmaliges Skript schreibt `category` und fehlende `tags` in das Frontmatter
 `Post::category` wird beim Laden zum Pflichtfeld; fehlt es, Fehler „Feld `category` fehlt“ mit Pfad. Der Code für „ohne Kategorie“ (Einordnung, Zählung) entfällt.
 
 ### 4. Ähnliche Beiträge
-Für einen Beitrag P und jeden anderen veröffentlichten Beitrag Q: `score = Σ_{t ∈ Tags(P)∩Tags(Q)} 1/count(t)` + 0,25 bei gleicher Kategorie. Q mit Score 0 werden ausgelassen; bleiben weniger als 6 Treffer, wird mit den neuesten Beiträgen derselben Kategorie aufgefüllt. Sortierung: Score absteigend, Datum absteigend, URL aufsteigend. Anzeige als Karte „Ähnliche Beiträge“ nach dem Autor und vor der Navigation zum älteren/neueren Beitrag: Titel als Link, darunter die gemeinsamen Schlagworte (ohne Fallback-Treffer). Berechnung zur Build-Zeit in `topics.rs`; deterministisch.
+Für einen Beitrag P und jeden anderen veröffentlichten Beitrag Q: `score = Σ_{t ∈ Tags(P)∩Tags(Q)} 1/count(t)` + 0,25 bei gleicher Kategorie, aber nur wenn mindestens ein Schlagwort gemeinsam ist. Q ohne gemeinsames Schlagwort werden ausgelassen; bleiben weniger als 6 Treffer, wird mit den neuesten Beiträgen derselben Kategorie aufgefüllt. Sortierung: Score absteigend, Datum absteigend, URL aufsteigend. Anzeige als Karte „Ähnliche Beiträge“ nach dem Autor und vor der Navigation zum älteren/neueren Beitrag: Titel als Link, darunter die gemeinsamen Schlagworte (ohne Fallback-Treffer). Berechnung zur Build-Zeit in `topics.rs`; deterministisch.
 
 ### 5. Kategoriebilder und -mottos
 Neue Kategorien erhalten `image` aus einem vorhandenen Beitragsbild (verkleinert über die Bildpipeline bzw. als statische Datei) und ein `motto` als Entwurf zur Prüfung durch die Autorin.

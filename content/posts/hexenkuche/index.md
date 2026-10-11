@@ -2,6 +2,7 @@
 title: "Hexenküche"
 permalink: /2014/08/hexenkuche/
 category: brandings
+tags: [Holz]
 author: Ermeline
 date: 2014-08-31 21:18:46
 image: "DSCF1611.JPG"

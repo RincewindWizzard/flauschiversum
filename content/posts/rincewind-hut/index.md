@@ -1,8 +1,8 @@
 ---
 title: "Rincewind-Hut"
 permalink: /2014/01/rincewind-hut/
-category: filzen
-tags: [Hüte, LARP]
+category: wolle
+tags: [Hüte, LARP, Filzen]
 author: Ermeline
 date: 2014-01-02 22:07:35
 image: "DSCF0508-e1423513204152.jpg"

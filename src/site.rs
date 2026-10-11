@@ -8,7 +8,7 @@ use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, CloudTag, Common, Entry, Menu, NavLink, PostCard, PostPageInput, Thumb, TopicLink, TopicPageInput};
+use crate::render::{self, CloudTag, Common, Entry, Menu, NavLink, PostCard, PostPageInput, RelatedLink, Thumb, TopicLink, TopicPageInput};
 use std::sync::Arc;
 use crate::search::{self, SearchDoc};
 use crate::seo;
@@ -155,9 +155,10 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     };
 
     let category_name = |id: &str| site.categories.iter().find(|c| c.id == id).map(|c| c.name.clone());
-    let category_link = |post: &content::Post| -> Option<TopicLink> {
-        let id = post.category.as_deref()?;
-        Some(TopicLink { url: topics::category_url(&urls::slugify(id)), name: category_name(id)?, count: None })
+    let category_link = |post: &content::Post| -> TopicLink {
+        let id = post.category.as_str();
+        let name = category_name(id).expect("Kategorie wurde beim Laden geprüft");
+        TopicLink { url: topics::category_url(&urls::slugify(id)), name, count: None }
     };
     let tag_links = |post: &content::Post| -> Vec<TopicLink> {
         post.tags
@@ -172,11 +173,22 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         date_human: render::date_human(p),
         thumb: thumb_of(p),
         excerpt: p.excerpt.clone().unwrap_or_default(),
-        category: if with_category { category_link(p) } else { None },
+        category: with_category.then(|| category_link(p)),
     };
 
     // Post-Seiten
     let posts = &site.posts;
+    let counts = topics::tag_counts(posts);
+    let related_links = |i: usize| -> Vec<RelatedLink> {
+        topics::related(posts, i, &counts)
+            .into_iter()
+            .map(|r| RelatedLink {
+                url: urls::encode_path(&r.post.url),
+                title: r.post.title.clone(),
+                shared: r.shared.iter().map(|t| TopicLink { url: topics::tag_url(&urls::slugify(t)), name: t.to_string(), count: None }).collect(),
+            })
+            .collect()
+    };
     let post_parts: Vec<(Option<feed::FeedEntry>, SearchDoc)> = posts
         .par_iter()
         .enumerate()
@@ -196,7 +208,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                 url: post.url.clone(),
                 title: post.title.clone(),
                 image: thumb_of(post).map(|t| t.src),
-                category: post.category.as_deref().and_then(category_name),
+                category: category_name(&post.category),
                 tags: post.tags.clone(),
                 body_html: rendered.html.clone(),
             };
@@ -210,6 +222,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                     older: posts.get(i + 1),
                     has_media,
                     category: category_link(post),
+                    related: related_links(i),
                     tags: tag_links(post),
                 },
                 &common,
@@ -466,7 +479,7 @@ pub mod tests {
             "---\ntitle: \"Kürbis\"\npermalink: /2020/10/kurbis/\nauthor: Ermeline\ncategory: basteln\ntags: [Halloween, Hüte]\ndate: 2020-10-31\nimage: \"kürbis thumb.png\"\nexcerpt: \"Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.\"\n---\n\n![Kürbis](kürbis thumb.png)\n",
         );
         write(root, "content/posts/kuerbis/kürbis thumb.png", png(400, 300));
-        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ntags: [Hüte, LARP]\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
+        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ncategory: basteln\ntags: [Hüte, LARP]\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
         write(root, "content/posts/morgen/index.md", "---\ntitle: \"Morgen\"\ncategory: wolle\ntags: [Halloween]\ndate: 2099-01-01\nimage: \"bild.jpg\"\n---\n\n![Bild](bild.jpg)\n");
         write(root, "content/posts/morgen/bild.jpg", jpeg(300, 200, 10));
     }
@@ -726,7 +739,7 @@ pub mod tests {
         assert!(cat.find("Papier und Schere").unwrap() < cat.find("<p>Alles mit <em>Klebe</em> und Schere.</p>").unwrap());
         assert!(cat.find("Alles mit <em>Klebe</em>").unwrap() < cat.find("<ul class=\"entries\"").unwrap());
         let cat_archive = between(cat, "<aside class=\"archive card\"", "</aside>");
-        assert!(cat_archive.contains("Alraune") && cat_archive.contains("Kürbis") && !cat_archive.contains("Mütze"));
+        assert!(cat_archive.contains("Alraune") && cat_archive.contains("Kürbis") && cat_archive.contains("Mütze") && !cat_archive.contains("Morgen"));
 
         // Tag-Seiten ohne Archiv; Suchfeld in der Topbar und (Suchseite) groß im Inhalt, verschiedene ids
         let post = &pages["/2014/01/alraune/index.html"];
@@ -746,6 +759,30 @@ pub mod tests {
         // Ohne Autor keine Zeile
         let muetze = &pages["/2026/01/gruene-muetze/index.html"];
         assert!(!muetze.contains("Von <a"));
+    }
+
+    #[test]
+    fn related_posts_card_on_post_pages() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
+        let post = &pages["/2014/01/alraune/index.html"];
+        let card = between(post, "<aside class=\"related card\"", "</aside>");
+        assert!(card.contains("<h2 class=\"side-title\" id=\"aehnlich-titel\">Ähnliche Beiträge</h2>"));
+        // Grüne Mütze teilt LARP und Hüte, Kürbis nur Hüte: Mütze zuerst; Alraune selbst und der geplante Beitrag fehlen
+        assert!(card.find("Grüne Mütze").unwrap() < card.find("Kürbis").unwrap());
+        assert!(!card.contains("Alraune") && !card.contains("Morgen"));
+        assert!(card.contains("<a class=\"tag\" href=\"/tag/larp/\">LARP</a><a class=\"tag\" href=\"/tag/huete/\">Hüte</a>"), "{card}");
+        assert!(card.contains("<a href=\"/2020/10/kurbis/\">Kürbis</a>"));
+        // Karte nach dem Autor, vor der Navigation zum älteren und neueren Beitrag
+        assert!(post.find("class=\"author\">Von").unwrap() < post.find("class=\"related card\"").unwrap());
+        assert!(post.find("class=\"related card\"").unwrap() < post.find("class=\"post-nav\"").unwrap());
+        // Kategorie gehört immer zur Einordnung
+        for (path, html) in pages.iter().filter(|(p, _)| p.starts_with("/20")) {
+            assert!(html.contains("<a class=\"category\" href=\"/kategorie/basteln/\">Basteln</a>"), "{path}");
+        }
     }
 
     #[test]
@@ -857,7 +894,7 @@ pub mod tests {
         }
         let cat = read(root, "kategorie/basteln/index.html");
         assert!(cat.contains("<title>Basteln – Flauschiversum</title>"));
-        assert!(cat.contains("content=\"2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.\""));
+        assert!(cat.contains("content=\"3 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.\""));
         assert!(!cat.contains("taglist"), "keine Schlagwortliste in der Kategorie");
         let tag = read(root, "tag/huete/index.html");
         assert!(tag.contains("3 Beiträge"));
@@ -919,7 +956,7 @@ pub mod tests {
             let html = &full[full.find("<main").unwrap()..full.find("</main>").unwrap()];
             for p in &site.posts {
                 let linked = html.contains(&format!("href=\"{}\"", urls::encode_path(&p.url)));
-                if p.category.as_deref() == Some(c.id.as_str()) {
+                if p.category == c.id {
                     assert!(linked, "{} fehlt auf Kategorie {}", p.url, c.id);
                     *pages_of_category.entry(p.url.as_str()).or_default() += 1;
                 } else {
@@ -927,7 +964,7 @@ pub mod tests {
                 }
             }
         }
-        for p in site.posts.iter().filter(|p| p.category.is_some()) {
+        for p in site.posts.iter() {
             assert_eq!(pages_of_category.get(p.url.as_str()), Some(&1), "{}", p.url);
         }
         for p in &site.posts {
@@ -963,7 +1000,7 @@ pub mod tests {
         };
         assert_eq!(entries(&page("/beitraege/")), site.posts.len());
         for c in &site.categories {
-            let n = site.posts.iter().filter(|p| p.category.as_deref() == Some(c.id.as_str())).count();
+            let n = site.posts.iter().filter(|p| p.category == c.id).count();
             if n > 0 {
                 assert_eq!(entries(&page(&format!("/kategorie/{}/", urls::slugify(&c.id)))), n, "{}", c.id);
             }

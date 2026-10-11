@@ -61,6 +61,23 @@ await test('Beitrag zeigt Einordnung, Link führt auf die Kategorie', async () =
   await page.close();
 });
 
+await test('Ähnliche Beiträge: Filz-Beitrag zeigt bis zu sechs verwandte Beiträge mit gemeinsamen Schlagworten', async () => {
+  const page = await browser.newPage();
+  await page.goto(BASE + '/2016/05/alltagshute/');
+  const items = page.locator('aside.related li');
+  const n = await items.count();
+  assert.ok(n >= 3 && n <= 6, `Anzahl ${n}`);
+  assert.ok((await page.locator('aside.related li a.tag', { hasText: 'Filzen' }).count()) > 0, 'gemeinsames Schlagwort Filzen');
+  assert.equal(await page.locator('aside.related li a[href="/2016/05/alltagshute/"]').count(), 0, 'nicht der Beitrag selbst');
+  const titles = await page.locator('aside.related li > a:first-child').allTextContents();
+  assert.equal(new Set(titles).size, titles.length, 'keine Doppelten');
+  const [rel, nav] = [await page.locator('aside.related').boundingBox(), await page.locator('nav.post-nav').boundingBox()];
+  assert.ok(rel.y + rel.height <= nav.y + 1, 'vor der Navigation zum älteren Beitrag');
+  await page.locator('aside.related li > a:first-child').first().click();
+  await page.waitForURL(/\/20\d\d\/\d\d\//);
+  await page.close();
+});
+
 await test('Suche von der Startseite: Eingabe öffnet /suche/?q= mit Treffern', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');

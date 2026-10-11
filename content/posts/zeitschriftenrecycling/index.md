@@ -1,7 +1,7 @@
 ---
 title: "Zeitschriftenrecycling"
 permalink: /2014/07/zeitschriftenrecycling/
-category: basteln
+category: papier
 tags: [Papier, Upcycling]
 author: Lucy
 date: 2014-07-14 13:50:11

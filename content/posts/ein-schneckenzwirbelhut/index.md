@@ -1,8 +1,8 @@
 ---
 title: "Ein Schneckenzwirbelhut"
 permalink: /2014/08/ein-schneckenzwirbelhut/
-category: filzen
-tags: [Hüte]
+category: wolle
+tags: [Hüte, Filzen]
 author: Ermeline
 date: 2014-08-05 22:27:59
 image: "DSCF1489.jpg"

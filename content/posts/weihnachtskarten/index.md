@@ -1,7 +1,7 @@
 ---
 title: "Weihnachtskarten"
 permalink: /2018/12/weihnachtskarten/
-category: basteln
+category: feste
 tags: [Papier, Weihnachten]
 author: Ermeline
 date: 2018-12-23

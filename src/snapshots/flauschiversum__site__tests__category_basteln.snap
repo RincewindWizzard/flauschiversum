@@ -8,7 +8,7 @@ expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Basteln – Flauschiversum</title>
-<meta name="description" content="2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
+<meta name="description" content="3 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
 <link rel="canonical" href="https://flauschiversum.de/kategorie/basteln/">
 <link rel="stylesheet" href="/style.css?v=HASH">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
@@ -17,7 +17,7 @@ expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
 <meta property="og:locale" content="de_DE">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Basteln">
-<meta property="og:description" content="2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
+<meta property="og:description" content="3 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
 <meta property="og:url" content="https://flauschiversum.de/kategorie/basteln/">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -75,7 +75,7 @@ expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
 mehr brauchst du nicht.</p>
   <div class="intro"><p>Alles mit <em>Klebe</em> und Schere.</p>
 </div>
-  <p class="count">2 Beiträge</p>
+  <p class="count">3 Beiträge</p>
 </header>
 
   </div>
@@ -83,6 +83,13 @@ mehr brauchst du nicht.</p>
     
 <main class="topic">
   <ul class="entries">
+    <li class="entry">
+  <div class="entry-text">
+    <p class="entry-title"><a href="/2026/01/gruene-muetze/">Grüne Mütze</a></p>
+    <p class="entry-meta"><time datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time></p>
+    <p class="excerpt">Ohne Bild.</p>
+  </div>
+</li>
     <li class="entry">
   <a href="/2020/10/kurbis/" class="entry-image" tabindex="-1" aria-hidden="true"><img src="/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png" width="200" height="150" alt="" loading="lazy"></a>
   <div class="entry-text">
@@ -109,8 +116,17 @@ mehr brauchst du nicht.</p>
   <div class="archive-tools" hidden></div>
   <div class="archive-years">
   <details class="year" open>
-    <summary>2020 <span class="count">(1)</span></summary>
+    <summary>2026 <span class="count">(1)</span></summary>
     <details class="month" open>
+      <summary>Januar <span class="count">(1)</span></summary>
+      <ul>
+        <li><span class="day">5.</span> <a href="/2026/01/gruene-muetze/">Grüne Mütze</a></li>
+      </ul>
+    </details>
+  </details>
+  <details class="year">
+    <summary>2020 <span class="count">(1)</span></summary>
+    <details class="month">
       <summary>Oktober <span class="count">(1)</span></summary>
       <ul>
         <li><span class="day">31.</span> <a href="/2020/10/kurbis/">Kürbis</a></li>

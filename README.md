@@ -34,7 +34,7 @@ date: 2026-11-01 10:00:00        # oder nur 2026-11-01; Zeitzone Europe/Berlin
 author: Ermeline
 image: "muetze.jpg"              # Vorschaubild auf der Startseite und beim Teilen
 excerpt: "Kurzer Text für die Startseite, den Feed und Suchmaschinen."
-category: wolle                  # optional: eine Kategorie aus content/categories.yaml (die `id`)
+category: wolle                  # Pflicht: genau eine Kategorie aus content/categories.yaml (die `id`)
 tags: [Mützen und Stirnbänder, Häkeln]   # optional: Schlagworte aus content/tags.yaml
 ---
 
@@ -72,9 +72,13 @@ Kategorie (`/kategorie/<name>/`) und Schlagwort (`/tag/<name>/`) sowie die Suche
 - **Kategorieseite:** Name, Reim (`motto`), kurzer Einleitungstext (`intro`), alle Beiträge der Kategorie und das
   Archiv der Kategorie. Das Menü „Kategorien“ listet alle Kategorien aus `content/categories.yaml` in Dateireihenfolge.
 
-- **Kategorie:** höchstens eine, optional. Die erlaubten stehen in `content/categories.yaml` (`id`, `name`, `image`
+- **Kategorie:** genau eine, Pflicht (fehlt sie, bricht der Build ab). Die erlaubten stehen in `content/categories.yaml` (`id`, `name`, `image`
   als Pfad unter `content/static/`, `motto`, optional `intro` als kurzer Markdown-Text für die Kategorieseite). Neue
   Kategorie = neuer Eintrag dort; sie erscheint im Menü „Kategorien“.
+- **Ähnliche Beiträge:** Unter jedem Beitrag stehen bis zu sechs ähnliche Beiträge. Ausgewählt wird über gemeinsame
+  Schlagworte (seltene zählen mehr, `1 / Anzahl der Beiträge mit dem Schlagwort`) mit einem kleinen Bonus für dieselbe
+  Kategorie; fehlende Plätze füllen die neuesten Beiträge der Kategorie. Je genauer die Schlagworte, desto besser die
+  Auswahl (z. B. „Filzen“, „Stricken“, „Häkeln“ innerhalb der Kategorie „Wolle“).
 - **Schlagworte:** beliebig viele, optional, als Liste oder durch Komma getrennt. Erlaubt sind nur die aus
   `content/tags.yaml`; ein Tippfehler bricht den Build ab und nennt das ähnlichste Schlagwort („Meintest du …?“).
   Ein neues Schlagwort zuerst dort eintragen. Ein Schlagwort mit weniger als zwei Beiträgen erzeugt eine Warnung.

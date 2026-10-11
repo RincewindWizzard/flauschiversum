@@ -1,8 +1,8 @@
 ---
 title: "Spinnenweben"
 permalink: /2015/12/spinnenweben/
-category: filzen
-tags: [Schals]
+category: wolle
+tags: [Schals, Filzen]
 author: Ermeline
 date: 2015-12-07 18:14:38
 image: "DSCF2140.JPG"

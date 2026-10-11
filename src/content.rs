@@ -39,8 +39,8 @@ pub struct Post {
     pub excerpt: Option<String>,
     pub markdown: String,
     pub media: Vec<Media>,
-    /// `id` der Kategorie (aus `categories.yaml`), falls der Post eine hat.
-    pub category: Option<String>,
+    /// `id` der Kategorie (aus `categories.yaml`); jeder Post hat genau eine.
+    pub category: String,
     /// Schlagworte in der Schreibweise aus `tags.yaml`, in der Reihenfolge des Posts.
     pub tags: Vec<String>,
 }
@@ -299,8 +299,13 @@ fn resolve_topics(
     tags: Vec<String>,
     vocab: &Vocabulary,
     diag: &Diagnostics,
-) -> Option<(Option<String>, Vec<String>)> {
+) -> Option<(String, Vec<String>)> {
     let mut ok = true;
+    if category.is_none() {
+        let ids: Vec<String> = vocab.categories.iter().map(|v| v.id.clone()).collect();
+        diag.error(source, format!("Pflichtfeld `category` fehlt. Erlaubt: {}", list_values(&ids)));
+        ok = false;
+    }
     if let Some(c) = &category
         && !vocab.categories.iter().any(|v| &v.id == c)
     {
@@ -323,7 +328,7 @@ fn resolve_topics(
             }
         }
     }
-    ok.then_some((category, resolved))
+    if ok { category.map(|c| (c, resolved)) } else { None }
 }
 
 fn read_frontmatter(path: &Path, source: &str, diag: &Diagnostics) -> Option<Frontmatter> {
@@ -603,7 +608,15 @@ mod tests {
     fn write_post(root: &Path, dir: &str, frontmatter: &str) {
         let d = root.join("content/posts").join(dir);
         fs::create_dir_all(&d).unwrap();
-        fs::write(d.join("index.md"), format!("---\n{frontmatter}---\nText\n")).unwrap();
+        // Kategorie ist Pflicht: Tests, die sie nicht prüfen, bekommen eine Standardkategorie samt Liste
+        let with_category = if frontmatter.contains("category:") { frontmatter.to_string() } else { format!("{frontmatter}category: filzen\n") };
+        fs::write(d.join("index.md"), format!("---\n{with_category}---\nText\n")).unwrap();
+        let cats = root.join("content/categories.yaml");
+        if !cats.exists() {
+            fs::create_dir_all(root.join("content/static/images")).unwrap();
+            fs::write(root.join("content/static/images/f.jpg"), b"x").unwrap();
+            fs::write(cats, "- id: filzen\n  name: Filzen\n  image: /images/f.jpg\n  motto: x\n").unwrap();
+        }
         let start = root.join("content/start.md");
         if !start.exists() {
             fs::write(start, "Hallo!\n").unwrap();
@@ -686,22 +699,23 @@ mod tests {
     }
 
     #[test]
-    fn reads_tags_as_list_or_text_and_category_is_optional() {
+    fn reads_tags_as_list_or_text_and_category() {
         let root = tempfile::tempdir().unwrap();
         write_vocab(root.path());
         write_post(root.path(), "a", "title: A\ndate: 2020-01-01\ncategory: filzen\ntags: [katzen, Hüte]\n");
         write_post(root.path(), "b", "title: B\ndate: 2020-01-02\ntags:\n  - Katzen\n  - Hüte\n");
         write_post(root.path(), "c", "title: C\ndate: 2020-01-03\ntags: Katzen, Taschen\n");
-        write_post(root.path(), "d", "title: D\ndate: 2020-01-04\n");
+        write_post(root.path(), "d", "title: D\ndate: 2020-01-04\ncategory: wolle\n");
         let diag = Diagnostics::default();
         let site = load(root.path(), &now(), &diag);
         assert!(!diag.has_errors(), "{:?}", messages(&diag));
         let by = |t: &str| site.posts.iter().find(|p| p.title == t).unwrap();
         assert_eq!(by("A").tags, ["Katzen", "Hüte"]);
-        assert_eq!(by("A").category.as_deref(), Some("filzen"));
+        assert_eq!(by("A").category, "filzen");
         assert_eq!(by("B").tags, ["Katzen", "Hüte"]);
         assert_eq!(by("C").tags, ["Katzen", "Taschen"]);
-        assert!(by("D").tags.is_empty() && by("D").category.is_none());
+        assert!(by("D").tags.is_empty() && by("D").category == "wolle");
+        assert_eq!(by("C").category, "filzen");
     }
 
     #[test]
@@ -808,5 +822,21 @@ mod tests {
         let intro = |id: &str| site.categories.iter().find(|c| c.id == id).unwrap().intro.clone();
         assert_eq!(intro("malen").as_deref(), Some("Pinsel und Stift."));
         assert_eq!(intro("filzen"), None);
+    }
+
+    #[test]
+    fn post_without_category_is_an_error_naming_path_and_field() {
+        let root = tempfile::tempdir().unwrap();
+        write_vocab(root.path());
+        let d = root.path().join("content/posts/ohne");
+        fs::create_dir_all(&d).unwrap();
+        fs::write(d.join("index.md"), "---\ntitle: Ohne\ndate: 2020-01-01\n---\nText\n").unwrap();
+        write_post(root.path(), "mit", "title: Mit\ndate: 2020-01-02\ncategory: wolle\n");
+        let diag = Diagnostics::default();
+        let site = load(root.path(), &now(), &diag);
+        let m = messages(&diag);
+        assert!(diag.has_errors());
+        assert!(m.iter().any(|x| x.contains("content/posts/ohne/index.md") && x.contains("`category`") && x.contains("`filzen`, `wolle`")), "{m:?}");
+        assert_eq!(site.posts.len(), 1, "fehlerhafter Post wird nicht geladen");
     }
 }

@@ -1,8 +1,8 @@
 ---
 title: "Wolle & Hobby"
 permalink: /2013/07/wolle-hobby/
-category: basteln
-tags: [Einkaufen]
+category: material
+tags: [Einkaufen, Linktipps]
 author: Ermeline
 date: 2013-07-28 00:41:25
 excerpt: "Wie der Name schon vermuten lässt, findet sich hier alles rund um Wolle und Basteln."

@@ -2,6 +2,7 @@
 title: "Freundschaften knüpfen mal anders"
 permalink: /2014/07/freundschaften-knupfen-mal-anders/
 category: wolle
+tags: [Linktipps]
 author: Ermeline
 date: 2014-07-23 12:52:24
 excerpt: "Freundschaftsbänder kennt jeder und hat bestimmt auch schon so mancher ausprobiert..."

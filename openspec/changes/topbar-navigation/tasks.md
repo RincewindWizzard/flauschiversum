@@ -28,7 +28,7 @@
 
 ## 5. Dokumentation
 
-- [ ] 5.1 `README.md` (Topbar, Archiv, `content/start.md`, `intro` in `categories.yaml`) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Schritte funktionieren (Text ändern erscheint auf der Startseite)
+- [x] 5.1 `README.md` (Topbar, Archiv, `content/start.md`, `intro` in `categories.yaml`) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Schritte funktionieren (Text ändern erscheint auf der Startseite)
 
 ## Workflow follow-up
 

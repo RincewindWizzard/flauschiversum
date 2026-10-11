@@ -1,7 +1,7 @@
 ---
 title: "Herzchenkonfetti"
 permalink: /2017/03/herzchenkonfetti/
-category: basteln
+category: feste
 tags: [Fasching, Papier]
 author: Ermeline
 date: 2017-03-12

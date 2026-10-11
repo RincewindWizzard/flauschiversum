@@ -1,8 +1,8 @@
 ---
 title: "Kuschelmonster"
 permalink: /2015/02/kuschelmonster/
-category: filzen
-tags: [Schals]
+category: wolle
+tags: [Schals, Filzen]
 author: Ermeline
 date: 2015-02-09 21:50:12
 image: "DSCF2154.jpg"

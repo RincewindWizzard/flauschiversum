@@ -84,7 +84,7 @@ expression: "stable(&read(root, \"index.html\"))"
       <li class="entry">
   <div class="entry-text">
     <p class="entry-title"><a href="/2026/01/gruene-muetze/">Grüne Mütze</a></p>
-    <p class="entry-meta"><time datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time></p>
+    <p class="entry-meta"><time datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time> · <a href="/kategorie/basteln/">Basteln</a></p>
     <p class="excerpt">Ohne Bild.</p>
   </div>
 </li>

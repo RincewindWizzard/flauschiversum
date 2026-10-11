@@ -28,7 +28,7 @@ await test('1440 px: Beitragsseite einspaltig, Text mittig, keine Seitenspalten'
   const fs = await page.locator('main.page').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   assert.ok(content.width / fs <= 40, `Lesetext höchstens etwa 40 em (${content.width / fs} em)`);
   assert.ok(Math.abs(content.x + content.width / 2 - 720) < 30, 'Text mittig');
-  assert.equal(await visibleCount(page, 'aside, .sitenav, .sidebar'), 0, 'keine Seitenspalten');
+  assert.equal(await visibleCount(page, 'aside:not(.related)'), 0, 'keine Seitenspalten');
   assert.equal(await visibleCount(page, 'input[type=search]'), 1, 'ein Suchfeld');
   await page.close();
 });

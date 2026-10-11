@@ -2,7 +2,7 @@
 title: "Grinsetasche"
 permalink: /2016/05/grinsetasche/
 category: brandings
-tags: [Katzen, Taschen]
+tags: [Katzen, Taschen, Leder]
 author: Ermeline
 date: 2016-05-29 15:39:45
 image: "DSCF4638.JPG"

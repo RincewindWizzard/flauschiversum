@@ -13,6 +13,7 @@
 @import "topics.css";
 @import "sidebar.css";
 @import "archive.css";
+@import "related.css";
 @import "footer.css";
 
 h1, h2, h3, h4, h5, h6, p, body, a, img, ul, ol, blockquote, pre, figure {

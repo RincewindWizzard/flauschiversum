@@ -5,6 +5,65 @@ use crate::diag::Diagnostics;
 use crate::urls;
 use std::collections::HashMap;
 
+/// Anzahl ähnlicher Beiträge unter einem Beitrag.
+pub const RELATED_MAX: usize = 6;
+const SAME_CATEGORY_BONUS: f64 = 0.25;
+
+/// Ein ähnlicher Beitrag mit den gemeinsamen Schlagworten (leer bei aus der Kategorie aufgefüllten).
+pub struct Related<'a> {
+    pub post: &'a Post,
+    pub shared: Vec<&'a str>,
+}
+
+/// Anzahl der Posts je Schlagwort.
+pub fn tag_counts(posts: &[Post]) -> HashMap<&str, usize> {
+    let mut counts = HashMap::new();
+    for t in posts.iter().flat_map(|p| &p.tags) {
+        *counts.entry(t.as_str()).or_insert(0) += 1;
+    }
+    counts
+}
+
+/// Ähnliche Beiträge zu `posts[index]` (`posts` = veröffentlichte Posts, neueste zuerst).
+/// Wert = Summe von 1/Anzahl über gemeinsame Schlagworte (seltene zählen mehr), plus 0,25 bei gleicher Kategorie,
+/// wenn mindestens ein Schlagwort gemeinsam ist. Ohne gemeinsames Schlagwort kein Treffer; fehlende Plätze füllen die
+/// neuesten Beiträge derselben Kategorie. Reihenfolge: Wert absteigend, Datum absteigend, URL aufsteigend.
+pub fn related<'a>(posts: &'a [Post], index: usize, counts: &HashMap<&str, usize>) -> Vec<Related<'a>> {
+    let me = &posts[index];
+    let mut scored: Vec<(f64, Related<'a>)> = posts
+        .iter()
+        .enumerate()
+        .filter(|(i, _)| *i != index)
+        .filter_map(|(_, q)| {
+            let shared: Vec<&str> = me.tags.iter().filter(|t| q.tags.contains(t)).map(String::as_str).collect();
+            if shared.is_empty() {
+                return None;
+            }
+            let mut score: f64 = shared.iter().map(|t| 1.0 / counts.get(t).copied().unwrap_or(1) as f64).sum();
+            if q.category == me.category {
+                score += SAME_CATEGORY_BONUS;
+            }
+            Some((score, Related { post: q, shared }))
+        })
+        .collect();
+    scored.sort_by(|a, b| {
+        b.0.total_cmp(&a.0).then_with(|| b.1.post.date.cmp(&a.1.post.date)).then_with(|| a.1.post.url.cmp(&b.1.post.url))
+    });
+    let mut out: Vec<Related<'a>> = scored.into_iter().map(|(_, r)| r).take(RELATED_MAX).collect();
+    if out.len() < RELATED_MAX {
+        // `posts` ist neueste zuerst
+        for q in posts.iter().enumerate().filter(|(i, q)| *i != index && q.category == me.category).map(|(_, q)| q) {
+            if out.len() == RELATED_MAX {
+                break;
+            }
+            if !out.iter().any(|r| std::ptr::eq(r.post, q)) {
+                out.push(Related { post: q, shared: Vec::new() });
+            }
+        }
+    }
+    out
+}
+
 /// Eine Kategorie mit ihren veröffentlichten Posts (neueste zuerst).
 pub struct CategoryTopic<'a> {
     pub category: &'a Category,
@@ -75,7 +134,7 @@ impl<'a> Topics<'a> {
             .map(|category| CategoryTopic {
                 category,
                 slug: urls::slugify(&category.id),
-                posts: site.posts.iter().filter(|p| p.category.as_deref() == Some(category.id.as_str())).collect(),
+                posts: site.posts.iter().filter(|p| p.category == category.id).collect(),
             })
             .filter(|c| !c.posts.is_empty())
             .collect();
@@ -133,6 +192,7 @@ mod tests {
         for (dir, fm) in posts {
             let d = c.join("posts").join(dir);
             fs::create_dir_all(&d).unwrap();
+            let fm = if fm.contains("category:") { fm.to_string() } else { format!("{fm}category: wolle\n") };
             fs::write(d.join("index.md"), format!("---\ntitle: {dir}\n{fm}---\nText\n")).unwrap();
         }
         let now = "2026-10-10T12:00[Europe/Berlin]".parse().unwrap();
@@ -157,8 +217,8 @@ mod tests {
         assert!(!diag.has_errors());
         // Kategorien: Reihenfolge der Liste, leere (malen: nur geplant) entfallen
         let ids: Vec<_> = t.categories.iter().map(|c| c.category.id.as_str()).collect();
-        assert_eq!(ids, ["filzen"]);
-        assert!(t.category("wolle").is_none());
+        assert_eq!(ids, ["filzen", "wolle"]);
+        assert_eq!(t.category("wolle").unwrap().posts.len(), 1, "Post ohne eigene Angabe liegt in der Standardkategorie");
         assert!(t.category("nähen").is_none(), "nur geplanter Beitrag");
         assert_eq!(t.category("filzen").unwrap().slug, "filzen");
         // Posts neueste zuerst
@@ -167,7 +227,6 @@ mod tests {
         // Schlagworte alphabetisch mit deutscher Sortierung, leere entfallen, geplanter Post zählt nicht
         let names: Vec<_> = t.tags.iter().map(|x| (x.name, x.posts.len())).collect();
         assert_eq!(names, [("Hüte", 1), ("Katzen", 3), ("Taschen", 1)]);
-        // Post ohne Kategorie steht nur bei den Schlagworten
         assert!(t.tag("Taschen").unwrap().posts.iter().any(|p| p.title == "c"));
     }
 
@@ -226,5 +285,93 @@ mod tests {
         let mut v = vec!["Taschen", "Äpfel", "Hüte", "Zebra", "Handyhüllen", "Häkeln"];
         v.sort_by_key(|x| sort_key(x));
         assert_eq!(v, ["Äpfel", "Häkeln", "Handyhüllen", "Hüte", "Taschen", "Zebra"]);
+    }
+
+    fn titles<'a>(r: &[Related<'a>]) -> Vec<&'a str> {
+        r.iter().map(|x| x.post.title.as_str()).collect()
+    }
+
+    fn related_of(s: &Site, title: &str) -> Vec<(String, Vec<String>)> {
+        let counts = tag_counts(&s.posts);
+        let i = s.posts.iter().position(|p| p.title == title).unwrap();
+        related(&s.posts, i, &counts).into_iter().map(|r| (r.post.title.clone(), r.shared.iter().map(|t| t.to_string()).collect())).collect()
+    }
+
+    #[test]
+    fn rare_shared_tag_counts_more_than_common_one() {
+        let root = tempfile::tempdir().unwrap();
+        let mut posts = vec![
+            ("A", "date: 2020-01-01\ncategory: wolle\ntags: [Katzen, Hüte]\n".to_string()),
+            ("B", "date: 2020-01-02\ncategory: wolle\ntags: [Katzen]\n".to_string()),
+            ("C", "date: 2020-01-03\ncategory: nähen\ntags: [Hüte]\n".to_string()),
+        ];
+        for i in 0..5 {
+            posts.push((["D", "E", "F", "G", "H"][i], format!("date: 2020-02-0{}\ncategory: filzen\ntags: [Katzen]\n", i + 1)));
+        }
+        let refs: Vec<(&str, &str)> = posts.iter().map(|(a, b)| (*a, b.as_str())).collect();
+        let s = site(root.path(), &refs, "- name: Katzen\n- name: Hüte\n");
+        let r = related_of(&s, "A");
+        // „Hüte“ (2 Beiträge) wiegt mehr als „Katzen“ (7 Beiträge): C vor B, obwohl B die gleiche Kategorie hat
+        assert_eq!(r[0].0, "C");
+        assert_eq!(r[0].1, ["Hüte"]);
+        assert_eq!(r[1].0, "B");
+        assert_eq!(r[1].1, ["Katzen"]);
+        assert_eq!(r.len(), 6, "höchstens sechs: C, B und vier der fünf übrigen Katzen-Beiträge");
+        assert!(r.iter().all(|(t, _)| t != "A"), "nicht der Beitrag selbst");
+    }
+
+    #[test]
+    fn ties_are_broken_by_date_then_url() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(
+            root.path(),
+            &[
+                ("a", "date: 2020-01-01\ncategory: wolle\ntags: [Katzen]\n"),
+                ("alt", "date: 2019-01-01\ncategory: wolle\ntags: [Katzen]\n"),
+                ("neu-b", "date: 2021-05-05\ncategory: wolle\ntags: [Katzen]\n"),
+                ("neu-a", "date: 2021-05-05\ncategory: wolle\ntags: [Katzen]\n"),
+            ],
+            "- name: Katzen\n",
+        );
+        let counts = tag_counts(&s.posts);
+        let i = s.posts.iter().position(|p| p.title == "a").unwrap();
+        assert_eq!(titles(&related(&s.posts, i, &counts)), ["neu-a", "neu-b", "alt"]);
+        // zweimal berechnet: gleiche Reihenfolge
+        assert_eq!(titles(&related(&s.posts, i, &counts)), ["neu-a", "neu-b", "alt"]);
+    }
+
+    #[test]
+    fn same_category_fills_up_and_only_when_needed() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(
+            root.path(),
+            &[
+                ("ohne", "date: 2020-01-01\ncategory: wolle\n"),
+                ("w1", "date: 2020-03-01\ncategory: wolle\ntags: [Katzen]\n"),
+                ("w2", "date: 2020-02-01\ncategory: wolle\n"),
+                ("w3", "date: 2019-02-01\ncategory: wolle\n"),
+                ("fremd", "date: 2020-04-01\ncategory: nähen\ntags: [Katzen]\n"),
+                ("geplant", "date: 2099-01-01\ncategory: wolle\ntags: [Katzen]\n"),
+            ],
+            "- name: Katzen\n",
+        );
+        // Beitrag ohne Schlagworte: die neuesten anderen Beiträge der Kategorie, ohne gemeinsame Schlagworte
+        let r = related_of(&s, "ohne");
+        assert_eq!(r.iter().map(|(t, _)| t.as_str()).collect::<Vec<_>>(), ["w1", "w2", "w3"]);
+        assert!(r.iter().all(|(_, shared)| shared.is_empty()));
+        // Mit Schlagwort: Treffer zuerst, Rest der Kategorie danach, andere Kategorie nur über das Schlagwort
+        let r = related_of(&s, "w1");
+        assert_eq!(r.iter().map(|(t, _)| t.as_str()).collect::<Vec<_>>(), ["fremd", "w2", "ohne", "w3"]);
+        assert_eq!(r[0].1, ["Katzen"]);
+        assert!(r[1].1.is_empty());
+        // der geplante Beitrag fehlt überall
+        assert!(!s.posts.iter().any(|p| p.title == "geplant"));
+    }
+
+    #[test]
+    fn lonely_post_has_no_related_posts() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(root.path(), &[("einzig", "date: 2020-01-01\ncategory: nähen\n"), ("anders", "date: 2020-01-02\ncategory: wolle\ntags: [Katzen]\n")], "- name: Katzen\n");
+        assert!(related_of(&s, "einzig").is_empty());
     }
 }

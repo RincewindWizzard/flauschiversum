@@ -1,8 +1,8 @@
 ---
 title: "Das Mädchen und die Heiligtümer des Todes"
 permalink: /2015/01/das-madchen-und-die-heiligtumer-des-todes/
-category: brandings
-tags: [Schule und Ausbildung]
+category: papier
+tags: [Schule und Ausbildung, Bücher]
 author: Ermeline
 date: 2015-01-07 18:10:57
 image: "IMG_4273.JPG"

@@ -1,7 +1,7 @@
 ---
 title: "idee Creativmarkt"
 permalink: /2013/07/idee-creativmarkt/
-category: basteln
+category: material
 tags: [Einkaufen]
 author: Ermeline
 date: 2013-07-28 01:01:06

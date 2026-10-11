@@ -1,7 +1,7 @@
 ---
 title: "Kürbis"
 permalink: /2020/10/kurbis/
-category: basteln
+category: feste
 tags: [Halloween]
 author: Ermeline
 date: 2020-10-31

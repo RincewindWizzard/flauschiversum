@@ -1,7 +1,7 @@
 ---
 title: "Perlen drehen"
 permalink: /2017/03/perlen-drehen/
-category: basteln
+category: schmuck
 tags: [Schmuck]
 author: Ermeline
 date: 2017-03-05

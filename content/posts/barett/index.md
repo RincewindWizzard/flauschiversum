@@ -1,8 +1,8 @@
 ---
 title: "Barett"
 permalink: /2015/07/barett/
-category: filzen
-tags: [Hüte, LARP]
+category: wolle
+tags: [Hüte, LARP, Filzen]
 author: Ermeline
 date: 2015-07-27 13:02:41
 image: "DSCF3009.jpg"

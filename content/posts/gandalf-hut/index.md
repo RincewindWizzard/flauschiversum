@@ -1,8 +1,8 @@
 ---
 title: "Gandalf-Hut"
 permalink: /2014/07/gandalf-hut/
-category: filzen
-tags: [Hüte, LARP]
+category: wolle
+tags: [Hüte, LARP, Filzen]
 author: Ermeline
 date: 2014-07-22 15:12:40
 image: "DSCF1386.jpg"

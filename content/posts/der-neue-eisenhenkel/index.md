@@ -1,8 +1,8 @@
 ---
 title: "der neue Eisenhenkel"
 permalink: /2013/07/der-neue-eisenhenkel/
-category: basteln
-tags: [Einkaufen]
+category: material
+tags: [Einkaufen, Leder]
 author: Ermeline
 date: 2013-07-28 01:01:34
 excerpt: "Mag komisch klingen, aber wenn man viele Nieten haben möchte..."

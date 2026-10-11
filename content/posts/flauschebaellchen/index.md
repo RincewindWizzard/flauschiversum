@@ -1,8 +1,8 @@
 ---
 title: "Flauschebällchen"
 permalink: /2013/07/flauscheballchen/
-category: filzen
-tags: [Spinnen, Upcycling]
+category: wolle
+tags: [Spinnen, Upcycling, Filzen]
 author: Ermeline
 date: 2013-07-28 17:23:39
 excerpt: "Als ich angefangen habe Wolle selbst zu waschen, zu kämmen und zu verarbeiten, habe ich mich beim Spinnen geärgert..."

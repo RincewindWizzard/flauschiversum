@@ -13,6 +13,7 @@ if (host && typeof PagefindUI === 'function') {
     showImages: true,
     showSubResults: false,
     showEmptyFilters: false,
+    openFilters: ['Kategorie'],
     resetStyles: false,
     autofocus: !query,
     pageSize: 10,

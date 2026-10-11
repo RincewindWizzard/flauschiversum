@@ -79,7 +79,7 @@ expression: "stable(&read(root, \"themen/index.html\"))"
   <section aria-labelledby="kategorien">
     <h2 id="kategorien">Kategorien</h2>
     <ul class="taglist">
-      <li><a href="/kategorie/basteln/">Basteln <span class="count">(2)</span></a></li>
+      <li><a href="/kategorie/basteln/">Basteln <span class="count">(3)</span></a></li>
     </ul>
   </section>
   <section aria-labelledby="schlagworte">
