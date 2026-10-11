@@ -15,60 +15,6 @@ main#home, main.topic {
   }
 }
 
-main#home { max-width: 56em; }
-
-ul.tiles {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
-  gap: 1em;
-
-  & a.tile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    padding: 0.6em;
-    text-align: center;
-    text-decoration: none;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    box-shadow: var(--card-shadow);
-  }
-
-  & a.tile:hover, & a.tile:focus-visible {
-    background-color: var(--accent-soft);
-  }
-
-  & img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-  & .tile-name {
-    font-family: var(--font-display);
-    font-size: 1.4em;
-    margin-top: 0.3em;
-  }
-
-  & .tile-motto {
-    font-style: italic;
-    font-size: 0.85em;
-    white-space: pre-line;
-  }
-
-  & .tile-count {
-    margin-top: auto;
-    padding-top: 0.4em;
-    font-size: 0.8em;
-    font-variant: small-caps;
-    letter-spacing: 1px;
-  }
-}
-
 ul.taglist {
   list-style: none;
   display: flex;
@@ -102,7 +48,7 @@ ul.taglist {
 
 /* Kategorie- und Schlagwortseite */
 header.topic-head {
-  margin: 3em 0 1em;
+  margin: 2em 0 1em;
   text-align: center;
 
   & h1 {
@@ -176,6 +122,26 @@ p.all-posts {
   margin-top: 1em;
 }
 
+/* Kopf der Startseite und der Beitragsliste */
+.list-head, .home-head {
+  padding: 0 1em;
+  margin: 1.2em 0 0.6em;
+
+  & h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 2em;
+    line-height: 1.2;
+    text-shadow: none;
+  }
+}
+
+.home-head .welcome {
+  max-width: 40em;
+
+  & p { margin: 0.4em 0; }
+}
+
 /* Titel der chronologischen Liste */
 h1.list-title {
   text-align: center;
@@ -213,12 +179,6 @@ h1.list-title {
 
   & a:hover {
     background-color: var(--accent-soft);
-  }
-}
-
-@media (max-width: 40em) {
-  #blogheader .topnav a {
-    padding: 0.3em 0.8em;
   }
 }
 

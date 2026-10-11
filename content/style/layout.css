@@ -1,11 +1,9 @@
 :root {
   --maxwidth: 1000px;
   --contentwidth: 38em;
-  /* Seitenspalten: mittlere Fenster (Inhalt + Sidebar), breite Fenster (Navigation + Inhalt + Sidebar) */
-  --maxwidth-medium: 1200px;
-  --maxwidth-wide: 1400px;
-  --nav-width: 13em;
-  --side-width: 16em;
+  /* Seiten mit ergänzender Karte neben dem Inhalt */
+  --maxwidth-aside: 1200px;
+  --aside-width: 18em;
 }
 
 div.container-fluid {
@@ -23,62 +21,53 @@ div.container-fluid {
   flex-wrap: nowrap;
 }
 
-/* Seitenaufbau: einspaltig; Navigationsspalte und Sidebar stehen im HTML nach dem Inhalt */
+/* Seitenaufbau: Topbar, Inhalt, Fußzeile. Seiten mit ergänzender Karte (Startseite, Beiträge, Kategorie)
+   stellen sie ab 64 em rechts neben den Inhalt, sonst darunter (Kategorie: unter den Einleitungstext). */
+html {
+  scroll-padding-top: 4.5em;
+}
+
 .page-layout {
   display: block;
 }
 
-.sitenav {
-  display: none;
+body.has-aside .container-fluid {
+  max-width: var(--maxwidth-aside);
+  padding: 0 1em;
+  box-sizing: border-box;
 }
 
-.sidebar {
-  margin: 1em 1em 0;
+body.has-aside .page-layout {
+  display: flex;
+  flex-direction: column;
 }
+
+body.has-aside .page-head { order: 1; }
+body.has-aside .page-content { order: 3; }
+body.has-aside aside { order: 4; margin: 1.5em 0 0; }
+body.has-aside.aside-early aside { order: 2; margin: 0 0 1.5em; }
 
 @media (min-width: 64em) {
-  body.has-side .container-fluid {
-    max-width: var(--maxwidth-medium);
-    padding: 0 1em;
-    box-sizing: border-box;
-  }
-
-  body.has-side .page-layout {
+  body.has-aside .page-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) calc(var(--side-width) + 1em);
-    grid-template-areas: "content side";
+    grid-template-columns: minmax(0, 1fr) var(--aside-width);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "head aside" "content aside";
     column-gap: 2em;
     align-items: start;
   }
 
-  body.has-side .page-content { grid-area: content; }
-  body.has-side .sidebar { grid-area: side; margin: 0; }
-}
+  body.has-aside .page-head { grid-area: head; }
+  body.has-aside .page-content { grid-area: content; }
 
-@media (min-width: 80em) {
-  body.has-side .container-fluid {
-    max-width: var(--maxwidth-wide);
-  }
-
-  body.has-side .page-layout {
-    grid-template-columns: var(--nav-width) minmax(0, 1fr) var(--side-width);
-    grid-template-areas: "nav content side";
-  }
-
-  /* Navigation und Suchfeld wandern vom Kopf in die linke Spalte, die Kategorien von der Sidebar dorthin */
-  body.has-side .sitenav {
-    display: block;
-    grid-area: nav;
+  body.has-aside aside,
+  body.has-aside.aside-early aside {
+    grid-area: aside;
+    margin: 1.5em 0 0;
     position: sticky;
-    top: 1em;
-    max-height: calc(100vh - 2em);
+    top: 4.8em;
+    max-height: calc(100vh - 6em);
     overflow-y: auto;
-  }
-
-  body.has-side #blogheader .topnav,
-  body.has-side #blogheader .topsearch,
-  body.has-side .sidebar-cats {
-    display: none;
   }
 }
 

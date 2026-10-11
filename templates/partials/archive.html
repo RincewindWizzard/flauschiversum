@@ -1,0 +1,21 @@
+<aside class="archive card" aria-labelledby="archiv-titel">
+  <h2 class="side-title" id="archiv-titel">Archiv</h2>
+  <div class="archive-tools" hidden></div>
+  <div class="archive-years">
+  {%- for y in archive %}
+  <details class="year"{% if y.open %} open{% endif %}>
+    <summary>{{ y.year }} <span class="count">({{ y.count }})</span></summary>
+    {%- for m in y.months %}
+    <details class="month"{% if m.open %} open{% endif %}>
+      <summary>{{ m.name }} <span class="count">({{ m.count }})</span></summary>
+      <ul>
+        {%- for p in m.posts %}
+        <li><span class="day">{{ p.day }}.</span> <a href="{{ p.url }}">{{ p.title }}</a></li>
+        {%- endfor %}
+      </ul>
+    </details>
+    {%- endfor %}
+  </details>
+  {%- endfor %}
+  </div>
+</aside>

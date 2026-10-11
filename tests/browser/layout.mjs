@@ -1,4 +1,4 @@
-// Browser-Tests für Spalten (Navigation, Sidebar), Footer und Autor.
+// Browser-Tests für Seitenaufbau (Topbar, Karten), Footer, Autor, Suchfeld, Typografie und Farben.
 // Voraussetzung: `flauschiversum serve --port 8099` läuft im Repository,
 // Playwright ist installiert (`npm i playwright-core`), Chromium vorhanden.
 // Aufruf: node tests/browser/layout.mjs [Pfad-zu-chromium]
@@ -22,68 +22,35 @@ const open = async (path, width, height = 900, extra = {}) => {
 const box = async (page, sel) => page.locator(sel).first().boundingBox();
 const visibleCount = (page, sel) => page.locator(`${sel}:visible`).count();
 
-await test('1440 px: drei Spalten, Kopf nur mit Logo', async () => {
+await test('1440 px: Beitragsseite einspaltig, Text mittig, keine Seitenspalten', async () => {
   const page = await open(POST, 1440);
-  const [nav, content, side] = [await box(page, '.sitenav'), await box(page, 'main.page'), await box(page, '.sidebar')];
-  assert.ok(nav && content && side, 'alle drei Spalten sichtbar');
-  assert.ok(nav.x + nav.width <= content.x && content.x + content.width <= side.x, 'nebeneinander: Navigation, Inhalt, Sidebar');
-  assert.ok(content.width <= 40 * 16 + 40, `Lesetext höchstens etwa 40 em (${content.width} px)`);
-  assert.equal(await visibleCount(page, '#blogheader .topnav'), 0, 'Navigationsleiste im Kopf ausgeblendet');
-  assert.equal(await visibleCount(page, '#blogheader .topsearch'), 0, 'Suchfeld im Kopf ausgeblendet');
-  assert.ok(await page.locator('#blogheader .logo').isVisible());
-  // Reihenfolge der linken Spalte: Suchfeld, Start, Themen, Beiträge, Kategorien
-  const ys = [];
-  for (const sel of ['.sitenav .sidesearch', '.sitenav .sitenav-links li:nth-child(1)', '.sitenav .sitenav-links li:nth-child(3)', '.sitenav .cats']) ys.push((await box(page, sel)).y);
-  assert.deepEqual(ys, [...ys].sort((a, b) => a - b));
-  await page.screenshot({ path: '/tmp/flausch-layout-1440.png' });
+  const content = await box(page, 'main.page');
+  const fs = await page.locator('main.page').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  assert.ok(content.width / fs <= 40, `Lesetext höchstens etwa 40 em (${content.width / fs} em)`);
+  assert.ok(Math.abs(content.x + content.width / 2 - 720) < 30, 'Text mittig');
+  assert.equal(await visibleCount(page, 'aside, .sitenav, .sidebar'), 0, 'keine Seitenspalten');
+  assert.equal(await visibleCount(page, 'input[type=search]'), 1, 'ein Suchfeld');
   await page.close();
 });
 
-await test('1440 px: genau ein sichtbares Suchfeld und eine sichtbare Kategorienliste', async () => {
-  for (const path of [POST, '/kategorie/filzen/', '/impressum/']) {
-    const page = await open(path, 1440);
-    assert.equal(await visibleCount(page, 'input[type=search]'), 1, path);
-    assert.equal(await visibleCount(page, 'ul.cats'), 1, path);
-    await page.close();
-  }
-});
-
-await test('1440 px: Navigationsspalte bleibt beim Scrollen sichtbar', async () => {
-  const page = await open(POST, 1440, 900);
-  await page.evaluate(() => scrollTo(0, 1500));
-  await page.waitForTimeout(200);
-  const nav = await box(page, '.sitenav');
-  assert.ok(nav.y >= 0 && nav.y < 200, `Spalte klebt oben (y=${nav.y})`);
+await test('1440 px: Startseite mit Cloud-Karte rechts, 360 px darunter, ohne waagerechtes Scrollen', async () => {
+  const page = await open('/', 1440);
+  const [content, aside] = [await box(page, 'main#home'), await box(page, 'aside.cloud-card')];
+  assert.ok(content.x + content.width <= aside.x + 1, 'Karte rechts neben den Beiträgen');
   await page.close();
-});
-
-await test('1100 px: zwei Spalten, Navigation im Kopf, Kategorien in der Sidebar', async () => {
-  const page = await open(POST, 1100);
-  const [content, side] = [await box(page, 'main.page'), await box(page, '.sidebar')];
-  assert.ok(content.x + content.width <= side.x, 'Sidebar rechts neben dem Inhalt');
-  assert.equal(await visibleCount(page, '.sitenav'), 0);
-  assert.equal(await visibleCount(page, '#blogheader .topnav'), 1);
-  assert.equal(await visibleCount(page, 'input[type=search]'), 1);
-  assert.equal(await visibleCount(page, 'ul.cats'), 1);
-  assert.equal(await visibleCount(page, '.sidebar .cats'), 1);
-  await page.close();
-});
-
-await test('360 px: Sidebar nach dem Inhalt und vor dem Footer, kein waagerechtes Scrollen', async () => {
-  const page = await open(POST, 360, 740, { hasTouch: true, isMobile: true });
-  const [content, side, footer] = [await box(page, 'main.page'), await box(page, '.sidebar'), await box(page, '#blogfooter')];
-  assert.ok(content.y + content.height <= side.y + 1 && side.y + side.height <= footer.y + 1, 'Reihenfolge Inhalt, Sidebar, Footer');
-  const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+  const small = await open('/', 360, 740, { hasTouch: true, isMobile: true });
+  const [c2, a2, footer] = [await box(small, 'main#home'), await box(small, 'aside.cloud-card'), await box(small, '#blogfooter')];
+  assert.ok(c2.y + c2.height <= a2.y + 1 && a2.y + a2.height <= footer.y + 1, 'Reihenfolge Beiträge, Karte, Footer');
+  const [sw, cw] = await small.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
   assert.ok(sw <= cw, `scrollWidth ${sw} > clientWidth ${cw}`);
-  assert.equal(await visibleCount(page, 'input[type=search]'), 1);
-  await page.close();
+  await small.close();
 });
 
-await test('Suche und Themenübersicht: einspaltig ohne Seitenspalten', async () => {
+await test('Suche und Themenübersicht: einspaltig ohne Karten, Topbar vorhanden', async () => {
   for (const path of ['/suche/?q=katze', '/themen/']) {
     const page = await open(path, 1440);
-    assert.equal(await visibleCount(page, '.sidebar, .sitenav'), 0, path);
-    assert.equal(await visibleCount(page, '#blogheader .topnav'), 1, path);
+    assert.equal(await visibleCount(page, 'aside'), 0, path);
+    assert.equal(await visibleCount(page, '.topbar .topnav'), 1, path);
     await page.close();
   }
 });
@@ -226,24 +193,18 @@ const cardStyle = (page, sel) =>
     return { alpha: alpha(s.backgroundColor), radius: parseFloat(s.borderTopLeftRadius), pad: parseFloat(s.paddingLeft) };
   });
 
-await test('Karten: Navigationsspalte und Sidebar liegen auf hellen, abgerundeten Karten (1440 px)', async () => {
-  const page = await open(POST, 1440);
-  for (const sel of ['.sitenav', '.sidebar .sidebar-cloud']) {
-    const c = await cardStyle(page, sel);
-    assert.ok(c.alpha > 0 && c.radius >= 8 && c.pad >= 8, `${sel}: ${JSON.stringify(c)}`);
-  }
-  await page.close();
-});
-
-await test('Karten: Sidebar-Blöcke auf dem Handy, ohne waagerechtes Scrollen', async () => {
-  const page = await open(POST, 360, 740, { hasTouch: true, isMobile: true });
-  for (const sel of ['.sidebar .sidebar-cats', '.sidebar .sidebar-cloud']) {
-    const c = await cardStyle(page, sel);
-    assert.ok(c.alpha > 0 && c.radius >= 8, `${sel}: ${JSON.stringify(c)}`);
-  }
-  const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
-  assert.ok(sw <= cw);
-  await page.close();
+await test('Karten: Cloud, Archiv und Untermenü liegen auf hellen, abgerundeten Karten', async () => {
+  const home = await open('/', 1440);
+  const c = await cardStyle(home, 'aside.cloud-card');
+  assert.ok(c.alpha > 0 && c.radius >= 8 && c.pad >= 8, `Cloud: ${JSON.stringify(c)}`);
+  await home.hover('.topnav li.has-menu >> nth=0');
+  const m = await cardStyle(home, '.topnav .submenu');
+  assert.ok(m.alpha > 0 && m.radius >= 8, `Untermenü: ${JSON.stringify(m)}`);
+  await home.close();
+  const arch = await open('/beitraege/', 1440);
+  const a = await cardStyle(arch, 'aside.archive');
+  assert.ok(a.alpha > 0 && a.radius >= 8 && a.pad >= 8, `Archiv: ${JSON.stringify(a)}`);
+  await arch.close();
 });
 
 const searchBoxChecks = async (page, root) => {
@@ -255,26 +216,26 @@ const searchBoxChecks = async (page, root) => {
   assert.equal(await page.locator(`${root} .searchbox button`).first().getAttribute('aria-label'), 'Suchen');
 };
 
-await test('Suchfeld: Lupe im Feld in der 13-em-Spalte und im Kopf, ein Zeile', async () => {
+await test('Suchfeld: Lupe im Feld in der Topbar am Desktop und am Handy, eine Zeile', async () => {
   const page = await open(POST, 1440);
-  await searchBoxChecks(page, '.sitenav');
+  await searchBoxChecks(page, '.topsearch');
   await page.close();
   const small = await open(POST, 360, 740, { hasTouch: true, isMobile: true });
   await searchBoxChecks(small, '.topsearch');
   await small.close();
-  const home = await open('/', 1440);
-  await searchBoxChecks(home, '.home-search');
-  await home.close();
+  const search = await open('/suche/', 1440);
+  await searchBoxChecks(search, '#search-form');
+  await search.close();
 });
 
 await test('Suchfeld: Lupe und Enter öffnen /suche/?q=', async () => {
   const page = await open(POST, 1440);
-  await page.locator('.sitenav input[type=search]').fill('Katze');
-  await page.locator('.sitenav .searchbox button').click();
+  await page.locator('.topsearch input[type=search]').fill('Katze');
+  await page.locator('.topsearch .searchbox button').click();
   await page.waitForURL('**/suche/?q=Katze');
   await page.close();
   const p2 = await open('/', 1440);
-  await p2.locator('.home-search input[type=search]').fill('Filz');
+  await p2.locator('.topsearch input[type=search]').fill('Filz');
   await p2.keyboard.press('Enter');
   await p2.waitForURL('**/suche/?q=Filz');
   await p2.close();
@@ -283,18 +244,15 @@ await test('Suchfeld: Lupe und Enter öffnen /suche/?q=', async () => {
 await test('Typografie: Navigation und Footer in Textschrift, Logo und Titel in Lobster', async () => {
   const page = await open('/', 1440);
   const font = (sel) => page.locator(sel).first().evaluate((el) => { const s = getComputedStyle(el); return [s.fontFamily, parseFloat(s.fontSize), s.fontWeight]; });
-  for (const sel of ['.sitenav .sitenav-links a', '#blogfooter .footer-links a', '.sidebar .cloud a', '.sitenav .cats a']) {
+  for (const sel of ['.topnav > ul > li > a', '#blogfooter .footer-links a', '.cloud-card .cloud a']) {
     const [family, size] = await font(sel);
     assert.ok(!/lobster/i.test(family), `${sel}: ${family}`);
     assert.ok(size >= 0.9 * 16, `${sel}: ${size}px`);
   }
-  for (const sel of ['#blogheader .logo h1', '#kategorien', '#neu']) assert.match((await font(sel))[0], /lobster/i, sel);
+  for (const sel of ['.brand-name', '.home-head h1', '.cloud-card .side-title']) assert.match((await font(sel))[0], /lobster/i, sel);
   assert.ok(Number((await font('#blogfooter .footer-links a'))[2]) >= 600, 'Footer-Links halbfett');
+  assert.ok(Number((await font('.topnav > ul > li > a'))[2]) >= 600, 'Menüs halbfett');
   await page.close();
-  const mid = await open(POST, 1100);
-  const fam = await mid.locator('#blogheader .topnav a').first().evaluate((el) => getComputedStyle(el).fontFamily);
-  assert.ok(!/lobster/i.test(fam), `Kopfnavigation: ${fam}`);
-  await mid.close();
 });
 
 // Kontrast nach WCAG
@@ -313,11 +271,15 @@ const contrast = (page, sel, bgSel) =>
 await test('Farben: Hintergrund Cremeweiß, Kontrast von Text, Links, Knopf und Tag mindestens 4,5 : 1', async () => {
   const page = await open(POST, 1440);
   assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 247, 240)');
-  for (const [sel, name] of [['main.page p', 'Text'], ['main.page a', 'Link im Text'], ['.sidebar .cloud a', 'Cloud'], ['.sitenav .sitenav-links a', 'Navigation'], ['.searchbox button', 'Lupe'], ['.post-header a.category', 'Kategorie-Tag'], ['.post-header a.tag', 'Schlagwort-Tag'], ['#blogfooter .footer-links a', 'Footer'], ['#blogfooter .copyright', 'Copyright']]) {
+  for (const [sel, name] of [['main.page p', 'Text'], ['main.page a', 'Link im Text'], ['.topnav a', 'Navigation'], ['.searchbox button', 'Lupe'], ['.post-header a.category', 'Kategorie-Tag'], ['.post-header a.tag', 'Schlagwort-Tag'], ['#blogfooter .footer-links a', 'Footer'], ['#blogfooter .copyright', 'Copyright']]) {
     const c = await contrast(page, sel);
     assert.ok(c >= 4.5, `${name}: Kontrast ${c.toFixed(2)}`);
   }
   await page.close();
+  const home = await open('/', 1440);
+  const cc = await contrast(home, '.cloud a');
+  assert.ok(cc >= 4.5, `Cloud: Kontrast ${cc.toFixed(2)}`);
+  await home.close();
   const css = await (await fetch(BASE + '/style.css')).text();
   for (const neon of ['#bdf239', '#82e536', '#eefc3c']) assert.ok(!css.toLowerCase().includes(neon), `Neongrün ${neon} im Stylesheet`);
 });

@@ -1,6 +1,7 @@
 //! HTML-Seiten über Askama-Templates (beim Kompilieren geprüft).
 
 use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, CONTACT_EMAIL, INSTAGRAM_URL, MASTODON_URL, PAGINATION_WINDOW, POSTS_PER_PAGE};
+use crate::archive::ArchiveYear;
 use crate::content::{Page, Post};
 use crate::media::Size;
 use crate::seo;
@@ -8,7 +9,7 @@ use crate::urls::{self, Base};
 use askama::Template;
 use std::sync::Arc;
 
-const MONTHS: [&str; 12] = [
+pub const MONTHS: [&str; 12] = [
     "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember",
 ];
 
@@ -28,17 +29,17 @@ pub struct Head {
     pub published_time: Option<String>,
     pub json_ld: Option<String>,
     pub style_href: String,
-    pub logo_is_h1: bool,
     pub year: i16,
     pub livereload: bool,
-    /// Suchfeld im Kopf (nicht auf Startseite und Suchseite).
-    pub search_form: bool,
     pub noindex: bool,
     /// Branchname im Staging-Modus (zeigt die Staging-Leiste).
     pub staging: Option<String>,
     pub feed_url: String,
-    /// Seitenspalten (Navigationsspalte und Sidebar); `None` auf Suche und Themenübersicht.
-    pub side: Option<Arc<Sidebar>>,
+    /// Menüs der Topbar (auf jeder Seite gleich).
+    pub menu: Arc<Menu>,
+    /// Klassen des `body`: `has-aside` (Karte neben dem Inhalt), `aside-early` (auf schmalen Fenstern vor der Liste).
+    pub body_class: &'static str,
+    pub topbar_script_href: String,
     /// Kontaktwege in der Fußzeile.
     pub mail_href: String,
     pub mail_address: &'static str,
@@ -55,10 +56,10 @@ pub struct CloudTag {
     pub level: u8,
 }
 
-/// Inhalt der Seitenspalten: Kategorien mit Anzahl und Tag-Cloud (auf jeder Seite gleich).
-pub struct Sidebar {
+/// Menüdaten der Topbar: die neuesten Beiträge und alle Kategorien.
+pub struct Menu {
+    pub latest: Vec<NavLink>,
     pub categories: Vec<TopicLink>,
-    pub tags: Vec<CloudTag>,
 }
 
 pub struct OgImage {
@@ -72,12 +73,15 @@ pub struct OgImage {
 pub struct Common {
     pub style_href: String,
     pub script_href: String,
+    pub topbar_script_href: String,
     pub year: i16,
     pub livereload: bool,
     pub base: Base,
     /// Staging-Modus mit Branchname: noindex und Staging-Leiste auf jeder Seite.
     pub staging: Option<String>,
-    pub sidebar: Arc<Sidebar>,
+    pub menu: Arc<Menu>,
+    /// Tag-Cloud (nur auf der Startseite).
+    pub cloud: Arc<Vec<CloudTag>>,
 }
 
 pub struct Thumb {
@@ -102,7 +106,7 @@ pub struct TopicLink {
     pub count: Option<usize>,
 }
 
-/// Eintrag in einer Themenliste oder im Abschnitt „Neu im Flauschiversum“.
+/// Eintrag in einer Beitragsliste.
 pub struct Entry {
     pub url: String,
     pub title: String,
@@ -111,15 +115,6 @@ pub struct Entry {
     pub thumb: Option<Thumb>,
     pub excerpt: String,
     pub category: Option<TopicLink>,
-}
-
-/// Kachel einer Kategorie auf der Startseite.
-pub struct Tile {
-    pub url: String,
-    pub name: String,
-    pub image: String,
-    pub motto: String,
-    pub count: usize,
 }
 
 pub struct PageLink {
@@ -148,11 +143,20 @@ pub struct IndexTemplate {
 }
 
 #[derive(Template)]
+#[template(path = "beitraege.html")]
+pub struct PostsTemplate {
+    pub head: Head,
+    pub entries: Vec<Entry>,
+    pub archive: Vec<ArchiveYear>,
+}
+
+#[derive(Template)]
 #[template(path = "home.html")]
 pub struct HomeTemplate {
     pub head: Head,
-    pub tiles: Vec<Tile>,
+    pub welcome: Option<String>,
     pub news: Vec<Entry>,
+    pub cloud: Arc<Vec<CloudTag>>,
 }
 
 #[derive(Template)]
@@ -162,7 +166,8 @@ pub struct TopicTemplate {
     pub title: String,
     pub motto: Option<String>,
     pub count_text: String,
-    pub subtopics: Vec<TopicLink>,
+    pub intro: Option<String>,
+    pub archive: Vec<ArchiveYear>,
     pub entries: Vec<Entry>,
 }
 
@@ -253,14 +258,14 @@ fn base_head(common: &Common, title: String, og_title: String, description: Stri
         published_time: None,
         json_ld: None,
         style_href: common.style_href.clone(),
-        logo_is_h1: false,
         year: common.year,
         livereload: common.livereload,
-        search_form: true,
         noindex: common.staging.is_some(),
         staging: common.staging.clone(),
         feed_url: format!("{}/rss.xml", common.base.as_str()),
-        side: Some(common.sidebar.clone()),
+        menu: common.menu.clone(),
+        body_class: "",
+        topbar_script_href: common.topbar_script_href.clone(),
         mail_href: mailto(BLOG_NAME),
         mail_address: CONTACT_EMAIL,
         instagram_url: INSTAGRAM_URL,
@@ -271,6 +276,19 @@ fn base_head(common: &Common, title: String, og_title: String, description: Stri
 /// „1 Beitrag“ / „37 Beiträge“
 pub fn count_text(n: usize) -> String {
     if n == 1 { "1 Beitrag".to_string() } else { format!("{n} Beiträge") }
+}
+
+pub fn render_posts(entries: Vec<Entry>, archive: Vec<ArchiveYear>, common: &Common) -> String {
+    let title = format!("Alle Beiträge – {BLOG_NAME}");
+    let mut head = base_head(
+        common,
+        title.clone(),
+        title,
+        "Alle Beiträge des Flauschiversums, die neuesten zuerst.".to_string(),
+        format!("{}{}", common.base.as_str(), index_url(0)),
+    );
+    head.body_class = "has-aside";
+    PostsTemplate { head, entries, archive }.render().expect("Beiträge-Template")
 }
 
 pub fn render_index(index: usize, count: usize, cards: Vec<PostCard>, common: &Common) -> String {
@@ -289,7 +307,7 @@ pub fn render_index(index: usize, count: usize, cards: Vec<PostCard>, common: &C
     IndexTemplate { head, posts: cards, pagination: pagination(index, count) }.render().expect("Index-Template")
 }
 
-pub fn render_home(tiles: Vec<Tile>, news: Vec<Entry>, common: &Common) -> String {
+pub fn render_home(welcome: Option<String>, news: Vec<Entry>, common: &Common) -> String {
     let title = format!("{BLOG_NAME} – {BLOG_DESCRIPTION}");
     let mut head = base_head(
         common,
@@ -298,9 +316,8 @@ pub fn render_home(tiles: Vec<Tile>, news: Vec<Entry>, common: &Common) -> Strin
         "Anleitungen und Ideen rund um Wolle, Filz, Nähen und Basteln – zum Suchen, Stöbern und Nachmachen.".to_string(),
         format!("{}/", common.base.as_str()),
     );
-    head.logo_is_h1 = true;
-    head.search_form = false;
-    HomeTemplate { head, tiles, news }.render().expect("Start-Template")
+    head.body_class = "has-aside";
+    HomeTemplate { head, welcome, news, cloud: common.cloud.clone() }.render().expect("Start-Template")
 }
 
 /// Seite einer Kategorie oder eines Schlagworts.
@@ -308,8 +325,11 @@ pub struct TopicPageInput {
     pub url: String,
     pub name: String,
     pub motto: Option<String>,
+    /// Einleitungstext als HTML (nur Kategorien).
+    pub intro: Option<String>,
     pub count: usize,
-    pub subtopics: Vec<TopicLink>,
+    /// Archiv der Beiträge (nur Kategorien); leer bei Schlagworten.
+    pub archive: Vec<ArchiveYear>,
     pub entries: Vec<Entry>,
 }
 
@@ -318,19 +338,23 @@ pub fn render_topic(input: TopicPageInput, common: &Common) -> String {
     if let Some(m) = &input.motto {
         description = format!("{description}. {}", m.split_whitespace().collect::<Vec<_>>().join(" "));
     }
-    let head = base_head(
+    let mut head = base_head(
         common,
         format!("{} – {BLOG_NAME}", input.name),
         input.name.clone(),
         seo::meta_description(&description),
         common.base.absolute(&input.url),
     );
+    if !input.archive.is_empty() {
+        head.body_class = "has-aside aside-early";
+    }
     TopicTemplate {
         head,
         title: input.name,
         motto: input.motto,
         count_text: count_text(input.count),
-        subtopics: input.subtopics,
+        intro: input.intro,
+        archive: input.archive,
         entries: input.entries,
     }
     .render()
@@ -345,16 +369,13 @@ pub fn render_search(script_href: String, common: &Common) -> String {
         format!("Suche in den Anleitungen und Ideen des {BLOG_NAME}s."),
         common.base.absolute("/suche/"),
     );
-    head.search_form = false;
     head.noindex = true;
-    head.side = None;
     SearchTemplate { head, script_href }.render().expect("Such-Template")
 }
 
 pub fn render_topics(categories: Vec<TopicLink>, tags: Vec<TopicLink>, common: &Common) -> String {
     let description = format!("Alle Kategorien und Schlagworte im {BLOG_NAME}: {} Kategorien, {} Schlagworte.", categories.len(), tags.len());
-    let mut head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, common.base.absolute("/themen/"));
-    head.side = None;
+    let head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, common.base.absolute("/themen/"));
     TopicsTemplate { head, categories, tags }.render().expect("Themenübersicht-Template")
 }
 

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block header %}
+<div class="list-head"><h1>Beiträge</h1></div>
+{% endblock %}
+{% block content %}
+<main class="topic posts-page">
+  <ul class="entries">
+    {%- for entry in entries %}
+    {% include "partials/entry.html" %}
+    {%- endfor %}
+  </ul>
+</main>
+{% endblock %}
+{% block aside %}
+{% include "partials/archive.html" %}
+{% endblock %}

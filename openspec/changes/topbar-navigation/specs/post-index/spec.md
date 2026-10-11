@@ -22,7 +22,7 @@ Auf den Folgeseiten `/page/<N>/` SHALL über und unter der Liste eine Paginierun
 
 #### Scenario: Erste Seite
 - **WHEN** die erste Folgeseite `/page/1/` angezeigt wird
-- **THEN** zeigt die Paginierung „«“ mit Link auf `/beitraege/`, „2“ (hervorgehoben), „3“, „4“ und „»“ mit Link auf `/page/2/`
+- **THEN** zeigt die Paginierung „«“ mit Link auf `/beitraege/`, „1“ (Link auf `/beitraege/`), „2“ (hervorgehoben), „3“, „4“ und „»“ mit Link auf `/page/2/`
 
 #### Scenario: Mittlere Seite
 - **WHEN** die zehnte Indexseite (`/page/9/`) angezeigt wird

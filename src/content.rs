@@ -53,6 +53,9 @@ pub struct Category {
     /// URL-Pfad einer statischen Datei, z.B. `/images/Filzen.jpg`.
     pub image: String,
     pub motto: String,
+    /// Kurzer Einleitungstext (Markdown) für die Kategorieseite.
+    #[serde(default)]
+    pub intro: Option<String>,
 }
 
 /// Erlaubte Kategorien und Schlagworte.
@@ -93,6 +96,8 @@ pub struct Site {
     pub style_dir: PathBuf,
     pub categories: Vec<Category>,
     pub tags: Vec<String>,
+    /// Begrüßungstext der Startseite (Markdown aus `content/start.md`), falls vorhanden.
+    pub start: Option<String>,
 }
 
 /// Ordnet eine Datei anhand ihrer Endung (und bei GIF ihres Inhalts) ein.
@@ -526,7 +531,22 @@ pub fn load(root: &Path, now: &Zoned, diag: &Diagnostics) -> Site {
         }
     }
 
+    let start = match fs::read_to_string(content.join("start.md")) {
+        Ok(text) => {
+            let body = match split_frontmatter(&text) {
+                Some((_, markdown)) if text.starts_with("---") => markdown.to_string(),
+                _ => text,
+            };
+            Some(body).filter(|b| !b.trim().is_empty())
+        }
+        Err(_) => {
+            diag.warning("content/start.md", "Datei fehlt; die Startseite zeigt keinen Begrüßungstext");
+            None
+        }
+    };
+
     Site {
+        start,
         posts: all_posts,
         scheduled,
         pages,
@@ -584,6 +604,10 @@ mod tests {
         let d = root.join("content/posts").join(dir);
         fs::create_dir_all(&d).unwrap();
         fs::write(d.join("index.md"), format!("---\n{frontmatter}---\nText\n")).unwrap();
+        let start = root.join("content/start.md");
+        if !start.exists() {
+            fs::write(start, "Hallo!\n").unwrap();
+        }
     }
 
     fn now() -> Zoned {
@@ -751,5 +775,38 @@ mod tests {
         two.push(0x3B);
         assert_eq!(gif_frame_count(&one), 1);
         assert_eq!(gif_frame_count(&two), 2);
+    }
+    #[test]
+    fn start_text_is_loaded_with_or_without_frontmatter() {
+        let root = tempfile::tempdir().unwrap();
+        write_vocab(root.path());
+        let diag = Diagnostics::default();
+        assert!(load(root.path(), &now(), &diag).start.is_none());
+        let m = messages(&diag);
+        assert!(m.iter().any(|m| m.contains("content/start.md") && m.contains("fehlt")), "{m:?}");
+
+        fs::write(root.path().join("content/start.md"), "Willkommen im Flauschiversum!\n").unwrap();
+        let diag = Diagnostics::default();
+        let site = load(root.path(), &now(), &diag);
+        assert_eq!(site.start.as_deref(), Some("Willkommen im Flauschiversum!\n"));
+        assert!(!messages(&diag).iter().any(|m| m.contains("start.md")));
+
+        fs::write(root.path().join("content/start.md"), "---\ntitle: Start\n---\nHallo!\n").unwrap();
+        let site = load(root.path(), &now(), &Diagnostics::default());
+        assert_eq!(site.start.as_deref(), Some("Hallo!\n"));
+    }
+
+    #[test]
+    fn category_intro_is_optional() {
+        let root = tempfile::tempdir().unwrap();
+        write_vocab(root.path());
+        let c = root.path().join("content/categories.yaml");
+        let mut text = fs::read_to_string(&c).unwrap();
+        text.push_str("- id: malen\n  name: Malen\n  image: /images/f.jpg\n  motto: m\n  intro: Pinsel und Stift.\n");
+        fs::write(&c, text).unwrap();
+        let site = load(root.path(), &now(), &Diagnostics::default());
+        let intro = |id: &str| site.categories.iter().find(|c| c.id == id).unwrap().intro.clone();
+        assert_eq!(intro("malen").as_deref(), Some("Pinsel und Stift."));
+        assert_eq!(intro("filzen"), None);
     }
 }

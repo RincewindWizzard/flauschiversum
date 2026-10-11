@@ -60,12 +60,21 @@ Text in Markdown …
 
 ### Kategorien, Schlagworte und Suche
 
-Besucher finden Beiträge über die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro Kategorie
-(`/kategorie/<name>/`) und Schlagwort (`/tag/<name>/`) sowie die Suche (`/suche/`). Die chronologische Liste liegt
-unter `/beitraege/`.
+Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi links, rechts die Menüs **About me**,
+**Beiträge**, **Kategorien** und die Suche), die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro
+Kategorie (`/kategorie/<name>/`) und Schlagwort (`/tag/<name>/`) sowie die Suche (`/suche/`).
+
+- **Startseite:** Überschrift, Begrüßungstext aus `content/start.md` (Markdown, ohne oder mit Frontmatter), die zehn
+  neuesten Beiträge und rechts die Tag-Cloud (nur dort).
+- **Beiträge** (`/beitraege/`): die zehn neuesten Beiträge und das Archiv nach Jahr und Monat (einklappbar; neuestes Jahr
+  und Monat offen). Das Menü „Beiträge“ zeigt dieselben zehn. Die früheren Blätterseiten (`/page/<N>/`) bleiben unter
+  ihren Adressen erreichbar, werden aber nicht mehr verlinkt.
+- **Kategorieseite:** Name, Reim (`motto`), kurzer Einleitungstext (`intro`), alle Beiträge der Kategorie und das
+  Archiv der Kategorie. Das Menü „Kategorien“ listet alle Kategorien aus `content/categories.yaml` in Dateireihenfolge.
 
 - **Kategorie:** höchstens eine, optional. Die erlaubten stehen in `content/categories.yaml` (`id`, `name`, `image`
-  als Pfad unter `content/static/`, `motto`). Neue Kategorie = neuer Eintrag dort; sie erscheint dann als Kachel.
+  als Pfad unter `content/static/`, `motto`, optional `intro` als kurzer Markdown-Text für die Kategorieseite). Neue
+  Kategorie = neuer Eintrag dort; sie erscheint im Menü „Kategorien“.
 - **Schlagworte:** beliebig viele, optional, als Liste oder durch Komma getrennt. Erlaubt sind nur die aus
   `content/tags.yaml`; ein Tippfehler bricht den Build ab und nennt das ähnlichste Schlagwort („Meintest du …?“).
   Ein neues Schlagwort zuerst dort eintragen. Ein Schlagwort mit weniger als zwei Beiträgen erzeugt eine Warnung.
@@ -75,14 +84,15 @@ unter `/beitraege/`.
   `.cache/` zu den Eingaben gemerkt, damit ein Build ohne Änderungen nichts neu schreibt.
 - Die Pfade `/themen/`, `/suche/`, `/beitraege/`, `/kategorie/`, `/tag/` und `/pagefind/` sind reserviert.
 
-### Kontakt, Social-Links und Seitenleisten
+### Kontakt, Social-Links und Karten
 
 Die Kontaktadresse und die Social-Links (Instagram, Mastodon) stehen als Konstanten in `src/config.rs`
 (`CONTACT_EMAIL`, `INSTAGRAM_URL`, `MASTODON_URL`) und erscheinen im Footer jeder Seite; die Icons sind inline SVG in
 `templates/partials/icon-*.html`. Jeder `mailto:`-Betreff enthält „Flauschiversum“ (Spamfilter): `render::mailto()` bricht
-sonst den Build ab. Die Navigationsspalte links (ab 80 em), die Kategorienliste und die Tag-Cloud rechts entstehen
+sonst den Build ab. Die Menüs der Topbar, das Archiv und die Tag-Cloud entstehen
 automatisch aus `content/categories.yaml`, `content/tags.yaml` und den Beiträgen; die Schriftgröße eines Schlagworts
-folgt der Zahl seiner Beiträge.
+folgt der Zahl seiner Beiträge. Das Maskottchen (`content/static/images/flauschi_normal.svg` und `flauschi_surprised.svg`,
+beim Überfahren des Titels) hat in beiden Dateien dieselbe `viewBox`, damit der Wechsel nichts verschiebt.
 
 Einzelseiten (About, Impressum, Tipps und Tricks) liegen als Markdown unter `content/pages/`; ihre URL ergibt sich
 aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlicht.
@@ -97,7 +107,7 @@ aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlic
 | `content/static/` | unverändert ausgelieferte Dateien (Schriften, Favicon, Bilder der Einzelseiten) |
 | `content/style/` | Gestaltung als normales CSS (`main.css` mit `@import`), wird zu `/style.css` gebündelt |
 | `templates/` | HTML-Templates ([Askama](https://askama.readthedocs.io/)), werden beim Kompilieren geprüft |
-| `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite) und die Badge-Vorlage |
+| `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite, Topbar und Archiv) und die Badge-Vorlage |
 | `src/` | Rust-Code des Generators |
 | `tests/` | Referenz der Live-URLs und Browser-Tests |
 | `scripts/` | Smoke-Test der Staging-Seite, Größenprüfung von `dist/` |
@@ -114,7 +124,7 @@ cargo test                       # Unit- und Integrationstests (Test-Site, Snaps
 cargo test --release -- --ignored   # baut die ganze Seite und prüft alle 194 Live-URLs
 ```
 
-Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload, Startseite, Suche, Spalten und Footer) brauchen Node.js und Chromium:
+Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload, Startseite, Topbar, Archiv, Suche und Footer) brauchen Node.js und Chromium:
 
 ```sh
 cargo run --release -- serve --port 8099 &
@@ -122,6 +132,7 @@ npm i playwright-core
 node tests/browser/frontend.mjs /pfad/zu/chromium
 node tests/browser/navigation.mjs /pfad/zu/chromium
 node tests/browser/layout.mjs /pfad/zu/chromium
+node tests/browser/topbar.mjs /pfad/zu/chromium
 # Staging-Leiste: Vorschau mit `serve --port 8098 --staging <langer Branchname>` starten
 node tests/browser/staging.mjs /pfad/zu/chromium <Branchname>
 ```

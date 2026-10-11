@@ -1,5 +1,4 @@
-/* Navigationsspalte (ab 80 em links) und Sidebar mit Kategorien und Tag-Cloud */
-/* Karten: heller Hintergrund, abgerundet, feiner Rand */
+/* Karten für ergänzende Blöcke (Archiv, Tag-Cloud) und die Tag-Cloud selbst */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -9,20 +8,20 @@
   box-sizing: border-box;
 }
 
-.sidebar .card + .card {
-  margin-top: 1em;
-}
-
-.sitenav,
-.sidebar {
+.cloud-card {
   & .side-title {
     font-family: var(--font-display);
+    font-weight: 400;
     font-size: 1.25em;
-    margin: 0 0 0.3em;
+    margin: 0 0 0.5em;
   }
 
   & ul {
     list-style: none;
+  }
+
+  & a {
+    text-decoration: none;
   }
 
   & .count {
@@ -30,55 +29,17 @@
     opacity: 0.8;
   }
 
-  & a {
-    text-decoration: none;
+  & .all-topics {
+    margin-top: 0.8em;
+    font-size: var(--fs-small);
+  }
+
+  & .all-topics a {
+    text-decoration: underline;
   }
 }
 
-/* Navigation wie ein Inhaltsverzeichnis */
-.sitenav {
-  & .side-title {
-    margin-top: 0.9em;
-  }
-
-  & .sitenav-links {
-    margin: 0.8em 0 0;
-
-    & a {
-      display: block;
-      padding: 0.3em 0.6em;
-      border-radius: 8px;
-      color: var(--acolor);
-      font-weight: 700;
-    }
-  }
-
-  & .cats a {
-    display: block;
-    padding: 0.2em 0.6em;
-    border-radius: 8px;
-    color: var(--acolor);
-  }
-
-  & .sitenav-links a:hover,
-  & .cats a:hover,
-  & a:focus-visible {
-    background-color: var(--accent-soft);
-  }
-
-  /* Das Suchfeld ist in der schmalen Spalte kompakt */
-  & form.search {
-    margin: 0;
-  }
-}
-
-/* Kategorienliste in der Sidebar (nur bis 80 em, darüber steht sie in der Navigationsspalte) */
-.sidebar .cats a {
-  display: inline-block;
-  padding: 0.15em 0;
-}
-
-/* Tag-Cloud: ruhige Chips wie die Schlagwortlisten; die Häufigkeit zeigt die Zahl, dazu eine dezente
+/* Tag-Cloud: ruhige Chips; die Häufigkeit zeigt die Zahl, dazu eine dezente
    Gewichtung (Schriftgröße 0,9 bis 1,1 em und Tönung) statt großer Größenunterschiede */
 .cloud {
   display: flex;
@@ -113,13 +74,4 @@
   & .cloud-3 { font-size: 1em; background: #f6f9f2; }
   & .cloud-4 { font-size: 1.05em; background: #edf4e6; }
   & .cloud-5 { font-size: 1.1em; background: var(--accent-soft); border-color: #c6dbb8; }
-}
-
-.sidebar .all-topics {
-  margin-top: 0.8em;
-  font-size: var(--fs-small);
-}
-
-.sidebar .all-topics a {
-  text-decoration: underline;
 }

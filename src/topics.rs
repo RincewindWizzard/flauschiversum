@@ -102,24 +102,14 @@ impl<'a> Topics<'a> {
         Topics { categories, tags }
     }
 
+    #[cfg(test)]
     pub fn category(&self, id: &str) -> Option<&CategoryTopic<'a>> {
         self.categories.iter().find(|c| c.category.id == id)
     }
 
+    #[cfg(test)]
     pub fn tag(&self, name: &str) -> Option<&TagTopic<'a>> {
         self.tags.iter().find(|t| t.name == name)
-    }
-
-    /// Schlagworte der Posts einer Kategorie mit Anzahl, absteigend nach Anzahl, dann alphabetisch.
-    pub fn tags_in(&self, posts: &[&Post]) -> Vec<(&TagTopic<'a>, usize)> {
-        let mut out: Vec<_> = self
-            .tags
-            .iter()
-            .map(|t| (t, posts.iter().filter(|p| p.tags.iter().any(|x| x == t.name)).count()))
-            .filter(|(_, n)| *n > 0)
-            .collect();
-        out.sort_by(|a, b| b.1.cmp(&a.1)); // stabil: bleibt sonst alphabetisch
-        out
     }
 }
 
@@ -177,9 +167,6 @@ mod tests {
         // Schlagworte alphabetisch mit deutscher Sortierung, leere entfallen, geplanter Post zählt nicht
         let names: Vec<_> = t.tags.iter().map(|x| (x.name, x.posts.len())).collect();
         assert_eq!(names, [("Hüte", 1), ("Katzen", 3), ("Taschen", 1)]);
-        // Schlagworte innerhalb der Kategorie: absteigend nach Anzahl
-        let inside: Vec<_> = t.tags_in(&t.category("filzen").unwrap().posts).iter().map(|(x, n)| (x.name, *n)).collect();
-        assert_eq!(inside, [("Katzen", 2), ("Hüte", 1)]);
         // Post ohne Kategorie steht nur bei den Schlagworten
         assert!(t.tag("Taschen").unwrap().posts.iter().any(|p| p.title == "c"));
     }

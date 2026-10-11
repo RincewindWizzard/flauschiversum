@@ -33,83 +33,64 @@
 <script type="application/ld+json">{{ ld|safe }}</script>
 {%- endif %}
 </head>
-<body{% if head.side.is_some() %} class="has-side"{% endif %}>
+<body{% if !head.body_class.is_empty() %} class="{{ head.body_class }}"{% endif %}>
 {%- if let Some(branch) = head.staging %}
 <div class="staging-bar" role="note">Staging: {{ branch }}</div>
 {%- endif %}
-<div class="container-fluid">
-<header id="blogheader">
-  <div class="logo">
-    {%- if head.logo_is_h1 %}
-    <h1><a href="/">Flauschiversum</a></h1>
-    {%- else %}
-    <p class="site-title"><a href="/">Flauschiversum</a></p>
-    {%- endif %}
-    <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
-  </div>
-  <nav class="topnav center" aria-label="Hauptnavigation">
-    <a href="/">Start</a>
-    <a href="/themen/">Themen</a>
-    <a href="/beitraege/">Beiträge</a>
-  </nav>
-  {%- if head.search_form %}
-  <form class="search topsearch" action="/suche/" method="get" role="search">
-    <label class="sr-only" for="q">Suchen</label>
-    <div class="searchbox">
-      <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
-      <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
-    </div>
-  </form>
-  {%- endif %}
-</header>
-<div class="page-layout">
-  <div class="page-content">
-    {% block header %}{% endblock %}
-    {% block content %}{% endblock %}
-  </div>
-  {%- if let Some(side) = head.side %}
-  <nav class="sitenav card" aria-label="Navigation">
-    {%- if head.search_form %}
-    <form class="search sidesearch" action="/suche/" method="get" role="search">
-      <label class="sr-only" for="q-side">Suchen</label>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/">
+      <span class="mascot" aria-hidden="true">
+        <img class="mascot-normal" src="/images/flauschi_normal.svg" alt="" width="45" height="40">
+        <img class="mascot-surprised" src="/images/flauschi_surprised.svg" alt="" width="45" height="40">
+      </span>
+      <span class="brand-name">Flauschiversum</span>
+    </a>
+    <details class="menu-toggle" open>
+      <summary><span class="menu-icon" aria-hidden="true"></span>Menü</summary>
+      <nav class="topnav" aria-label="Hauptnavigation">
+        <ul>
+          <li><a href="/about/">About me</a></li>
+          <li class="has-menu">
+            <a href="/beitraege/">Beiträge</a>
+            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-beitraege" aria-label="Beiträge-Menü"><span aria-hidden="true">▾</span></button>
+            <ul class="submenu card" id="menu-beitraege">
+              {%- for p in head.menu.latest %}
+              <li><a href="{{ p.url }}">{{ p.title }}</a></li>
+              {%- endfor %}
+              <li class="all"><a href="/beitraege/">Alle Beiträge</a></li>
+            </ul>
+          </li>
+          <li class="has-menu">
+            <a href="/themen/">Kategorien</a>
+            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
+            <ul class="submenu card" id="menu-kategorien">
+              {%- for c in head.menu.categories %}
+              <li><a href="{{ c.url }}">{{ c.name }}</a></li>
+              {%- endfor %}
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </details>
+    <form class="search topsearch" action="/suche/" method="get" role="search">
+      <label class="sr-only" for="q-top">Suchen</label>
       <div class="searchbox">
-        <input type="search" id="q-side" name="q" placeholder="Suchen …" autocomplete="off">
+        <input type="search" id="q-top" name="q" placeholder="Anleitung suchen …" autocomplete="off">
         <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
       </div>
     </form>
-    {%- endif %}
-    <ul class="sitenav-links">
-      <li><a href="/">Start</a></li>
-      <li><a href="/themen/">Themen</a></li>
-      <li><a href="/beitraege/">Beiträge</a></li>
-    </ul>
-    <p class="side-title">Kategorien</p>
-    <ul class="cats">
-      {%- for c in side.categories %}
-      <li><a href="{{ c.url }}">{{ c.name }}{% if let Some(n) = c.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
-      {%- endfor %}
-    </ul>
-  </nav>
-  <aside class="sidebar" aria-label="Themen">
-    <div class="sidebar-cats card">
-      <p class="side-title">Kategorien</p>
-      <ul class="cats">
-        {%- for c in side.categories %}
-        <li><a href="{{ c.url }}">{{ c.name }}{% if let Some(n) = c.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
-        {%- endfor %}
-      </ul>
-    </div>
-    <div class="sidebar-cloud card">
-    <p class="side-title">Themen</p>
-    <ul class="cloud">
-      {%- for t in side.tags %}
-      <li><a class="cloud-{{ t.level }}" href="{{ t.url }}" title="{{ t.name }}: {{ t.count }} {% if t.count == 1 %}Beitrag{% else %}Beiträge{% endif %}">{{ t.name }} <span class="count">{{ t.count }}</span></a></li>
-      {%- endfor %}
-    </ul>
-    <p class="all-topics"><a href="/themen/">Alle Themen</a></p>
-    </div>
-  </aside>
-  {%- endif %}
+  </div>
+</header>
+<div class="container-fluid">
+<div class="page-layout">
+  <div class="page-head">
+    {% block header %}{% endblock %}
+  </div>
+  <div class="page-content">
+    {% block content %}{% endblock %}
+  </div>
+  {% block aside %}{% endblock %}
 </div>
 <footer id="blogfooter">
   <nav class="footer-links" aria-label="Weitere Seiten">
@@ -129,6 +110,7 @@
   <p class="copyright">&copy; {{ head.year }} Ermeline Wollknoll</p>
 </footer>
 </div>
+<script src="{{ head.topbar_script_href }}"></script>
 {% block scripts %}{% endblock %}
 {%- if head.livereload %}
 <script>

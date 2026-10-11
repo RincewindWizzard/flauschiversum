@@ -17,30 +17,34 @@ const test = async (name, fn) => {
 const resultTitles = (page) => page.locator('.pagefind-ui__result-title a').allTextContents();
 const waitResults = (page) => page.waitForSelector('.pagefind-ui__result', { timeout: 10000 });
 
-await test('Startseite: Suchfeld, Kacheln, Neu – in dieser Reihenfolge, Themen in der Sidebar', async () => {
+await test('Startseite: Überschrift, Begrüßung, zehn Beiträge – in dieser Reihenfolge, Cloud rechts', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');
   const y = (sel) => page.locator(sel).first().evaluate((el) => el.getBoundingClientRect().top + scrollY);
-  const ys = [await y('.home-search'), await y('ul.tiles'), await y('.news .entries')];
+  const ys = [await y('.home-head h1'), await y('.home-head .welcome'), await y('.news .entries')];
   assert.deepEqual(ys, [...ys].sort((a, b) => a - b));
-  assert.equal(await page.locator('ul.tiles li').count(), 6);
-  assert.equal(await page.locator('.news .entry').count(), 4);
-  assert.equal(await page.locator('.topics').count(), 0, 'kein Abschnitt „Häufige Themen“ mehr');
-  assert.ok((await page.locator('.sidebar .cloud li').count()) > 20, 'Tag-Cloud in der Sidebar');
+  assert.equal(await page.locator('.home-head h1').textContent(), 'Flauschiversum');
+  assert.equal(await page.locator('ul.tiles').count(), 0, 'keine Kategoriekacheln');
+  assert.equal(await page.locator('.news .entry').count(), 10);
+  assert.equal(await page.locator('main input[type=search]').count(), 0, 'kein Suchfeld im Inhalt');
+  assert.ok((await page.locator('.cloud-card .cloud li').count()) > 20, 'Tag-Cloud in der Karte');
   assert.equal(await page.locator('.pagination').count(), 0);
   await page.screenshot({ path: '/tmp/flausch-home.png' });
   await page.close();
 });
 
-await test('Kachel führt auf die Kategorieseite, Schlagwort auf die Schlagwortseite', async () => {
-  const page = await browser.newPage();
+await test('Kategorie aus dem Menü führt auf die Kategorieseite, Schlagwort auf die Schlagwortseite', async () => {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');
-  await page.locator('ul.tiles a.tile', { hasText: 'Filzen' }).click();
-  await page.waitForURL('**/kategorie/filzen/');
-  assert.equal(await page.locator('h1').textContent(), 'Filzen');
-  assert.ok((await page.locator('.entries .entry').count()) > 20, 'alle Beiträge auf einer Seite');
+  await page.hover('.topnav li.has-menu >> nth=1');
+  const first = page.locator('#menu-kategorien a').first();
+  const name = (await first.textContent()).trim();
+  await first.click();
+  await page.waitForURL('**/kategorie/**');
+  assert.equal(await page.locator('h1').textContent(), name);
+  assert.ok((await page.locator('main .entries .entry').count()) > 3, 'alle Beiträge auf einer Seite');
   await page.goto(BASE + '/');
-  await page.locator('.sidebar .cloud a').first().click();
+  await page.locator('.cloud-card .cloud a').first().click();
   await page.waitForURL('**/tag/**');
   assert.ok((await page.locator('.entries .entry').count()) > 0);
   await page.close();
@@ -58,10 +62,10 @@ await test('Beitrag zeigt Einordnung, Link führt auf die Kategorie', async () =
 });
 
 await test('Suche von der Startseite: Eingabe öffnet /suche/?q= mit Treffern', async () => {
-  const page = await browser.newPage();
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');
-  await page.fill('.home-search input[name=q]', 'Stirnband');
-  await page.press('.home-search input[name=q]', 'Enter');
+  await page.fill('.topsearch input[name=q]', 'Stirnband');
+  await page.press('.topsearch input[name=q]', 'Enter');
   await page.waitForURL('**/suche/?q=Stirnband');
   await waitResults(page);
   assert.ok((await resultTitles(page)).length > 0);
@@ -71,9 +75,8 @@ await test('Suche von der Startseite: Eingabe öffnet /suche/?q= mit Treffern', 
 await test('Suche aus einem Beitrag: Umlaut in der Adresse', async () => {
   const page = await browser.newPage();
   await page.goto(BASE + '/2020/10/kurbis/');
-  // Je nach Breite steht das Suchfeld im Kopf oder in der linken Spalte; sichtbar ist genau eines
-  await page.fill('form.search:visible input[name=q]', 'Mütze');
-  await page.press('form.search:visible input[name=q]', 'Enter');
+  await page.fill('.topsearch input[name=q]', 'Mütze');
+  await page.press('.topsearch input[name=q]', 'Enter');
   await page.waitForURL('**/suche/?q=M%C3%BCtze');
   await waitResults(page);
   await page.close();

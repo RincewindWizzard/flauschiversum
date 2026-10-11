@@ -18,8 +18,8 @@ context: |
   - Bilder: drei Größen (200/700/1000), Badge-Wasserzeichen, Rechte-Metadaten,
     inkrementeller Cache in .cache/, parallel mit rayon
   - Themen und Suche: feste Listen content/categories.yaml und content/tags.yaml;
-    Seiten /themen/, /kategorie/<name>/, /tag/<name>/, /suche/; Startseite ist
-    der Handbuch-Einstieg, die chronologische Liste liegt unter /beitraege/;
+    Seiten /themen/, /kategorie/<name>/, /tag/<name>/, /suche/; Topbar mit den Menüs About me, Beiträge, Kategorien; Startseite mit
+    Begrüßung (content/start.md) und Beiträgen, /beitraege/ mit Archiv nach Jahr und Monat;
     Suchindex mit dem Crate `pagefind` (Bibliothek) unter /pagefind/
   - Staging: GitHub Actions (.github/workflows/staging.yml) baut bei Push auf `dev` und
     `claude/**` mit `--staging <Branch>` und `--base-url` und veröffentlicht auf GitHub Pages

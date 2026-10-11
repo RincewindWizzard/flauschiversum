@@ -28,8 +28,10 @@ pub const MEDIA_WARN_BYTES: u64 = 20 * 1024 * 1024;
 /// Erste Pfadsegmente, die der Generator selbst belegt (Posts und Einzelseiten dürfen sie nicht verwenden).
 pub const RESERVED_PATHS: [&str; 6] = ["themen", "suche", "beitraege", "kategorie", "tag", "pagefind"];
 
-/// Anzahl Beiträge unter „Neu im Flauschiversum“ auf der Startseite.
-pub const HOME_NEWS: usize = 4;
+/// Anzahl der neuesten Beiträge auf der Startseite, auf `/beitraege/` und im Menü „Beiträge“.
+pub const HOME_NEWS: usize = 10;
+pub const POSTS_LATEST: usize = 10;
+pub const MENU_LATEST: usize = 10;
 
 /// Kontaktwege (Fußzeile). Jeder `mailto:`-Betreff enthält „Flauschiversum“ (Spamfilter).
 pub const CONTACT_EMAIL: &str = "ermeline@flauschiversum.de";

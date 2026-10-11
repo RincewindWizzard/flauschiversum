@@ -1,13 +1,14 @@
 //! Ablauf eines Builds: Laden → Medien → Rendern → Ausgaben (ohne zu schreiben).
 
-use crate::config::{HOME_NEWS, POSTS_PER_PAGE, TIME_ZONE};
+use crate::archive;
+use crate::config::{HOME_NEWS, MENU_LATEST, POSTS_LATEST, POSTS_PER_PAGE, TIME_ZONE};
 use crate::content::{self, Site};
 use crate::diag::Diagnostics;
 use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, CloudTag, Common, Entry, PostCard, PostPageInput, Sidebar, Thumb, Tile, TopicLink, TopicPageInput};
+use crate::render::{self, CloudTag, Common, Entry, Menu, NavLink, PostCard, PostPageInput, Thumb, TopicLink, TopicPageInput};
 use std::sync::Arc;
 use crate::search::{self, SearchDoc};
 use crate::seo;
@@ -85,6 +86,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     let assets = assets_dir(&opts.root);
     let mut script_href = String::from("/assets/js/media.js");
     let mut search_script_href = String::from("/assets/js/search.js");
+    let mut topbar_script_href = String::from("/assets/js/topbar.js");
     for entry in walkdir::WalkDir::new(&assets).into_iter().filter_map(Result::ok).filter(|e| e.file_type().is_file()) {
         let rel = entry.path().strip_prefix(&assets).unwrap().to_string_lossy().replace('\\', "/");
         if rel == "badge.png" {
@@ -92,6 +94,9 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         }
         if rel == "js/media.js" {
             script_href = format!("/assets/js/media.js?v={}", short_hash(&fs::read(entry.path())?));
+        }
+        if rel == "js/topbar.js" {
+            topbar_script_href = format!("/assets/js/topbar.js?v={}", short_hash(&fs::read(entry.path())?));
         }
         if rel == "js/search.js" {
             search_script_href = format!("/assets/js/search.js?v={}", short_hash(&fs::read(entry.path())?));
@@ -105,26 +110,31 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     if diag.has_errors() {
         bail!("Inhalte enthalten Fehler");
     }
-    let sidebar = Arc::new(Sidebar {
+    let menu = Arc::new(Menu {
+        latest: site.posts.iter().take(MENU_LATEST).map(|p| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() }).collect(),
         categories: topics
             .categories
             .iter()
-            .map(|c| TopicLink { url: topics::category_url(&c.slug), name: c.category.name.clone(), count: Some(c.posts.len()) })
+            .map(|c| TopicLink { url: topics::category_url(&c.slug), name: c.category.name.clone(), count: None })
             .collect(),
-        tags: topics
+    });
+    let cloud = Arc::new(
+        topics
             .cloud()
             .into_iter()
             .map(|(t, level)| CloudTag { url: topics::tag_url(&t.slug), name: t.name.to_string(), count: t.posts.len(), level })
-            .collect(),
-    });
+            .collect::<Vec<_>>(),
+    );
     let common = Common {
         style_href: format!("/style.css?v={}", short_hash(css.as_bytes())),
         script_href,
+        topbar_script_href,
         year: opts.now.year(),
         livereload: opts.livereload,
         base: opts.base.clone(),
         staging: opts.staging.clone(),
-        sidebar,
+        menu,
+        cloud,
     };
     outputs.insert("/style.css", Content::Bytes(css.into_bytes()));
 
@@ -240,24 +250,22 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                 excerpt: p.excerpt.clone().unwrap_or_default(),
             })
             .collect();
-        let html = render::render_index(index, count, cards, &common);
-        outputs.insert(render::index_url(index), Content::Bytes(html.into_bytes()));
+        if index > 0 {
+            let html = render::render_index(index, count, cards, &common);
+            outputs.insert(render::index_url(index), Content::Bytes(html.into_bytes()));
+        }
     });
+    {
+        let all: Vec<&content::Post> = posts.iter().collect();
+        let latest = posts.iter().take(POSTS_LATEST).map(|p| entry_of(p, true)).collect();
+        let html = render::render_posts(latest, archive::build(&all), &common);
+        outputs.insert(render::index_url(0), Content::Bytes(html.into_bytes()));
+    }
 
     // Startseite, Themenübersicht, Kategorie- und Schlagwortseiten
-    let tiles = topics
-        .categories
-        .iter()
-        .map(|c| Tile {
-            url: topics::category_url(&c.slug),
-            name: c.category.name.clone(),
-            image: urls::encode_path(&c.category.image),
-            motto: c.category.motto.trim().to_string(),
-            count: c.posts.len(),
-        })
-        .collect();
-    let news = posts.iter().take(HOME_NEWS).map(|p| entry_of(p, false)).collect();
-    outputs.insert("/", Content::Bytes(render::render_home(tiles, news, &common).into_bytes()));
+    let news = posts.iter().take(HOME_NEWS).map(|p| entry_of(p, true)).collect();
+    let welcome = site.start.as_deref().map(markdown::render_page);
+    outputs.insert("/", Content::Bytes(render::render_home(welcome, news, &common).into_bytes()));
 
     let link_of = |url: String, name: &str, n: usize| TopicLink { url, name: name.to_string(), count: Some(n) };
     let overview_categories = topics.categories.iter().map(|c| link_of(topics::category_url(&c.slug), &c.category.name, c.posts.len())).collect();
@@ -265,15 +273,15 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     outputs.insert("/themen/", Content::Bytes(render::render_topics(overview_categories, overview_tags, &common).into_bytes()));
 
     for c in &topics.categories {
-        let subtopics = topics.tags_in(&c.posts).into_iter().map(|(t, n)| link_of(topics::tag_url(&t.slug), t.name, n)).collect();
         let url = topics::category_url(&c.slug);
         let html = render::render_topic(
             TopicPageInput {
                 url: url.clone(),
                 name: c.category.name.clone(),
                 motto: Some(c.category.motto.trim().to_string()),
+                intro: c.category.intro.as_deref().map(markdown::render_page),
                 count: c.posts.len(),
-                subtopics,
+                archive: archive::build(&c.posts),
                 entries: c.posts.iter().map(|p| entry_of(p, false)).collect(),
             },
             &common,
@@ -287,8 +295,9 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                 url: url.clone(),
                 name: t.name.to_string(),
                 motto: None,
+                intro: None,
                 count: t.posts.len(),
-                subtopics: Vec::new(),
+                archive: Vec::new(),
                 entries: t.posts.iter().map(|p| entry_of(p, true)).collect(),
             },
             &common,
@@ -428,12 +437,16 @@ pub mod tests {
             write(root, &format!("content/style/{}", e.file_name().to_string_lossy()), fs::read(e.path()).unwrap());
         }
         write(root, "content/static/favicon.ico", b"ico");
+        for mascot in ["flauschi_normal.svg", "flauschi_surprised.svg"] {
+            write(root, &format!("content/static/images/{mascot}"), fs::read(repo.join("content/static/images").join(mascot)).unwrap());
+        }
+        write(root, "content/start.md", "Willkommen im **Flauschiversum**!\n");
         write(root, "content/static/images/basteln.jpg", jpeg(300, 225, 120));
         write(root, "content/static/images/wolle.jpg", jpeg(300, 225, 60));
         write(
             root,
             "content/categories.yaml",
-            "- id: basteln\n  name: Basteln\n  image: /images/basteln.jpg\n  motto: |\n    Papier und Schere,\n    mehr brauchst du nicht.\n- id: wolle\n  name: Wolle\n  image: /images/wolle.jpg\n  motto: |\n    Maschen\n    ohne Ende\n",
+            "- id: basteln\n  name: Basteln\n  image: /images/basteln.jpg\n  motto: |\n    Papier und Schere,\n    mehr brauchst du nicht.\n  intro: Alles mit *Klebe* und Schere.\n- id: wolle\n  name: Wolle\n  image: /images/wolle.jpg\n  motto: |\n    Maschen\n    ohne Ende\n",
         );
         write(root, "content/tags.yaml", "- name: LARP\n- name: Hüte\n- name: Halloween\n");
         write(root, "content/pages/about.md", "---\ntitle: \"About\"\n---\n\n# Das Flauschiversum\n\nEin Blog über Wolle & Filz.\n\n[Kürbis](/2020/10/kurbis/)\n");
@@ -610,12 +623,19 @@ pub mod tests {
         let pages = g.outputs.snapshot_html();
         assert!(pages.len() > 10);
         for (path, html) in &pages {
-            // Kopfnavigation: genau drei Einträge
+            // Topbar: Marke mit Maskottchen, drei Menüs, Suchfeld; keine Seitenspalten mehr
+            let bar = between(html, "<header class=\"topbar\"", "</header>");
+            assert!(bar.contains("<a class=\"brand\" href=\"/\">"), "{path}");
+            assert!(bar.find("mascot-normal").unwrap() < bar.find("brand-name").unwrap(), "{path}: Maskottchen vor dem Titel");
+            assert!(bar.contains("src=\"/images/flauschi_normal.svg\"") && bar.contains("src=\"/images/flauschi_surprised.svg\""), "{path}");
             let top = between(html, "<nav class=\"topnav", "</nav>");
-            assert_eq!(top.matches("<a ").count(), 3, "{path}");
-            for (href, text) in [("/", "Start"), ("/themen/", "Themen"), ("/beitraege/", "Beiträge")] {
+            for (href, text) in [("/about/", "About me"), ("/beitraege/", "Beiträge"), ("/themen/", "Kategorien")] {
                 assert!(top.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
             }
+            assert!(top.find("About me").unwrap() < top.find(">Beiträge</a>").unwrap() && top.find(">Beiträge</a>").unwrap() < top.find(">Kategorien</a>").unwrap());
+            assert_eq!(top.matches("aria-expanded=\"false\"").count(), 2, "{path}");
+            assert!(bar.find("</nav>").unwrap() < bar.find("class=\"search topsearch\"").unwrap(), "{path}: Suche nach den Menüs");
+            assert!(!html.contains("sitenav") && !html.contains("<aside class=\"sidebar\"") && !html.contains("blogheader"), "{path}");
             // Fußzeile: vier Seitenlinks, Kontakt, Socials, Copyright
             let footer = between(html, "<footer id=\"blogfooter\"", "</footer>");
             for (href, text) in [("/tipps-und-tricks/", "Tipps und Tricks"), ("/about/", "About"), ("/impressum/", "Impressum"), ("/rss.xml", "Abonnieren")] {
@@ -647,55 +667,75 @@ pub mod tests {
     }
 
     #[test]
-    fn side_columns_cloud_and_author_placement() {
+    fn topbar_menus_cloud_home_and_author_placement() {
         let dir = tempfile::tempdir().unwrap();
         let root = dir.path();
         fixture_site(root);
         let (g, _) = generate_with(root, "https://flauschiversum.de", None);
         let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
 
-        // Seitenspalten: überall außer Suche und Themenübersicht, überall gleich
-        let mut sidebars = std::collections::BTreeSet::new();
-        let mut navs = std::collections::BTreeSet::new();
+        // Menüs auf jeder Seite gleich: neueste Beiträge (geplanter fehlt), Kategorien in Dateireihenfolge, leere entfallen
+        let mut menus = std::collections::BTreeSet::new();
         for (path, html) in &pages {
-            let single = path == "/suche/index.html" || path == "/themen/index.html";
-            assert_eq!(html.contains("<aside class=\"sidebar\""), !single, "{path}");
-            assert_eq!(html.contains("<nav class=\"sitenav card\""), !single, "{path}");
-            assert_eq!(html.contains("class=\"has-side\""), !single, "{path}");
-            if !single {
-                sidebars.insert(between(html, "<aside class=\"sidebar\"", "</aside>").to_string());
-                // Navigationsspalte ohne das Suchfeld, das auf der Startseite fehlt
-                let nav = between(html, "<nav class=\"sitenav card\"", "</nav>");
-                navs.insert(nav[nav.find("<ul class=\"sitenav-links\"").unwrap()..].to_string());
-            }
+            menus.insert(between(html, "<nav class=\"topnav", "</nav>").to_string());
+            // Cloud nur auf der Startseite
+            assert_eq!(html.contains("class=\"cloud\""), path == "/index.html", "{path}");
+            // Archiv nur auf Beiträge- und Kategorieseiten
+            let has_archive = path == "/beitraege/index.html" || path == "/kategorie/basteln/index.html";
+            assert_eq!(html.contains("class=\"archive card\""), has_archive, "{path}");
+            assert_eq!(html.contains("class=\"has-aside"), path == "/index.html" || has_archive, "{path}");
         }
-        assert_eq!(sidebars.len(), 1, "Sidebar auf allen Seiten gleich");
-        assert_eq!(navs.len(), 1, "Navigationsspalte auf allen Seiten gleich");
-        let side = sidebars.into_iter().next().unwrap();
-        // Kategorien mit Anzahl (Wolle nur mit geplantem Beitrag fehlt), Cloud alphabetisch mit Stufen und Titel
-        assert!(side.contains("<a href=\"/kategorie/basteln/\">Basteln <span class=\"count\">(2)</span></a>"));
-        assert!(!side.contains("Wolle"));
-        let cloud = between(&side, "<ul class=\"cloud\"", "</ul>");
-        let names: Vec<_> = cloud.match_indices("class=\"cloud-").map(|(i, _)| &cloud[i..i + 20]).collect();
-        assert_eq!(names.len(), 3, "{cloud}");
+        assert_eq!(menus.len(), 1, "Menüs auf allen Seiten gleich");
+        let menu = menus.into_iter().next().unwrap();
+        let latest = between(&menu, "id=\"menu-beitraege\"", "</ul>");
+        assert_eq!(latest.matches("<li><a href").count(), 3, "{latest}");
+        assert!(latest.find("Grüne Mütze").unwrap() < latest.find("Kürbis").unwrap() && latest.find("Kürbis").unwrap() < latest.find("Alraune").unwrap());
+        assert!(latest.contains("<li class=\"all\"><a href=\"/beitraege/\">Alle Beiträge</a></li>"));
+        assert!(!latest.contains("Morgen"));
+        let cats = between(&menu, "id=\"menu-kategorien\"", "</ul>");
+        assert!(cats.contains("<li><a href=\"/kategorie/basteln/\">Basteln</a></li>"));
+        assert!(!cats.contains("Wolle"), "Kategorie nur mit geplantem Beitrag fehlt");
+
+        // Startseite: h1, Begrüßung, Beiträge, Cloud rechts; kein Suchfeld im Inhalt, keine Kacheln
+        let home = &pages["/index.html"];
+        let (h1, welcome, news) = (home.find("<h1>Flauschiversum</h1>").unwrap(), home.find("Willkommen im <strong>Flauschiversum</strong>!").unwrap(), home.find("<ul class=\"entries\"").unwrap());
+        assert!(h1 < welcome && welcome < news);
+        assert!(!home.contains("class=\"tiles\"") && !home.contains("Neu im Flauschiversum") && !home.contains("big"));
+        assert_eq!(home.matches("type=\"search\"").count(), 1, "nur das Suchfeld der Topbar");
+        let cloud = between(home, "<ul class=\"cloud\"", "</ul>");
         let pos = |n: &str| cloud.find(n).unwrap_or_else(|| panic!("{n}"));
         assert!(pos(">Halloween ") < pos(">Hüte ") && pos(">Hüte ") < pos(">LARP "));
         assert!(cloud.contains("<a class=\"cloud-5\" href=\"/tag/huete/\" title=\"Hüte: 3 Beiträge\">Hüte <span class=\"count\">3</span></a>"), "{cloud}");
         assert!(cloud.contains("title=\"Halloween: 1 Beitrag\""), "{cloud}");
-        assert!(side.contains("<a href=\"/themen/\">Alle Themen</a>"));
+        assert!(home.contains("<a href=\"/themen/\">Alle Themen</a>") && home.contains("<a href=\"/beitraege/\">Alle Beiträge</a></p>"));
+        assert!(!home.contains("aside-early"));
 
-        // Startseite ohne „Häufige Themen“, ein sichtbares Suchfeld (das große im Inhalt)
-        let home = &pages["/index.html"];
-        assert!(!home.contains("Häufige Themen"));
-        assert_eq!(home.matches("type=\"search\"").count(), 1);
-        // Andere Seiten: Suchfeld im Kopf und in der Navigationsspalte, mit verschiedenen ids
+        // Beiträge: Einträge und Archiv (neuestes Jahr und Monat offen)
+        let index = &pages["/beitraege/index.html"];
+        assert!(index.contains("<h1>Beiträge</h1>") && !index.contains("class=\"pagination\""));
+        assert_eq!(between(index, "<main", "</main>").matches("<li class=\"entry\"").count(), 3);
+        let archive = between(index, "<aside class=\"archive card\"", "</aside>");
+        assert!(archive.contains("<details class=\"year\" open>\n    <summary>2026 <span class=\"count\">(1)</span>"), "{archive}");
+        assert!(archive.contains("<details class=\"year\">\n    <summary>2020") && archive.contains("<details class=\"year\">\n    <summary>2014"));
+        assert_eq!(archive.matches("<details class=\"month\" open>").count(), 1);
+        assert!(archive.contains("<a href=\"/2020/10/kurbis/\">Kürbis</a>") && archive.contains("<span class=\"day\">31.</span>"));
+        assert!(archive.contains("Oktober <span class=\"count\">(1)</span>") && archive.contains("Januar <span class=\"count\">(1)</span>"));
+        // Kategorie: Reim, Einleitung, dann Beiträge; Archiv nur dieser Kategorie, auf schmalen Fenstern früh
+        let cat = &pages["/kategorie/basteln/index.html"];
+        assert!(cat.contains("class=\"has-aside aside-early\""));
+        assert!(cat.find("Papier und Schere").unwrap() < cat.find("<p>Alles mit <em>Klebe</em> und Schere.</p>").unwrap());
+        assert!(cat.find("Alles mit <em>Klebe</em>").unwrap() < cat.find("<ul class=\"entries\"").unwrap());
+        let cat_archive = between(cat, "<aside class=\"archive card\"", "</aside>");
+        assert!(cat_archive.contains("Alraune") && cat_archive.contains("Kürbis") && !cat_archive.contains("Mütze"));
+
+        // Tag-Seiten ohne Archiv; Suchfeld in der Topbar und (Suchseite) groß im Inhalt, verschiedene ids
         let post = &pages["/2014/01/alraune/index.html"];
-        assert_eq!(post.matches("type=\"search\"").count(), 2);
-        // Lupe im Feld: Knopf mit Namen „Suchen“ im selben .searchbox, kein sichtbarer Text „Suchen“ als Knopfbeschriftung
-        assert_eq!(post.matches("<div class=\"searchbox\">").count(), 2);
+        assert_eq!(post.matches("type=\"search\"").count(), 1);
         assert!(post.contains("<button type=\"submit\" aria-label=\"Suchen\" title=\"Suchen\"><svg"), "Lupe als Icon");
-        assert!(!post.contains(">Suchen</button>"));
-        assert!(post.contains("id=\"q\"") && post.contains("id=\"q-side\""));
+        assert!(!post.contains(">Suchen</button>") && post.contains("id=\"q-top\""));
+        let search = &pages["/suche/index.html"];
+        assert_eq!(search.matches("type=\"search\"").count(), 2);
+        assert!(search.contains("id=\"q\"") && search.contains("id=\"q-top\""));
 
         // Autor: nicht im Kopf, sondern nach dem Text und vor „älterer Beitrag“
         assert!(!between(post, "<div class=\"post-header\"", "<main").contains("Von "));
@@ -706,6 +746,42 @@ pub mod tests {
         // Ohne Autor keine Zeile
         let muetze = &pages["/2026/01/gruene-muetze/index.html"];
         assert!(!muetze.contains("Von <a"));
+    }
+
+    #[test]
+    fn menu_and_lists_with_more_than_ten_posts() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        for i in 1..=10 {
+            write(root, &format!("content/posts/p{i:02}/index.md"), format!("---\ntitle: \"Beitrag {i:02}\"\ncategory: wolle\ndate: 2021-{:02}-15\n---\nText\n", i.min(12)));
+        }
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
+        let home = &pages["/index.html"];
+        // 13 veröffentlichte Beiträge: zehn neueste im Menü, auf der Startseite und auf /beitraege/
+        let menu = between(home, "id=\"menu-beitraege\"", "</ul>");
+        assert_eq!(menu.matches("<li><a href").count(), 10);
+        assert!(menu.contains("Grüne Mütze") && menu.contains("Beitrag 10") && !menu.contains("Alraune") && !menu.contains("Kürbis"));
+        assert_eq!(between(home, "<main", "</main>").matches("<li class=\"entry\"").count(), 10);
+        let index = &pages["/beitraege/index.html"];
+        assert_eq!(between(index, "<main", "</main>").matches("<li class=\"entry\"").count(), 10);
+        // Archiv enthält alle 13, nach Jahr gruppiert; Kategorie Wolle erscheint im Menü nach Basteln (Dateireihenfolge)
+        let archive = between(index, "<aside class=\"archive card\"", "</aside>");
+        assert_eq!(archive.matches("<li><span class=\"day\">").count(), 13);
+        assert!(archive.contains("<summary>2021 <span class=\"count\">(10)</span>"));
+        assert!(archive.find("2026").unwrap() < archive.find("2021").unwrap() && archive.find("2021").unwrap() < archive.find("2014").unwrap());
+        let cats = between(home, "id=\"menu-kategorien\"", "</ul>");
+        assert!(cats.find("Basteln").unwrap() < cats.find("Wolle").unwrap());
+        // Bisherige Blätterseiten bleiben: 13 Beiträge, 4 je Seite
+        for n in 1..=3 {
+            assert!(g.outputs.contains(&format!("/page/{n}/")), "/page/{n}/");
+        }
+        assert!(!g.outputs.contains("/page/4/"));
+        assert!(pages["/page/1/index.html"].contains("class=\"pagination\""));
+        assert!(!pages["/page/1/index.html"].contains("class=\"archive"));
+        let cat = &pages["/kategorie/wolle/index.html"];
+        assert_eq!(between(cat, "<main", "</main>").matches("<li class=\"entry\"").count(), 10, "alle Beiträge der Kategorie auf einer Seite");
     }
 
     #[test]
@@ -782,8 +858,7 @@ pub mod tests {
         let cat = read(root, "kategorie/basteln/index.html");
         assert!(cat.contains("<title>Basteln – Flauschiversum</title>"));
         assert!(cat.contains("content=\"2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.\""));
-        assert!(cat.contains("<a href=\"/tag/huete/\">Hüte <span class=\"count\">(2)</span></a>"));
-        assert!(!cat.contains("href=\"/kategorie/basteln/\">Basteln</a></p>"), "Kategorie nicht doppelt auf Kategorieseite");
+        assert!(!cat.contains("taglist"), "keine Schlagwortliste in der Kategorie");
         let tag = read(root, "tag/huete/index.html");
         assert!(tag.contains("3 Beiträge"));
         assert!(tag.find("Grüne Mütze").unwrap() < tag.find("Alraune").unwrap(), "neueste zuerst");
@@ -796,7 +871,7 @@ pub mod tests {
         assert!(search.contains("<meta name=\"robots\" content=\"noindex\">"));
         assert!(search.contains("<title>Suche – Flauschiversum</title>"));
         assert_eq!(search.matches("<h1").count(), 1);
-        assert_eq!(search.matches("name=\"q\"").count(), 1);
+        assert_eq!(search.matches("name=\"q\"").count(), 2, "Topbar und großes Feld");
         assert!(!read(root, "robots.txt").contains("suche"));
         assert!(!post.contains("noindex") && !home.contains("noindex"));
         assert!(!read(root, "sitemap.xml").contains("/suche/"));
@@ -840,7 +915,8 @@ pub mod tests {
         let site = &g.site;
         let mut pages_of_category: HashMap<&str, usize> = HashMap::new();
         for c in &site.categories {
-            let html = page(&format!("/kategorie/{}/", urls::slugify(&c.id)));
+            let full = page(&format!("/kategorie/{}/", urls::slugify(&c.id)));
+            let html = &full[full.find("<main").unwrap()..full.find("</main>").unwrap()];
             for p in &site.posts {
                 let linked = html.contains(&format!("href=\"{}\"", urls::encode_path(&p.url)));
                 if p.category.as_deref() == Some(c.id.as_str()) {
@@ -868,21 +944,30 @@ pub mod tests {
         for page in ["/themen/", "/suche/", "/pagefind/pagefind.js", "/pagefind/pagefind-entry.json"] {
             assert!(g.outputs.contains(page), "{page}");
         }
-        // Jeder mailto-Link der ganzen Seite hat „Flauschiversum“ im Betreff, überall dieselbe Sidebar
-        let mut sidebars = std::collections::BTreeSet::new();
+        // Jeder mailto-Link der ganzen Seite hat „Flauschiversum“ im Betreff; Menüs überall gleich, Cloud nur auf der Startseite
+        let mut menus = std::collections::BTreeSet::new();
         for (path, html) in &pages {
             for (i, _) in html.match_indices("mailto:") {
                 let link = &html[i..i + html[i..].find(|c| c == '"' || c == ')').unwrap()];
                 let subject = urls::decode_path(link.split("subject=").nth(1).unwrap_or_else(|| panic!("{path}: kein Betreff in {link}")));
                 assert!(subject.contains("Flauschiversum"), "{path}: {link}");
             }
-            if let Some(i) = html.find("<aside class=\"sidebar\"") {
-                sidebars.insert(html[i..i + html[i..].find("</aside>").unwrap()].to_string());
-            } else {
-                assert!(path == "/suche/index.html" || path == "/themen/index.html", "Sidebar fehlt: {path}");
+            menus.insert(html[html.find("<nav class=\"topnav").unwrap()..html.find("</nav>").unwrap()].to_string());
+            assert_eq!(html.contains("class=\"cloud\""), path == "/index.html", "{path}");
+        }
+        assert_eq!(menus.len(), 1);
+        // Archiv: jede Kategorie und /beitraege/ führen alle ihre Beiträge auf (Zahl der Archiv-Einträge = Zahl der Beiträge)
+        let entries = |html: &str| {
+            let a = &html[html.find("<aside class=\"archive card\"").unwrap()..];
+            a[..a.find("</aside>").unwrap()].matches("<li><span class=\"day\">").count()
+        };
+        assert_eq!(entries(&page("/beitraege/")), site.posts.len());
+        for c in &site.categories {
+            let n = site.posts.iter().filter(|p| p.category.as_deref() == Some(c.id.as_str())).count();
+            if n > 0 {
+                assert_eq!(entries(&page(&format!("/kategorie/{}/", urls::slugify(&c.id)))), n, "{}", c.id);
             }
         }
-        assert_eq!(sidebars.len(), 1);
         // Alle Medien-Referenzen lösen auf: Warnungen betreffen nur Seitenlinks in den Inhalten
         for d in diag.all() {
             let is_media = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".webm", ".css", ".js"]
