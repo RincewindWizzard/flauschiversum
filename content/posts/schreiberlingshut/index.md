@@ -2,6 +2,7 @@
 title: "Schreiberlingshut"
 permalink: /2017/04/schreiberlingshut/
 category: filzen
+tags: [Hüte, LARP]
 author: Ermeline
 date: 2017-04-30
 image: "schreiberlingshut_thumb.jpg"

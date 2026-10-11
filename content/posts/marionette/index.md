@@ -2,6 +2,7 @@
 title: "Marionette "
 permalink: /2017/01/marionette/
 category: basteln
+tags: [Puppen]
 author: Ermeline
 date: 2017-01-29
 image: "marionette_thumb.jpg"

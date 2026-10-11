@@ -2,6 +2,7 @@
 title: "Eine Facebook Seite"
 permalink: /2014/05/eine-facebook-seite/
 category: basteln
+tags: [Blog]
 author: Ermeline
 date: 2014-05-10 15:30:11
 excerpt: "Es gibt jetzt auch die Möglichkeit meine Beiträge und mich bei Facebook zu liken."

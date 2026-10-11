@@ -2,6 +2,7 @@
 title: "Magierdinge"
 permalink: /2016/03/magierdinge/
 category: brandings
+tags: [LARP]
 author: Ermeline
 date: 2016-03-06 12:42:16
 image: "DSCF3998.JPG"

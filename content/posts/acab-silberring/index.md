@@ -2,6 +2,7 @@
 title: "ACAB-Silberring"
 permalink: /2017/06/acab-silberring/
 category: basteln
+tags: [Schmuck]
 author: Ermeline
 date: 2017-06-18
 image: "acab-silberring_thumb.jpg"

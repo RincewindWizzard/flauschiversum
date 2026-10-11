@@ -2,6 +2,7 @@
 title: "unterstützte Spindel"
 permalink: /2015/05/unterstutzte-spindel/
 category: wolle
+tags: [Spinnen]
 author: Ermeline
 date: 2015-05-12 16:58:09
 image: DSCF2839.jpg

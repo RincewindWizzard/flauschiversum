@@ -2,6 +2,7 @@
 title: "monstermässiges Kuschelkissen"
 permalink: /2015/04/monstermassiges-kuschelkissen/
 category: nähen
+tags: [Kissen]
 author: Ermeline
 date: 2015-04-03 08:42:16
 image: "DSCF2682.jpg"

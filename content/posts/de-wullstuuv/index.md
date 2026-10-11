@@ -2,6 +2,7 @@
 title: "de Wullstuuv"
 permalink: /2013/07/de-wullstuuv/
 category: filzen
+tags: [Einkaufen]
 author: Ermeline
 date: 2013-07-28 00:50:23
 excerpt: "Das ist der Laden für Spinner und Filzer."

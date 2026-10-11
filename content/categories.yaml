@@ -1,0 +1,38 @@
+# Erlaubte Kategorien. Der Wert von `category` in einem Beitrag ist die `id`.
+# Die Reihenfolge bestimmt die Reihenfolge der Kacheln auf der Startseite.
+- id: basteln
+  name: Basteln
+  image: /images/Basteln.jpg
+  motto: |-
+    Mit Klebe und Schere bestückt,
+    wird mit Liebe geschmückt.
+- id: brandings
+  name: Brandings
+  image: /images/Brandings.jpg
+  motto: |-
+    Die Haut zu dick? Das ist egal,
+    bebrannt wird auch das Holzregal.
+- id: filzen
+  name: Filzen
+  image: /images/Filzen.jpg
+  motto: |-
+    Wasser, Seife, Wolle,
+    reibe nicht zu dolle.
+- id: malen
+  name: Malen
+  image: /images/Malen.jpg
+  motto: |-
+    Pinselstrich und Mine, geben mir die Muße,
+    dem ersten Zug, ein Neuer folgt zum Gruße.
+- id: nähen
+  name: Nähen
+  image: /images/Naehen.jpg
+  motto: |-
+    Mit Nadel und Faden in den Krieg,
+    erreichen kannst du nur den Sieg.
+- id: wolle
+  name: Wolle
+  image: /images/Wolle.jpg
+  motto: |-
+    Spinne, häkel, webe, sticke,
+    knüpfe dir nur keine Stricke.

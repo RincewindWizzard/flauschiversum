@@ -2,6 +2,7 @@
 title: "Seepferdchenhut"
 permalink: /2015/11/seepferdchenhut/
 category: filzen
+tags: [Hüte, Geschenke, Weihnachten]
 author: Ermeline
 date: 2015-11-15 15:00:00
 image: "Seepferdchenhut_links.jpg"

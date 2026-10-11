@@ -2,6 +2,7 @@
 title: "der Hut einer Magiewirkenden"
 permalink: /2016/03/der-hut-einer-magiewirkenden/
 category: filzen
+tags: [Hüte, LARP]
 author: Ermeline
 date: 2016-03-13 19:15:26
 image: "DSCF4071.JPG"

@@ -2,6 +2,7 @@
 title: "idee Creativmarkt"
 permalink: /2013/07/idee-creativmarkt/
 category: basteln
+tags: [Einkaufen]
 author: Ermeline
 date: 2013-07-28 01:01:06
 excerpt: "Wenn man das Gefühl hat man weiß nicht was man machen soll..."

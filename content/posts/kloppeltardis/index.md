@@ -2,6 +2,7 @@
 title: "Klöppeltardis"
 permalink: /2019/02/kloppeltardis/
 category: wolle
+tags: [Klöppeln]
 author: Ermeline
 date: 2019-02-10
 image: "kloppeltardis_thumb.jpg"

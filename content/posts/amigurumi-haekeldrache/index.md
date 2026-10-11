@@ -1,6 +1,8 @@
 ---
 title: "Amigurumi Häkeldrache"
 permalink: /2014/07/amigurumi-hakeldrache/
+category: wolle
+tags: [Amigurumi, Häkeln]
 author: Ermeline
 date: 2014-07-15 09:43:39
 image: "DSCF1374.jpg"

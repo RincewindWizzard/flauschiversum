@@ -2,6 +2,7 @@
 title: "Flauschiversum Schild"
 permalink: /2016/01/flauschiversum-schild/
 category: brandings
+tags: [Blog]
 author: Ermeline
 date: 2016-01-17 13:18:46
 image: "DSCF3716.JPG"

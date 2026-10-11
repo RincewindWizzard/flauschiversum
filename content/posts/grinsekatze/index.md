@@ -2,6 +2,7 @@
 title: "Grinsekatze"
 permalink: /2014/07/grinsekatze/
 category: basteln
+tags: [Katzen, Upcycling]
 author: Ermeline
 date: 2014-07-10 22:38:20
 image: DSCF1318.jpg

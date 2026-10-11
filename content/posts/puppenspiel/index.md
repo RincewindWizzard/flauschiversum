@@ -2,6 +2,7 @@
 title: "Puppenspiel"
 permalink: /2014/06/puppenspiel/
 category: wolle
+tags: [Stricken, Puppen]
 author: Lucy
 date: 2014-06-16 19:22:24
 image: DSCF0844-e1422111087530.jpg

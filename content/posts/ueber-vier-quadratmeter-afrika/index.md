@@ -2,6 +2,7 @@
 title: "über vier Quadratmeter Afrika"
 permalink: /2016/08/uber-vier-quadratmeter-afrika/
 category: nähen
+tags: [Quilten, Decken]
 author: Lucy
 date: 2016-08-21 20:56:41
 image: "IMG_4570.JPG"

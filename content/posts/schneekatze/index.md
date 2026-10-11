@@ -2,6 +2,7 @@
 title: "Schneekatze"
 permalink: /2015/01/schneekatze/
 category: basteln
+tags: [Katzen]
 author: Ermeline
 date: 2015-01-24 12:07:37
 image: DSCF2033.jpg

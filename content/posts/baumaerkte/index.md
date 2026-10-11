@@ -2,6 +2,7 @@
 title: "Baumärkte"
 permalink: /2013/07/baumarkte/
 category: basteln
+tags: [Einkaufen]
 author: Ermeline
 date: 2013-07-28 01:03:37
 excerpt: "Yey, davon haben wir ja so schön viele."

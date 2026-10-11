@@ -2,6 +2,7 @@
 title: "Der Monet auf dem WC"
 permalink: /2015/01/der-monet-auf-dem-wc/
 category: nähen
+tags: [Quilten]
 author: Lucy
 date: 2015-01-18 20:30:23
 image: "DSCF2030.JPG"

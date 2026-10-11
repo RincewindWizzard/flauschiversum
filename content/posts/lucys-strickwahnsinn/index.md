@@ -2,6 +2,7 @@
 title: "Lucys Strickwahnsinn"
 permalink: /2015/12/lucys-strickwahnsinn/
 category: wolle
+tags: [Stricken, Schals]
 author: Lucy
 date: 2015-12-13 15:11:47
 image: "DSCF1574.JPG"

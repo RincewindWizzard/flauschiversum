@@ -2,6 +2,7 @@
 title: "Fescher Fez"
 permalink: /2014/08/fescher-fez/
 category: filzen
+tags: [Hüte, LARP]
 author: Ermeline
 date: 2014-08-21 20:59:48
 image: "DSCF1509.jpg"

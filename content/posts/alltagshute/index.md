@@ -2,6 +2,7 @@
 title: "Alltagshüte"
 permalink: /2016/05/alltagshute/
 category: filzen
+tags: [Hüte]
 author: Ermeline
 date: 2016-05-08 21:00:00
 image: "DSCF3142.JPG"

@@ -2,6 +2,7 @@
 title: "Quilt alias Patchworkdecke"
 permalink: /2014/01/quilt-alias-patchworkdecke/
 category: nähen
+tags: [Quilten, Decken]
 author: Ermeline
 date: 2014-01-02 23:56:41
 image: DSCF0515-e1423511199914.jpg

@@ -2,6 +2,7 @@
 title: "Edlothia"
 permalink: /2016/11/edlothia/
 category: wolle
+tags: [Stricken]
 author: Ermeline
 date: 2016-11-06 19:39:18
 image: "nah.jpg"

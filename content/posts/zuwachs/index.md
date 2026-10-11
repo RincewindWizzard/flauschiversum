@@ -2,6 +2,7 @@
 title: "Zuwachs"
 permalink: /2016/10/zuwachs/
 category: basteln
+tags: [Katzen]
 author: Ermeline
 date: 2016-10-23 17:41:25
 image: "DSCF5821.JPG"

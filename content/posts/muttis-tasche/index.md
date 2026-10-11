@@ -2,6 +2,7 @@
 title: "Muttis Tasche"
 permalink: /2016/01/muttis-tasche/
 category: brandings
+tags: [Taschen, Upcycling]
 author: Ermeline
 date: 2016-01-24 18:25:10
 image: "DSCF3721.JPG"

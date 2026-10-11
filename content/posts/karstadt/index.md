@@ -2,6 +2,7 @@
 title: "Karstadt"
 permalink: /2013/07/karstadt/
 category: basteln
+tags: [Einkaufen]
 author: Ermeline
 date: 2013-07-28 01:04:03
 excerpt: "Für ältere Herrschaften mag Karstadt noch eine Art Qualitätssiegel besitzen..."

@@ -2,6 +2,7 @@
 title: "Ein Hut für Steinfreunde"
 permalink: /2014/04/ein-hut-fur-steinfreunde/
 category: filzen
+tags: [Hüte, LARP]
 author: Ermeline
 date: 2014-04-28 21:33:43
 image: "DSCF0548.jpg"

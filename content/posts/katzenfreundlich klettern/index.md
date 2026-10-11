@@ -2,6 +2,7 @@
 title: "Katzenfreundlich Klettern"
 permalink: /2016/08/katzenfreundlich-klettern/
 category: basteln
+tags: [Katzen]
 author: Ermeline
 date: 2016-08-28 20:20:18
 image: "Klettern_1.jpg"

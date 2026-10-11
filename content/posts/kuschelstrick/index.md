@@ -2,6 +2,7 @@
 title: "Kuschelstrick"
 permalink: /2014/06/kuschelstrick/
 category: wolle
+tags: [Stricken, Decken]
 author: Lucy
 date: 2014-06-11 15:51:03
 image: "DSCF0854.jpg"

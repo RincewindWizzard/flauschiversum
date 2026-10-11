@@ -2,6 +2,7 @@
 title: "Monstermützen"
 permalink: /2015/01/monstermutzen/
 category: wolle
+tags: [Häkeln, Mützen und Stirnbänder]
 author: Ermeline
 date: 2015-01-04 14:12:55
 image: DSCF2005.jpg

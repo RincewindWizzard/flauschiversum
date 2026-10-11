@@ -2,6 +2,7 @@
 title: "Doubleface"
 permalink: /2014/01/doubleface/
 category: wolle
+tags: [Stricken, Schals]
 author: Ermeline
 date: 2014-01-02 23:31:40
 image: "IMG_3751.jpg"

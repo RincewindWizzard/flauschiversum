@@ -2,6 +2,7 @@
 title: "Filz-Stifte statt Filzstifte"
 permalink: /2014/07/filz-stifte-statt-filzstifte/
 category: filzen
+tags: [Upcycling]
 author: Ermeline
 date: 2014-07-23 18:45:51
 image: "DSCF1405.jpg"

@@ -2,6 +2,7 @@
 title: "In the Pink"
 permalink: /2014/01/in-the-pink/
 category: wolle
+tags: [Stricken, Schals]
 author: Ermeline
 date: 2014-01-02 23:19:50
 image: "IMG_1897.jpg"

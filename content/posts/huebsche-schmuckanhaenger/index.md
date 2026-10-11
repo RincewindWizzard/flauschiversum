@@ -2,6 +2,7 @@
 title: "Hübsche Schmuckanhänger "
 permalink: /2017/03/hubsche-schmuckanhanger/
 category: basteln
+tags: [Schmuck]
 author: Lucy
 date: 2017-03-19
 image: "hubsche-schmuckanhanger_thumb.jpg"

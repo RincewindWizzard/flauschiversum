@@ -1,6 +1,7 @@
 ---
 title: "Relaunch aus der Hackermatte"
 permalink: /2019/08/relaunch-aus-der-hackermatte/
+tags: [Blog]
 author: Ehrlich
 date: 2019-08-22 22:30:23
 image: "fairy_dust.jpg"

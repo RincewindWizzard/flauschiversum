@@ -2,6 +2,7 @@
 title: "Afrikas kleiner Bruder"
 permalink: /2017/07/afrikas-kleiner-bruder/
 category: nähen
+tags: [Quilten]
 author: Lucy
 date: 2017-07-30
 image: "afrikas-kleiner-bruder_thumb.jpg"

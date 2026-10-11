@@ -2,6 +2,7 @@
 title: "Fertiggestricktes Spannen"
 permalink: /2013/07/fertiggestricktes-spannen/
 category: wolle
+tags: [Stricken]
 author: Ermeline
 date: 2013-07-28 00:05:43
 excerpt: "Nicht jeder hat einen großen Keller für eine Styroporwand..."

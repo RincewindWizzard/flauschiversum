@@ -2,6 +2,7 @@
 title: "Trickfilm Gelenkpuppen"
 permalink: /2016/11/trickfilm-gelenkpuppen/
 category: brandings
+tags: [Puppen]
 author: Ermeline
 date: 2016-11-20 19:42:16
 image: "DSCF5954.JPG"

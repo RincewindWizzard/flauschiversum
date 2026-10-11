@@ -2,6 +2,7 @@
 title: "eine schlichte Pfeilraupe"
 permalink: /2018/03/eine-schlichte-pfeilraupe/
 category: wolle
+tags: [Stricken, Schals]
 author: Ermeline
 date: 2018-03-11
 image: "eine-schlichte-pfeilraupe_thumb.jpg"

@@ -2,6 +2,7 @@
 title: "backe backe Plätzchen"
 permalink: /2016/11/backe-backe-platzchen/
 category: basteln
+tags: [Weihnachten]
 author: Ermeline Lucy
 date: 2016-11-27 16:16:47
 image: "IMG_20161127_113221.jpg"

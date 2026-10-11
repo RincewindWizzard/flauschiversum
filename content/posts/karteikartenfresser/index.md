@@ -2,6 +2,7 @@
 title: "Karteikartenfresser"
 permalink: /2014/05/karteikartenfresser/
 category: basteln
+tags: [Upcycling]
 author: Ermeline
 date: 2014-05-18 15:14:18
 image: "DSCF0444sscff.jpg"

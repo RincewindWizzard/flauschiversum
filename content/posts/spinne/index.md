@@ -1,6 +1,8 @@
 ---
 title: "Spinne"
 permalink: /2015/04/spinne/
+category: basteln
+tags: [Upcycling]
 author: Ermeline
 date: 2015-04-09 14:39:36
 image: DSCF2118.jpg

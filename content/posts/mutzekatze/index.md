@@ -2,6 +2,7 @@
 title: "Mützekatze"
 permalink: /2014/05/mutzekatze/
 category: wolle
+tags: [Katzen, Häkeln, Mützen und Stirnbänder]
 author: Ermeline
 date: 2014-05-18 18:25:10
 image: "DSCF0295-e1422117136878.jpg"

@@ -2,6 +2,7 @@
 title: "Strickmantel"
 permalink: /2014/06/strickmantel/
 category: wolle
+tags: [Stricken]
 author: Lucy
 date: 2014-06-25 16:36:09
 image: DSCF0872-e1422110208219.jpg

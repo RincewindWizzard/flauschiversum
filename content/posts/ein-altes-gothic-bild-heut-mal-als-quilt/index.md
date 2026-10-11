@@ -2,6 +2,7 @@
 title: "Ein altes Gothic Bild, heut' mal als Quilt"
 permalink: /2016/02/ein-altes-gothic-bild-heut-mal-als-quilt/
 category: nähen
+tags: [Quilten, Upcycling]
 author: Lucy
 date: 2016-02-28 15:11:47
 image: "DSCF3959.JPG"

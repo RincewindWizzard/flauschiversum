@@ -2,6 +2,7 @@
 title: "Pfeilraupe"
 permalink: /2016/12/pfeilraupe/
 category: wolle
+tags: [Stricken, Schals]
 author: Lucy
 date: 2016-12-18 13:51:03
 image: "_1000352.JPG"

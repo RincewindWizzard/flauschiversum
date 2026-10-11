@@ -2,6 +2,7 @@
 title: "ein wichtiger Hut"
 permalink: /2017/02/ein-wichtiger-hut/
 category: nähen
+tags: [Hüte, LARP]
 author: Ermeline
 date: 2017-02-19
 image: "ein-wichtiger-hut_thumb.jpg"

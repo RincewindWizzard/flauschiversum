@@ -2,6 +2,7 @@
 title: "NyanCat Stirnband"
 permalink: /2017/01/nyancat-stirnband/
 category: wolle
+tags: [Häkeln, Katzen, Mützen und Stirnbänder]
 author: Ermeline
 date: 2017-01-22
 image: "nyancat-stirnband_thumb.jpg"

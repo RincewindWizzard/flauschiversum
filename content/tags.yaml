@@ -1,0 +1,31 @@
+# Erlaubte Schlagworte (Tags). Beiträge nennen sie im Frontmatter: tags: [Katzen, Hüte]
+# Neue Schlagworte hier ergänzen; unbekannte Schlagworte lässt der Build nicht durch.
+- name: Amigurumi
+- name: Blog
+- name: Challenge
+- name: Decken
+- name: Einhörner
+- name: Einkaufen
+- name: Fasching
+- name: Geschenke
+- name: Häkeln
+- name: Halloween
+- name: Handyhüllen
+- name: Hüte
+- name: Katzen
+- name: Kissen
+- name: Klöppeln
+- name: LARP
+- name: Mappen und Etuis
+- name: Mützen und Stirnbänder
+- name: Papier
+- name: Puppen
+- name: Quilten
+- name: Schals
+- name: Schmuck
+- name: Schule und Ausbildung
+- name: Spinnen
+- name: Stricken
+- name: Taschen
+- name: Upcycling
+- name: Weihnachten

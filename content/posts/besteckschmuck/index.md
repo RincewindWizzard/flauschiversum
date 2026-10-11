@@ -2,6 +2,7 @@
 title: "Besteckschmuck"
 permalink: /2016/10/besteckschmuck/
 category: basteln
+tags: [Schmuck, Upcycling]
 author: Ermeline
 date: 2016-10-02 21:16:47
 image: "DSCF5777.JPG"

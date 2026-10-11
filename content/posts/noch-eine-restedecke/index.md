@@ -2,6 +2,7 @@
 title: "Noch eine Restedecke"
 permalink: /2017/05/noch-eine-restedecke/
 category: wolle
+tags: [Stricken, Decken]
 author: Lucy
 date: 2017-05-07
 image: "noch-eine-restedecke_thumb.jpg"

@@ -2,6 +2,7 @@
 title: "Laptoptasche"
 permalink: /2018/04/laptoptasche/
 category: nähen
+tags: [Taschen]
 author: Ermeline
 date: 2018-04-22
 image: "laptoptasche_thumb.jpg"

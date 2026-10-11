@@ -2,6 +2,7 @@
 title: "Abschiedsgeschenk"
 permalink: /2018/04/abschiedsgeschenk/
 category: basteln
+tags: [Geschenke]
 author: Ermeline
 date: 2018-04-01
 image: "abschiedsgeschenk_thumb.jpg"

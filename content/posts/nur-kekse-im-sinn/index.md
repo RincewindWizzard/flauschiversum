@@ -2,6 +2,7 @@
 title: "... nur Kekse im Sinn"
 permalink: /2014/05/nur-kekse-im-sinn/
 category: wolle
+tags: [Häkeln, Mützen und Stirnbänder]
 author: Ermeline
 date: 2014-05-18 18:31:53
 image: IMG_20130412_213522.jpg

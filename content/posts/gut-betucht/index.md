@@ -2,6 +2,7 @@
 title: "Gut betucht"
 permalink: /2015/07/gut-betucht/
 category: wolle
+tags: [Spinnen, Schals]
 author: Ermeline
 date: 2015-07-20 19:39:18
 image: "DSCF2941.jpg"

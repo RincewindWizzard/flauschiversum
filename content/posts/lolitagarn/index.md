@@ -2,6 +2,7 @@
 title: "Lolitagarn"
 permalink: /2018/08/lolitagarn/
 category: wolle
+tags: [Katzen, Spinnen]
 author: Ermeline
 date: 2018-08-05
 image: "lolitagarn_thumb.jpg"

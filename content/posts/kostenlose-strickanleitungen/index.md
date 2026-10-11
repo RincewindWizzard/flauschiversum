@@ -2,6 +2,7 @@
 title: "kostenlose Strickanleitungen"
 permalink: /2014/06/kostenlose-strickanleitungen/
 category: wolle
+tags: [Stricken]
 author: Ermeline
 date: 2014-06-29 15:32:06
 excerpt: "Sooo dann wollen wir doch mal das Wissen um meine Strickanleitungsquellen teilen."

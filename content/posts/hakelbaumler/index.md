@@ -2,6 +2,7 @@
 title: "Häkelbaumler"
 permalink: /2017/05/hakelbaumler/
 category: wolle
+tags: [Häkeln]
 author: Ermeline
 date: 2017-05-21
 image: "hakelbaumler_thumb.jpg"

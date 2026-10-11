@@ -2,6 +2,7 @@
 title: "Ermelines neuer Hexenhut"
 permalink: /2014/07/ermelines-neuer-hexenhut/
 category: filzen
+tags: [Hüte]
 author: Ermeline
 date: 2014-07-22 15:10:47
 image: "DSCF1378.jpg"

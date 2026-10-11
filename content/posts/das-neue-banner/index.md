@@ -2,6 +2,7 @@
 title: "das neue Banner"
 permalink: /2014/08/das-neue-banner/
 category: filzen
+tags: [LARP]
 author: Ermeline
 date: 2014-08-31 18:45:53
 image: "DSCF1536.jpg"

@@ -2,6 +2,7 @@
 title: "Popupbox"
 permalink: /2016/04/popupbox/
 category: basteln
+tags: [Geschenke, Papier]
 author: Ermeline
 date: 2016-04-24 21:50:11
 image: "DSCF3571.JPG"

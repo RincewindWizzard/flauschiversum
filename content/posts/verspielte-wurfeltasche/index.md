@@ -2,6 +2,7 @@
 title: "verspielte Würfeltasche"
 permalink: /2017/08/verspielte-wurfeltasche/
 category: brandings
+tags: [Taschen]
 author: Ermeline
 date: 2017-08-20
 image: "verspielte-wurfeltasche_thumb.jpg"

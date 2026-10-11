@@ -2,6 +2,7 @@
 title: "So schön ist das Lagerleben"
 permalink: /2016/08/so-schon-ist-das-lagerleben/
 category: basteln
+tags: [LARP]
 author: Ermeline
 date: 2016-08-14 20:25:10
 image: "DSCF5291.JPG"

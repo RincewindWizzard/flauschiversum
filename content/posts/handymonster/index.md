@@ -2,6 +2,7 @@
 title: "Handymonster"
 permalink: /2017/06/handymonster/
 category: wolle
+tags: [Häkeln, Handyhüllen]
 author: Ermeline
 date: 2017-06-04
 image: "handymonster_thumb.jpg"

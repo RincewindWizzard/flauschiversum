@@ -2,6 +2,7 @@
 title: "Flamin-Goooo"
 permalink: /2018/08/flamin-goooo/
 category: wolle
+tags: [Amigurumi, Häkeln]
 author: Ermeline
 date: 2018-08-19
 image: "flamin-goooo_thumb.jpg"

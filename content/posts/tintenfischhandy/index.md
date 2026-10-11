@@ -2,6 +2,7 @@
 title: "Tintenfischhandy"
 permalink: /2017/06/tintenfischhandy/
 category: wolle
+tags: [Häkeln, Handyhüllen]
 author: Ermeline
 date: 2017-06-11
 image: "tintenfischhandy_thumb.jpg"

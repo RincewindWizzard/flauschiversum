@@ -2,6 +2,7 @@
 title: "Pimp-my-Karton"
 permalink: /2016/02/pimp-my-karton/
 category: basteln
+tags: [Upcycling]
 author: Ermeline
 date: 2016-02-14 18:50:11
 image: "DSCF3849.JPG"

@@ -2,6 +2,7 @@
 title: "Häkeleinhorn"
 permalink: /2018/02/hakeleinhorn/
 category: wolle
+tags: [Amigurumi, Häkeln, Einhörner]
 author: Ermeline
 date: 2018-02-18
 image: "hakeleinhorn_thumb.jpg"

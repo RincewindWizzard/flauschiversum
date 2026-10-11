@@ -2,6 +2,7 @@
 title: "Wandbehang"
 permalink: /2016/09/wandbehang/
 category: nähen
+tags: [Quilten]
 author: Lucy
 date: 2016-09-18 19:03:47
 image: "IMG_4565.JPG"
