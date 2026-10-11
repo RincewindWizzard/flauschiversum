@@ -48,14 +48,14 @@ Jede Seite SHALL oben eine Topbar zeigen. Links steht der Titel „Flauschiversu
 - **THEN** öffnet sich `/2020/10/kurbis/`
 
 ### Requirement: Menü Kategorien
-„Kategorien“ SHALL ein Untermenü mit den Kategorien aus `content/categories.yaml` in der Reihenfolge Filzen, Basteln, Malen, Wolle, Brandings, Nähen aufklappen, jede mit Link auf `/kategorie/<name>/`. Kategorien ohne veröffentlichten Beitrag fehlen. Ein Klick auf „Kategorien“ selbst öffnet `/themen/`.
+„Kategorien“ SHALL ein Untermenü mit den Kategorien aus `content/categories.yaml` in der Reihenfolge der Datei aufklappen, jede mit Link auf `/kategorie/<name>/`. Kategorien ohne veröffentlichten Beitrag fehlen. Ein Klick auf „Kategorien“ selbst öffnet `/themen/`.
 
-#### Scenario: Sechs Kategorien
+#### Scenario: Alle Kategorien
 - **WHEN** das Menü „Kategorien“ aufgeklappt wird
-- **THEN** zeigt es die sechs Kategorien als Links auf ihre Kategorieseiten
+- **THEN** zeigt es alle Kategorien als Links auf ihre Kategorieseiten
 
 #### Scenario: Reihenfolge
-- **WHEN** `content/categories.yaml` die Reihenfolge Filzen, Basteln, Malen, Wolle, Brandings, Nähen vorgibt
+- **WHEN** `content/categories.yaml` eine Reihenfolge vorgibt
 - **THEN** erscheinen die Einträge in dieser Reihenfolge
 
 #### Scenario: Klick auf Kategorien

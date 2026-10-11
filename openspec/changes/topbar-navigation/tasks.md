@@ -5,7 +5,7 @@
 - [ ] 1.1 Menüdaten für die Topbar (zehn neueste veröffentlichte Beiträge mit Titel und URL, Kategorien in der Reihenfolge der Datei mit Anzahl, leere Kategorien entfallen) in `Common` bereitstellen; prüfen: Unit-Tests für zehn Einträge bei mehr als zehn Beiträgen, geplante Beiträge fehlen, Reihenfolge der Kategorien
 - [ ] 1.2 Archivdaten (`Year`/`Month`/Beiträge, neueste zuerst, leere Gruppen entfallen, Zählungen) für eine Beitragsliste berechnen (alle bzw. einer Kategorie); prüfen: Unit-Tests für Gruppierung über Jahre und Monate, Zählung, Sortierung, Kategorie-Filter und geplanten Beitrag
 - [ ] 1.3 `content/start.md` laden (Warnung bei fehlender Datei) und das optionale Feld `intro` in `content/categories.yaml` (Markdown) lesen und prüfen; prüfen: Unit-Tests für vorhandene und fehlende Datei (Warnung mit Pfad) und für Kategorie mit und ohne `intro`
-- [ ] 1.4 Inhalte als Entwurf anlegen: Begrüßungstext in `content/start.md` und je ein kurzer `intro` (zwei bis drei Sätze) für Filzen, Basteln, Malen, Wolle, Brandings und Nähen, aus den vorhandenen Texten abgeleitet; prüfen: Entwürfe stehen zur Prüfung durch die Autorin im Gespräch, jede Kategorie hat einen Text, Build ohne Warnung
+- [ ] 1.4 Inhalte als Entwurf anlegen: Begrüßungstext in `content/start.md` und je ein kurzer `intro` (zwei bis drei Sätze) für jede Kategorie aus `content/categories.yaml`, aus den vorhandenen Texten abgeleitet; prüfen: Entwürfe stehen zur Prüfung durch die Autorin im Gespräch, jede Kategorie hat einen Text, Build ohne Warnung
 
 ## 2. Topbar
 

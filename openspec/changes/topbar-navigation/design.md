@@ -30,7 +30,7 @@
       <li class="has-menu"><a href="/beitraege/">Beiträge</a>
         <button aria-expanded="false" aria-controls="menu-beitraege" aria-label="Beiträge-Menü">▾</button>
         <ul id="menu-beitraege" class="submenu card">… 10 Links, „Alle Beiträge“ …</ul></li>
-      <li class="has-menu"><a href="/themen/">Kategorien</a> … 6 Links …</li>
+      <li class="has-menu"><a href="/themen/">Kategorien</a> … ein Link je Kategorie …</li>
     </ul>
   </nav>
   <form class="search">…</form>
@@ -74,7 +74,7 @@ Unter 48 em zeigt die Topbar Titel, Suche (Lupe als Knopf, klappt das Feld auf b
 
 - [Dropdowns sind schwer zugänglich oder auf Touch unbrauchbar] → Knopf mit `aria-expanded`, Tastatur und Escape, Touch über Knopf; Browser-Tests für Maus, Tastatur und Handy.
 - [Sticky-Topbar verdeckt Anker und Inhalt] → `scroll-margin-top` für Überschriften, Höhe als Variable; Staging-Leiste scrollt weg (nicht sticky).
-- [Kategorie-Text fehlt und die Seite wirkt leer] → Entwürfe für alle sechs Kategorien liefern; ohne `intro` bleibt Reim.
+- [Kategorie-Text fehlt und die Seite wirkt leer] → Entwürfe für alle Kategorien liefern; ohne `intro` bleibt Reim.
 - [Der Auftrag macht frühere Entscheidungen rückgängig (Footer-Navigation, linke Spalte)] → Footer bleibt, die Spalten entfallen; die Spezifikation führt die Änderungen als REMOVED mit Begründung.
 - [Blätterseiten werden zu verwaisten Seiten] → Sie bleiben erreichbar und indexierbar wie bisher; Verweis „Ältere Beiträge“ am Ende von `/beitraege/` auf `/page/1/` wäre möglich, ist aber nicht gewünscht (Archiv ersetzt es).
 - [Seiten werden größer durch Menüdaten] → ca. 1,5 KB je Seite, bei 194 Beiträgen vernachlässigbar.

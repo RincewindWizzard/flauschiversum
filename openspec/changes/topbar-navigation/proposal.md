@@ -10,12 +10,12 @@ Das Layout hat zuletzt drei Spalten bekommen (Navigation links, Inhalt, Sidebar 
 - **About me:** Ein einfacher Link auf die Seite über die Autorin (`/about/`), ohne Untermenü.
 - **Beiträge:** Das Menü klappt die zehn neuesten Beiträge als Auswahl auf (plus „Alle Beiträge“). Ein Klick auf „Beiträge“ selbst öffnet `/beitraege/`.
 - **Seite Beiträge (`/beitraege/`):** Zeigt die zehn neuesten Beiträge und daneben ein **Archiv**: alle Beiträge nach Jahr und Monat, jede Gruppe ein- und ausklappbar, jeder Beitrag ein Link. Die bisherige Blätterliste (`/page/<N>/`) bleibt unter ihren Adressen erreichbar, wird aber nicht mehr verlinkt.
-- **Kategorien:** Das Menü klappt die sechs Kategorien auf (Filzen, Basteln, Malen, Wolle, Brandings, Nähen). Ein Klick führt auf die Kategorieseite: oben ein kurzer Text zur Kategorie, darunter die Beiträge, daneben dasselbe Archiv nach Monat und Jahr, aber nur mit den Beiträgen dieser Kategorie.
+- **Kategorien:** Das Menü klappt alle Kategorien aus `content/categories.yaml` auf. Ein Klick führt auf die Kategorieseite: oben ein kurzer Text zur Kategorie, darunter die Beiträge, daneben dasselbe Archiv nach Monat und Jahr, aber nur mit den Beiträgen dieser Kategorie.
 - **Startseite (Klick auf den Titel):** Zuerst ein kurzer Begrüßungstext (in `content/start.md` pflegbar), direkt danach die neuesten Beiträge. Die Kategoriekacheln entfallen, weil die Kategorien im Menü stehen.
 - **Tag-Cloud nur auf der Startseite:** Die Schlagwort-Cloud steht nur noch dort (Karte neben bzw. unter den Beiträgen). Auf allen anderen Seiten entfallen Cloud und Kategorienliste.
 - **Beibehalten:** Footer (Tipps und Tricks, About, Impressum, Abonnieren, E-Mail, Socials, RSS, Copyright), Farbschema, Typografie und Karten, alle Beitrags-, Schlagwort-, Themen- und Suchseiten samt URLs.
 
-Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext und den sechs Kategorietexten (Entwürfe zur Prüfung), Änderungen an Suche, Feed oder Deployment.
+Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext und den Kategorietexten (Entwürfe zur Prüfung), Änderungen an Suche, Feed oder Deployment.
 
 ## Capabilities
 
