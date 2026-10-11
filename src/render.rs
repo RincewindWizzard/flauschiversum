@@ -1,11 +1,12 @@
 //! HTML-Seiten über Askama-Templates (beim Kompilieren geprüft).
 
-use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, PAGINATION_WINDOW, POSTS_PER_PAGE};
+use crate::config::{BLOG_DESCRIPTION, BLOG_NAME, CONTACT_EMAIL, INSTAGRAM_URL, MASTODON_URL, PAGINATION_WINDOW, POSTS_PER_PAGE};
 use crate::content::{Page, Post};
 use crate::media::Size;
 use crate::seo;
 use crate::urls::{self, Base};
 use askama::Template;
+use std::sync::Arc;
 
 const MONTHS: [&str; 12] = [
     "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember",
@@ -36,6 +37,28 @@ pub struct Head {
     /// Branchname im Staging-Modus (zeigt die Staging-Leiste).
     pub staging: Option<String>,
     pub feed_url: String,
+    /// Seitenspalten (Navigationsspalte und Sidebar); `None` auf Suche und Themenübersicht.
+    pub side: Option<Arc<Sidebar>>,
+    /// Kontaktwege in der Fußzeile.
+    pub mail_href: String,
+    pub mail_address: &'static str,
+    pub instagram_url: &'static str,
+    pub mastodon_url: &'static str,
+}
+
+/// Ein Schlagwort der Tag-Cloud.
+pub struct CloudTag {
+    pub url: String,
+    pub name: String,
+    pub count: usize,
+    /// Größenstufe 1–5.
+    pub level: u8,
+}
+
+/// Inhalt der Seitenspalten: Kategorien mit Anzahl und Tag-Cloud (auf jeder Seite gleich).
+pub struct Sidebar {
+    pub categories: Vec<TopicLink>,
+    pub tags: Vec<CloudTag>,
 }
 
 pub struct OgImage {
@@ -54,6 +77,7 @@ pub struct Common {
     pub base: Base,
     /// Staging-Modus mit Branchname: noindex und Staging-Leiste auf jeder Seite.
     pub staging: Option<String>,
+    pub sidebar: Arc<Sidebar>,
 }
 
 pub struct Thumb {
@@ -128,7 +152,6 @@ pub struct IndexTemplate {
 pub struct HomeTemplate {
     pub head: Head,
     pub tiles: Vec<Tile>,
-    pub topics: Vec<TopicLink>,
     pub news: Vec<Entry>,
 }
 
@@ -165,7 +188,7 @@ pub struct PostTemplate {
     pub title: String,
     pub thumb: Option<Thumb>,
     pub author: Option<String>,
-    pub mail_subject: String,
+    pub mail_href: String,
     pub content: String,
     pub prev: Option<NavLink>,
     pub next: Option<NavLink>,
@@ -204,10 +227,11 @@ pub fn page_count(posts: usize) -> usize {
     posts.div_ceil(POSTS_PER_PAGE).max(1)
 }
 
-fn mail_subject(title: &str) -> String {
-    let s = format!("[{BLOG_NAME}] {title}");
-    let mut out = String::new();
-    for b in s.bytes() {
+/// `mailto:`-Adresse mit kodiertem Betreff. Der Betreff muss „Flauschiversum“ enthalten (Spamfilter).
+pub fn mailto(subject: &str) -> String {
+    assert!(subject.contains(BLOG_NAME), "Betreff `{subject}` enthält nicht „{BLOG_NAME}“");
+    let mut out = format!("mailto:{CONTACT_EMAIL}?subject=");
+    for b in subject.bytes() {
         if b.is_ascii_alphanumeric() || matches!(b, b'-' | b'.' | b'_' | b'~') {
             out.push(b as char);
         } else {
@@ -236,6 +260,11 @@ fn base_head(common: &Common, title: String, og_title: String, description: Stri
         noindex: common.staging.is_some(),
         staging: common.staging.clone(),
         feed_url: format!("{}/rss.xml", common.base.as_str()),
+        side: Some(common.sidebar.clone()),
+        mail_href: mailto(BLOG_NAME),
+        mail_address: CONTACT_EMAIL,
+        instagram_url: INSTAGRAM_URL,
+        mastodon_url: MASTODON_URL,
     }
 }
 
@@ -260,7 +289,7 @@ pub fn render_index(index: usize, count: usize, cards: Vec<PostCard>, common: &C
     IndexTemplate { head, posts: cards, pagination: pagination(index, count) }.render().expect("Index-Template")
 }
 
-pub fn render_home(tiles: Vec<Tile>, topics: Vec<TopicLink>, news: Vec<Entry>, common: &Common) -> String {
+pub fn render_home(tiles: Vec<Tile>, news: Vec<Entry>, common: &Common) -> String {
     let title = format!("{BLOG_NAME} – {BLOG_DESCRIPTION}");
     let mut head = base_head(
         common,
@@ -271,7 +300,7 @@ pub fn render_home(tiles: Vec<Tile>, topics: Vec<TopicLink>, news: Vec<Entry>, c
     );
     head.logo_is_h1 = true;
     head.search_form = false;
-    HomeTemplate { head, tiles, topics, news }.render().expect("Start-Template")
+    HomeTemplate { head, tiles, news }.render().expect("Start-Template")
 }
 
 /// Seite einer Kategorie oder eines Schlagworts.
@@ -318,12 +347,14 @@ pub fn render_search(script_href: String, common: &Common) -> String {
     );
     head.search_form = false;
     head.noindex = true;
+    head.side = None;
     SearchTemplate { head, script_href }.render().expect("Such-Template")
 }
 
 pub fn render_topics(categories: Vec<TopicLink>, tags: Vec<TopicLink>, common: &Common) -> String {
     let description = format!("Alle Kategorien und Schlagworte im {BLOG_NAME}: {} Kategorien, {} Schlagworte.", categories.len(), tags.len());
-    let head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, common.base.absolute("/themen/"));
+    let mut head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, common.base.absolute("/themen/"));
+    head.side = None;
     TopicsTemplate { head, categories, tags }.render().expect("Themenübersicht-Template")
 }
 
@@ -342,36 +373,29 @@ pub struct PostPageInput<'a> {
 pub fn render_post(input: PostPageInput, common: &Common) -> String {
     let post = input.post;
     let image_url = input.og_image.as_ref().map(|(u, _)| u.as_str());
-    let head = Head {
-        title: format!("{} – {BLOG_NAME}", post.title),
-        og_title: post.title.clone(),
-        description: seo::meta_description(post.excerpt.as_deref().unwrap_or(BLOG_DESCRIPTION)),
-        canonical: common.base.absolute(&post.url),
-        og_type: "article",
-        og_image: input.og_image.as_ref().map(|(url, size)| OgImage {
-            url: url.clone(),
-            width: size.width,
-            height: size.height,
-            alt: post.title.clone(),
-        }),
-        published_time: Some(seo::iso(post)),
-        json_ld: Some(seo::blog_posting(post, image_url, input.category.as_ref().map(|c| c.name.as_str()), &common.base)),
-        style_href: common.style_href.clone(),
-        logo_is_h1: false,
-        year: common.year,
-        livereload: common.livereload,
-        search_form: true,
-        noindex: common.staging.is_some(),
-        staging: common.staging.clone(),
-        feed_url: format!("{}/rss.xml", common.base.as_str()),
-    };
+    let mut head = base_head(
+        common,
+        format!("{} – {BLOG_NAME}", post.title),
+        post.title.clone(),
+        seo::meta_description(post.excerpt.as_deref().unwrap_or(BLOG_DESCRIPTION)),
+        common.base.absolute(&post.url),
+    );
+    head.og_type = "article";
+    head.og_image = input.og_image.as_ref().map(|(url, size)| OgImage {
+        url: url.clone(),
+        width: size.width,
+        height: size.height,
+        alt: post.title.clone(),
+    });
+    head.published_time = Some(seo::iso(post));
+    head.json_ld = Some(seo::blog_posting(post, image_url, input.category.as_ref().map(|c| c.name.as_str()), &common.base));
     let link = |p: &Post| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() };
     PostTemplate {
         head,
         title: post.title.clone(),
         thumb: input.thumb,
         author: post.author.clone(),
-        mail_subject: mail_subject(&post.title),
+        mail_href: mailto(&format!("[{BLOG_NAME}] {}", post.title)),
         content: input.content,
         prev: input.older.map(link),
         next: input.newer.map(link),
@@ -444,6 +468,14 @@ mod tests {
 
     #[test]
     fn subject_is_encoded() {
-        assert_eq!(mail_subject("Alraune"), "%5BFlauschiversum%5D%20Alraune");
+        assert_eq!(mailto("[Flauschiversum] Alraune"), "mailto:ermeline@flauschiversum.de?subject=%5BFlauschiversum%5D%20Alraune");
+        assert_eq!(mailto("Flauschiversum"), "mailto:ermeline@flauschiversum.de?subject=Flauschiversum");
+        assert_eq!(mailto("[Flauschiversum] Mütze & Co"), "mailto:ermeline@flauschiversum.de?subject=%5BFlauschiversum%5D%20M%C3%BCtze%20%26%20Co");
+    }
+
+    #[test]
+    #[should_panic(expected = "enthält nicht")]
+    fn subject_without_blog_name_is_rejected() {
+        mailto("Hallo");
     }
 }

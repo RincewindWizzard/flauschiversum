@@ -78,7 +78,7 @@ form.search.big {
 
 /* Abschnitte der Startseite und der Themenseiten */
 main#home, main.topic {
-  max-width: var(--contentwidth);
+  max-width: 52em;
   margin: 0 auto 2em;
   padding: 0 1em;
 
@@ -91,7 +91,7 @@ main#home, main.topic {
   }
 }
 
-main#home { max-width: 44em; }
+main#home { max-width: 56em; }
 
 ul.tiles {
   list-style: none;
@@ -260,7 +260,7 @@ h1.list-title {
 }
 
 /* Kategorie und Schlagworte unter dem Beitragstitel */
-#blogheader .post-header p.classification {
+.post-header p.classification {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

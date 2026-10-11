@@ -18,8 +18,8 @@ Die Seitenspalten SHALL die Kategorien aus `content/categories.yaml` in der Reih
 - **THEN** fehlt sie in der Seitenspalte
 
 #### Scenario: Links auf dem Desktop, in der Sidebar auf kleineren Fenstern
-- **WHEN** dieselbe Seite bei 1440 px und bei 1000 px Breite geöffnet wird
-- **THEN** steht die Kategorienliste bei 1440 px links unter der Navigation und bei 1000 px in der Sidebar, und nie doppelt sichtbar
+- **WHEN** dieselbe Seite bei 1440 px und bei 1100 px Breite geöffnet wird
+- **THEN** steht die Kategorienliste bei 1440 px links unter der Navigation und bei 1100 px in der Sidebar, und nie doppelt sichtbar
 
 ### Requirement: Tag-Cloud
 Die Sidebar SHALL alle Schlagworte mit mindestens einem veröffentlichten Beitrag als Tag-Cloud zeigen: alphabetisch nach deutscher Sortierung (Umlaute wie ihre Grundbuchstaben, ohne Beachtung der Groß-/Kleinschreibung), jedes als Link auf `/tag/<name>/`, mit der Anzahl im Titel des Links („Hüte: 21 Beiträge“). Am Ende steht ein Link „Alle Themen“ auf `/themen/`.

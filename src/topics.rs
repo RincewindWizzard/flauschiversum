@@ -49,7 +49,25 @@ pub fn sort_key(text: &str) -> String {
         .collect()
 }
 
+/// Größenstufe 1–5 der Tag-Cloud: logarithmisch zwischen dem seltensten (1) und häufigsten (5) Schlagwort,
+/// bei gleicher Anzahl überall die mittlere Stufe 3.
+pub fn cloud_level(count: usize, min: usize, max: usize) -> u8 {
+    if max <= min {
+        return 3;
+    }
+    let ln = |n: usize| (n.max(1) as f64).ln();
+    let level = 1.0 + 4.0 * (ln(count) - ln(min)) / (ln(max) - ln(min));
+    level.round().clamp(1.0, 5.0) as u8
+}
+
 impl<'a> Topics<'a> {
+    /// Schlagworte der Tag-Cloud (alphabetisch) mit Größenstufe.
+    pub fn cloud(&self) -> Vec<(&TagTopic<'a>, u8)> {
+        let counts = self.tags.iter().map(|t| t.posts.len());
+        let (min, max) = (counts.clone().min().unwrap_or(0), counts.max().unwrap_or(0));
+        self.tags.iter().map(|t| (t, cloud_level(t.posts.len(), min, max))).collect()
+    }
+
     pub fn build(site: &'a Site, diag: &Diagnostics) -> Self {
         let categories = site
             .categories
@@ -184,6 +202,36 @@ mod tests {
         let m = diag.all();
         assert_eq!(m.len(), 1);
         assert!(m[0].message.contains("`Huete`") && m[0].message.contains("`Hüte`") && m[0].message.contains("/tag/huete/"), "{}", m[0].message);
+    }
+
+    #[test]
+    fn cloud_levels_are_logarithmic_between_min_and_max() {
+        assert_eq!(cloud_level(1, 1, 21), 1);
+        assert_eq!(cloud_level(21, 1, 21), 5);
+        assert_eq!(cloud_level(9, 1, 21), 4);
+        assert_eq!(cloud_level(3, 1, 21), 2);
+        assert!(cloud_level(21, 1, 21) > cloud_level(9, 1, 21));
+        // alle gleich häufig oder nur ein Schlagwort: mittlere Stufe, keine Division durch null
+        assert_eq!(cloud_level(5, 5, 5), 3);
+        assert_eq!(cloud_level(0, 0, 0), 3);
+    }
+
+    #[test]
+    fn cloud_is_alphabetical_with_levels_and_ignores_scheduled() {
+        let root = tempfile::tempdir().unwrap();
+        let s = site(
+            root.path(),
+            &[
+                ("a", "date: 2020-01-01\ntags: [Taschen, Katzen, Hüte]\n"),
+                ("b", "date: 2021-01-01\ntags: [Katzen, Hüte]\n"),
+                ("c", "date: 2022-01-01\ntags: [Katzen]\n"),
+                ("geplant", "date: 2099-01-01\ntags: [Leer]\n"),
+            ],
+            "- name: Taschen\n- name: Katzen\n- name: Hüte\n- name: Leer\n",
+        );
+        let t = Topics::build(&s, &Diagnostics::default());
+        let cloud: Vec<_> = t.cloud().iter().map(|(t, l)| (t.name, *l)).collect();
+        assert_eq!(cloud, [("Hüte", 4), ("Katzen", 5), ("Taschen", 1)]);
     }
 
     #[test]

@@ -1,6 +1,11 @@
 :root {
   --maxwidth: 1000px;
-  --contentwidth: 34em;
+  --contentwidth: 38em;
+  /* Seitenspalten: mittlere Fenster (Inhalt + Sidebar), breite Fenster (Navigation + Inhalt + Sidebar) */
+  --maxwidth-medium: 1200px;
+  --maxwidth-wide: 1400px;
+  --nav-width: 13em;
+  --side-width: 16em;
 }
 
 div.container-fluid {
@@ -18,8 +23,63 @@ div.container-fluid {
   flex-wrap: nowrap;
 }
 
-footer {
-  margin: 2em;
+/* Seitenaufbau: einspaltig; Navigationsspalte und Sidebar stehen im HTML nach dem Inhalt */
+.page-layout {
+  display: block;
+}
+
+.sitenav {
+  display: none;
+}
+
+.sidebar {
+  margin: 1em 1em 0;
+}
+
+@media (min-width: 64em) {
+  body.has-side .container-fluid {
+    max-width: var(--maxwidth-medium);
+    padding: 0 1em;
+    box-sizing: border-box;
+  }
+
+  body.has-side .page-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(var(--side-width) + 1em);
+    grid-template-areas: "content side";
+    column-gap: 2em;
+    align-items: start;
+  }
+
+  body.has-side .page-content { grid-area: content; }
+  body.has-side .sidebar { grid-area: side; margin: 0; }
+}
+
+@media (min-width: 80em) {
+  body.has-side .container-fluid {
+    max-width: var(--maxwidth-wide);
+  }
+
+  body.has-side .page-layout {
+    grid-template-columns: var(--nav-width) minmax(0, 1fr) var(--side-width);
+    grid-template-areas: "nav content side";
+  }
+
+  /* Navigation und Suchfeld wandern vom Kopf in die linke Spalte, die Kategorien von der Sidebar dorthin */
+  body.has-side .sitenav {
+    display: block;
+    grid-area: nav;
+    position: sticky;
+    top: 1em;
+    max-height: calc(100vh - 2em);
+    overflow-y: auto;
+  }
+
+  body.has-side #blogheader .topnav,
+  body.has-side #blogheader .topsearch,
+  body.has-side .sidebar-cats {
+    display: none;
+  }
 }
 
 /* Staging-Leiste: nur auf der Staging-Seite, mit dem Namen des gebauten Branches */

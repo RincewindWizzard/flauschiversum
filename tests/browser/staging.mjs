@@ -52,7 +52,7 @@ await test('Absolut-URLs zeigen auf die Basis, interne Links bleiben wurzelbezog
   const page = await browser.newPage();
   await page.goto(BASE + '/2020/10/kurbis/');
   assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://flauschiversum.de/2020/10/kurbis/');
-  assert.equal(await page.locator('nav a[href="/themen/"]').count(), 1);
+  assert.ok((await page.locator('nav a[href="/themen/"]').count()) >= 1);
   await page.close();
 });
 

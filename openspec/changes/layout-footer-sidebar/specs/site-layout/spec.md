@@ -18,7 +18,7 @@ Jede Seite SHALL eine Navigation mit genau diesen Einträgen in dieser Reihenfol
 - **THEN** enthält keine der Navigationen im Kopf oder in der linken Spalte ein „About“, „Impressum“, „Tipps und Tricks“ oder „Abonnieren“
 
 #### Scenario: Navigation als Leiste im Kopf
-- **WHEN** eine Seite bei 1000 px Breite geöffnet wird
+- **WHEN** eine Seite bei 1100 px Breite geöffnet wird
 - **THEN** stehen „Start“, „Themen“ und „Beiträge“ als Leiste im Kopf
 
 ### Requirement: Fußzeile
@@ -72,7 +72,7 @@ Die linke Spalte SHALL von oben nach unten das Suchfeld, die Links „Start“, 
 Zwischen 64 em und 80 em Fensterbreite SHALL jede Seite außer der Suchseite und der Themenübersicht den Inhalt links und die Sidebar rechts zeigen (Rahmen bis etwa 1200 px); die Navigation steht als Leiste im Kopf, und die Sidebar enthält zusätzlich die Kategorien vor der Tag-Cloud.
 
 #### Scenario: Tablet quer
-- **WHEN** eine Seite bei 1000 px Breite geöffnet wird
+- **WHEN** eine Seite bei 1100 px Breite geöffnet wird
 - **THEN** stehen Inhalt links und Sidebar rechts, die Navigation steht im Kopf, und die Sidebar zeigt Kategorien und Tag-Cloud
 
 ### Requirement: Sidebar auf schmalen Fenstern und Ausnahmen

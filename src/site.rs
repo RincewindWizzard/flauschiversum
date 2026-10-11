@@ -1,13 +1,14 @@
 //! Ablauf eines Builds: Laden → Medien → Rendern → Ausgaben (ohne zu schreiben).
 
-use crate::config::{HOME_NEWS, HOME_TOPICS, POSTS_PER_PAGE, TIME_ZONE};
+use crate::config::{HOME_NEWS, POSTS_PER_PAGE, TIME_ZONE};
 use crate::content::{self, Site};
 use crate::diag::Diagnostics;
 use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, Common, Entry, PostCard, PostPageInput, Thumb, Tile, TopicLink, TopicPageInput};
+use crate::render::{self, CloudTag, Common, Entry, PostCard, PostPageInput, Sidebar, Thumb, Tile, TopicLink, TopicPageInput};
+use std::sync::Arc;
 use crate::search::{self, SearchDoc};
 use crate::seo;
 use crate::topics::{self, Topics};
@@ -100,6 +101,22 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
 
     // Stylesheet
     let css = bundle_css(&site.style_dir).context("Stylesheet")?;
+    let topics = Topics::build(&site, diag);
+    if diag.has_errors() {
+        bail!("Inhalte enthalten Fehler");
+    }
+    let sidebar = Arc::new(Sidebar {
+        categories: topics
+            .categories
+            .iter()
+            .map(|c| TopicLink { url: topics::category_url(&c.slug), name: c.category.name.clone(), count: Some(c.posts.len()) })
+            .collect(),
+        tags: topics
+            .cloud()
+            .into_iter()
+            .map(|(t, level)| CloudTag { url: topics::tag_url(&t.slug), name: t.name.to_string(), count: t.posts.len(), level })
+            .collect(),
+    });
     let common = Common {
         style_href: format!("/style.css?v={}", short_hash(css.as_bytes())),
         script_href,
@@ -107,6 +124,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         livereload: opts.livereload,
         base: opts.base.clone(),
         staging: opts.staging.clone(),
+        sidebar,
     };
     outputs.insert("/style.css", Content::Bytes(css.into_bytes()));
 
@@ -126,10 +144,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         Some(Thumb { src: urls::encode_path(&urls::variant_path(&post.url, 200, name)), width: size.width, height: size.height })
     };
 
-    let topics = Topics::build(&site, diag);
-    if diag.has_errors() {
-        bail!("Inhalte enthalten Fehler");
-    }
     let category_name = |id: &str| site.categories.iter().find(|c| c.id == id).map(|c| c.name.clone());
     let category_link = |post: &content::Post| -> Option<TopicLink> {
         let id = post.category.as_deref()?;
@@ -242,15 +256,8 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
             count: c.posts.len(),
         })
         .collect();
-    let mut popular: Vec<_> = topics.tags.iter().collect();
-    popular.sort_by(|a, b| b.posts.len().cmp(&a.posts.len()).then_with(|| topics::sort_key(a.name).cmp(&topics::sort_key(b.name))));
-    let popular = popular
-        .into_iter()
-        .take(HOME_TOPICS)
-        .map(|t| TopicLink { url: topics::tag_url(&t.slug), name: t.name.to_string(), count: Some(t.posts.len()) })
-        .collect();
     let news = posts.iter().take(HOME_NEWS).map(|p| entry_of(p, false)).collect();
-    outputs.insert("/", Content::Bytes(render::render_home(tiles, popular, news, &common).into_bytes()));
+    outputs.insert("/", Content::Bytes(render::render_home(tiles, news, &common).into_bytes()));
 
     let link_of = |url: String, name: &str, n: usize| TopicLink { url, name: name.to_string(), count: Some(n) };
     let overview_categories = topics.categories.iter().map(|c| link_of(topics::category_url(&c.slug), &c.category.name, c.posts.len())).collect();
@@ -588,6 +595,105 @@ pub mod tests {
         assert!(robots.contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
     }
 
+    fn between<'a>(html: &'a str, start: &str, end: &str) -> &'a str {
+        let i = html.find(start).unwrap_or_else(|| panic!("`{start}` fehlt"));
+        let rest = &html[i..];
+        &rest[..rest.find(end).unwrap_or_else(|| panic!("`{end}` fehlt")) + end.len()]
+    }
+
+    #[test]
+    fn footer_navigation_and_contact_on_every_page() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        let pages = g.outputs.snapshot_html();
+        assert!(pages.len() > 10);
+        for (path, html) in &pages {
+            // Kopfnavigation: genau drei Einträge
+            let top = between(html, "<nav class=\"topnav", "</nav>");
+            assert_eq!(top.matches("<a ").count(), 3, "{path}");
+            for (href, text) in [("/", "Start"), ("/themen/", "Themen"), ("/beitraege/", "Beiträge")] {
+                assert!(top.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
+            }
+            // Fußzeile: vier Seitenlinks, Kontakt, Socials, Copyright
+            let footer = between(html, "<footer id=\"blogfooter\"", "</footer>");
+            for (href, text) in [("/tipps-und-tricks/", "Tipps und Tricks"), ("/about/", "About"), ("/impressum/", "Impressum"), ("/rss.xml", "Abonnieren")] {
+                assert!(footer.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
+            }
+            assert!(footer.contains("href=\"mailto:ermeline@flauschiversum.de?subject=Flauschiversum\""), "{path}");
+            assert!(footer.contains("href=\"https://www.instagram.com/ermelinewollknoll/\" rel=\"noopener\" aria-label=\"Instagram\""), "{path}");
+            assert!(footer.contains("href=\"https://chaos.social/@ErmelineWollknoll\" rel=\"me noopener\" aria-label=\"Mastodon\""), "{path}");
+            assert_eq!(footer.matches("<svg").count(), 3, "drei Icons als inline SVG: {path}");
+            assert!(footer.contains("&copy; 2026 Ermeline Wollknoll"), "{path}");
+            assert!(!footer.contains("http-equiv") && !html.contains("fonts.googleapis"), "{path}");
+            // Jeder mailto-Link hat einen Betreff mit „Flauschiversum“
+            for (i, _) in html.match_indices("mailto:") {
+                let link = &html[i..i + html[i..].find('"').unwrap()];
+                let subject = urls::decode_path(link.split("subject=").nth(1).unwrap_or_else(|| panic!("kein Betreff: {link}")));
+                assert!(subject.contains("Flauschiversum"), "{path}: {subject}");
+            }
+        }
+    }
+
+    #[test]
+    fn side_columns_cloud_and_author_placement() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
+
+        // Seitenspalten: überall außer Suche und Themenübersicht, überall gleich
+        let mut sidebars = std::collections::BTreeSet::new();
+        let mut navs = std::collections::BTreeSet::new();
+        for (path, html) in &pages {
+            let single = path == "/suche/index.html" || path == "/themen/index.html";
+            assert_eq!(html.contains("<aside class=\"sidebar\""), !single, "{path}");
+            assert_eq!(html.contains("<nav class=\"sitenav\""), !single, "{path}");
+            assert_eq!(html.contains("class=\"has-side\""), !single, "{path}");
+            if !single {
+                sidebars.insert(between(html, "<aside class=\"sidebar\"", "</aside>").to_string());
+                // Navigationsspalte ohne das Suchfeld, das auf der Startseite fehlt
+                let nav = between(html, "<nav class=\"sitenav\"", "</nav>");
+                navs.insert(nav[nav.find("<ul class=\"sitenav-links\"").unwrap()..].to_string());
+            }
+        }
+        assert_eq!(sidebars.len(), 1, "Sidebar auf allen Seiten gleich");
+        assert_eq!(navs.len(), 1, "Navigationsspalte auf allen Seiten gleich");
+        let side = sidebars.into_iter().next().unwrap();
+        // Kategorien mit Anzahl (Wolle nur mit geplantem Beitrag fehlt), Cloud alphabetisch mit Stufen und Titel
+        assert!(side.contains("<a href=\"/kategorie/basteln/\">Basteln <span class=\"count\">(2)</span></a>"));
+        assert!(!side.contains("Wolle"));
+        let cloud = between(&side, "<ul class=\"cloud\"", "</ul>");
+        let names: Vec<_> = cloud.match_indices("class=\"cloud-").map(|(i, _)| &cloud[i..i + 20]).collect();
+        assert_eq!(names.len(), 3, "{cloud}");
+        let pos = |n: &str| cloud.find(n).unwrap_or_else(|| panic!("{n}"));
+        assert!(pos(">Halloween<") < pos(">Hüte<") && pos(">Hüte<") < pos(">LARP<"));
+        assert!(cloud.contains("<a class=\"cloud-5\" href=\"/tag/huete/\" title=\"Hüte: 3 Beiträge\">Hüte</a>"), "{cloud}");
+        assert!(cloud.contains("title=\"Halloween: 1 Beitrag\""), "{cloud}");
+        assert!(side.contains("<a href=\"/themen/\">Alle Themen</a>"));
+
+        // Startseite ohne „Häufige Themen“, ein sichtbares Suchfeld (das große im Inhalt)
+        let home = &pages["/index.html"];
+        assert!(!home.contains("Häufige Themen"));
+        assert_eq!(home.matches("type=\"search\"").count(), 1);
+        // Andere Seiten: Suchfeld im Kopf und in der Navigationsspalte, mit verschiedenen ids
+        let post = &pages["/2014/01/alraune/index.html"];
+        assert_eq!(post.matches("type=\"search\"").count(), 2);
+        assert!(post.contains("id=\"q\"") && post.contains("id=\"q-side\""));
+
+        // Autor: nicht im Kopf, sondern nach dem Text und vor „älterer Beitrag“
+        assert!(!between(post, "<div class=\"post-header\"", "<main").contains("Von "));
+        let author = post.find("<p class=\"author\">Von <a href=\"/about/\" class=\"author\">Ermeline</a></p>").expect("Autorenzeile");
+        assert!(author > post.find("</figure>").unwrap(), "nach dem Text");
+        assert!(author < post.find("class=\"post-nav\"").unwrap_or(usize::MAX));
+        assert!(author > post.rfind("Siehe ").unwrap(), "nach dem letzten Absatz");
+        // Ohne Autor keine Zeile
+        let muetze = &pages["/2026/01/gruene-muetze/index.html"];
+        assert!(!muetze.contains("Von <a"));
+    }
+
     #[test]
     fn second_build_writes_nothing_and_deleted_post_disappears() {
         let dir = tempfile::tempdir().unwrap();
@@ -748,6 +854,21 @@ pub mod tests {
         for page in ["/themen/", "/suche/", "/pagefind/pagefind.js", "/pagefind/pagefind-entry.json"] {
             assert!(g.outputs.contains(page), "{page}");
         }
+        // Jeder mailto-Link der ganzen Seite hat „Flauschiversum“ im Betreff, überall dieselbe Sidebar
+        let mut sidebars = std::collections::BTreeSet::new();
+        for (path, html) in &pages {
+            for (i, _) in html.match_indices("mailto:") {
+                let link = &html[i..i + html[i..].find(|c| c == '"' || c == ')').unwrap()];
+                let subject = urls::decode_path(link.split("subject=").nth(1).unwrap_or_else(|| panic!("{path}: kein Betreff in {link}")));
+                assert!(subject.contains("Flauschiversum"), "{path}: {link}");
+            }
+            if let Some(i) = html.find("<aside class=\"sidebar\"") {
+                sidebars.insert(html[i..i + html[i..].find("</aside>").unwrap()].to_string());
+            } else {
+                assert!(path == "/suche/index.html" || path == "/themen/index.html", "Sidebar fehlt: {path}");
+            }
+        }
+        assert_eq!(sidebars.len(), 1);
         // Alle Medien-Referenzen lösen auf: Warnungen betreffen nur Seitenlinks in den Inhalten
         for d in diag.all() {
             let is_media = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".webm", ".css", ".js"]

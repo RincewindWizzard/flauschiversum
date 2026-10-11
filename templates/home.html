@@ -25,16 +25,6 @@
     </ul>
   </section>
 
-  <section class="topics" aria-labelledby="themen">
-    <h2 id="themen">Häufige Themen</h2>
-    <ul class="taglist">
-      {%- for t in topics %}
-      <li><a href="{{ t.url }}">{{ t.name }}{% if let Some(n) = t.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
-      {%- endfor %}
-      <li class="all"><a href="/themen/">Alle Themen</a></li>
-    </ul>
-  </section>
-
   <section class="news" aria-labelledby="neu">
     <h2 id="neu">Neu im Flauschiversum</h2>
     <ul class="entries">

@@ -75,6 +75,15 @@ unter `/beitraege/`.
   `.cache/` zu den Eingaben gemerkt, damit ein Build ohne Änderungen nichts neu schreibt.
 - Die Pfade `/themen/`, `/suche/`, `/beitraege/`, `/kategorie/`, `/tag/` und `/pagefind/` sind reserviert.
 
+### Kontakt, Social-Links und Seitenleisten
+
+Die Kontaktadresse und die Social-Links (Instagram, Mastodon) stehen als Konstanten in `src/config.rs`
+(`CONTACT_EMAIL`, `INSTAGRAM_URL`, `MASTODON_URL`) und erscheinen im Footer jeder Seite; die Icons sind inline SVG in
+`templates/partials/icon-*.html`. Jeder `mailto:`-Betreff enthält „Flauschiversum“ (Spamfilter): `render::mailto()` bricht
+sonst den Build ab. Die Navigationsspalte links (ab 80 em), die Kategorienliste und die Tag-Cloud rechts entstehen
+automatisch aus `content/categories.yaml`, `content/tags.yaml` und den Beiträgen; die Schriftgröße eines Schlagworts
+folgt der Zahl seiner Beiträge.
+
 Einzelseiten (About, Impressum, Tipps und Tricks) liegen als Markdown unter `content/pages/`; ihre URL ergibt sich
 aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlicht.
 
@@ -105,13 +114,14 @@ cargo test                       # Unit- und Integrationstests (Test-Site, Snaps
 cargo test --release -- --ignored   # baut die ganze Seite und prüft alle 194 Live-URLs
 ```
 
-Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload, Startseite, Suche) brauchen Node.js und Chromium:
+Browser-Tests (Karussell, Vollbild, Handy, ohne JavaScript, Live-Reload, Startseite, Suche, Spalten und Footer) brauchen Node.js und Chromium:
 
 ```sh
 cargo run --release -- serve --port 8099 &
 npm i playwright-core
 node tests/browser/frontend.mjs /pfad/zu/chromium
 node tests/browser/navigation.mjs /pfad/zu/chromium
+node tests/browser/layout.mjs /pfad/zu/chromium
 # Staging-Leiste: Vorschau mit `serve --port 8098 --staging <langer Branchname>` starten
 node tests/browser/staging.mjs /pfad/zu/chromium <Branchname>
 ```

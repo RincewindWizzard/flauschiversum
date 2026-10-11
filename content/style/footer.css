@@ -1,0 +1,101 @@
+/* Fußzeile: Seitenlinks, Kontakt mit Icons, Copyright */
+#blogfooter {
+  margin: 3em 1em 2em;
+  padding-top: 1.2em;
+  border-top: 1px dashed var(--bordercolor);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em 2em;
+
+  & a {
+    text-decoration: none;
+  }
+
+  & .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2em 0.4em;
+    font-family: "Lobster";
+    font-size: 1.2em;
+  }
+
+  & .footer-links a,
+  & .footer-contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 44px;
+    padding: 0 0.6em;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  & .footer-links a:hover,
+  & .footer-contact a:hover,
+  & a:focus-visible {
+    background-color: var(--pagination-hover);
+  }
+
+  & a:focus-visible {
+    outline: 2px solid var(--acolor);
+    outline-offset: 2px;
+  }
+
+  & .footer-links,
+  & .footer-contact {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  & .mail span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  & .footer-contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4em 1em;
+  }
+
+  & .socials {
+    display: flex;
+    gap: 0.2em;
+    list-style: none;
+  }
+
+  & .socials a {
+    justify-content: center;
+    min-width: 44px;
+    padding: 0;
+  }
+
+  & .icon {
+    width: 1.5em;
+    height: 1.5em;
+    flex: none;
+  }
+
+  & .copyright {
+    flex-basis: 100%;
+    text-align: center;
+    font-size: 0.85em;
+    opacity: 0.85;
+  }
+}
+
+@media (max-width: 40em) {
+  #blogfooter {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    & .footer-links,
+    & .footer-contact {
+      justify-content: center;
+    }
+  }
+}

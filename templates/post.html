@@ -5,9 +5,6 @@
   {%- if let Some(t) = thumb %}
   <div class="center"><img src="{{ t.src }}" width="{{ t.width }}" height="{{ t.height }}" alt=""></div>
   {%- endif %}
-  {%- if let Some(a) = author %}
-  <p class="author">Von <a href="/about/" class="author">{{ a }}</a></p>
-  {%- endif %}
   {%- if category.is_some() || !tags.is_empty() %}
   <p class="classification">
     {%- if let Some(c) = category %}<a class="category" href="{{ c.url }}">{{ c.name }}</a>{% endif %}
@@ -15,13 +12,16 @@
   </p>
   {%- endif %}
   <div class="center">
-    <small>Schreibe Ihr eine <a href="mailto:ermeline@flauschiversum.de?subject={{ mail_subject }}" class="mailto">Nachricht</a>!</small>
+    <small>Schreibe Ihr eine <a href="{{ mail_href }}" class="mailto">Nachricht</a>!</small>
   </div>
 </div>
 {% endblock %}
 {% block content %}
 <main class="page">
 {{ content|safe }}
+{%- if let Some(a) = author %}
+<p class="author">Von <a href="/about/" class="author">{{ a }}</a></p>
+{%- endif %}
 </main>
 {%- if prev.is_some() || next.is_some() %}
 <nav class="post-nav" aria-label="Weitere Beiträge">
