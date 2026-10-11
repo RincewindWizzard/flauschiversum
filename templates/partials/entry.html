@@ -1,0 +1,13 @@
+<li class="entry">
+  {%- if let Some(t) = entry.thumb %}
+  <a href="{{ entry.url }}" class="entry-image" tabindex="-1" aria-hidden="true"><img src="{{ t.src }}" width="{{ t.width }}" height="{{ t.height }}" alt="" loading="lazy"></a>
+  {%- endif %}
+  <div class="entry-text">
+    <p class="entry-title"><a href="{{ entry.url }}">{{ entry.title }}</a></p>
+    <p class="entry-meta"><time datetime="{{ entry.date_iso }}">{{ entry.date_human }}</time>
+      {%- if let Some(c) = entry.category %} · <a href="{{ c.url }}">{{ c.name }}</a>{% endif %}</p>
+    {%- if !entry.excerpt.is_empty() %}
+    <p class="excerpt">{{ entry.excerpt }}</p>
+    {%- endif %}
+  </div>
+</li>

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="topic topics-overview">
+  <header class="topic-head">
+    <h1>Themen</h1>
+  </header>
+  <section aria-labelledby="kategorien">
+    <h2 id="kategorien">Kategorien</h2>
+    <ul class="taglist">
+      {%- for t in categories %}
+      <li><a href="{{ t.url }}">{{ t.name }}{% if let Some(n) = t.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  <section aria-labelledby="schlagworte">
+    <h2 id="schlagworte">Schlagworte</h2>
+    <ul class="taglist">
+      {%- for t in tags %}
+      <li><a href="{{ t.url }}">{{ t.name }}{% if let Some(n) = t.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,86 @@
+---
+source: src/site.rs
+expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basteln – Flauschiversum</title>
+<meta name="description" content="2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
+<link rel="canonical" href="https://flauschiversum.de/kategorie/basteln/">
+<link rel="stylesheet" href="/style.css?v=HASH">
+<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
+<meta property="og:site_name" content="Flauschiversum">
+<meta property="og:locale" content="de_DE">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Basteln">
+<meta property="og:description" content="2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
+<meta property="og:url" content="https://flauschiversum.de/kategorie/basteln/">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="container-fluid">
+<header id="blogheader">
+  <div class="logo">
+    <p class="site-title"><a href="/">Flauschiversum</a></p>
+    <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
+  </div>
+  <nav class="center">
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
+    <a href="/tipps-und-tricks/">Tipps und Tricks</a>
+    <a href="/about/">About</a>
+    <a href="/impressum/">Impressum</a>
+    <a href="/rss.xml">Abonnieren</a>
+  </nav>
+  <form class="search" action="/suche/" method="get" role="search">
+    <label for="q">Suchen</label>
+    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+    <button type="submit">Suchen</button>
+  </form>
+  
+</header>
+
+<main class="topic">
+  <header class="topic-head">
+    <h1>Basteln</h1>
+    <p class="motto">Papier und Schere,
+mehr brauchst du nicht.</p>
+    <p class="count">2 Beiträge</p>
+  </header>
+  <ul class="taglist" aria-label="Schlagworte in dieser Kategorie">
+    <li><a href="/tag/huete/">Hüte <span class="count">(2)</span></a></li>
+    <li><a href="/tag/halloween/">Halloween <span class="count">(1)</span></a></li>
+    <li><a href="/tag/larp/">LARP <span class="count">(1)</span></a></li>
+  </ul>
+  <ul class="entries">
+    <li class="entry">
+  <a href="/2020/10/kurbis/" class="entry-image" tabindex="-1" aria-hidden="true"><img src="/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png" width="200" height="150" alt="" loading="lazy"></a>
+  <div class="entry-text">
+    <p class="entry-title"><a href="/2020/10/kurbis/">Kürbis</a></p>
+    <p class="entry-meta"><time datetime="2020-10-31T00:00:00+01:00">31. Oktober 2020</time></p>
+    <p class="excerpt">Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.</p>
+  </div>
+</li>
+    <li class="entry">
+  <a href="/2014/01/alraune/" class="entry-image" tabindex="-1" aria-hidden="true"><img src="/2014/01/alraune/200x/DSCF0527.jpg" width="200" height="150" alt="" loading="lazy"></a>
+  <div class="entry-text">
+    <p class="entry-title"><a href="/2014/01/alraune/">Alraune</a></p>
+    <p class="entry-meta"><time datetime="2014-01-04T19:10:28+01:00">4. Januar 2014</time></p>
+    <p class="excerpt">Mal wieder etwas für das Hobby LARP.</p>
+  </div>
+</li>
+  </ul>
+</main>
+
+<footer class="center">
+  <p>&copy; 2026 Ermeline Wollknoll &mdash;&nbsp;<a href="/impressum/">Impressum</a></p>
+</footer>
+</div>
+
+</body>
+</html>

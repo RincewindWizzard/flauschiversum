@@ -1,47 +1,55 @@
 ---
 source: src/site.rs
-expression: "stable(&read(root, \"index.html\"))"
+expression: "stable(&read(root, \"beitraege/index.html\"))"
 ---
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flauschiversum – Mehr als nur eine Masche</title>
-<meta name="description" content="Mehr als nur eine Masche">
-<link rel="canonical" href="https://flauschiversum.de/">
+<title>Alle Beiträge – Flauschiversum</title>
+<meta name="description" content="Alle Beiträge des Flauschiversums, die neuesten zuerst.">
+<link rel="canonical" href="https://flauschiversum.de/beitraege/">
 <link rel="stylesheet" href="/style.css?v=HASH">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
 <link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
 <meta property="og:site_name" content="Flauschiversum">
 <meta property="og:locale" content="de_DE">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Flauschiversum – Mehr als nur eine Masche">
-<meta property="og:description" content="Mehr als nur eine Masche">
-<meta property="og:url" content="https://flauschiversum.de/">
+<meta property="og:title" content="Alle Beiträge – Flauschiversum">
+<meta property="og:description" content="Alle Beiträge des Flauschiversums, die neuesten zuerst.">
+<meta property="og:url" content="https://flauschiversum.de/beitraege/">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <div class="container-fluid">
 <header id="blogheader">
   <div class="logo">
-    <h1><a href="/">Flauschiversum</a></h1>
+    <p class="site-title"><a href="/">Flauschiversum</a></p>
     <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
   </div>
   <nav class="center">
-    <a href="/">Beiträge</a>
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
     <a href="/tipps-und-tricks/">Tipps und Tricks</a>
     <a href="/about/">About</a>
     <a href="/impressum/">Impressum</a>
     <a href="/rss.xml">Abonnieren</a>
   </nav>
+  <form class="search" action="/suche/" method="get" role="search">
+    <label for="q">Suchen</label>
+    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+    <button type="submit">Suchen</button>
+  </form>
   
 </header>
 
 <main id="index">
+  <h1 class="list-title">Alle Beiträge</h1>
   <div class="center">
   <ul class="pagination">
-    <li><a href="/" class="active" aria-current="page">1</a></li>
+    <li><a href="/beitraege/" class="active" aria-current="page">1</a></li>
   </ul>
 </div>
   <div class="center">
@@ -90,7 +98,7 @@ expression: "stable(&read(root, \"index.html\"))"
   </div>
   <div class="center">
   <ul class="pagination">
-    <li><a href="/" class="active" aria-current="page">1</a></li>
+    <li><a href="/beitraege/" class="active" aria-current="page">1</a></li>
   </ul>
 </div>
 </main>

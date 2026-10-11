@@ -1,0 +1,279 @@
+/* Startseite, Themenübersicht, Kategorie- und Schlagwortseiten, Suchfeld, Einordnung im Beitrag */
+
+/* Suchfeld im Kopf */
+form.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0 1em 1em;
+
+  & label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  & input[type="search"] {
+    font: inherit;
+    padding: 0.35em 0.7em;
+    border: 1px solid var(--bordercolor);
+    border-radius: 20em;
+    min-width: 0;
+    width: 16em;
+    max-width: 100%;
+  }
+
+  & button {
+    font: inherit;
+    padding: 0.35em 1em;
+    border: 0;
+    border-radius: 20em;
+    background-color: var(--pagination-active);
+    color: black;
+    cursor: pointer;
+  }
+
+  & button:hover {
+    background-color: var(--theme-yellow);
+  }
+}
+
+/* Großes Suchfeld auf der Startseite */
+form.search.big {
+  flex-direction: column;
+  margin-bottom: 0;
+
+  & label {
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+    font-family: "Lobster";
+    font-size: 1.5em;
+  }
+
+  & .search-row {
+    display: flex;
+    gap: 0.5em;
+    width: 100%;
+    justify-content: center;
+  }
+
+  & input[type="search"] {
+    font-size: 1.15em;
+    width: 20em;
+  }
+
+  & button {
+    font-size: 1.15em;
+  }
+}
+
+/* Abschnitte der Startseite und der Themenseiten */
+main#home, main.topic {
+  max-width: var(--contentwidth);
+  margin: 0 auto 2em;
+  padding: 0 1em;
+
+  & h2 {
+    font-family: "Lobster";
+    font-weight: 400;
+    font-size: 1.5em;
+    text-align: center;
+    margin: 1.2em 0 0.5em;
+  }
+}
+
+main#home { max-width: 44em; }
+
+ul.tiles {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
+  gap: 1em;
+
+  & a.tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 0.6em;
+    text-align: center;
+    text-decoration: none;
+    border: 1px dashed var(--bordercolor);
+    border-radius: 12px;
+  }
+
+  & a.tile:hover, & a.tile:focus-visible {
+    background-color: var(--pagination-hover);
+  }
+
+  & img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  & .tile-name {
+    font-family: "Lobster";
+    font-size: 1.4em;
+    margin-top: 0.3em;
+  }
+
+  & .tile-motto {
+    font-style: italic;
+    font-size: 0.85em;
+    white-space: pre-line;
+  }
+
+  & .tile-count {
+    margin-top: auto;
+    padding-top: 0.4em;
+    font-size: 0.8em;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+  }
+}
+
+ul.taglist {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  margin: 0.5em 0 1em;
+
+  & a, & li.all a {
+    display: inline-block;
+    padding: 0.15em 0.8em;
+    border: 1px solid var(--bordercolor);
+    border-radius: 20em;
+    text-decoration: none;
+  }
+
+  & a:hover, & a:focus-visible {
+    background-color: var(--pagination-hover);
+  }
+
+  & .count {
+    font-size: 0.8em;
+    opacity: 0.8;
+  }
+
+  & li.all a {
+    border-style: dashed;
+    font-style: italic;
+  }
+}
+
+/* Kategorie- und Schlagwortseite */
+header.topic-head {
+  margin: 3em 0 1em;
+  text-align: center;
+
+  & h1 {
+    font-family: "Lobster";
+    font-weight: 400;
+    font-size: 2em;
+    line-height: 1.2;
+    text-shadow: none;
+  }
+
+  & .motto {
+    font-style: italic;
+    white-space: pre-line;
+    margin-top: 0.4em;
+  }
+
+  & .count {
+    font-size: 0.85em;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+  }
+}
+
+/* Einträge einer Liste */
+ul.entries {
+  list-style: none;
+
+  & li.entry {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    padding: 0.8em 0;
+    border-top: 1px dashed var(--bordercolor);
+  }
+
+  & .entry-image img {
+    display: block;
+    height: 5em;
+    width: 5em;
+    object-fit: cover;
+    border-radius: 20em;
+  }
+
+  & .entry-title {
+    font-style: italic;
+    font-size: 1.1em;
+  }
+
+  & .entry-meta {
+    font-size: 0.8em;
+    opacity: 0.8;
+  }
+
+  & .excerpt {
+    margin-top: 0.2em;
+    font-size: 0.9em;
+  }
+}
+
+p.all-posts {
+  text-align: center;
+  margin-top: 1em;
+}
+
+/* Titel der chronologischen Liste */
+h1.list-title {
+  text-align: center;
+  font-family: "Lobster";
+  font-weight: 400;
+  font-size: 1.8em;
+  text-shadow: none;
+}
+
+/* Kategorie und Schlagworte unter dem Beitragstitel */
+#blogheader .post-header p.classification {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4em;
+  margin-bottom: 0.6em;
+
+  & a {
+    padding: 0.05em 0.7em;
+    border: 1px solid var(--bordercolor);
+    border-radius: 20em;
+    font-size: 0.85em;
+  }
+
+  & a.category {
+    background-color: var(--pagination-active);
+    border-color: var(--pagination-active);
+  }
+
+  & a:hover {
+    background-color: var(--pagination-hover);
+  }
+}
+
+@media (max-width: 40em) {
+  #blogheader nav a {
+    margin: 0.5em 0.6em;
+    font-size: 1.15em;
+  }
+}

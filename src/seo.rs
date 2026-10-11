@@ -2,6 +2,7 @@
 
 use crate::config::{BLOG_NAME, BLOG_URL, META_DESCRIPTION_MAX};
 use crate::content::{Post, Site};
+use crate::topics::{self, Topics};
 use crate::urls;
 use serde_json::json;
 use std::fmt::Write;
@@ -33,7 +34,7 @@ pub fn iso(post: &Post) -> String {
 }
 
 /// JSON-LD `BlogPosting` für eine Post-Seite.
-pub fn blog_posting(post: &Post, image: Option<&str>) -> String {
+pub fn blog_posting(post: &Post, image: Option<&str>, section: Option<&str>) -> String {
     let url = urls::absolute(&post.url);
     let mut v = json!({
         "@context": "https://schema.org",
@@ -54,6 +55,12 @@ pub fn blog_posting(post: &Post, image: Option<&str>) -> String {
     if let Some(e) = &post.excerpt {
         v["description"] = json!(e);
     }
+    if let Some(name) = section {
+        v["articleSection"] = json!(name);
+    }
+    if !post.tags.is_empty() {
+        v["keywords"] = json!(post.tags.join(", "));
+    }
     // `</` darf in einem Script-Block nicht vorkommen
     v.to_string().replace("</", "<\\/")
 }
@@ -62,12 +69,21 @@ fn xml_escape(s: &str) -> String {
     s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
 }
 
-/// Sitemap mit Startseite, allen veröffentlichten Posts und Einzelseiten.
-pub fn sitemap(site: &Site) -> String {
+/// Sitemap mit Startseite, Themenseiten, allen veröffentlichten Posts und Einzelseiten.
+pub fn sitemap(site: &Site, topics: &Topics) -> String {
     let mut out = String::from(
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n",
     );
     let _ = writeln!(out, "  <url><loc>{BLOG_URL}/</loc></url>");
+    let _ = writeln!(out, "  <url><loc>{BLOG_URL}/themen/</loc></url>");
+    let topic_urls = topics
+        .categories
+        .iter()
+        .map(|c| topics::category_url(&c.category.id))
+        .chain(topics.tags.iter().map(|t| topics::tag_url(&t.slug)));
+    for url in topic_urls {
+        let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&urls::absolute(&url)));
+    }
     for post in &site.posts {
         let _ = writeln!(
             out,

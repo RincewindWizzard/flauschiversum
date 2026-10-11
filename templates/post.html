@@ -8,6 +8,12 @@
   {%- if let Some(a) = author %}
   <p class="author">Von <a href="/about/" class="author">{{ a }}</a></p>
   {%- endif %}
+  {%- if category.is_some() || !tags.is_empty() %}
+  <p class="classification">
+    {%- if let Some(c) = category %}<a class="category" href="{{ c.url }}">{{ c.name }}</a>{% endif %}
+    {%- for t in tags %}<a class="tag" href="{{ t.url }}">{{ t.name }}</a>{% endfor %}
+  </p>
+  {%- endif %}
   <div class="center">
     <small>Schreibe Ihr eine <a href="mailto:ermeline@flauschiversum.de?subject={{ mail_subject }}" class="mailto">Nachricht</a>!</small>
   </div>

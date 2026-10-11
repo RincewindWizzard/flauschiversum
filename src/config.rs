@@ -27,3 +27,7 @@ pub const MEDIA_WARN_BYTES: u64 = 20 * 1024 * 1024;
 
 /// Erste Pfadsegmente, die der Generator selbst belegt (Posts und Einzelseiten dürfen sie nicht verwenden).
 pub const RESERVED_PATHS: [&str; 6] = ["themen", "suche", "beitraege", "kategorie", "tag", "pagefind"];
+
+/// Anzahl Schlagworte unter „Häufige Themen“ und Beiträge unter „Neu im Flauschiversum“ auf der Startseite.
+pub const HOME_TOPICS: usize = 12;
+pub const HOME_NEWS: usize = 4;

@@ -1,14 +1,15 @@
 //! Ablauf eines Builds: Laden → Medien → Rendern → Ausgaben (ohne zu schreiben).
 
-use crate::config::{BLOG_URL, POSTS_PER_PAGE, TIME_ZONE};
+use crate::config::{BLOG_URL, HOME_NEWS, HOME_TOPICS, POSTS_PER_PAGE, TIME_ZONE};
 use crate::content::{self, Site};
 use crate::diag::Diagnostics;
 use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, Common, PostCard, PostPageInput, Thumb};
+use crate::render::{self, Common, Entry, PostCard, PostPageInput, Thumb, Tile, TopicLink, TopicPageInput};
 use crate::seo;
+use crate::topics::{self, Topics};
 use crate::urls;
 use anyhow::{Context, Result, bail};
 use rayon::prelude::*;
@@ -114,6 +115,31 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         Some(Thumb { src: urls::encode_path(&urls::variant_path(&post.url, 200, name)), width: size.width, height: size.height })
     };
 
+    let topics = Topics::build(&site, diag);
+    if diag.has_errors() {
+        bail!("Inhalte enthalten Fehler");
+    }
+    let category_name = |id: &str| site.categories.iter().find(|c| c.id == id).map(|c| c.name.clone());
+    let category_link = |post: &content::Post| -> Option<TopicLink> {
+        let id = post.category.as_deref()?;
+        Some(TopicLink { url: topics::category_url(id), name: category_name(id)?, count: None })
+    };
+    let tag_links = |post: &content::Post| -> Vec<TopicLink> {
+        post.tags
+            .iter()
+            .map(|t| TopicLink { url: topics::tag_url(&urls::slugify(t)), name: t.clone(), count: None })
+            .collect()
+    };
+    let entry_of = |p: &content::Post, with_category: bool| Entry {
+        url: urls::encode_path(&p.url),
+        title: p.title.clone(),
+        date_iso: seo::iso(p),
+        date_human: render::date_human(p),
+        thumb: thumb_of(p),
+        excerpt: p.excerpt.clone().unwrap_or_default(),
+        category: if with_category { category_link(p) } else { None },
+    };
+
     // Post-Seiten
     let posts = &site.posts;
     let feed_parts: Vec<Option<feed::FeedEntry>> = posts
@@ -140,6 +166,8 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                     newer: i.checked_sub(1).map(|j| &posts[j]),
                     older: posts.get(i + 1),
                     has_media,
+                    category: category_link(post),
+                    tags: tag_links(post),
                 },
                 &common,
             );
@@ -181,6 +209,65 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         outputs.insert(render::index_url(index), Content::Bytes(html.into_bytes()));
     });
 
+    // Startseite, Themenübersicht, Kategorie- und Schlagwortseiten
+    let tiles = topics
+        .categories
+        .iter()
+        .map(|c| Tile {
+            url: topics::category_url(&c.category.id),
+            name: c.category.name.clone(),
+            image: urls::encode_path(&c.category.image),
+            motto: c.category.motto.trim().to_string(),
+            count: c.posts.len(),
+        })
+        .collect();
+    let mut popular: Vec<_> = topics.tags.iter().collect();
+    popular.sort_by(|a, b| b.posts.len().cmp(&a.posts.len()).then_with(|| topics::sort_key(a.name).cmp(&topics::sort_key(b.name))));
+    let popular = popular
+        .into_iter()
+        .take(HOME_TOPICS)
+        .map(|t| TopicLink { url: topics::tag_url(&t.slug), name: t.name.to_string(), count: Some(t.posts.len()) })
+        .collect();
+    let news = posts.iter().take(HOME_NEWS).map(|p| entry_of(p, false)).collect();
+    outputs.insert("/", Content::Bytes(render::render_home(tiles, popular, news, &common).into_bytes()));
+
+    let link_of = |url: String, name: &str, n: usize| TopicLink { url, name: name.to_string(), count: Some(n) };
+    let overview_categories = topics.categories.iter().map(|c| link_of(topics::category_url(&c.category.id), &c.category.name, c.posts.len())).collect();
+    let overview_tags = topics.tags.iter().map(|t| link_of(topics::tag_url(&t.slug), t.name, t.posts.len())).collect();
+    outputs.insert("/themen/", Content::Bytes(render::render_topics(overview_categories, overview_tags, &common).into_bytes()));
+
+    for c in &topics.categories {
+        let subtopics = topics.tags_in(&c.posts).into_iter().map(|(t, n)| link_of(topics::tag_url(&t.slug), t.name, n)).collect();
+        let url = topics::category_url(&c.category.id);
+        let html = render::render_topic(
+            TopicPageInput {
+                url: url.clone(),
+                name: c.category.name.clone(),
+                motto: Some(c.category.motto.trim().to_string()),
+                count: c.posts.len(),
+                subtopics,
+                entries: c.posts.iter().map(|p| entry_of(p, false)).collect(),
+            },
+            &common,
+        );
+        outputs.insert(url, Content::Bytes(html.into_bytes()));
+    }
+    for t in &topics.tags {
+        let url = topics::tag_url(&t.slug);
+        let html = render::render_topic(
+            TopicPageInput {
+                url: url.clone(),
+                name: t.name.to_string(),
+                motto: None,
+                count: t.posts.len(),
+                subtopics: Vec::new(),
+                entries: t.posts.iter().map(|p| entry_of(p, true)).collect(),
+            },
+            &common,
+        );
+        outputs.insert(url, Content::Bytes(html.into_bytes()));
+    }
+
     // Einzelseiten
     for page in &site.pages {
         let html = markdown::render_page(&page.markdown);
@@ -191,7 +278,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     // Feed, Sitemap, robots.txt
     let feed_xml = feed::render(&site, feed_parts.into_iter().flatten().collect());
     outputs.insert("/rss.xml", Content::Bytes(feed_xml.into_bytes()));
-    outputs.insert("/sitemap.xml", Content::Bytes(seo::sitemap(&site).into_bytes()));
+    outputs.insert("/sitemap.xml", Content::Bytes(seo::sitemap(&site, &topics).into_bytes()));
     outputs.insert("/robots.txt", Content::Bytes(seo::robots().into_bytes()));
 
     let mut sources: HashMap<String, String> = HashMap::new();
@@ -295,11 +382,19 @@ pub mod tests {
             write(root, &format!("content/style/{}", e.file_name().to_string_lossy()), fs::read(e.path()).unwrap());
         }
         write(root, "content/static/favicon.ico", b"ico");
+        write(root, "content/static/images/basteln.jpg", jpeg(300, 225, 120));
+        write(root, "content/static/images/wolle.jpg", jpeg(300, 225, 60));
+        write(
+            root,
+            "content/categories.yaml",
+            "- id: basteln\n  name: Basteln\n  image: /images/basteln.jpg\n  motto: |\n    Papier und Schere,\n    mehr brauchst du nicht.\n- id: wolle\n  name: Wolle\n  image: /images/wolle.jpg\n  motto: |\n    Maschen\n    ohne Ende\n",
+        );
+        write(root, "content/tags.yaml", "- name: LARP\n- name: Hüte\n- name: Halloween\n");
         write(root, "content/pages/about.md", "---\ntitle: \"About\"\n---\n\n# Das Flauschiversum\n\nEin Blog über Wolle & Filz.\n\n[Kürbis](/2020/10/kurbis/)\n");
         write(
             root,
             "content/posts/alraune/index.md",
-            "---\ntitle: \"Alraune\"\npermalink: /2014/01/alraune/\nauthor: Ermeline\ndate: 2014-01-04 19:10:28\nimage: \"DSCF0527.jpg\"\nexcerpt: \"Mal wieder etwas für das Hobby LARP.\"\n---\n\n![Alraune oben](DSCF0527.jpg)\n![Alraune nah oben](DSCF0528.jpg)\n![Clip](clip.mp4)\n\nMal wieder etwas für das Hobby LARP.\n\n![Ohrenschützer](DSCF0531.jpg)\n\nSiehe [Kürbis](/2020/10/kurbis/) und [kaputt](/2014/01/gibts-nicht/).\n",
+            "---\ntitle: \"Alraune\"\npermalink: /2014/01/alraune/\nauthor: Ermeline\ncategory: basteln\ntags: [LARP, Hüte]\ndate: 2014-01-04 19:10:28\nimage: \"DSCF0527.jpg\"\nexcerpt: \"Mal wieder etwas für das Hobby LARP.\"\n---\n\n![Alraune oben](DSCF0527.jpg)\n![Alraune nah oben](DSCF0528.jpg)\n![Clip](clip.mp4)\n\nMal wieder etwas für das Hobby LARP.\n\n![Ohrenschützer](DSCF0531.jpg)\n\nSiehe [Kürbis](/2020/10/kurbis/) und [kaputt](/2014/01/gibts-nicht/).\n",
         );
         write(root, "content/posts/alraune/DSCF0527.jpg", jpeg(800, 600, 40));
         write(root, "content/posts/alraune/DSCF0528.jpg", jpeg(600, 800, 90));
@@ -309,11 +404,11 @@ pub mod tests {
         write(
             root,
             "content/posts/kuerbis/index.md",
-            "---\ntitle: \"Kürbis\"\npermalink: /2020/10/kurbis/\nauthor: Ermeline\ndate: 2020-10-31\nimage: \"kürbis thumb.png\"\nexcerpt: \"Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.\"\n---\n\n![Kürbis](kürbis thumb.png)\n",
+            "---\ntitle: \"Kürbis\"\npermalink: /2020/10/kurbis/\nauthor: Ermeline\ncategory: basteln\ntags: [Halloween, Hüte]\ndate: 2020-10-31\nimage: \"kürbis thumb.png\"\nexcerpt: \"Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.\"\n---\n\n![Kürbis](kürbis thumb.png)\n",
         );
         write(root, "content/posts/kuerbis/kürbis thumb.png", png(400, 300));
-        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
-        write(root, "content/posts/morgen/index.md", "---\ntitle: \"Morgen\"\ndate: 2099-01-01\nimage: \"bild.jpg\"\n---\n\n![Bild](bild.jpg)\n");
+        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ntags: [Hüte, LARP]\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
+        write(root, "content/posts/morgen/index.md", "---\ntitle: \"Morgen\"\ncategory: wolle\ntags: [Halloween]\ndate: 2099-01-01\nimage: \"bild.jpg\"\n---\n\n![Bild](bild.jpg)\n");
         write(root, "content/posts/morgen/bild.jpg", jpeg(300, 200, 10));
     }
 
@@ -374,7 +469,11 @@ pub mod tests {
         assert_eq!(ws.deleted, 0);
 
         insta::assert_snapshot!("post_alraune", stable(&read(root, "2014/01/alraune/index.html")));
-        insta::assert_snapshot!("index", stable(&read(root, "index.html")));
+        insta::assert_snapshot!("index", stable(&read(root, "beitraege/index.html")));
+        insta::assert_snapshot!("home", stable(&read(root, "index.html")));
+        insta::assert_snapshot!("category_basteln", stable(&read(root, "kategorie/basteln/index.html")));
+        insta::assert_snapshot!("tag_huete", stable(&read(root, "tag/huete/index.html")));
+        insta::assert_snapshot!("topics", stable(&read(root, "themen/index.html")));
         insta::assert_snapshot!("page_about", stable(&read(root, "about/index.html")));
         let rss = read(root, "rss.xml");
         assert!(rss.contains("<a href=\"https://flauschiversum.de/2020/10/kurbis/\">Kürbis</a>"));
@@ -428,11 +527,38 @@ pub mod tests {
         assert_eq!(ld["@type"], "BlogPosting");
         assert_eq!(ld["datePublished"], "2014-01-04T19:10:28+01:00");
 
-        let index = read(root, "index.html");
-        assert!(index.contains("<title>Flauschiversum – Mehr als nur eine Masche</title>"));
+        let home = read(root, "index.html");
+        assert!(home.contains("<title>Flauschiversum – Mehr als nur eine Masche</title>"));
+        assert_eq!(home.matches("<h1").count(), 1);
+        assert!(!home.contains("weiterlesen"));
+        let index = read(root, "beitraege/index.html");
+        assert!(index.contains("<title>Alle Beiträge – Flauschiversum</title>"));
         assert_eq!(index.matches("<h1").count(), 1);
         let png_src = "/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png";
         assert!(index.contains(png_src), "kodierte Thumbnail-URL");
+        // Themenseiten: je eine h1, Kategorie nur auf Schlagwortseiten, Zählung ohne geplanten Beitrag
+        for page in ["kategorie/basteln/", "tag/huete/", "tag/larp/", "themen/", "beitraege/"] {
+            assert_eq!(read(root, &format!("{page}index.html")).matches("<h1").count(), 1, "{page}");
+        }
+        let cat = read(root, "kategorie/basteln/index.html");
+        assert!(cat.contains("<title>Basteln – Flauschiversum</title>"));
+        assert!(cat.contains("content=\"2 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.\""));
+        assert!(cat.contains("<a href=\"/tag/huete/\">Hüte <span class=\"count\">(2)</span></a>"));
+        assert!(!cat.contains("href=\"/kategorie/basteln/\">Basteln</a></p>"), "Kategorie nicht doppelt auf Kategorieseite");
+        let tag = read(root, "tag/huete/index.html");
+        assert!(tag.contains("3 Beiträge"));
+        assert!(tag.find("Grüne Mütze").unwrap() < tag.find("Alraune").unwrap(), "neueste zuerst");
+        assert!(tag.contains(" · <a href=\"/kategorie/basteln/\">Basteln</a>"));
+        // Schlagwort nur am geplanten Beitrag: Kategorie „Wolle“ und ihre Seite entfallen
+        assert!(!root.join("dist/kategorie/wolle").exists());
+        assert!(read(root, "tag/halloween/index.html").contains("1 Beitrag"));
+        // Themenübersicht alphabetisch
+        let themen = read(root, "themen/index.html");
+        assert!(themen.find("Halloween").unwrap() < themen.find("Hüte").unwrap() && themen.find("Hüte").unwrap() < themen.find("LARP").unwrap());
+        // Beitrag trägt Einordnung auch im Datensatz
+        assert!(post.contains("<a class=\"category\" href=\"/kategorie/basteln/\">Basteln</a>"));
+        assert_eq!(ld["articleSection"], "Basteln");
+        assert_eq!(ld["keywords"], "LARP, Hüte");
         assert!(read(root, "robots.txt").contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
     }
 

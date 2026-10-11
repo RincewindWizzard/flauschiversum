@@ -25,7 +25,7 @@ expression: "stable(&read(root, \"2014/01/alraune/index.html\"))"
 <meta property="og:image:alt" content="Alraune">
 <meta property="article:published_time" content="2014-01-04T19:10:28+01:00">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Ermeline"},"datePublished":"2014-01-04T19:10:28+01:00","description":"Mal wieder etwas für das Hobby LARP.","headline":"Alraune","image":"https://flauschiversum.de/2014/01/alraune/1000x/DSCF0527.jpg","inLanguage":"de-DE","mainEntityOfPage":"https://flauschiversum.de/2014/01/alraune/","publisher":{"@type":"Organization","name":"Flauschiversum","url":"https://flauschiversum.de/"},"url":"https://flauschiversum.de/2014/01/alraune/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","articleSection":"Basteln","author":{"@type":"Person","name":"Ermeline"},"datePublished":"2014-01-04T19:10:28+01:00","description":"Mal wieder etwas für das Hobby LARP.","headline":"Alraune","image":"https://flauschiversum.de/2014/01/alraune/1000x/DSCF0527.jpg","inLanguage":"de-DE","keywords":"LARP, Hüte","mainEntityOfPage":"https://flauschiversum.de/2014/01/alraune/","publisher":{"@type":"Organization","name":"Flauschiversum","url":"https://flauschiversum.de/"},"url":"https://flauschiversum.de/2014/01/alraune/"}</script>
 </head>
 <body>
 <div class="container-fluid">
@@ -35,17 +35,26 @@ expression: "stable(&read(root, \"2014/01/alraune/index.html\"))"
     <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
   </div>
   <nav class="center">
-    <a href="/">Beiträge</a>
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
     <a href="/tipps-und-tricks/">Tipps und Tricks</a>
     <a href="/about/">About</a>
     <a href="/impressum/">Impressum</a>
     <a href="/rss.xml">Abonnieren</a>
   </nav>
+  <form class="search" action="/suche/" method="get" role="search">
+    <label for="q">Suchen</label>
+    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+    <button type="submit">Suchen</button>
+  </form>
   
 <div class="post-header">
   <h1>Alraune</h1>
   <div class="center"><img src="/2014/01/alraune/200x/DSCF0527.jpg" width="200" height="150" alt=""></div>
   <p class="author">Von <a href="/about/" class="author">Ermeline</a></p>
+  <p class="classification"><a class="category" href="/kategorie/basteln/">Basteln</a><a class="tag" href="/tag/larp/">LARP</a><a class="tag" href="/tag/huete/">Hüte</a>
+  </p>
   <div class="center">
     <small>Schreibe Ihr eine <a href="mailto:ermeline@flauschiversum.de?subject=%5BFlauschiversum%5D%20Alraune" class="mailto">Nachricht</a>!</small>
   </div>

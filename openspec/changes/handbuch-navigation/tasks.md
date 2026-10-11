@@ -15,9 +15,9 @@
 
 ## 3. Seiten und Navigation
 
-- [ ] 3.1 Die chronologische Liste nach `/beitraege/` verlegen (Paginierung, Titel „Alle Beiträge …“, Rücklink von `/page/1/`); prüfen: Unit-Tests der Paginierung und Titel, alle bisherigen `/page/<N>/` bleiben im Gesamtseitentest erhalten
-- [ ] 3.2 Templates `home.html`, `topic.html`, `topics.html` und Partial `entry.html` sowie `content/style/topics.css` (Kacheln, Schlagwortliste, kompakte Einträge) umsetzen; prüfen: Snapshot-Tests für Startseite, Kategorieseite, Schlagwortseite und Themenübersicht, jeweils mit einer einzigen `h1`
-- [ ] 3.3 Beitragskopf mit Kategorie und Schlagworten, neue Hauptnavigation und Suchfeld im Kopf umsetzen; prüfen: Snapshot-Test der Beitragsseite, Navigation enthält die sieben Einträge in der Reihenfolge der Spec
+- [x] 3.1 Die chronologische Liste nach `/beitraege/` verlegen (Paginierung, Titel „Alle Beiträge …“, Rücklink von `/page/1/`); prüfen: Unit-Tests der Paginierung und Titel, alle bisherigen `/page/<N>/` bleiben im Gesamtseitentest erhalten
+- [x] 3.2 Templates `home.html`, `topic.html`, `topics.html` und Partial `entry.html` sowie `content/style/topics.css` (Kacheln, Schlagwortliste, kompakte Einträge) umsetzen; prüfen: Snapshot-Tests für Startseite, Kategorieseite, Schlagwortseite und Themenübersicht, jeweils mit einer einzigen `h1`
+- [x] 3.3 Beitragskopf mit Kategorie und Schlagworten, neue Hauptnavigation und Suchfeld im Kopf umsetzen; prüfen: Snapshot-Test der Beitragsseite, Navigation enthält die sieben Einträge in der Reihenfolge der Spec
 - [ ] 3.4 SEO: Sitemap um Themenseiten erweitern, Titel und Meta-Beschreibungen der neuen Seiten, `articleSection` und `keywords` im JSON-LD, `noindex` auf der Suchseite; prüfen: Unit- und Snapshot-Tests, JSON-LD parst als gültiges JSON
 
 ## 4. Suche

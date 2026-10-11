@@ -8,6 +8,7 @@
 @import "pagination.css";
 @import "media.css";
 @import "autoren.css";
+@import "topics.css";
 
 h1, h2, h3, h4, h5, h6, p, body, a, img, ul, ol, blockquote, pre, figure {
   margin: 0;

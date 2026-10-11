@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ head.title }}</title>
 <meta name="description" content="{{ head.description }}">
+{%- if head.noindex %}
+<meta name="robots" content="noindex">
+{%- endif %}
 <link rel="canonical" href="{{ head.canonical }}">
 <link rel="stylesheet" href="{{ head.style_href }}">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
@@ -41,12 +44,21 @@
     <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
   </div>
   <nav class="center">
-    <a href="/">Beiträge</a>
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
     <a href="/tipps-und-tricks/">Tipps und Tricks</a>
     <a href="/about/">About</a>
     <a href="/impressum/">Impressum</a>
     <a href="/rss.xml">Abonnieren</a>
   </nav>
+  {%- if head.search_form %}
+  <form class="search" action="/suche/" method="get" role="search">
+    <label for="q">Suchen</label>
+    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+    <button type="submit">Suchen</button>
+  </form>
+  {%- endif %}
   {% block header %}{% endblock %}
 </header>
 {% block content %}{% endblock %}

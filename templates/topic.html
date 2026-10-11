@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="topic">
+  <header class="topic-head">
+    <h1>{{ title }}</h1>
+    {%- if let Some(m) = motto %}
+    <p class="motto">{{ m }}</p>
+    {%- endif %}
+    <p class="count">{{ count_text }}</p>
+  </header>
+  {%- if !subtopics.is_empty() %}
+  <ul class="taglist" aria-label="Schlagworte in dieser Kategorie">
+    {%- for t in subtopics %}
+    <li><a href="{{ t.url }}">{{ t.name }}{% if let Some(n) = t.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+  <ul class="entries">
+    {%- for entry in entries %}
+    {% include "partials/entry.html" %}
+    {%- endfor %}
+  </ul>
+</main>
+{% endblock %}

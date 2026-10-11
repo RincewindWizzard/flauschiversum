@@ -29,12 +29,19 @@ expression: "stable(&read(root, \"about/index.html\"))"
     <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
   </div>
   <nav class="center">
-    <a href="/">Beiträge</a>
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
     <a href="/tipps-und-tricks/">Tipps und Tricks</a>
     <a href="/about/">About</a>
     <a href="/impressum/">Impressum</a>
     <a href="/rss.xml">Abonnieren</a>
   </nav>
+  <form class="search" action="/suche/" method="get" role="search">
+    <label for="q">Suchen</label>
+    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+    <button type="submit">Suchen</button>
+  </form>
   
 <div class="post-header">
   <h1>About</h1>

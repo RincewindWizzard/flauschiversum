@@ -1,0 +1,74 @@
+---
+source: src/site.rs
+expression: "stable(&read(root, \"themen/index.html\"))"
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Themen – Flauschiversum</title>
+<meta name="description" content="Alle Kategorien und Schlagworte im Flauschiversum: 1 Kategorien, 3 Schlagworte.">
+<link rel="canonical" href="https://flauschiversum.de/themen/">
+<link rel="stylesheet" href="/style.css?v=HASH">
+<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
+<meta property="og:site_name" content="Flauschiversum">
+<meta property="og:locale" content="de_DE">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Themen">
+<meta property="og:description" content="Alle Kategorien und Schlagworte im Flauschiversum: 1 Kategorien, 3 Schlagworte.">
+<meta property="og:url" content="https://flauschiversum.de/themen/">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="container-fluid">
+<header id="blogheader">
+  <div class="logo">
+    <p class="site-title"><a href="/">Flauschiversum</a></p>
+    <p class="description">Mehr als nur eine Masche <small>neue Posts an Sonntagen</small></p>
+  </div>
+  <nav class="center">
+    <a href="/">Start</a>
+    <a href="/themen/">Themen</a>
+    <a href="/beitraege/">Beiträge</a>
+    <a href="/tipps-und-tricks/">Tipps und Tricks</a>
+    <a href="/about/">About</a>
+    <a href="/impressum/">Impressum</a>
+    <a href="/rss.xml">Abonnieren</a>
+  </nav>
+  <form class="search" action="/suche/" method="get" role="search">
+    <label for="q">Suchen</label>
+    <input type="search" id="q" name="q" placeholder="Anleitung suchen …" autocomplete="off">
+    <button type="submit">Suchen</button>
+  </form>
+  
+</header>
+
+<main class="topic topics-overview">
+  <header class="topic-head">
+    <h1>Themen</h1>
+  </header>
+  <section aria-labelledby="kategorien">
+    <h2 id="kategorien">Kategorien</h2>
+    <ul class="taglist">
+      <li><a href="/kategorie/basteln/">Basteln <span class="count">(2)</span></a></li>
+    </ul>
+  </section>
+  <section aria-labelledby="schlagworte">
+    <h2 id="schlagworte">Schlagworte</h2>
+    <ul class="taglist">
+      <li><a href="/tag/halloween/">Halloween <span class="count">(1)</span></a></li>
+      <li><a href="/tag/huete/">Hüte <span class="count">(3)</span></a></li>
+      <li><a href="/tag/larp/">LARP <span class="count">(2)</span></a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="center">
+  <p>&copy; 2026 Ermeline Wollknoll &mdash;&nbsp;<a href="/impressum/">Impressum</a></p>
+</footer>
+</div>
+
+</body>
+</html>

@@ -30,6 +30,9 @@ pub struct Head {
     pub logo_is_h1: bool,
     pub year: i16,
     pub livereload: bool,
+    /// Suchfeld im Kopf (nicht auf Startseite und Suchseite).
+    pub search_form: bool,
+    pub noindex: bool,
 }
 
 pub struct OgImage {
@@ -62,6 +65,33 @@ pub struct PostCard {
     pub excerpt: String,
 }
 
+/// Link mit Anzeigename, optional mit Anzahl der Beiträge.
+pub struct TopicLink {
+    pub url: String,
+    pub name: String,
+    pub count: Option<usize>,
+}
+
+/// Eintrag in einer Themenliste oder im Abschnitt „Neu im Flauschiversum“.
+pub struct Entry {
+    pub url: String,
+    pub title: String,
+    pub date_iso: String,
+    pub date_human: String,
+    pub thumb: Option<Thumb>,
+    pub excerpt: String,
+    pub category: Option<TopicLink>,
+}
+
+/// Kachel einer Kategorie auf der Startseite.
+pub struct Tile {
+    pub url: String,
+    pub name: String,
+    pub image: String,
+    pub motto: String,
+    pub count: usize,
+}
+
 pub struct PageLink {
     pub number: usize,
     pub url: String,
@@ -88,6 +118,34 @@ pub struct IndexTemplate {
 }
 
 #[derive(Template)]
+#[template(path = "home.html")]
+pub struct HomeTemplate {
+    pub head: Head,
+    pub tiles: Vec<Tile>,
+    pub topics: Vec<TopicLink>,
+    pub news: Vec<Entry>,
+}
+
+#[derive(Template)]
+#[template(path = "topic.html")]
+pub struct TopicTemplate {
+    pub head: Head,
+    pub title: String,
+    pub motto: Option<String>,
+    pub count_text: String,
+    pub subtopics: Vec<TopicLink>,
+    pub entries: Vec<Entry>,
+}
+
+#[derive(Template)]
+#[template(path = "topics.html")]
+pub struct TopicsTemplate {
+    pub head: Head,
+    pub categories: Vec<TopicLink>,
+    pub tags: Vec<TopicLink>,
+}
+
+#[derive(Template)]
 #[template(path = "post.html")]
 pub struct PostTemplate {
     pub head: Head,
@@ -100,6 +158,8 @@ pub struct PostTemplate {
     pub next: Option<NavLink>,
     pub has_media: bool,
     pub script_href: String,
+    pub category: Option<TopicLink>,
+    pub tags: Vec<TopicLink>,
 }
 
 #[derive(Template)]
@@ -110,9 +170,9 @@ pub struct PageTemplate {
     pub content: String,
 }
 
-/// URL der Indexseite `index` (0 = Startseite).
+/// URL der Seite `index` der chronologischen Liste (0 = `/beitraege/`).
 pub fn index_url(index: usize) -> String {
-    if index == 0 { "/".to_string() } else { format!("/page/{index}/") }
+    if index == 0 { "/beitraege/".to_string() } else { format!("/page/{index}/") }
 }
 
 /// Paginierung für Seite `index` von `count` Seiten.
@@ -144,27 +204,99 @@ fn mail_subject(title: &str) -> String {
     out
 }
 
-pub fn render_index(index: usize, count: usize, cards: Vec<PostCard>, common: &Common) -> String {
-    let title = if index == 0 {
-        format!("{BLOG_NAME} – {BLOG_DESCRIPTION}")
-    } else {
-        format!("{BLOG_NAME} – Seite {}", index + 1)
-    };
-    let head = Head {
-        og_title: title.clone(),
+/// Gemeinsamer Seitenkopf; Aufrufer überschreiben, was abweicht.
+fn base_head(common: &Common, title: String, og_title: String, description: String, canonical: String) -> Head {
+    Head {
         title,
-        description: BLOG_DESCRIPTION.to_string(),
-        canonical: format!("{BLOG_URL}{}", index_url(index)),
+        og_title,
+        description,
+        canonical,
         og_type: "website",
         og_image: None,
         published_time: None,
         json_ld: None,
         style_href: common.style_href.clone(),
-        logo_is_h1: true,
+        logo_is_h1: false,
         year: common.year,
         livereload: common.livereload,
+        search_form: true,
+        noindex: false,
+    }
+}
+
+/// „1 Beitrag“ / „37 Beiträge“
+pub fn count_text(n: usize) -> String {
+    if n == 1 { "1 Beitrag".to_string() } else { format!("{n} Beiträge") }
+}
+
+pub fn render_index(index: usize, count: usize, cards: Vec<PostCard>, common: &Common) -> String {
+    let title = if index == 0 {
+        format!("Alle Beiträge – {BLOG_NAME}")
+    } else {
+        format!("Alle Beiträge – Seite {} – {BLOG_NAME}", index + 1)
     };
+    let head = base_head(
+        common,
+        title.clone(),
+        title,
+        "Alle Beiträge des Flauschiversums, die neuesten zuerst.".to_string(),
+        format!("{BLOG_URL}{}", index_url(index)),
+    );
     IndexTemplate { head, posts: cards, pagination: pagination(index, count) }.render().expect("Index-Template")
+}
+
+pub fn render_home(tiles: Vec<Tile>, topics: Vec<TopicLink>, news: Vec<Entry>, common: &Common) -> String {
+    let title = format!("{BLOG_NAME} – {BLOG_DESCRIPTION}");
+    let mut head = base_head(
+        common,
+        title.clone(),
+        title,
+        "Anleitungen und Ideen rund um Wolle, Filz, Nähen und Basteln – zum Suchen, Stöbern und Nachmachen.".to_string(),
+        format!("{BLOG_URL}/"),
+    );
+    head.logo_is_h1 = true;
+    head.search_form = false;
+    HomeTemplate { head, tiles, topics, news }.render().expect("Start-Template")
+}
+
+/// Seite einer Kategorie oder eines Schlagworts.
+pub struct TopicPageInput {
+    pub url: String,
+    pub name: String,
+    pub motto: Option<String>,
+    pub count: usize,
+    pub subtopics: Vec<TopicLink>,
+    pub entries: Vec<Entry>,
+}
+
+pub fn render_topic(input: TopicPageInput, common: &Common) -> String {
+    let mut description = format!("{} zu {} im {BLOG_NAME}", count_text(input.count), input.name);
+    if let Some(m) = &input.motto {
+        description = format!("{description}. {}", m.split_whitespace().collect::<Vec<_>>().join(" "));
+    }
+    let head = base_head(
+        common,
+        format!("{} – {BLOG_NAME}", input.name),
+        input.name.clone(),
+        seo::meta_description(&description),
+        urls::absolute(&input.url),
+    );
+    TopicTemplate {
+        head,
+        title: input.name,
+        motto: input.motto,
+        count_text: count_text(input.count),
+        subtopics: input.subtopics,
+        entries: input.entries,
+    }
+    .render()
+    .expect("Themen-Template")
+}
+
+pub fn render_topics(categories: Vec<TopicLink>, tags: Vec<TopicLink>, common: &Common) -> String {
+    let description = format!("Alle Kategorien und Schlagworte im {BLOG_NAME}: {} Kategorien, {} Schlagworte.", categories.len(), tags.len());
+    let head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, urls::absolute("/themen/"));
+    TopicsTemplate { head, categories, tags }.render().expect("Themenübersicht-Template")
 }
 
 pub struct PostPageInput<'a> {
@@ -175,6 +307,8 @@ pub struct PostPageInput<'a> {
     pub newer: Option<&'a Post>,
     pub older: Option<&'a Post>,
     pub has_media: bool,
+    pub category: Option<TopicLink>,
+    pub tags: Vec<TopicLink>,
 }
 
 pub fn render_post(input: PostPageInput, common: &Common) -> String {
@@ -193,11 +327,13 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
             alt: post.title.clone(),
         }),
         published_time: Some(seo::iso(post)),
-        json_ld: Some(seo::blog_posting(post, image_url)),
+        json_ld: Some(seo::blog_posting(post, image_url, input.category.as_ref().map(|c| c.name.as_str()))),
         style_href: common.style_href.clone(),
         logo_is_h1: false,
         year: common.year,
         livereload: common.livereload,
+        search_form: true,
+        noindex: false,
     };
     let link = |p: &Post| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() };
     PostTemplate {
@@ -211,26 +347,21 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         next: input.newer.map(link),
         has_media: input.has_media,
         script_href: common.script_href.clone(),
+        category: input.category,
+        tags: input.tags,
     }
     .render()
     .expect("Post-Template")
 }
 
 pub fn render_page(page: &Page, content: String, description: String, common: &Common) -> String {
-    let head = Head {
-        title: format!("{} – {BLOG_NAME}", page.title),
-        og_title: page.title.clone(),
-        description: seo::meta_description(&description),
-        canonical: urls::absolute(&page.url),
-        og_type: "website",
-        og_image: None,
-        published_time: None,
-        json_ld: None,
-        style_href: common.style_href.clone(),
-        logo_is_h1: false,
-        year: common.year,
-        livereload: common.livereload,
-    };
+    let head = base_head(
+        common,
+        format!("{} – {BLOG_NAME}", page.title),
+        page.title.clone(),
+        seo::meta_description(&description),
+        urls::absolute(&page.url),
+    );
     PageTemplate { head, title: page.title.clone(), content }.render().expect("Seiten-Template")
 }
 

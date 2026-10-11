@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+<main id="home">
+  <section class="home-search" aria-label="Suche">
+    <form class="search big" action="/suche/" method="get" role="search">
+      <label for="q">Was möchtest du machen?</label>
+      <div class="search-row">
+        <input type="search" id="q" name="q" placeholder="z.B. Mütze, Katze, Filz …" autocomplete="off">
+        <button type="submit">Suchen</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="categories" aria-labelledby="kategorien">
+    <h2 id="kategorien">Kategorien</h2>
+    <ul class="tiles">
+      {%- for tile in tiles %}
+      <li><a class="tile" href="{{ tile.url }}">
+        <img src="{{ tile.image }}" alt="" loading="lazy">
+        <span class="tile-name">{{ tile.name }}</span>
+        <span class="tile-motto">{{ tile.motto }}</span>
+        <span class="tile-count">{{ tile.count }} {% if tile.count == 1 %}Beitrag{% else %}Beiträge{% endif %}</span>
+      </a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+
+  <section class="topics" aria-labelledby="themen">
+    <h2 id="themen">Häufige Themen</h2>
+    <ul class="taglist">
+      {%- for t in topics %}
+      <li><a href="{{ t.url }}">{{ t.name }}{% if let Some(n) = t.count %} <span class="count">({{ n }})</span>{% endif %}</a></li>
+      {%- endfor %}
+      <li class="all"><a href="/themen/">Alle Themen</a></li>
+    </ul>
+  </section>
+
+  <section class="news" aria-labelledby="neu">
+    <h2 id="neu">Neu im Flauschiversum</h2>
+    <ul class="entries">
+      {%- for entry in news %}
+      {% include "partials/entry.html" %}
+      {%- endfor %}
+    </ul>
+    <p class="all-posts"><a href="/beitraege/">Alle Beiträge</a></p>
+  </section>
+</main>
+{% endblock %}
