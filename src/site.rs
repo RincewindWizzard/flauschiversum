@@ -658,6 +658,11 @@ pub mod tests {
             assert!(!top.contains("About"), "{path}: About me steht in der Fußzeile");
             assert_eq!(top.matches("aria-expanded=\"false\"").count(), 1, "nur Kategorien hat ein Untermenü: {path}");
             assert!(bar.contains("<summary aria-label=\"Menü\">"), "{path}: Hamburger-Knopf");
+            assert!(bar.contains("class=\"theme-toggle\" data-state=\"auto\""), "{path}: Umschalter für das Farbschema");
+            // Farbschema: Meta-Angabe und Skript gegen das Aufblitzen stehen im head, vor dem Stylesheet
+            let head_end = html.find("</head>").unwrap();
+            assert!(html.contains("<meta name=\"color-scheme\" content=\"light dark\">"), "{path}");
+            assert!(html.find("localStorage.getItem(\"theme\")").unwrap() < html.find("<link rel=\"stylesheet\"").unwrap() && html.find("localStorage.getItem(\"theme\")").unwrap() < head_end, "{path}");
             assert!(bar.find("</nav>").unwrap() < bar.find("class=\"search topsearch\"").unwrap(), "{path}: Suche nach den Menüs");
             assert!(!html.contains("sitenav") && !html.contains("<aside class=\"sidebar\"") && !html.contains("blogheader"), "{path}");
             // Fußzeile: vier Seitenlinks, Kontakt, Socials, Copyright
@@ -769,6 +774,46 @@ pub mod tests {
         // Ohne Autor keine Zeile
         let muetze = &pages["/2026/01/gruene-muetze/index.html"];
         assert!(!muetze.contains("Von <a"));
+    }
+
+    /// Farben stehen nur in `theme.css` (Tokens für Hell und Dunkel); alle anderen Stylesheets nutzen Variablen.
+    #[test]
+    fn colors_are_defined_only_in_theme_css() {
+        let repo = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let mut checked = 0;
+        for entry in fs::read_dir(repo.join("content/style")).unwrap().filter_map(Result::ok) {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            if name == "theme.css" || !name.ends_with(".css") {
+                continue;
+            }
+            let css = fs::read_to_string(entry.path()).unwrap();
+            // Kommentare entfernen
+            let mut code = String::new();
+            let mut rest = css.as_str();
+            while let Some(i) = rest.find("/*") {
+                code.push_str(&rest[..i]);
+                rest = &rest[i + 2..];
+                rest = rest.find("*/").map_or("", |j| &rest[j + 2..]);
+            }
+            code.push_str(rest);
+            for (n, line) in code.lines().enumerate() {
+                let bytes = line.as_bytes();
+                let hex = line.match_indices('#').any(|(i, _)| {
+                    let digits = bytes[i + 1..].iter().take_while(|b| b.is_ascii_hexdigit()).count();
+                    (3..=8).contains(&digits) && !bytes.get(i + 1 + digits).is_some_and(|b| b.is_ascii_alphanumeric())
+                });
+                let func = ["rgb(", "rgba(", "hsl(", "hsla("].iter().any(|f| line.contains(f));
+                let named = line.split(|c: char| !c.is_ascii_alphabetic() && c != '-').any(|w| matches!(w, "white" | "black" | "red" | "green" | "blue" | "gray" | "grey"));
+                assert!(!(hex || func || named), "{name}:{}: feste Farbe `{}` (Farben gehören nach theme.css)", n + 1, line.trim());
+            }
+            checked += 1;
+        }
+        assert!(checked >= 10, "Stylesheets gefunden: {checked}");
+        let theme = fs::read_to_string(repo.join("content/style/theme.css")).unwrap();
+        assert!(theme.contains("prefers-color-scheme: dark") && theme.contains("[data-theme=\"dark\"]") && theme.contains("[data-theme=\"light\"]"));
+        for token in ["--bgcolor", "--card-bg", "--acolor", "--muted", "--link", "--accent", "--accent-ink", "--accent-soft", "--border-strong", "--footer-bg"] {
+            assert_eq!(theme.matches(&format!("{token}:")).count(), 3, "{token} in Hell, System-Dunkel und Dunkel gesetzt");
+        }
     }
 
     #[test]

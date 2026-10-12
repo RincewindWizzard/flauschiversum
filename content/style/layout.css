@@ -73,8 +73,8 @@ body.has-aside.aside-early aside { order: 2; margin: 0 0 1.5em; }
 
 /* Staging-Leiste: nur auf der Staging-Seite, mit dem Namen des gebauten Branches */
 .staging-bar {
-  background-color: #b3261e;
-  color: #fff;
+  background-color: var(--staging-bg);
+  color: var(--staging-text);
   text-align: center;
   font-family: monospace;
   font-weight: 700;

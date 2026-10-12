@@ -24,6 +24,8 @@ context: |
   - Staging: GitHub Actions (.github/workflows/staging.yml) baut bei Push auf `dev` und
     `claude/**` mit `--staging <Branch>` und `--base-url` und veröffentlicht auf GitHub Pages
     (https://staging.flauschiversum.de/); Produktiv-Deployment ist ein eigener Change
+  - Farben: Schema „Flauschi-Nebel“ in Hell und Dunkel, Variablen nur in
+    content/style/theme.css, Umschalter in der Topbar, Sterne/Nebel in starfield.css
   - Frontend: Karussell (CSS scroll-snap) und Vollbild (PhotoSwipe 5) in assets/
   - Tests: cargo test (Unit, Integration, Snapshots mit insta), Browser-Tests mit
     Playwright in tests/browser/

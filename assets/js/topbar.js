@@ -4,6 +4,32 @@
   const root = document.documentElement;
   root.classList.add("js");
 
+  // Farbschema: Automatisch (Systemeinstellung), Hell, Dunkel; die Wahl wird im Browser gemerkt
+  const themeButton = document.querySelector(".theme-toggle");
+  if (themeButton) {
+    const modes = ["auto", "light", "dark"];
+    const names = { auto: "Automatisch", light: "Hell", dark: "Dunkel" };
+    const read = () => { try { return localStorage.getItem("theme"); } catch { return null; } };
+    const write = (mode) => {
+      try { if (mode === "auto") localStorage.removeItem("theme"); else localStorage.setItem("theme", mode); } catch { /* Speicher nicht verfügbar */ }
+    };
+    const show = (mode) => {
+      if (mode === "auto") delete root.dataset.theme; else root.dataset.theme = mode;
+      themeButton.dataset.state = mode;
+      const label = `Farbschema: ${names[mode]}`;
+      themeButton.title = label;
+      themeButton.setAttribute("aria-label", `${label}. Zum Wechseln drücken.`);
+    };
+    const saved = read();
+    let mode = modes.includes(saved) ? saved : "auto";
+    show(mode);
+    themeButton.addEventListener("click", () => {
+      mode = modes[(modes.indexOf(mode) + 1) % modes.length];
+      write(mode);
+      show(mode);
+    });
+  }
+
   const menus = [...document.querySelectorAll(".topnav li.has-menu")];
   const toggleOf = (li) => li.querySelector(":scope > .submenu-toggle");
   const linksOf = (li) => [...li.querySelectorAll(":scope > .submenu a")];

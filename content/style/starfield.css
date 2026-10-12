@@ -1,0 +1,84 @@
+/* Universum als Stilelement: Sterne und Nebel hinter dem Inhalt.
+   Rein dekorativ: liegt hinter allem, fängt keine Mausereignisse ab, bewegt sich nicht. Der Inhaltsbereich
+   (.container-fluid) hat einen einfarbigen Hintergrund, damit nie ein Stern hinter Text liegt; sichtbar sind Sterne
+   und Nebel an den Rändern und im Streifen über der Fußzeile. */
+/* Die weiche Fläche hinter dem Inhalt ragt seitlich über den Rahmen hinaus: kein waagerechtes Scrollen */
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: clip;
+  background-image:
+    radial-gradient(ellipse 55% 50% at 100% 55%, var(--nebula-a), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 0% 100%, var(--nebula-b), transparent 70%);
+  background-attachment: fixed;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--stars-opacity);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+
+body::before {
+  background: var(--star-1);
+  -webkit-mask-image: url("/images/stars-small.svg");
+  mask-image: url("/images/stars-small.svg");
+}
+
+body::after {
+  background: var(--star-2);
+  -webkit-mask-image: url("/images/stars-large.svg");
+  mask-image: url("/images/stars-large.svg");
+}
+
+/* Fläche hinter dem Inhalt: einfarbig über die volle Breite des Rahmens, an den Seiten weich ausgeblendet */
+div.container-fluid {
+  position: relative;
+  isolation: isolate;
+}
+
+div.container-fluid::before {
+  content: "";
+  position: absolute;
+  inset: 0 -4em;
+  z-index: -1;
+  background: linear-gradient(to right, transparent, var(--bgcolor) 4em, var(--bgcolor) calc(100% - 4em), transparent);
+}
+
+#blogfooter {
+  margin-top: 4em;
+}
+
+.mascot img {
+  filter: var(--mascot-glow);
+}
+
+/* Erhöhter Kontrast und erzwungene Farben: keine Dekoration */
+@media (prefers-contrast: more), (forced-colors: active) {
+  body {
+    background-image: none;
+  }
+
+  body::before,
+  body::after {
+    display: none;
+  }
+}
+
+/* Sternchen-Trenner am oberen Rand der Fußzeile (Dekoration, für Screenreader ohne Text) */
+#blogfooter::before {
+  content: "✦  ✦  ✦" / "";
+  display: block;
+  margin: -0.6em 0 1em;
+  text-align: center;
+  letter-spacing: 0.4em;
+  color: var(--footer-star);
+}

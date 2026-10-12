@@ -310,9 +310,9 @@ const contrast = (page, sel, bgSel) =>
     return (a + 0.05) / (b + 0.05);
   }, [sel, bgSel]);
 
-await test('Farben: Hintergrund Cremeweiß, Kontrast von Text, Links, Knopf und Tag mindestens 4,5 : 1', async () => {
+await test('Farben: Hintergrund Lavendelweiß (Flauschi-Nebel), Kontrast von Text, Links, Knopf und Tag mindestens 4,5 : 1', async () => {
   const page = await open(POST, 1440);
-  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 247, 240)');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(246, 243, 252)');
   for (const [sel, name] of [['main.page p', 'Text'], ['main.page a', 'Link im Text'], ['.topnav a', 'Navigation'], ['.searchbox button', 'Lupe'], ['.post-header a.category', 'Kategorie-Tag'], ['.post-header a.tag', 'Schlagwort-Tag'], ['#blogfooter .footer-links a', 'Footer'], ['#blogfooter .copyright', 'Copyright']]) {
     const c = await contrast(page, sel);
     assert.ok(c >= 4.5, `${name}: Kontrast ${c.toFixed(2)}`);

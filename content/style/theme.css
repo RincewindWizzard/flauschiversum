@@ -1,24 +1,48 @@
 /*
-  Farbschema: gedämpftes Salbeigrün auf Cremeweiß.
-  Alle Farben der Seite stehen hier; Kontrast Text/Link auf Hintergrund und Karte mindestens 4,5 : 1.
-    #faf7f0  Seitenhintergrund (Cremeweiß)
-    #ffffff  Karten
-    #2b2b2b  Text
-    #2f5d3a  Links (dunkelgrün)
-    #6f9a5b  Akzent (Salbeigrün) für Knöpfe und aktive Elemente, darauf dunkle Schrift #121a12
-    #e4eedc  helle Tönung des Akzents (Hover, Tags)
+  Farbschema „Flauschi-Nebel“: Violett und Indigo wie das Maskottchen, Gold und Cyan als Sternenlicht.
+  Alle Farben der Seite stehen hier, in einem hellen (Tag) und einem dunklen Modus (Nacht); in den anderen
+  Stylesheets stehen keine Farbwerte. Der Modus folgt der Systemeinstellung (prefers-color-scheme) und lässt sich
+  mit data-theme="light" oder data-theme="dark" am html-Element überschreiben (Umschalter in der Topbar).
+  Kontraste (WCAG): Text auf Karte mindestens 14 : 1, grauer Text 7 : 1, Link 7,9 : 1, Schrift auf Akzent 5,4 : 1,
+  Rand und Akzent als Bedienelemente mindestens 3 : 1; geprüft von tests/browser/theme.mjs.
 */
 :root {
-  --bgcolor: #faf7f0;
+  color-scheme: light;
+  --bgcolor: #f6f3fc;
   --card-bg: #ffffff;
-  --card-border: rgb(0 0 0 / 0.07);
-  --card-shadow: 0 1px 3px rgb(60 50 30 / 0.08);
-  --acolor: #2b2b2b;
-  --link: #2f5d3a;
-  --accent: #6f9a5b;
-  --accent-ink: #121a12;
-  --accent-soft: #e4eedc;
-  --bordercolor: #e2dccf;
+  --card-border: rgb(29 25 48 / 0.08);
+  --acolor: #1d1930;
+  --muted: #575270;
+  --link: #4a38b0;
+  --accent: #6d4fe0;
+  --accent-hover: #5a3dc8;
+  --accent-ink: #ffffff;
+  --accent-soft: #e9e4fa;
+  --bordercolor: #ddd7ef;
+  --border-strong: #8f89ab;
+  --shadow-color: 40 30 90;
+  --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.1);
+  --shadow-md: 0 2px 12px rgb(var(--shadow-color) / 0.25);
+  --shadow-lg: 0 6px 18px rgb(var(--shadow-color) / 0.18);
+  --card-shadow: var(--shadow-sm);
+
+  /* Universum: Sterne und Nebel hinter dem Inhalt, im hellen Modus nur zart */
+  --star-1: #6d4fe0;
+  --star-2: #b8860b;
+  --stars-opacity: 0.35;
+  --nebula-a: rgb(143 115 245 / 0.14);
+  --nebula-b: rgb(60 200 220 / 0.10);
+  --mascot-glow: none;
+
+  /* Fußzeile: in beiden Modi ein dunkles Band */
+  --footer-bg: #241d4f;
+  --footer-text: #afafaf;
+  --footer-hover: #ffffff;
+  --footer-star: #ffd166;
+
+  /* Staging-Leiste bleibt in beiden Modi rot */
+  --staging-bg: #b3261e;
+  --staging-text: #ffffff;
 
   /* Typografie: Lobster für Logo und Titel, Lora für alles andere */
   --font-display: "Lobster", cursive;
@@ -31,6 +55,62 @@
   /* Alte Namen, auf die das Stylesheet noch verweist */
   --pagination-hover: var(--accent-soft);
   --pagination-active: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bgcolor: #0e0b1f;
+    --card-bg: #191537;
+    --card-border: rgb(255 255 255 / 0.08);
+    --acolor: #ebe8f8;
+    --muted: #aaa5c8;
+    --link: #b4a2ff;
+    --accent: #8f73f5;
+    --accent-hover: #a58cff;
+    --accent-ink: #0e0b1f;
+    --accent-soft: #2a2459;
+    --bordercolor: #2d2860;
+    --border-strong: #6f68a0;
+    --shadow-color: 0 0 0;
+    --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.5);
+    --shadow-md: 0 2px 12px rgb(var(--shadow-color) / 0.6);
+    --shadow-lg: 0 6px 18px rgb(var(--shadow-color) / 0.6);
+    --star-1: #ffffff;
+    --star-2: #ffd166;
+    --stars-opacity: 1;
+    --nebula-a: rgb(143 115 245 / 0.32);
+    --nebula-b: rgb(60 200 220 / 0.18);
+    --mascot-glow: drop-shadow(0 0 4px rgb(190 170 255 / 0.55));
+    --footer-bg: #191537;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bgcolor: #0e0b1f;
+  --card-bg: #191537;
+  --card-border: rgb(255 255 255 / 0.08);
+  --acolor: #ebe8f8;
+  --muted: #aaa5c8;
+  --link: #b4a2ff;
+  --accent: #8f73f5;
+  --accent-hover: #a58cff;
+  --accent-ink: #0e0b1f;
+  --accent-soft: #2a2459;
+  --bordercolor: #2d2860;
+  --border-strong: #6f68a0;
+  --shadow-color: 0 0 0;
+  --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.5);
+  --shadow-md: 0 2px 12px rgb(var(--shadow-color) / 0.6);
+  --shadow-lg: 0 6px 18px rgb(var(--shadow-color) / 0.6);
+  --star-1: #ffffff;
+  --star-2: #ffd166;
+  --stars-opacity: 1;
+  --nebula-a: rgb(143 115 245 / 0.32);
+  --nebula-b: rgb(60 200 220 / 0.18);
+  --mascot-glow: drop-shadow(0 0 4px rgb(190 170 255 / 0.55));
+  --footer-bg: #191537;
 }
 
 body {

@@ -11,7 +11,7 @@ figure.media {
     max-width: 100%;
     height: auto;
     border-radius: 3px;
-    box-shadow: 0 2px 12px rgb(60 50 30 / 0.3);
+    box-shadow: var(--shadow-md);
   }
 
   & a {
@@ -63,12 +63,12 @@ figure.media {
     height: 2.4em;
     border: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.75);
+    background: color-mix(in srgb, var(--card-bg) 80%, transparent);
     color: var(--acolor);
     font-size: 1em;
     line-height: 1;
     cursor: pointer;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-sm);
 
     &:disabled {
       opacity: 0.3;

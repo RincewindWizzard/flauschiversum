@@ -174,7 +174,7 @@ h1.list-title {
   }
 
   & a.category:hover {
-    background-color: #86ad74;
+    background-color: var(--accent-hover);
   }
 
   & a:hover {
@@ -182,19 +182,27 @@ h1.list-title {
   }
 }
 
-/* Suchseite */
-.search-page {
-  --pagefind-ui-primary: #2f5d3a;
-  --pagefind-ui-text: #2b2b2b;
-  --pagefind-ui-background: #ffffff;
-  --pagefind-ui-border: var(--bordercolor);
+/* Suchseite: Farben der Suchoberfläche (Pagefind setzt seine Variablen auf `.pagefind-ui`, deshalb dort) */
+.search-page .pagefind-ui {
+  --pagefind-ui-primary: var(--link);
+  --pagefind-ui-text: var(--acolor);
+  --pagefind-ui-background: var(--card-bg);
+  --pagefind-ui-border: var(--border-strong);
   --pagefind-ui-tag: var(--accent-soft);
   --pagefind-ui-border-width: 1px;
   --pagefind-ui-border-radius: 12px;
   --pagefind-ui-image-border-radius: 20em;
   --pagefind-ui-image-box-ratio: 1;
   --pagefind-ui-font: inherit;
+}
 
+.search-page mark {
+  background: var(--accent-soft);
+  color: var(--acolor);
+  font-weight: 700;
+}
+
+.search-page {
   & .notice {
     text-align: center;
     margin: 1em 0;

@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>{{ head.title }}</title>
 <meta name="description" content="{{ head.description }}">
 {%- if head.noindex %}
@@ -70,6 +72,7 @@
         <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
       </div>
     </form>
+    <button type="button" class="theme-toggle" data-state="auto" aria-label="Farbschema: Automatisch. Zum Wechseln drücken." title="Farbschema: Automatisch">{% include "partials/icon-theme.html" %}</button>
   </div>
 </header>
 <div class="container-fluid">

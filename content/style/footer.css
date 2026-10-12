@@ -2,9 +2,6 @@
    Band über die volle Breite, zwei Spalten in einer Zeile mittig; links Icons und darunter das Copyright,
    rechts die Seitenlinks untereinander. Auf dem Handy: Icons, Links, zuletzt das Copyright. */
 #blogfooter {
-  --footer-bg: #263329;
-  --footer-text: #afafaf;
-  --footer-hover: #ffffff;
   --footer-socials-height: 3em;
   margin-top: 3em;
   padding: 2em;

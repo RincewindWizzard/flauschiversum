@@ -30,7 +30,10 @@ await test('Topbar am Desktop: Maskottchen und Titel links, rechts Beiträge, Ka
   assert.ok(mascot.x < brand.x && brand.x + brand.width < posts.x, 'Maskottchen, Titel, dann Menüs');
   assert.ok(posts.x < cats.x && cats.x + cats.width <= search.x + 1, 'Reihenfolge der Menüs, Suche zuletzt');
   assert.ok(mascot.x < 200, 'ganz links');
-  assert.ok(search.x + search.width > 1280 - 100 && posts.x > 300, 'Menüs rechtsbündig');
+  const toggle = await box(page, '.theme-toggle');
+  assert.ok(toggle.x + toggle.width > 1280 - 100 && posts.x > 300, 'Menüs rechtsbündig');
+  assert.ok(search.x + search.width <= toggle.x + 1, 'Umschalter nach der Suche');
+  assert.ok(Math.abs((toggle.y + toggle.height / 2) - (bar.y + bar.height / 2)) <= 2, 'Umschalter auf der Mittellinie');
   assert.equal(await page.locator('.topnav a[href="/about/"]').count(), 0, 'About me steht nicht in der Topbar');
   // vertikal auf einer Linie: alle Mittelpunkte auf der Mittellinie der Leiste
   const mid = (b) => b.y + b.height / 2;

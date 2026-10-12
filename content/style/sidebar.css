@@ -66,12 +66,12 @@
 
   & .count {
     font-size: 0.8em;
-    color: #5a554a;
+    color: var(--muted);
   }
 
   & .cloud-1 { font-size: 0.9em; }
   & .cloud-2 { font-size: 0.95em; }
-  & .cloud-3 { font-size: 1em; background: #f6f9f2; }
-  & .cloud-4 { font-size: 1.05em; background: #edf4e6; }
-  & .cloud-5 { font-size: 1.1em; background: var(--accent-soft); border-color: #c6dbb8; }
+  & .cloud-3 { font-size: 1em; background: color-mix(in srgb, var(--accent-soft) 35%, var(--card-bg)); }
+  & .cloud-4 { font-size: 1.05em; background: color-mix(in srgb, var(--accent-soft) 70%, var(--card-bg)); }
+  & .cloud-5 { font-size: 1.1em; background: var(--accent-soft); border-color: var(--accent); }
 }

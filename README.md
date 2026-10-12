@@ -106,6 +106,18 @@ beim Überfahren des Titels) hat in beiden Dateien dieselbe `viewBox`, damit der
 Einzelseiten (About, Impressum, Tipps und Tricks) liegen als Markdown unter `content/pages/`; ihre URL ergibt sich
 aus dem Titel. Dateien unter `content/static/` werden unverändert veröffentlicht.
 
+### Farben: Hell, Dunkel und das Universum
+
+Das Farbschema heißt „Flauschi-Nebel“ (Violett und Indigo wie das Maskottchen, Gold und Cyan als Sternenlicht) und
+gibt es hell und dunkel. Alle Farben stehen als Variablen nur in `content/style/theme.css` (ein Test sucht feste
+Farben in den anderen Stylesheets). Der Modus folgt der Systemeinstellung (`prefers-color-scheme`); der Knopf in der
+Topbar schaltet zwischen Automatisch, Hell und Dunkel um und merkt sich die Wahl im Browser (`localStorage`). Ein
+kleines Skript im `<head>` setzt sie vor dem ersten Zeichnen, damit nichts aufblitzt. Die Sterne (`stars-small.svg`,
+`stars-large.svg` unter `content/static/images/`, als Maske in Farbe eingefärbt) und der Nebel liegen in
+`content/style/starfield.css` hinter dem Inhalt; die Fläche hinter dem Text ist einfarbig, die Dekoration bewegt
+sich nicht und entfällt bei erhöhtem Kontrast. Kontraste und Farbfehlsichtigkeit (Protanopie, Deuteranopie,
+Tritanopie) prüft `tests/browser/theme.mjs`.
+
 ## Verzeichnisse
 
 | Pfad | Inhalt |
@@ -142,6 +154,7 @@ node tests/browser/frontend.mjs /pfad/zu/chromium
 node tests/browser/navigation.mjs /pfad/zu/chromium
 node tests/browser/layout.mjs /pfad/zu/chromium
 node tests/browser/topbar.mjs /pfad/zu/chromium
+node tests/browser/theme.mjs /pfad/zu/chromium
 # Staging-Leiste: Vorschau mit `serve --port 8098 --staging <langer Branchname>` starten
 node tests/browser/staging.mjs /pfad/zu/chromium <Branchname>
 ```
