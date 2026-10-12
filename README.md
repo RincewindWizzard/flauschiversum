@@ -13,11 +13,19 @@ Voraussetzung: [Rust](https://rustup.rs/) (stable) und ein C-Compiler (für die 
 cargo run --release -- build     # Seite nach dist/ bauen
 cargo run --release -- check     # Inhalte prüfen, ohne etwas zu schreiben
 cargo run --release -- serve     # Vorschau unter http://localhost:8080/ mit Live-Reload
+cargo run --release -- clean     # Cache leeren (mit --dist auch dist/)
 ```
 
 Optionen (für alle Befehle): `--root <Pfad>` (Projektverzeichnis, Standard `.`), `--out <Pfad>` (Standard `dist/`),
 `--cache <Pfad>` (Bild-Cache, Standard `.cache/`), `--base-url <URL>` (Standard `https://flauschiversum.de`, siehe
 [Staging](#staging)) und `--staging <Branch>`; bei `serve` zusätzlich `--port <Nummer>`.
+
+`clean` leert den Cache (`.cache/`: Bildvarianten, Suchindex, Vorschau-Ausgabe von `serve`) und meldet Dateizahl und
+Größe; `clean --dist` leert zusätzlich das Ausgabeverzeichnis, aber nur, wenn es von diesem Generator stammt. Es löscht
+nur bekannte Cache-Einträge (fremde Dateien bleiben) und bricht ab, wenn `--cache` auf das Projektverzeichnis oder ein
+Verzeichnis mit `content/` zeigt. Nicht gleichzeitig mit `build` oder `serve` ausführen. Danach braucht der nächste Build
+einige Minuten, weil Bilder und Suchindex neu berechnet werden.
+Im GitHub-Workflow (`.github/workflows/staging.yml`) liegt `.cache/` in `actions/cache`; ein Neustart ohne Cache lässt sich dort über das Löschen des Caches in den Actions-Einstellungen erzwingen, `clean` wird dort nicht gebraucht.
 
 Der erste Build berechnet alle Bilder (ca. 3200 Originale, rund 20–30 Sekunden auf 4 Kernen). Danach kommen die
 Bilder aus `.cache/`, und ein Build ohne Änderungen dauert unter einer Sekunde. Geschrieben werden nur Dateien,

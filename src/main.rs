@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 
 mod archive;
+mod clean;
 mod config;
 mod content;
 mod diag;
@@ -34,6 +35,21 @@ enum Command {
     Build(PathArgs),
     /// Prüft alle Inhalte, ohne etwas zu schreiben.
     Check(PathArgs),
+    /// Leert den Cache (Bildvarianten, Suchindex, Vorschau-Ausgabe); nicht gleichzeitig mit `build` oder `serve` ausführen.
+    Clean {
+        /// Projektverzeichnis (enthält `content/`).
+        #[arg(long, default_value = ".")]
+        root: PathBuf,
+        /// Cache-Verzeichnis (relativ zum Projektverzeichnis).
+        #[arg(long, default_value = ".cache")]
+        cache: PathBuf,
+        /// Leert zusätzlich das Ausgabeverzeichnis (nur wenn es vom Generator stammt).
+        #[arg(long)]
+        dist: bool,
+        /// Ausgabeverzeichnis (relativ zum Projektverzeichnis), nur mit `--dist`.
+        #[arg(long, default_value = "dist")]
+        out: PathBuf,
+    },
     /// Baut die Seite, liefert sie lokal aus und baut bei Änderungen neu.
     Serve {
         #[command(flatten)]
@@ -170,6 +186,36 @@ fn run(cli: Cli) -> Result<ExitCode> {
                     Ok(ExitCode::FAILURE)
                 }
             }
+        }
+        Command::Clean { root, cache, dist, out } => {
+            let resolve = |p: &PathBuf| if p.is_absolute() { p.clone() } else { root.join(p) };
+            let cache = resolve(&cache);
+            let mut failed = false;
+            match clean::clean_cache(&cache, &root) {
+                Ok(r) if r.files == 0 => println!("Cache ist bereits leer ({})", cache.display()),
+                Ok(r) => println!(
+                    "Cache geleert: {} Dateien, {} frei ({}). Der nächste Build berechnet Bilder und Suchindex neu (das kann einige Minuten dauern).",
+                    r.files,
+                    clean::human_size(r.bytes),
+                    cache.display()
+                ),
+                Err(e) => {
+                    eprintln!("Fehler: {e:#}");
+                    failed = true;
+                }
+            }
+            if dist && !failed {
+                let out = resolve(&out);
+                match clean::clean_dist(&out) {
+                    Ok(r) if r.files == 0 => println!("Ausgabeverzeichnis ist bereits leer ({})", out.display()),
+                    Ok(r) => println!("Ausgabeverzeichnis geleert: {} Dateien, {} frei ({})", r.files, clean::human_size(r.bytes), out.display()),
+                    Err(e) => {
+                        eprintln!("Fehler: {e:#}");
+                        failed = true;
+                    }
+                }
+            }
+            Ok(if failed { ExitCode::FAILURE } else { ExitCode::SUCCESS })
         }
         Command::Build(paths) => Ok(if build_once(&paths, false)? { ExitCode::SUCCESS } else { ExitCode::FAILURE }),
         Command::Serve { paths, port } => {

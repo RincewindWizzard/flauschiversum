@@ -497,6 +497,44 @@ pub mod tests {
         out
     }
 
+    /// `clean` erfasst jede Datei, die ein Build im Cache anlegt; der nächste Build liefert dasselbe Ergebnis.
+    #[test]
+    fn clean_covers_everything_a_build_caches() {
+        let t = tempfile::tempdir().unwrap();
+        fixture_site(t.path());
+        let opts = test_options(t.path());
+        let build = |opts: &BuildOptions| {
+            let g = generate(opts, &Diagnostics::default(), &Stats::default()).unwrap();
+            let dist = t.path().join("dist");
+            output::write(&dist, g.outputs.into_map()).unwrap();
+            let mut files: Vec<(String, Vec<u8>)> = walkdir::WalkDir::new(&dist)
+                .into_iter()
+                .filter_map(Result::ok)
+                .filter(|e| e.file_type().is_file() && !e.file_name().to_string_lossy().starts_with(".flauschiversum"))
+                // Pagefind ist nicht bitgenau reproduzierbar (Hash-Namen); sein Verhalten prüft `search.rs`
+                .filter(|e| !e.path().starts_with(dist.join("pagefind")))
+                .map(|e| (e.path().strip_prefix(&dist).unwrap().display().to_string(), fs::read(e.path()).unwrap()))
+                .collect();
+            files.sort();
+            files
+        };
+        let first = build(&opts);
+        assert!(fs::read_dir(&opts.cache).unwrap().next().is_some(), "der Build legt einen Cache an");
+        // Vorschau-Ausgabe wie bei `serve`
+        let serve_out = opts.cache.join("serve");
+        output::write(&serve_out, std::collections::BTreeMap::from([("/index.html".to_string(), output::Content::Bytes(b"x".to_vec()))])).unwrap();
+        let removed = crate::clean::clean_cache(&opts.cache, t.path()).unwrap();
+        assert!(removed.files > 0);
+        assert_eq!(fs::read_dir(&opts.cache).unwrap().count(), 0, "nichts bleibt im Cache zurück");
+        let second = build(&opts);
+        let names = |v: &[(String, Vec<u8>)]| v.iter().map(|f| f.0.clone()).collect::<Vec<_>>();
+        let (n1, n2) = (names(&first), names(&second));
+        let diff: Vec<_> = n1.iter().filter(|n| !n2.contains(n)).chain(n2.iter().filter(|n| !n1.contains(n))).collect();
+        assert!(diff.is_empty(), "dieselben Dateien nach dem Leeren, abweichend: {diff:?}");
+        let differing: Vec<_> = first.iter().zip(&second).filter(|(a, b)| a.1 != b.1).map(|(a, _)| a.0.clone()).collect();
+        assert!(differing.is_empty(), "gleicher Inhalt nach dem Leeren, abweichend: {differing:?}");
+    }
+
     #[test]
     fn builds_fixture_site() {
         let dir = tempfile::tempdir().unwrap();
