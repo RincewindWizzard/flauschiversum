@@ -131,7 +131,7 @@ Die Seite SHALL das Farbschema „Flauschi-Nebel“ (Violett und Indigo, Variabl
 - **THEN** hebt sich die Staging-Leiste mit ihrer roten Farbe weiterhin deutlich vom Schema ab
 
 ### Requirement: Seitenaufbau mit Topbar
-Jede Seite SHALL aus Topbar, Inhalt und Fußzeile bestehen. Es gibt keine linke Navigationsspalte und keine allgemeine Sidebar mehr. Ergänzende Karten (Tag-Cloud auf der Startseite, Archiv auf Beiträge- und Themenseiten) stehen ab 64 em rechts neben dem Inhalt, auf schmaleren Fenstern darunter. Der Seitenrahmen ist bis etwa 1200 px breit, der Lesetext höchstens etwa 40 em.
+Jede Seite SHALL aus Topbar, Inhalt und Fußzeile bestehen. Es gibt keine linke Navigationsspalte und keine allgemeine Sidebar mehr. Ergänzende Karten (Tag-Cloud auf der Startseite, Archiv auf Beiträge- und Themenseiten, Inhaltsverzeichnis auf Einzelseiten) stehen ab 64 em rechts neben dem Inhalt, auf schmaleren Fenstern darunter; Karten, die der Orientierung im Inhalt dienen (Inhaltsverzeichnis der Einzelseiten, Themenfilter der Suche), stehen dort stattdessen über dem Inhalt. Der Seitenrahmen ist bis etwa 1200 px breit, der Lesetext höchstens etwa 40 em.
 
 #### Scenario: Beitragsseite
 - **WHEN** eine Beitragsseite bei 1440 px Breite geöffnet wird
@@ -143,7 +143,7 @@ Jede Seite SHALL aus Topbar, Inhalt und Fußzeile bestehen. Es gibt keine linke 
 
 #### Scenario: Handy
 - **WHEN** eine Seite bei 360 px Breite geöffnet wird
-- **THEN** stehen ergänzende Karten unter dem Inhalt, und die Seite scrollt nicht waagerecht
+- **THEN** stehen ergänzende Karten unter dem Inhalt (Inhaltsverzeichnis und Suchfilter über dem Inhalt), und die Seite scrollt nicht waagerecht
 
 ### Requirement: Karten für ergänzende Blöcke
 Tag-Cloud und Archiv SHALL auf Karten liegen: heller Hintergrund, abgerundete Ecken, feiner Rand oder Schatten und Innenabstand.
