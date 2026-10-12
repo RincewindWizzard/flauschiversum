@@ -134,8 +134,10 @@ pub fn build(mut docs: Vec<SearchDoc>, cache: &std::path::Path) -> Result<Vec<(S
     let key = input_key(&docs);
     let cached = cache.join(format!("search-{key}.bin"));
     if let Some(files) = std::fs::read(&cached).ok().and_then(|b| decode(&b)) {
+        crate::progress::note("Suchindex aus dem Cache übernommen");
         return Ok(files);
     }
+    crate::progress::note("Suchindex ist neu zu berechnen (das kann bei vielen Seiten einige Minuten dauern) …");
     let files = generate(&docs)?;
     if let Ok(entries) = std::fs::read_dir(cache) {
         for e in entries.filter_map(Result::ok) {
