@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Beschreibt die Seitenspalten des Flauschiversums: die Tag-Cloud, mit denen Besucher von jeder Seite aus zu Themen springen können.
+Beschreibt die Seitenspalten des Flauschiversums: die Tag-Cloud, mit der Besucher von jeder Seite aus zu Themen springen können.
 
 ## Requirements
 
