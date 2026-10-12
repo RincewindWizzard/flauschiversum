@@ -9,3 +9,18 @@
 {{ content|safe }}
 </main>
 {% endblock %}
+{% block aside %}
+{%- if let Some(t) = toc %}
+<aside class="toc card" id="toc" aria-labelledby="toc-titel">
+  <details id="toc-details" open>
+    <summary><h2 class="side-title" id="toc-titel">Inhalt</h2></summary>
+    <nav aria-label="Inhalt dieser Seite">{{ t|safe }}</nav>
+  </details>
+</aside>
+{%- endif %}
+{% endblock %}
+{% block scripts %}
+{%- if toc.is_some() %}
+<script src="{{ toc_script_href }}"></script>
+{%- endif %}
+{% endblock %}

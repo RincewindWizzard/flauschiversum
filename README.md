@@ -82,6 +82,10 @@ Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi l
 - **Beiträge** (`/beitraege/`): die zehn neuesten Beiträge und das Archiv nach Jahr und Monat (einklappbar; neuestes Jahr
   und Monat offen). Die früheren Blätterseiten (`/page/<N>/`) bleiben unter
   ihren Adressen erreichbar, werden aber nicht mehr verlinkt.
+- **Einzelseiten** (`content/pages/*.md`): Seiten mit mindestens zwei Überschriften zeigen in der Seitenleiste ein
+  **Inhaltsverzeichnis**, das der Build automatisch aus den Überschriften erzeugt (nichts zu pflegen). Jede Überschrift
+  bekommt dafür ein `id` aus ihrem Text (`/tipps-und-tricks/#ufo-s`), Doppelte werden nummeriert. Am Handy steht das
+  Verzeichnis zugeklappt über dem Text, mit JavaScript wird der aktuelle Abschnitt hervorgehoben. Beiträge haben keins.
 - **Themenseite:** Name mit Anzahl, alle Beiträge des Themas und daneben das Archiv nach Jahr und Monat nur dieses
   Themas. „Themen“ in der Topbar führt auf die Übersicht aller Themen.
 - **Alte Adressen:** `content/redirects.yaml` ordnet frühere Adressen neuen zu (`/kategorie/basteln/: /tag/basteln/`);

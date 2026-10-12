@@ -102,9 +102,103 @@ fn normalize(md: &str) -> String {
 
 /// Rendert Markdown einer Einzelseite (ohne Medienbehandlung).
 pub fn render_page(md: &str) -> String {
+    render_page_with_toc(md).0
+}
+
+/// Eine Überschrift einer Einzelseite für das Inhaltsverzeichnis.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TocEntry {
+    /// Ebene der Überschrift, 1 bis 6.
+    pub level: u8,
+    pub id: String,
+    pub text: String,
+}
+
+/// IDs des Seitenrahmens; Überschriften dürfen sie nicht belegen.
+const RESERVED_IDS: &[&str] = &["q", "main", "search", "search-form", "search-results", "search-summary", "search-filters", "toc", "toc-titel", "toc-details", "filter-titel", "blogfooter", "archiv-titel", "aehnlich-titel"];
+
+fn heading_level(level: pulldown_cmark::HeadingLevel) -> u8 {
+    level as u8
+}
+
+/// Rendert eine Einzelseite und liefert dazu ihre Überschriften. Jede Überschrift bekommt ein `id` aus ihrem Text
+/// (Doppelte werden nummeriert, IDs des Seitenrahmens vermieden).
+pub fn render_page_with_toc(md: &str) -> (String, Vec<TocEntry>) {
+    let normalized = normalize(md);
+    let mut events: Vec<Event> = Parser::new_ext(&normalized, options()).collect();
+    let mut used: std::collections::HashSet<String> = RESERVED_IDS.iter().map(|s| s.to_string()).collect();
+    let mut toc = Vec::new();
+    let mut i = 0;
+    while i < events.len() {
+        if let Event::Start(Tag::Heading { level, id, classes, attrs }) = events[i].clone() {
+            let end = (i + 1..events.len()).find(|&j| matches!(events[j], Event::End(TagEnd::Heading(_)))).unwrap_or(events.len() - 1);
+            let mut text = String::new();
+            for e in &events[i + 1..end] {
+                match e {
+                    Event::Text(t) | Event::Code(t) => text.push_str(t),
+                    Event::SoftBreak | Event::HardBreak => text.push(' '),
+                    _ => {}
+                }
+            }
+            let text = text.trim().to_string();
+            let base = match id {
+                Some(own) if !own.is_empty() => own.to_string(),
+                _ => {
+                    let slug = urls::slugify(&text);
+                    if slug.is_empty() { "abschnitt".to_string() } else { slug }
+                }
+            };
+            let mut unique = base.clone();
+            let mut n = 2;
+            while used.contains(&unique) {
+                unique = format!("{base}-{n}");
+                n += 1;
+            }
+            used.insert(unique.clone());
+            events[i] = Event::Start(Tag::Heading { level, id: Some(CowStr::from(unique.clone())), classes, attrs });
+            if !text.is_empty() {
+                toc.push(TocEntry { level: heading_level(level), id: unique, text });
+            }
+        }
+        i += 1;
+    }
     let mut out = String::new();
-    html::push_html(&mut out, Parser::new_ext(&normalize(md), options()));
-    out
+    html::push_html(&mut out, events.into_iter());
+    (out, toc)
+}
+
+/// Verschachtelte Liste des Inhaltsverzeichnisses nach der Ebene relativ zur kleinsten vorkommenden (höchstens drei
+/// Stufen). Weniger als zwei Überschriften ergeben kein Verzeichnis.
+pub fn toc_html(entries: &[TocEntry]) -> Option<String> {
+    if entries.len() < 2 {
+        return None;
+    }
+    let min = entries.iter().map(|e| e.level).min()?;
+    let mut out = String::new();
+    let mut depth: i32 = -1; // -1: noch keine Liste offen
+    for e in entries {
+        let want = ((e.level - min) as i32).min(2).min(depth + 1);
+        if want > depth {
+            out.push_str("<ol>");
+        } else {
+            out.push_str("</li>");
+            while depth > want {
+                out.push_str("</ol></li>");
+                depth -= 1;
+            }
+        }
+        depth = want;
+        let mut text = String::new();
+        pulldown_cmark_escape::escape_html(&mut text, &e.text).expect("String");
+        let _ = write!(out, "<li><a href=\"#{}\">{text}</a>", e.id);
+    }
+    out.push_str("</li>");
+    while depth > 0 {
+        out.push_str("</ol></li>");
+        depth -= 1;
+    }
+    out.push_str("</ol>");
+    Some(out)
 }
 
 fn is_local(dest: &str) -> bool {
@@ -450,7 +544,7 @@ mod tests {
     #[test]
     fn headings_without_space() {
         let html = render_page("##Kopf\nText\n\n```\n#nicht\n```\n");
-        assert!(html.contains("<h2>Kopf</h2>"), "{html}");
+        assert!(html.contains("<h2 id=\"kopf\">Kopf</h2>"), "{html}");
         assert!(html.contains("#nicht"));
     }
 
@@ -463,5 +557,50 @@ mod tests {
     #[test]
     fn first_paragraph() {
         assert_eq!(first_paragraph_text("# Titel\n\nErster *Absatz*\nmit Umbruch.\n\nZweiter."), "Erster Absatz mit Umbruch.");
+    }
+
+    #[test]
+    fn headings_get_ids_and_toc_entries() {
+        let (html, toc) = render_page_with_toc("# Das kreative schwarze Loch\n\ntext\n\n# Ufo's\n\n## Über *uns*\n\n##Ohne Leerzeichen\n\n# Ufo's\n\n```\n# Kein Kopf\n```\n");
+        let ids: Vec<_> = toc.iter().map(|e| e.id.as_str()).collect();
+        assert_eq!(ids, ["das-kreative-schwarze-loch", "ufo-s", "ueber-uns", "ohne-leerzeichen", "ufo-s-2"]);
+        assert_eq!(toc[2].text, "Über uns");
+        assert_eq!(toc[2].level, 2);
+        assert!(html.contains("<h1 id=\"ufo-s\">Ufo's</h1>") && html.contains("<h2 id=\"ueber-uns\">"), "{html}");
+        assert!(!toc.iter().any(|e| e.text.contains("Kein Kopf")), "Codeblock ist keine Überschrift");
+    }
+
+    #[test]
+    fn heading_ids_avoid_page_frame_ids() {
+        let (_, toc) = render_page_with_toc("# Q\n\n# Search Form\n\n# Eigene\n\n## Main\n");
+        let ids: Vec<_> = toc.iter().map(|e| e.id.as_str()).collect();
+        assert_eq!(ids[0], "q-2");
+        assert_eq!(ids[1], "search-form-2");
+        assert_eq!(ids[2], "eigene");
+        assert_eq!(ids[3], "main-2");
+    }
+
+    fn entry(level: u8, text: &str) -> TocEntry {
+        TocEntry { level, id: urls::slugify(text), text: text.to_string() }
+    }
+
+    #[test]
+    fn toc_nests_by_relative_level() {
+        assert_eq!(toc_html(&[entry(1, "A")]), None, "eine Überschrift: kein Verzeichnis");
+        assert_eq!(toc_html(&[]), None);
+        // nur Ebene 2: alle auf der ersten Stufe
+        assert_eq!(toc_html(&[entry(2, "A"), entry(2, "B")]).unwrap(), "<ol><li><a href=\"#a\">A</a></li><li><a href=\"#b\">B</a></li></ol>");
+        // gemischt: Ebene 2 unter 1
+        let html = toc_html(&[entry(1, "Stars"), entry(2, "Shubia"), entry(2, "Jemima"), entry(1, "Ende")]).unwrap();
+        assert_eq!(
+            html,
+            "<ol><li><a href=\"#stars\">Stars</a><ol><li><a href=\"#shubia\">Shubia</a></li><li><a href=\"#jemima\">Jemima</a></li></ol></li><li><a href=\"#ende\">Ende</a></li></ol>"
+        );
+        // vier Ebenen: höchstens drei Stufen, Sprünge werden geglättet; Text wird maskiert
+        let html = toc_html(&[entry(1, "A"), entry(3, "B <x>"), entry(4, "C"), entry(4, "D"), entry(1, "E")]).unwrap();
+        assert_eq!(html.matches("<ol>").count(), 3);
+        assert_eq!(html.matches("<ol>").count(), html.matches("</ol>").count());
+        assert_eq!(html.matches("<li>").count(), html.matches("</li>").count());
+        assert!(html.contains("B &lt;x&gt;"));
     }
 }

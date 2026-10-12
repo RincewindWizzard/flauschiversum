@@ -90,6 +90,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     let mut script_href = String::from("/assets/js/media.js");
     let mut search_script_href = String::from("/assets/js/search.js");
     let mut topbar_script_href = String::from("/assets/js/topbar.js");
+    let mut toc_script_href = String::from("/assets/js/toc.js");
     for entry in walkdir::WalkDir::new(&assets).into_iter().filter_map(Result::ok).filter(|e| e.file_type().is_file()) {
         let rel = entry.path().strip_prefix(&assets).unwrap().to_string_lossy().replace('\\', "/");
         if rel == "badge.png" {
@@ -100,6 +101,9 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         }
         if rel == "js/topbar.js" {
             topbar_script_href = format!("/assets/js/topbar.js?v={}", short_hash(&fs::read(entry.path())?));
+        }
+        if rel == "js/toc.js" {
+            toc_script_href = format!("/assets/js/toc.js?v={}", short_hash(&fs::read(entry.path())?));
         }
         if rel == "js/search.js" {
             search_script_href = format!("/assets/js/search.js?v={}", short_hash(&fs::read(entry.path())?));
@@ -125,6 +129,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         style_href: format!("/style.css?v={}", short_hash(css.as_bytes())),
         script_href,
         topbar_script_href,
+        toc_script_href,
         year: opts.now.year(),
         livereload: opts.livereload,
         base: opts.base.clone(),
@@ -302,7 +307,8 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
 
     // Einzelseiten
     for page in &site.pages {
-        let html = markdown::render_page(&page.markdown);
+        let (html, headings) = markdown::render_page_with_toc(&page.markdown);
+        let toc = markdown::toc_html(&headings);
         let desc = markdown::first_paragraph_text(&page.markdown);
         search_docs.push(SearchDoc {
             url: page.url.clone(),
@@ -311,7 +317,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
             tags: Vec::new(),
             body_html: html.clone(),
         });
-        outputs.insert(page.url.clone(), Content::Bytes(render::render_page(page, html, desc, &common).into_bytes()));
+        outputs.insert(page.url.clone(), Content::Bytes(render::render_page(page, html, toc, desc, &common).into_bytes()));
     }
 
     crate::progress::step("Baue den Suchindex …");
@@ -646,6 +652,51 @@ pub mod tests {
         let i = html.find(start).unwrap_or_else(|| panic!("`{start}` fehlt"));
         let rest = &html[i..];
         &rest[..rest.find(end).unwrap_or_else(|| panic!("`{end}` fehlt")) + end.len()]
+    }
+
+    /// Alle `id="…"`-Werte einer Seite.
+    fn ids_of(html: &str) -> Vec<String> {
+        html.match_indices(" id=\"").map(|(i, m)| html[i + m.len()..].split('"').next().unwrap().to_string()).collect()
+    }
+
+    /// Prüft das Inhaltsverzeichnis einer Seite: jede `id` einmalig, jeder Verzeichnislink zeigt auf eine vorhandene `id`.
+    fn check_toc(path: &str, html: &str) {
+        let ids = ids_of(html);
+        let set: std::collections::HashSet<_> = ids.iter().collect();
+        assert_eq!(set.len(), ids.len(), "{path}: IDs doppelt: {ids:?}");
+        if html.contains("<aside class=\"toc card\"") {
+            let toc = between(html, "<aside class=\"toc card\"", "</aside>");
+            let links: Vec<_> = toc.match_indices("href=\"#").map(|(i, m)| toc[i + m.len()..].split('"').next().unwrap()).collect();
+            assert!(links.len() >= 2, "{path}: Verzeichnis braucht mindestens zwei Einträge");
+            for l in links {
+                assert!(ids.iter().any(|i| i == l), "{path}: Anker #{l} fehlt");
+            }
+        }
+    }
+
+    #[test]
+    fn page_toc_from_headings() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        write(root, "content/pages/tipps.md", "---\ntitle: \"Tipps und Tricks\"\n---\n\n# Das kreative schwarze Loch\n\nText\n\n# Ufo's\n\n## Unter Ufo\n\n# Ufo's\n");
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
+        let tipps = &pages["/tipps-und-tricks/index.html"];
+        let toc = between(tipps, "<aside class=\"toc card\"", "</aside>");
+        assert!(toc.contains("<h2 class=\"side-title\" id=\"toc-titel\">Inhalt</h2>"));
+        assert!(toc.find("das-kreative-schwarze-loch").unwrap() < toc.find("href=\"#ufo-s\"").unwrap());
+        assert!(toc.contains("href=\"#unter-ufo\"") && toc.contains("href=\"#ufo-s-2\""));
+        assert!(tipps.contains("<h1 id=\"das-kreative-schwarze-loch\">") && tipps.contains("<h2 id=\"unter-ufo\">"));
+        assert!(tipps.contains("class=\"has-aside aside-early"), "{tipps}");
+        assert!(tipps.contains("/assets/js/toc.js"));
+        // Seiten mit weniger als zwei Überschriften und Beiträge haben kein Verzeichnis
+        let about = &pages["/about/index.html"];
+        assert!(!about.contains("class=\"toc card\"") && !about.contains("toc.js") && !about.contains("has-aside"));
+        assert!(!pages["/2014/01/alraune/index.html"].contains("class=\"toc card\""));
+        for (path, html) in pages.iter().filter(|(_, h)| !h.contains("http-equiv=\"refresh\"")) {
+            check_toc(path, html);
+        }
     }
 
     #[test]
@@ -1025,6 +1076,9 @@ pub mod tests {
             count += 1;
         }
         assert_eq!(count, 194);
+        for (path, html) in g.outputs.snapshot_html().iter().filter(|(_, h)| !h.contains("http-equiv=\"refresh\"")) {
+            check_toc(path, html);
+        }
         for page in ["/", "/about/", "/impressum/", "/tipps-und-tricks/", "/rss.xml", "/sitemap.xml", "/robots.txt", "/style.css", "/favicon.ico"] {
             assert!(g.outputs.contains(page), "{page}");
         }

@@ -11,7 +11,7 @@
 
 ### 1. Überschriften beim Rendern erfassen
 
-`render_page` bleibt, bekommt aber eine Variante, die die Ereignisse von pulldown-cmark durchläuft: Für jedes `Start(Heading)` wird der Text bis `End(Heading)` gesammelt (nur Text und Code, ohne Auszeichnung), daraus ein Anker erzeugt (`urls::slugify`, also Kleinbuchstaben und `ä`→`ae`), bei Doppelten mit `-2`, `-3` nummeriert, und die Überschrift mit `id` ausgegeben (`Tag::Heading { id, .. }` setzen, damit der Standard-HTML-Renderer das Attribut schreibt). Die Funktion liefert `(html, Vec<TocEntry { level, id, text }>)`. Ein vom Autor gesetztes `{#id}` (Heading-Attribute) bleibt unberührt, falls das Markdown es schon trägt. Anker, die mit festen IDs des Seitenrahmens kollidieren würden (`search-form`, `q` usw.), erhalten ein Suffix.
+`render_page` bleibt, bekommt aber eine Variante, die die Ereignisse von pulldown-cmark durchläuft: Für jedes `Start(Heading)` wird der Text bis `End(Heading)` gesammelt (nur Text und Code, ohne Auszeichnung), daraus ein Anker erzeugt (`urls::slugify`, also Kleinbuchstaben und `ä`→`ae`), bei Doppelten mit `-2`, `-3` nummeriert, und die Überschrift mit `id` ausgegeben (`Tag::Heading { id, .. }` setzen, damit der Standard-HTML-Renderer das Attribut schreibt). Die Funktion liefert `(html, Vec<TocEntry { level, id, text }>)`. Heading-Attribute im Markdown (`{#id}`) werden nicht aktiviert, damit bestehender Text mit Klammern unverändert bleibt. Anker, die mit festen IDs des Seitenrahmens kollidieren würden (`search-form`, `q` usw.), erhalten ein Suffix.
 
 *Alternative:* HTML nachträglich mit Regeln durchsuchen. Verworfen: fehleranfällig bei eingebettetem HTML und Code.
 

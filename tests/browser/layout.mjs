@@ -349,6 +349,59 @@ await test('Beitragsseite: Datum unter dem Titel lesbar, Hinweis „Schreibe Ihr
   }
 });
 
+await test('Einzelseite: Inhaltsverzeichnis rechts neben dem Text, Anker unter der Topbar, aktueller Abschnitt wechselt', async () => {
+  const page = await open('/tipps-und-tricks/', 1440);
+  const [main, toc] = [await box(page, 'main.page'), await box(page, 'aside.toc')];
+  assert.ok(toc.x >= main.x + main.width - 1, 'Verzeichnis rechts neben dem Text');
+  assert.equal(await page.locator('main aside, main .toc').count(), 0, 'Verzeichnis liegt nicht im main');
+  const links = await page.locator('aside.toc a').evaluateAll((els) => els.map((e) => [e.textContent, e.getAttribute('href')]));
+  const heads = await page.locator('main.page h1, main.page h2, main.page h3').evaluateAll((els) => els.map((e) => [e.textContent, '#' + e.id]));
+  assert.ok(links.length >= 2);
+  assert.deepEqual(links, heads, 'Verzeichnis = Überschriften in Textreihenfolge');
+  assert.equal(await page.locator('aside.toc a[aria-current="true"]').count(), 1);
+  assert.equal(await page.locator('aside.toc').evaluate((el) => getComputedStyle(el).position), 'sticky');
+  // Klick: Überschrift steht unter der Topbar, nicht darunter verdeckt
+  await page.locator('aside.toc a').nth(1).click();
+  await page.waitForTimeout(500);
+  const [bar, head] = [await box(page, '.topbar'), await page.locator(`[id="${links[1][1].slice(1)}"]`).boundingBox()];
+  assert.ok(head.y >= bar.y + bar.height - 1, `Überschrift unter der Topbar (${head.y} / ${bar.height})`);
+  assert.equal(await page.locator('aside.toc a[aria-current="true"]').getAttribute('href'), links[1][1], 'aktueller Abschnitt');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.close();
+});
+
+await test('Einzelseite am Handy: Verzeichnis über dem Text, zugeklappt und aufklappbar; Seiten ohne Überschriften haben keins', async () => {
+  const page = await open('/tipps-und-tricks/', 360, 800, { hasTouch: true, isMobile: true });
+  const [toc, main] = [await box(page, 'aside.toc'), await box(page, 'main.page')];
+  assert.ok(toc.y + toc.height <= main.y + 1, 'Verzeichnis über dem Text');
+  assert.equal(await page.locator('aside.toc a').first().isVisible(), false, 'zunächst zugeklappt');
+  await page.locator('aside.toc summary').click();
+  assert.ok(await page.locator('aside.toc a').first().isVisible(), 'aufgeklappt');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'kein waagerechtes Scrollen');
+  await page.close();
+  const post = await open(POST, 1280);
+  assert.equal(await post.locator('aside.toc').count(), 0, 'Beitrag ohne Verzeichnis');
+  await post.close();
+  const ctx = await browser.newContext({ javaScriptEnabled: false });
+  const nojs = await ctx.newPage();
+  await nojs.goto(BASE + '/tipps-und-tricks/');
+  assert.ok(await nojs.locator('aside.toc a').first().isVisible(), 'ohne JavaScript alle Links sichtbar');
+  await ctx.close();
+});
+
+for (const scheme of ['light', 'dark']) {
+  await test(`Einzelseite: Kontrast im Verzeichnis (${scheme})`, async () => {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: scheme });
+    const page = await ctx.newPage();
+    await page.goto(BASE + '/tipps-und-tricks/');
+    for (const sel of ['aside.toc li:nth-child(2) > a', 'aside.toc a[aria-current="true"]', 'aside.toc .side-title']) {
+      const c = await contrast(page, sel);
+      assert.ok(c >= 4.5, `${scheme} ${sel}: ${c.toFixed(2)}`);
+    }
+    await ctx.close();
+  });
+}
+
 await browser.close();
 for (const r of results) console.log(r.join(' – '));
 process.exit(results.every((r) => r[0] === 'ok') ? 0 : 1);

@@ -66,6 +66,7 @@ pub struct Common {
     pub style_href: String,
     pub script_href: String,
     pub topbar_script_href: String,
+    pub toc_script_href: String,
     pub year: i16,
     pub livereload: bool,
     pub base: Base,
@@ -199,6 +200,9 @@ pub struct PageTemplate {
     pub head: Head,
     pub title: String,
     pub content: String,
+    /// Inhaltsverzeichnis (HTML der Liste), falls die Seite mindestens zwei Überschriften hat.
+    pub toc: Option<String>,
+    pub toc_script_href: String,
 }
 
 /// URL der Seite `index` der chronologischen Liste (0 = `/beitraege/`).
@@ -413,15 +417,18 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
     .expect("Post-Template")
 }
 
-pub fn render_page(page: &Page, content: String, description: String, common: &Common) -> String {
-    let head = base_head(
+pub fn render_page(page: &Page, content: String, toc: Option<String>, description: String, common: &Common) -> String {
+    let mut head = base_head(
         common,
         format!("{} – {BLOG_NAME}", page.title),
         page.title.clone(),
         seo::meta_description(&description),
         common.base.absolute(&page.url),
     );
-    PageTemplate { head, title: page.title.clone(), content }.render().expect("Seiten-Template")
+    if toc.is_some() {
+        head.body_class = "has-aside aside-early";
+    }
+    PageTemplate { head, title: page.title.clone(), content, toc, toc_script_href: common.toc_script_href.clone() }.render().expect("Seiten-Template")
 }
 
 #[cfg(test)]

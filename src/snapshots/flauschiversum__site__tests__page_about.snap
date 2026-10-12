@@ -67,7 +67,7 @@ expression: "stable(&read(root, \"about/index.html\"))"
   <div class="page-content">
     
 <main class="page">
-<h1>Das Flauschiversum</h1>
+<h1 id="das-flauschiversum">Das Flauschiversum</h1>
 <p>Ein Blog über Wolle &amp; Filz.</p>
 <p><a href="/2020/10/kurbis/">Kürbis</a></p>
 
@@ -75,6 +75,7 @@ expression: "stable(&read(root, \"about/index.html\"))"
 
   </div>
   
+
 </div>
 </div>
 <footer id="blogfooter">
@@ -95,6 +96,7 @@ expression: "stable(&read(root, \"about/index.html\"))"
   </div>
 </footer>
 <script src="/assets/js/topbar.js?v=HASH"></script>
+
 
 </body>
 </html>
