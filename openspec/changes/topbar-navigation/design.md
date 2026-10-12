@@ -56,7 +56,7 @@ Unter 48 em zeigt die Topbar Titel, Suche (Lupe als Knopf, klappt das Feld auf b
 
 ### 4. Seiten
 
-- **Startseite:** `home.html` mit `<h1>Flauschiversum</h1>` (Logo im Titel bleibt Link, zählt nicht als h1), Begrüßung aus `content/start.md` (gerendert wie Einzelseiten), die zehn neuesten Einträge (Partial `entry.html`), Link „Alle Beiträge“, rechts die Karte mit der Tag-Cloud (aus `Sidebar`-Daten, nur noch hier; `HOME_NEWS = 10`).
+- **Startseite:** `home.html` ohne eigene Überschrift (der Titel steht in der Topbar; Entscheidung der Autorin), Begrüßung aus `content/start.md` (gerendert wie Einzelseiten), die zehn neuesten Einträge (Partial `entry.html`), Link „Alle Beiträge“, rechts die Karte mit der Tag-Cloud (aus `Sidebar`-Daten, nur noch hier; `HOME_NEWS = 10`).
 - **Beiträge:** `/beitraege/` mit `<h1>Beiträge</h1>`, den zehn neuesten Einträgen und dem Archiv. Die Seiten `/page/<N>/` bleiben mit dem bisherigen Inhalt (4 je Seite, Paginierung), „«“ auf `/page/1/` führt nach `/beitraege/`. Sie sind nicht mehr verlinkt, haben aber weiter Titel „Alle Beiträge – Seite N“.
 - **Kategorie:** `topic.html` für Kategorien: Name, Reim und `intro` (Markdown) oben, darunter alle Beiträge (Einträge), rechts das Archiv der Kategorie. Schlagwortseiten und `/themen/` bleiben wie bisher (ohne Archiv, einspaltig).
 - **Entfall:** `nav.sitenav`, `aside.sidebar` (außer der Cloud-Karte auf der Startseite), Spalten-Grid, `HOME_TOPICS` (bereits entfernt), Kategoriekacheln, großes Suchfeld auf der Startseite (die Suchseite behält ihr großes Feld).

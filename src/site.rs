@@ -720,8 +720,9 @@ pub mod tests {
 
         // Startseite: h1, Begrüßung, Beiträge, Cloud rechts; kein Suchfeld im Inhalt, keine Kacheln
         let home = &pages["/index.html"];
-        let (h1, welcome, news) = (home.find("<h1>Flauschiversum</h1>").unwrap(), home.find("Willkommen im <strong>Flauschiversum</strong>!").unwrap(), home.find("<ul class=\"entries\"").unwrap());
-        assert!(h1 < welcome && welcome < news);
+        assert_eq!(home.matches("<h1").count(), 0, "Titel steht nur in der Topbar");
+        let (welcome, news) = (home.find("Willkommen im <strong>Flauschiversum</strong>!").unwrap(), home.find("<ul class=\"entries\"").unwrap());
+        assert!(welcome < news);
         assert!(!home.contains("class=\"tiles\"") && !home.contains("Neu im Flauschiversum") && !home.contains("big"));
         assert_eq!(home.matches("type=\"search\"").count(), 1, "nur das Suchfeld der Topbar");
         let cloud = between(home, "<ul class=\"cloud\"", "</ul>");
@@ -888,7 +889,7 @@ pub mod tests {
 
         let home = read(root, "index.html");
         assert!(home.contains("<title>Flauschiversum – Mehr als nur eine Masche</title>"));
-        assert_eq!(home.matches("<h1").count(), 1);
+        assert_eq!(home.matches("<h1").count(), 0);
         assert!(!home.contains("weiterlesen"));
         let index = read(root, "beitraege/index.html");
         assert!(index.contains("<title>Alle Beiträge – Flauschiversum</title>"));

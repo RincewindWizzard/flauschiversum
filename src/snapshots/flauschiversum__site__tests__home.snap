@@ -60,7 +60,6 @@ expression: "stable(&read(root, \"index.html\"))"
   <div class="page-head">
     
 <div class="home-head">
-  <h1>Flauschiversum</h1>
   <div class="welcome"><p>Willkommen im <strong>Flauschiversum</strong>!</p>
 </div>
 </div>

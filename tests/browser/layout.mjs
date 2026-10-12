@@ -292,7 +292,7 @@ await test('Typografie: Navigation und Footer in Textschrift, Logo und Titel in 
     assert.ok(!/lobster/i.test(family), `${sel}: ${family}`);
     assert.ok(size >= 0.9 * 16, `${sel}: ${size}px`);
   }
-  for (const sel of ['.brand-name', '.home-head h1', '.cloud-card .side-title']) assert.match((await font(sel))[0], /lobster/i, sel);
+  for (const sel of ['.brand-name', '.cloud-card .side-title']) assert.match((await font(sel))[0], /lobster/i, sel);
   assert.ok(Number((await font('.topnav > ul > li > a'))[2]) >= 600, 'Menüs halbfett');
   await page.close();
 });

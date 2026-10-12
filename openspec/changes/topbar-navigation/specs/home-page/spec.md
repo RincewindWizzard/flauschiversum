@@ -3,15 +3,15 @@
 ## ADDED Requirements
 
 ### Requirement: Startseite mit Begrüßung
-Die Startseite SHALL unter `/` und `/index.html` erreichbar sein und, in dieser Reihenfolge, zeigen: die Überschrift „Flauschiversum“, einen kurzen Begrüßungstext aus `content/start.md` und direkt danach die letzten Beiträge. Es gibt kein Suchfeld im Inhalt (die Suche steht in der Topbar), keine Kategoriekacheln und keine Blätterliste.
+Die Startseite SHALL unter `/` und `/index.html` erreichbar sein und, in dieser Reihenfolge, zeigen: einen kurzen Begrüßungstext aus `content/start.md` und direkt danach die letzten Beiträge. Der Titel „Flauschiversum“ steht nur in der Topbar und wird im Inhalt nicht wiederholt. Es gibt kein Suchfeld im Inhalt (die Suche steht in der Topbar), keine Kategoriekacheln und keine Blätterliste.
 
 #### Scenario: Aufbau der Startseite
 - **WHEN** `/` geöffnet wird
-- **THEN** erscheinen nacheinander die Überschrift „Flauschiversum“, der Begrüßungstext und die letzten Beiträge
+- **THEN** erscheinen nacheinander der Begrüßungstext und die letzten Beiträge, ohne wiederholte Überschrift „Flauschiversum“
 
 #### Scenario: Begrüßungstext aus der Datei
 - **WHEN** `content/start.md` den Text „Willkommen im Flauschiversum!“ enthält
-- **THEN** steht er unter der Überschrift auf der Startseite
+- **THEN** steht er am Anfang des Inhalts der Startseite
 
 #### Scenario: Keine Blätterliste
 - **WHEN** `/` geöffnet wird

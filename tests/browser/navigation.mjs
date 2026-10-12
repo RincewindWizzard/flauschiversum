@@ -17,13 +17,13 @@ const test = async (name, fn) => {
 const resultTitles = (page) => page.locator('.pagefind-ui__result-title a').allTextContents();
 const waitResults = (page) => page.waitForSelector('.pagefind-ui__result', { timeout: 10000 });
 
-await test('Startseite: Überschrift, Begrüßung, zehn Beiträge – in dieser Reihenfolge, Cloud rechts', async () => {
+await test('Startseite: Begrüßung, zehn Beiträge – in dieser Reihenfolge, Cloud rechts', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');
   const y = (sel) => page.locator(sel).first().evaluate((el) => el.getBoundingClientRect().top + scrollY);
-  const ys = [await y('.home-head h1'), await y('.home-head .welcome'), await y('.news .entries')];
+  const ys = [await y('.home-head .welcome'), await y('.news .entries')];
   assert.deepEqual(ys, [...ys].sort((a, b) => a - b));
-  assert.equal(await page.locator('.home-head h1').textContent(), 'Flauschiversum');
+  assert.equal(await page.locator('main h1, .home-head h1').count(), 0, 'Titel steht nur in der Topbar');
   assert.equal(await page.locator('ul.tiles').count(), 0, 'keine Kategoriekacheln');
   assert.equal(await page.locator('.news .entry').count(), 10);
   assert.equal(await page.locator('main input[type=search]').count(), 0, 'kein Suchfeld im Inhalt');
