@@ -11,5 +11,5 @@
 
 ## 3. Abschluss
 
-- [ ] 3.1 Vollständigen Build und `check` laufen lassen, Browser-Tests und Screenshots (Beitrag mit ähnlichen Beiträgen) der Autorin vorlegen; prüfen: Abnahme
+- [x] 3.1 Vollständigen Build und `check` laufen lassen, Browser-Tests und Screenshots (Beitrag mit ähnlichen Beiträgen) der Autorin vorlegen; prüfen: Abnahme
 - [x] 3.2 README aktualisieren (Schlagworte, Ähnliche Beiträge); prüfen: Doku nennt keine Kategorien
