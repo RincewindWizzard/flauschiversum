@@ -21,7 +21,7 @@
 
 - [x] 5.1 `tests/browser/theme.mjs`: alle Farbpaare beider Modi (Text/Hintergrund, Link/Karte, grauer Text, Knopf, Rand, Akzent) über berechnete Stile gegen 4,5 : 1 bzw. 3 : 1 prüfen, auf mehreren Seiten (Start, Beitrag, Kategorie, Suche, Impressum); Simulation von Protanopie, Deuteranopie und Tritanopie für Link/Karte; prüfen: grün
 - [x] 5.2 Bestehende Browser-Tests (Kontrast, Farben in `layout.mjs`) auf Tokens umstellen, Snapshots anpassen; prüfen: `cargo test` und alle Playwright-Skripte grün
-- [ ] 5.3 Vergleichsbilder (Hell und Dunkel: Startseite, Beitrag, Kategorie, Suche, Handy) zur Abnahme; prüfen: Freigabe im Gespräch am Staging
+- [x] 5.3 Vergleichsbilder (Hell und Dunkel: Startseite, Beitrag, Kategorie, Suche, Handy) zur Abnahme; prüfen: Freigabe im Gespräch am Staging
 
 ## 6. Dokumentation
 

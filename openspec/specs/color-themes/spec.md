@@ -1,8 +1,10 @@
+# color-themes Specification
+
 ## Purpose
 
-Beschreibt das Farbsystem der Seite: einen hellen und einen dunklen Modus einer von der Autorin gewählten Themenfamilie, deren Umschaltung, die Barrierefreiheit der Farben und das Universum als Stilelement.
+Beschreibt das Farbsystem der Seite: einen hellen und einen dunklen Modus des Schemas „Flauschi-Nebel“, deren Umschaltung, die Barrierefreiheit der Farben und das Universum als Stilelement.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Hell und Dunkel
 Die Seite SHALL einen hellen und einen dunklen Modus bieten. Standard ist die Systemeinstellung des Besuchers (`prefers-color-scheme`); ohne JavaScript gilt ausschließlich sie. Alle Farben stammen aus Variablen, die für beide Modi an einer Stelle definiert sind. Im Dunkelmodus haben Seite, Karten, Menüs, Suche, Archiv, Tag-Cloud, Fußzeile und Lightbox dunkle Hintergründe und helle Schrift; Fotos bleiben unverändert.

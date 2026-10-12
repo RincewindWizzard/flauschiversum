@@ -218,16 +218,16 @@ Die Schrift „Lobster“ SHALL nur für das Logo und für Titel (Überschriften
 - **THEN** haben ihre Links mindestens 0,9 em Schriftgröße und die Textschrift
 
 ### Requirement: Farbschema
-Die Seite SHALL ein gedämpftes Schema mit Salbeigrün als Akzent verwenden: Hintergrund Cremeweiß (`#faf7f0`), Karten weiß, Text `#2b2b2b`, Links dunkelgrün (`#2f5d3a`), Akzent `#6f9a5b` für Knöpfe und aktive Elemente, in heller Tönung für Hover. Alle Farben sind als Variablen an einer Stelle definiert, Text und Links erreichen mindestens 4,5 : 1 Kontrast, das frühere Neongrün entfällt.
+Die Seite SHALL das Farbschema „Flauschi-Nebel“ (Violett und Indigo, Variablen in `content/style/theme.css`) in einem hellen und einem dunklen Modus verwenden: Hintergrund, weiße bzw. dunkle Karten, Text, graue Schrift, Links, Akzent für Knöpfe und aktive Elemente, Rand und Tönung für Hover. Alle Farben sind als Variablen an einer Stelle definiert, Text und Links erreichen mindestens 4,5 : 1 Kontrast, das frühere Neongrün entfällt.
 
 #### Scenario: Hintergrund und Karten
-- **WHEN** eine beliebige Seite geöffnet wird
-- **THEN** ist der Seitenhintergrund Cremeweiß, Karten sind heller als der Hintergrund, und es gibt keinen leuchtend grünen Hintergrund
+- **WHEN** eine beliebige Seite in einem der beiden Modi geöffnet wird
+- **THEN** sind Karten deutlich von ihrem Seitenhintergrund unterscheidbar, und es gibt keine grellen Neonflächen
 
 #### Scenario: Kontrast
-- **WHEN** Fließtext, Links, Knöpfe und Tags auf ihren Hintergründen geprüft werden
+- **WHEN** Fließtext, Links, Knöpfe und Tags in beiden Modi auf ihren Hintergründen geprüft werden
 - **THEN** beträgt das Kontrastverhältnis mindestens 4,5 : 1
 
 #### Scenario: Staging-Leiste bleibt auffällig
-- **WHEN** eine Staging-Seite geöffnet wird
-- **THEN** hebt sich die Staging-Leiste mit ihrer roten Farbe weiterhin deutlich vom neuen Schema ab
+- **WHEN** eine Staging-Seite in einem der beiden Modi geöffnet wird
+- **THEN** hebt sich die Staging-Leiste mit ihrer roten Farbe weiterhin deutlich vom Schema ab
