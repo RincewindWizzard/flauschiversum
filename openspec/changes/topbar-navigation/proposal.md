@@ -13,7 +13,7 @@ Das Layout hat zuletzt drei Spalten bekommen (Navigation links, Inhalt, Sidebar 
 - **Kategorien:** Das Menü klappt alle Kategorien aus `content/categories.yaml` auf. Ein Klick führt auf die Kategorieseite: oben ein kurzer Text zur Kategorie, darunter die Beiträge, daneben dasselbe Archiv nach Monat und Jahr, aber nur mit den Beiträgen dieser Kategorie.
 - **Startseite (Klick auf den Titel):** Zuerst ein kurzer Begrüßungstext (in `content/start.md` pflegbar), direkt danach die neuesten Beiträge. Die Kategoriekacheln entfallen, weil die Kategorien im Menü stehen.
 - **Tag-Cloud nur auf der Startseite:** Die Schlagwort-Cloud steht nur noch dort (Karte neben bzw. unter den Beiträgen). Auf allen anderen Seiten entfallen Cloud und Kategorienliste.
-- **Footer wie die Segelgruppe Kiel:** dunkles Band über die volle Breite; links die großen Icons (E-Mail, Instagram, Mastodon, RSS) in einer Zeile mit dem Copyright darunter, rechts die Links „Tipps und Tricks“, „About me“, „Impressum“ untereinander. Der Textlink „Abonnieren“ entfällt, das RSS-Icon genügt.
+- **Footer genau wie auf segelgruppe-kiel.de:** dunkles Band über die volle Breite, zwei Spalten mittig in einer Zeile; links die Icons (E-Mail, Instagram, Mastodon, RSS, 3 em hoch) mit dem Copyright darunter, rechts die Links „Tipps und Tricks“, „About me“, „Impressum“ untereinander. Auf dem Handy steht das Copyright immer zuletzt. Der Textlink „Abonnieren“ entfällt, das RSS-Icon genügt.
 - **Beibehalten:** Farbschema, Typografie und Karten, a
 
 Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext und den Kategorietexten (Entwürfe zur Prüfung), Änderungen an Suche, Feed oder Deployment.

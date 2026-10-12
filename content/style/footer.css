@@ -1,20 +1,23 @@
-/* Fußzeile: dunkles Band über die ganze Breite. Links die Icons mit dem Copyright darunter, rechts die Seitenlinks untereinander. */
+/* Fußzeile nach dem Vorbild der Segelgruppe Kiel (genau dieses Layout ist verlangt):
+   Band über die volle Breite, zwei Spalten in einer Zeile mittig; links Icons und darunter das Copyright,
+   rechts die Seitenlinks untereinander. Auf dem Handy: Icons, Links, zuletzt das Copyright. */
 #blogfooter {
   --footer-bg: #263329;
-  --footer-text: #dde3da;
+  --footer-text: #afafaf;
   --footer-hover: #ffffff;
+  --footer-socials-height: 3em;
   margin-top: 3em;
-  padding: 2.4em 1em 2.6em;
+  padding: 2em;
   background: var(--footer-bg);
   color: var(--footer-text);
 
-  & a {
+  & a,
+  & a:visited {
     color: var(--footer-text);
     text-decoration: none;
   }
 
-  & a:hover,
-  & a:focus-visible {
+  & a:hover {
     color: var(--footer-hover);
   }
 
@@ -25,44 +28,44 @@
   }
 
   & .footer-inner {
-    max-width: var(--maxwidth-aside);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    align-items: start;
-    gap: 1.5em 3em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2em 4em;
   }
 
   & .footer-left {
-    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
 
   & .socials {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.2em 0.6em;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 0.6em;
+    height: var(--footer-socials-height);
+    max-height: var(--footer-socials-height);
     list-style: none;
-    margin-left: -0.4em;
   }
 
   & .socials a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    height: var(--footer-socials-height);
     min-width: 44px;
-    min-height: 44px;
-    padding: 0.2em 0.4em;
-    box-sizing: border-box;
   }
 
   & .icon {
-    width: 2.6em;
-    height: 2.6em;
-    flex: none;
+    height: var(--footer-socials-height);
+    width: auto;
+    aspect-ratio: 1;
   }
 
   & .copyright {
-    margin-top: 0.8em;
+    margin-top: 1em;
     font-size: 1.1em;
     line-height: 1.4;
   }
@@ -70,21 +73,35 @@
   & .footer-links {
     display: flex;
     flex-direction: column;
-    flex: 0 1 auto;
     font-family: var(--font-text);
     font-size: 1.35em;
     line-height: 1.4;
   }
 
   & .footer-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
+    display: block;
+    padding: 0.2em;
   }
 }
 
+/* Handy: eine Spalte, das Copyright steht immer zuletzt */
 @media (max-width: 40em) {
   #blogfooter .footer-inner {
-    grid-template-columns: minmax(0, 1fr);
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  #blogfooter .footer-left {
+    display: contents;
+  }
+
+  #blogfooter .socials { order: 1; }
+  #blogfooter .footer-links { order: 2; }
+  #blogfooter .copyright { order: 3; margin-top: 0; }
+
+  #blogfooter .footer-links a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 }

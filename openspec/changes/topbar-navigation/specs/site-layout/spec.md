@@ -27,7 +27,7 @@ Tag-Cloud und Archiv SHALL auf Karten liegen: heller Hintergrund, abgerundete Ec
 ## MODIFIED Requirements
 
 ### Requirement: Fußzeile
-Jede Seite SHALL am Ende eine Fußzeile als dunkles Band über die volle Breite haben (Vorbild: Fußzeile der Segelgruppe Kiel). Der Inhalt steht im Rahmen bis 1200 px in zwei Spalten: links in einer Zeile die großen Icons der Kontaktwege nach der Spec `contact-links` und darunter der Hinweis „© <Jahr> Ermeline Wollknoll“, rechts untereinander die Links „Tipps und Tricks“ (`/tipps-und-tricks/`), „About me“ (`/about/`) und „Impressum“ (`/impressum/`) in großer, normal starker Schrift. Das Jahr ist das Jahr des Builds. Die Fußzeile ist auch ohne JavaScript vollständig; auf schmalen Fenstern stehen die Spalten untereinander, ohne waagerechtes Scrollen zu verursachen.
+Jede Seite SHALL am Ende eine Fußzeile haben, die genau dem Layout der Fußzeile der Segelgruppe Kiel (segelgruppe-kiel.de) folgt: ein Band über die volle Breite mit Innenabstand 2 em, gedämpfter heller Schrift (`#afafaf`) auf dunklem Grund und zwei Spalten in einer Zeile, mittig angeordnet. Die linke Spalte ist ein Block, in dem eine Navigation mit den Icons der Kontaktwege nach der Spec `contact-links` (eine Zeile, gleichmäßig verteilt, Höhe 3 em) über dem Hinweis „© <Jahr> Ermeline Wollknoll“ steht. Die rechte Spalte ist eine Navigation mit den Links „Tipps und Tricks“ (`/tipps-und-tricks/`), „About me“ (`/about/`) und „Impressum“ (`/impressum/`) als Liste untereinander, ohne Aufzählungszeichen und ohne Unterstreichung, jeweils mit 0,2 em Innenabstand. Links behalten ihre Farbe auch nach dem Besuch. Das Jahr ist das Jahr des Builds. Auf dem Handy steht das Copyright immer als letztes Element der Fußzeile.
 
 #### Scenario: Jahr im Copyright
 - **WHEN** die Seite im Jahr 2021 gebaut wurde
@@ -39,11 +39,19 @@ Jede Seite SHALL am Ende eine Fußzeile als dunkles Band über die volle Breite 
 
 #### Scenario: Anordnung wie das Vorbild
 - **WHEN** eine Seite bei 1280 px Breite geöffnet wird
-- **THEN** spannt die Fußzeile die volle Breite mit dunklem Hintergrund, links stehen die Icons in einer Zeile mit dem Copyright linksbündig darunter, und rechts stehen die drei Links untereinander
+- **THEN** spannt die Fußzeile die volle Breite mit dunklem Hintergrund und Schriftfarbe `#afafaf`, links stehen die Icons in einer Zeile mit dem Copyright linksbündig darunter, und rechts neben diesem Block stehen die drei Links untereinander
+
+#### Scenario: Größe der Icons
+- **WHEN** die Fußzeile angezeigt wird
+- **THEN** sind die Icons 3 em hoch
 
 #### Scenario: Handy
 - **WHEN** eine Seite bei 360 px Breite geöffnet wird
 - **THEN** sind alle Links der Fußzeile sichtbar und erreichbar, und die Seite scrollt nicht waagerecht
+
+#### Scenario: Copyright zuletzt auf dem Handy
+- **WHEN** eine Seite bei 360 px Breite geöffnet wird
+- **THEN** stehen in der Fußzeile von oben nach unten die Icons, die Links und zuletzt das Copyright
 
 #### Scenario: Reihenfolge am Seitenende
 - **WHEN** eine beliebige Seite geöffnet wird

@@ -135,9 +135,27 @@ await test('Footer wie die Segelgruppe: dunkles Band, links Icons mit Copyright 
   assert.ok(copyright.y >= socials.y + socials.height - 1, 'Copyright unter den Icons');
   assert.ok(Math.abs(copyright.x - socials.x) < 12, 'Copyright linksbündig unter den Icons');
   assert.ok(linkBox.x > socials.x + socials.width - 1 && linkBox.x > 640, 'Links rechts neben dem linken Block');
-  assert.ok(await f.locator('.icon').first().evaluate((el) => el.getBoundingClientRect().width) >= 32, 'große Icons');
+  const iconH = await f.locator('.socials .icon').first().evaluate((el) => [el.getBoundingClientRect().height, parseFloat(getComputedStyle(el.closest('#blogfooter')).fontSize)]);
+  assert.ok(Math.abs(iconH[0] - 3 * iconH[1]) < 2, `Icons 3 em hoch (${iconH})`);
+  assert.equal(await f.evaluate((el) => getComputedStyle(el).color), 'rgb(175, 175, 175)', 'Schriftfarbe #afafaf');
+  assert.equal(await f.locator('.footer-links a').first().evaluate((el) => getComputedStyle(el).textDecorationLine), 'none');
   assert.ok(await f.locator('.footer-links a').first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize)) >= 20, 'große Links');
   await f.screenshot({ path: '/tmp/flausch-footer-kompakt.png' });
+  await page.close();
+});
+
+await test('Footer am Handy: Icons, Links, zuletzt das Copyright', async () => {
+  const page = await open(POST, 360, 740, { hasTouch: true, isMobile: true });
+  const f = page.locator('#blogfooter');
+  const [socials, links, copyright] = [await f.locator('.socials').boundingBox(), await f.locator('.footer-links').boundingBox(), await f.locator('.copyright').boundingBox()];
+  assert.ok(socials.y + socials.height <= links.y + 1, 'Icons über den Links');
+  assert.ok(links.y + links.height <= copyright.y + 1, 'Copyright unter den Links');
+  const docH = await page.evaluate(() => document.documentElement.scrollHeight);
+  const ft = await f.boundingBox();
+  assert.ok(copyright.y + copyright.height <= ft.y + ft.height + 1 && ft.y + ft.height >= docH - 2, 'Copyright ist das letzte Element der Seite');
+  const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+  assert.ok(sw <= cw, 'kein waagerechtes Scrollen');
+  await f.screenshot({ path: '/tmp/flausch-footer-handy.png' });
   await page.close();
 });
 
