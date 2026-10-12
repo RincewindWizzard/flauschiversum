@@ -17,8 +17,8 @@ context: |
     Standard-CSS (content/style/, gebündelt mit lightningcss)
   - Bilder: drei Größen (200/700/1000), Badge-Wasserzeichen, Rechte-Metadaten,
     inkrementeller Cache in .cache/, parallel mit rayon
-  - Themen und Suche: feste Listen content/categories.yaml und content/tags.yaml;
-    Seiten /themen/, /kategorie/<name>/, /tag/<name>/, /suche/; Topbar mit den Menüs About me, Beiträge, Kategorien; Startseite mit
+  - Themen und Suche: feste Liste content/tags.yaml (keine Kategorien, Themen = Schlagworte);
+    Seiten /themen/, /tag/<name>/, /suche/, Weiterleitungen alter Adressen in content/redirects.yaml; Topbar mit den Links Beiträge, Themen, Tipps und Tricks (About me im Footer); Startseite mit
     Begrüßung (content/start.md) und Beiträgen, /beitraege/ mit Archiv nach Jahr und Monat;
     Suchindex mit dem Crate `pagefind` (Bibliothek) unter /pagefind/
   - Staging: GitHub Actions (.github/workflows/staging.yml) baut bei Push auf `dev` und

@@ -2,37 +2,45 @@
 
 ## Why
 
-Das Layout hat zuletzt drei Spalten bekommen (Navigation links, Inhalt, Sidebar rechts), und trotzdem finden Besucher Beiträge schlecht: Die Navigation ist ein Mix aus Kopfleiste, linker Spalte, Sidebar und Footer, die Startseite ist ein Katalog statt einer Begrüßung, und die Beitragsliste blättert in 4er-Schritten durch 49 Seiten. Gewünscht ist ein klares Blog-Muster: eine einzige Topbar mit Logo und wenigen Menüs, eine Startseite mit Begrüßung und den neuesten Beiträgen, ein Beiträge-Bereich mit Archiv nach Monat und Jahr und Kategorieseiten mit eigenem Einleitungstext.
+Das Layout hat zuletzt drei Spalten bekommen (Navigation links, Inhalt, Sidebar rechts), und trotzdem finden Besucher Beiträge schlecht: Die Navigation ist ein Mix aus Kopfleiste, linker Spalte, Sidebar und Footer, die Startseite ist ein Katalog statt einer Begrüßung, und die Beitragsliste blättert in 4er-Schritten durch 49 Seiten. Gewünscht ist ein klares Blog-Muster: eine einzige Topbar mit Logo und wenigen Menüs, eine Startseite mit Begrüßung und den neuesten Beiträgen, ein Beiträge-Bereich mit Archiv nach Monat und Jahr und Themenseiten (Schlagworte) mit demselben Archiv.
 
 ## What Changes
 
-- **Topbar statt Sidebars:** Oben steht eine Leiste, alles auf einer Linie vertikal zentriert. Ganz links das Maskottchen Flauschi (normal, bei Mouse-over „überrascht“) und daneben der Titel „Flauschiversum“ (Link auf die Startseite), rechtsbündig die Menüs **Beiträge** und **Kategorien** und das Suchfeld. Die linke Navigationsspalte und die rechte Sidebar entfallen; Kopfnavigation und Kopfbereich gehen in der Topbar auf. Auf dem Handy klappt die Topbar über ein Hamburger-Menü auf.
+- **Topbar statt Sidebars:** Oben steht eine Leiste, alles auf einer Linie vertikal zentriert. Ganz links das Maskottchen Flauschi (normal, bei Mouse-over „überrascht“) und daneben der Titel „Flauschiversum“ (Link auf die Startseite), rechtsbündig die Links **Beiträge**, **Themen** und **Tipps und Tricks**, dann das Suchfeld. Die linke Navigationsspalte und die rechte Sidebar entfallen; Kopfnavigation und Kopfbereich gehen in der Topbar auf. Auf dem Handy klappt die Topbar über ein Hamburger-Menü auf.
 - **About me:** steht nicht in der Topbar, sondern im Footer (Link auf `/about/`).
 - **Beiträge:** Ein einfacher Link auf `/beitraege/`, ohne Dropdown.
 - **Seite Beiträge (`/beitraege/`):** Zeigt die zehn neuesten Beiträge und daneben ein **Archiv**: alle Beiträge nach Jahr und Monat, jede Gruppe ein- und ausklappbar, jeder Beitrag ein Link. Die bisherige Blätterliste (`/page/<N>/`) bleibt unter ihren Adressen erreichbar, wird aber nicht mehr verlinkt.
-- **Kategorien:** Das Menü klappt alle Kategorien aus `content/categories.yaml` auf. Ein Klick führt auf die Kategorieseite: oben ein kurzer Text zur Kategorie, darunter die Beiträge, daneben dasselbe Archiv nach Monat und Jahr, aber nur mit den Beiträgen dieser Kategorie.
+- **Keine Kategorien mehr, nur Themen:** Kategorien und Schlagworte ließen sich nicht trennen (Kategorien müssen sich ausschließen, es gibt aber immer Überschneidungen). Alles läuft deshalb über Schlagworte, die in der Oberfläche **Themen** heißen: `content/categories.yaml`, das Feld `category`, die Kategorieseiten, das Kategorien-Menü, Kategorie-Etiketten und der Kategoriefilter der Suche entfallen (der Filter heißt „Thema“). Der frühere Kategoriewert jedes Beitrags steht als Schlagwort in `tags`. „Themen“ ist ein einfacher Link auf `/themen/` ohne Dropdown. Die Themenseite `/tag/<name>/` zeigt die Beiträge und daneben dasselbe Archiv nach Monat und Jahr, nur mit den Beiträgen des Themas.
+- **Alte Adressen bleiben:** `/kategorie/<name>/` leitet über statische Weiterleitungsseiten (`content/redirects.yaml`) auf das passende Thema weiter (Cool URIs).
+- **Tipps und Tricks in der Topbar:** statt im Footer; der Footer führt nur „About me“ und „Impressum“.
+- **Konzentrische Lupe:** Der Suchknopf sitzt als Kreis im Feld mit gleichem Abstand oben, unten und rechts (Mittelpunkt wie die Rundung des Feldes), auch in der größeren Suchseite.
 - **Startseite (Klick auf den Titel):** Zuerst ein kurzer Begrüßungstext (in `content/start.md` pflegbar), direkt danach die neuesten Beiträge. Die Kategoriekacheln entfallen, weil die Kategorien im Menü stehen.
 - **Tag-Cloud nur auf der Startseite:** Die Schlagwort-Cloud steht nur noch dort (Karte neben bzw. unter den Beiträgen). Auf allen anderen Seiten entfallen Cloud und Kategorienliste.
-- **Footer genau wie auf segelgruppe-kiel.de:** dunkles Band über die volle Breite, zwei Spalten mittig in einer Zeile; links die Icons (E-Mail, Instagram, Mastodon, RSS, 3 em hoch) mit dem Copyright darunter, rechts die Links „Tipps und Tricks“, „About me“, „Impressum“ untereinander. Auf dem Handy steht das Copyright immer zuletzt. Der Textlink „Abonnieren“ entfällt, das RSS-Icon genügt.
+- **Footer genau wie auf segelgruppe-kiel.de:** dunkles Band über die volle Breite, zwei Spalten mittig in einer Zeile; links die Icons (E-Mail, Instagram, Mastodon, RSS, 3 em hoch) mit dem Copyright darunter, rechts die Links „About me“ und „Impressum“ untereinander. Auf dem Handy steht das Copyright immer zuletzt. Der Textlink „Abonnieren“ entfällt, das RSS-Icon genügt.
 - **Beibehalten:** Farbschema, Typografie und Karten, a
 
-Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext und den Kategorietexten (Entwürfe zur Prüfung), Änderungen an Suche, Feed oder Deployment.
+Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext, Änderungen an Feed oder Deployment.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `topbar`: Die Topbar mit Titel, Menüs Beiträge, Kategorien und Suche, einschließlich Kategorien-Dropdown, Tastaturbedienung und Handy-Menü.
-- `post-archive`: Das einklappbare Archiv aller (oder einer Kategorie von) Beiträgen nach Jahr und Monat.
+- `topbar`: Die Topbar mit Titel, den Links Beiträge, Themen und Tipps und Tricks und der Suche, einschließlich Tastaturbedienung und Handy-Menü.
+- `post-archive`: Das einklappbare Archiv aller (oder eines Themas) Beiträge nach Jahr und Monat.
 
 ### Modified Capabilities
 
 - `site-layout`: Seitenaufbau mit Topbar; die Spalten-Anforderungen (Navigationsspalte, Dreispaltig, Zweispaltig, Sidebar, Karten für Seitenspalten, Suchfeld im Kopf/links) entfallen oder werden ersetzt.
 - `sidebar`: Die Tag-Cloud steht nur noch auf der Startseite; die Kategorienliste in der Seitenspalte entfällt.
 - `home-page`: Begrüßung und letzte Beiträge statt Suchfeld, Kacheln und „Neu im Flauschiversum“.
-- `topic-pages`: Kategorieseite mit Einleitungstext, Beitragsliste und Archiv; die Schlagwortliste in der Kategorie entfällt.
+- `topic-pages`: Kategorieseiten entfallen; Themenseite mit Beitragsliste und Archiv; Themenübersicht nur mit Schlagworten.
 - `post-index`: `/beitraege/` zeigt die zehn neuesten Beiträge; die Blätterseiten bleiben unverändert erreichbar.
-- `content-format`: Neue Datei `content/start.md` für den Begrüßungstext; optionales Feld `intro` je Kategorie.
+- `content-format`: Neue Dateien `content/start.md` und `content/redirects.yaml`; kein Feld `category` mehr.
+- `build`: Prüfung nur noch von Schlagworten, Warnung bei altem `category`, Weiterleitungen.
+- `post-page`: Einordnung nur über Schlagworte.
+- `seo`: Sitemap, strukturierte Daten und Meta-Angaben ohne Kategorien.
+- `url-scheme`: `/kategorie/<name>/` als Weiterleitung, keine reservierte Seitenart mehr.
+- `site-search`: Filter „Thema“ statt Kategorie, konzentrische Lupe.
 
 ## Impact
 

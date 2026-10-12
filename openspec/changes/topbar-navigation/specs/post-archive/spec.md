@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Beschreibt das Archiv der Beiträge nach Jahr und Monat: eine einklappbare Liste, mit der Besucher jeden Beitrag über sein Datum finden, auf der Seite Beiträge für alle Beiträge und auf Kategorieseiten für die Beiträge der Kategorie.
+Beschreibt das Archiv der Beiträge nach Jahr und Monat: eine einklappbare Liste, mit der Besucher jeden Beitrag über sein Datum finden, auf der Seite Beiträge für alle Beiträge und auf Themenseiten für die Beiträge des Themas.
 
 ## ADDED Requirements
 
@@ -36,19 +36,19 @@ Beim Laden SHALL nur die Gruppe des neuesten Jahres und darin des neuesten Monat
 - **WHEN** mit JavaScript „Alle aufklappen“ gedrückt wird
 - **THEN** sind alle Jahres- und Monatsgruppen offen
 
-### Requirement: Archiv einer Kategorie
-Auf einer Kategorieseite SHALL das Archiv nur die veröffentlichten Beiträge dieser Kategorie enthalten, mit denselben Gruppen und derselben Bedienung. Beiträge anderer Kategorien und Beiträge ohne Kategorie fehlen.
+### Requirement: Archiv eines Themas
+Auf einer Themenseite SHALL das Archiv nur die veröffentlichten Beiträge dieses Schlagworts enthalten, mit denselben Gruppen und derselben Bedienung. Beiträge ohne das Schlagwort fehlen.
 
-#### Scenario: Nur Filzen
-- **WHEN** `/kategorie/filzen/` geöffnet wird
-- **THEN** enthält das Archiv genau die Beiträge der Kategorie „Filzen“, und die Gesamtzahl im Archiv stimmt mit der Zahl der Beiträge der Kategorie überein
+#### Scenario: Nur ein Thema
+- **WHEN** `/tag/filzen/` geöffnet wird
+- **THEN** enthält das Archiv genau die Beiträge mit dem Schlagwort „Filzen“, und die Gesamtzahl im Archiv stimmt mit der Zahl der Beiträge des Themas überein
 
 #### Scenario: Leere Monate
-- **WHEN** eine Kategorie in einem Monat keinen Beitrag hat
+- **WHEN** ein Thema in einem Monat keinen Beitrag hat
 - **THEN** erscheint dieser Monat nicht
 
 ### Requirement: Platz des Archivs
-Das Archiv SHALL auf der Seite Beiträge und auf Kategorieseiten als Karte neben der Beitragsliste stehen (ab 64 em rechts), auf schmaleren Fenstern unter der Liste bzw. unter dem Einleitungstext, und beim Scrollen am Desktop sichtbar bleiben, solange es ins Fenster passt.
+Das Archiv SHALL auf der Seite Beiträge und auf Themenseiten als Karte neben der Beitragsliste stehen (ab 64 em rechts), auf schmaleren Fenstern auf der Seite Beiträge unter der Liste und auf Themenseiten zwischen Titel und Liste, und beim Scrollen am Desktop sichtbar bleiben, solange es ins Fenster passt.
 
 #### Scenario: Desktop
 - **WHEN** `/beitraege/` bei 1440 px Breite geöffnet wird

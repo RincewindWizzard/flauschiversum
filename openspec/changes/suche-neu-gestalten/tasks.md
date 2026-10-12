@@ -10,7 +10,7 @@
 
 ## 3. Absicherung
 
-- [ ] 3.1 Bestehende Suchtests (Treffer, Hervorhebung, Umlaute, Kategoriefilter, Adresse aktualisieren) anpassen und Snapshot der Suchseite aktualisieren; prüfen: `cargo test` und `node tests/browser/navigation.mjs` grün
+- [ ] 3.1 Bestehende Suchtests (Treffer, Hervorhebung, Umlaute, Themenfilter, Adresse aktualisieren) anpassen und Snapshot der Suchseite aktualisieren; prüfen: `cargo test` und `node tests/browser/navigation.mjs` grün
 - [ ] 3.2 Vergleichsbilder (vorher/nachher, 1440 und 360 px, mit Filter) zur Abnahme; prüfen: Freigabe im Gespräch am Staging
 
 ## 4. Dokumentation

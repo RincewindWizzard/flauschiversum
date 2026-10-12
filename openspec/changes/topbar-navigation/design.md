@@ -79,9 +79,23 @@ Unter 48 em zeigt die Topbar Titel, Suche (Lupe als Knopf, klappt das Feld auf b
 - Nur „Kategorien“ hat ein Untermenü; „Beiträge“ ist ein einfacher Link. Damit entfallen die Menüdaten der zehn neuesten Beiträge.
 - Handy: Hamburger-Symbol als quadratischer Knopf (mindestens 44 px, `aria-label="Menü"`) in der Zeile der Marke, die Suche in einer eigenen Zeile darunter; das Menü klappt unter der Leiste auf.
 
+### 8. Überarbeitung: nur noch Themen (Schlagworte)
+
+Die Entscheidungen 1 bis 7 gelten, soweit sie Kategorien betreffen, nicht mehr:
+
+- **Taxonomie:** Es gibt nur noch Schlagworte (`content/tags.yaml`), in der Oberfläche „Themen“. `Category`, `Site.categories`, `categories.yaml`, `intro`/`motto` und alle Kategorie-Seiten und -Etiketten sind entfernt. Der frühere Kategoriewert steht als Schlagwort in `tags` aller Beiträge; ein altes Feld `category` wird mit einer Warnung ignoriert.
+- **Topbar:** drei einfache Links (Beiträge, Themen, Tipps und Tricks) ohne Untermenü; `topbar.js` enthält nur noch Umschalter, Handy-Menü und „Alle aufklappen“. Bei 48 bis 64 em sind Abstände und Schrift der Links etwas kleiner, damit die Leiste einzeilig bleibt.
+- **Themenseite:** `topic.html` zeigt Titel mit Anzahl, Beiträge und das Archiv (`archive::build` auf den Beiträgen des Schlagworts); auf dem Handy Titel, Archiv, Beiträge.
+- **Weiterleitungen:** `content/redirects.yaml` (`/kategorie/basteln/: /tag/basteln/` usw.) erzeugt statische Seiten mit `meta refresh`, `canonical` und `noindex`; der Build prüft Ziel und Kollisionen. Weiterleitungsseiten sind nicht in der Sitemap, ohne Kopf und Fußzeile (kein Staging-Balken).
+- **Suche:** Pagefind-Filter „Thema“ (ein Filterwert je Schlagwort), Schlagworte durchsuchbar.
+- **Konzentrische Lupe:** `--sb-height` und `--sb-gap` am `.searchbox` (in `em` des Feldes); Knopfbreite = Höhe = `--sb-height − 2·--sb-gap`, `right: --sb-gap`, vertikal zentriert. Die Schriftgröße steht am `.searchbox` selbst, damit `em` in Feld und Knopf gleich ist (sonst weichen die Abstände ab).
+- **Footer:** Links nur „About me“ und „Impressum“.
+- **Ähnliche Beiträge** nur über gemeinsame Schlagworte (Change `kategorien-neu`).
+
 ## Risks / Trade-offs
 
-- [Dropdowns sind schwer zugänglich oder auf Touch unbrauchbar] → Knopf mit `aria-expanded`, Tastatur und Escape, Touch über Knopf; Browser-Tests für Maus, Tastatur und Handy.
+- [Alte Kategorie-Adressen brechen] → Weiterleitungsseiten, getestet für alle früheren Kategorien.
+- [Dropdowns entfallen] → keine Zugänglichkeitsrisiken mehr; die Links sind einfache Anker.
 - [Sticky-Topbar verdeckt Anker und Inhalt] → `scroll-margin-top` für Überschriften, Höhe als Variable; Staging-Leiste scrollt weg (nicht sticky).
 - [Kategorie-Text fehlt und die Seite wirkt leer] → Entwürfe für alle Kategorien liefern; ohne `intro` bleibt Reim.
 - [Der Auftrag macht frühere Entscheidungen rückgängig (Footer-Navigation, linke Spalte)] → Footer bleibt, die Spalten entfallen; die Spezifikation führt die Änderungen als REMOVED mit Begründung.

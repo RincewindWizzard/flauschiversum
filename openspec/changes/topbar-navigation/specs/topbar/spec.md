@@ -2,20 +2,20 @@
 
 ## Purpose
 
-Beschreibt die Topbar des Flauschiversums: die einzige Navigation oben auf jeder Seite mit Titel, den Menüs About me, Beiträge und Kategorien sowie der Suche.
+Beschreibt die Topbar des Flauschiversums: die einzige Navigation oben auf jeder Seite mit Titel, den Links Beiträge, Themen und Tipps und Tricks sowie der Suche.
 
 ## ADDED Requirements
 
 ### Requirement: Topbar auf jeder Seite
-Jede Seite SHALL oben eine Topbar zeigen. Links steht der Titel „Flauschiversum“ in Lobster als Link auf `/`. Rechtsbündig stehen in dieser Reihenfolge die Menüs „Beiträge“ und „Kategorien“ und danach das Suchfeld. Alle Elemente der Topbar (Maskottchen, Titel, Menüs, Suchfeld samt Lupe) sind vertikal auf einer Linie zentriert. Auf Beitragsseiten wächst oder verdeckt die Topbar den Inhalt nicht, und sie bleibt beim Scrollen oben stehen.
+Jede Seite SHALL oben eine Topbar zeigen. Links steht der Titel „Flauschiversum“ in Lobster als Link auf `/`. Rechtsbündig stehen in dieser Reihenfolge die Links „Beiträge“, „Themen“ und „Tipps und Tricks“ und danach das Suchfeld und der Hell/Dunkel-Umschalter. Alle Elemente der Topbar (Maskottchen, Titel, Menüs, Suchfeld samt Lupe) sind vertikal auf einer Linie zentriert. Auf Beitragsseiten wächst oder verdeckt die Topbar den Inhalt nicht, und sie bleibt beim Scrollen oben stehen.
 
 #### Scenario: Aufbau am Desktop
 - **WHEN** eine beliebige Seite bei 1280 px Breite geöffnet wird
-- **THEN** steht links „Flauschiversum“, rechts „Beiträge“, „Kategorien“ und das Suchfeld
+- **THEN** steht links „Flauschiversum“, rechts „Beiträge“, „Themen“, „Tipps und Tricks“ und das Suchfeld
 
 #### Scenario: Vertikal zentriert
 - **WHEN** eine beliebige Seite bei 1280 px Breite geöffnet wird
-- **THEN** liegen die Mittelpunkte von Maskottchen, Titel, Menüeinträgen und Suchfeld auf derselben Linie (Abweichung höchstens 2 px)
+- **THEN** liegen die Mittelpunkte von Maskottchen, Titel, Links, Suchfeld und Umschalter auf derselben Linie (Abweichung höchstens 2 px)
 
 #### Scenario: Titel führt zur Startseite
 - **WHEN** auf einer Beitragsseite „Flauschiversum“ angeklickt wird
@@ -59,38 +59,31 @@ Links neben dem Titel in der Topbar SHALL das Maskottchen Flauschi stehen und zu
 - **WHEN** eine beliebige Seite geöffnet wird
 - **THEN** enthält die Topbar keinen Link auf `/about/`
 
-### Requirement: Menü Kategorien
-„Kategorien“ SHALL ein Untermenü mit den Kategorien aus `content/categories.yaml` in der Reihenfolge der Datei aufklappen, jede mit Link auf `/kategorie/<name>/`. Kategorien ohne veröffentlichten Beitrag fehlen. Ein Klick auf „Kategorien“ selbst öffnet `/themen/`.
+### Requirement: Themen und Tipps und Tricks als einfache Links
+„Themen“ SHALL ein einfacher Link auf `/themen/` und „Tipps und Tricks“ ein einfacher Link auf `/tipps-und-tricks/` sein, beide ohne Untermenü. Die Topbar nennt weder „Kategorien“ noch bietet sie ein Dropdown; es gibt keine Knöpfe mit `aria-expanded` in der Navigation. Die Links sind im Quelltext vorhanden und per Tab in der Reihenfolge Titel, Beiträge, Themen, Tipps und Tricks, Suche, Umschalter erreichbar.
 
-#### Scenario: Alle Kategorien
-- **WHEN** das Menü „Kategorien“ aufgeklappt wird
-- **THEN** zeigt es alle Kategorien als Links auf ihre Kategorieseiten
-
-#### Scenario: Reihenfolge
-- **WHEN** `content/categories.yaml` eine Reihenfolge vorgibt
-- **THEN** erscheinen die Einträge in dieser Reihenfolge
-
-#### Scenario: Klick auf Kategorien
-- **WHEN** der Eintrag „Kategorien“ selbst angeklickt wird
+#### Scenario: Klick auf Themen
+- **WHEN** der Eintrag „Themen“ angeklickt wird
 - **THEN** öffnet sich die Themenübersicht `/themen/`
 
-### Requirement: Bedienung der Untermenüs
-Das Untermenü „Kategorien“ SHALL per Maus (Überfahren, Klick auf den Knopf), per Tastatur (Tab, Enter/Leertaste auf dem Knopf, Pfeiltasten, Escape zum Schließen) und per Touch bedienbar sein. Der Knopf trägt `aria-expanded` und `aria-controls`. Ein Klick außerhalb oder Escape schließt ein geöffnetes Untermenü; hat der Mauszeiger es geöffnet, hält ein Klick auf den Knopf es offen. Ohne JavaScript öffnet es sich bei Überfahren und Fokus (CSS), und die Links sind im Quelltext vorhanden.
+#### Scenario: Klick auf Tipps und Tricks
+- **WHEN** der Eintrag „Tipps und Tricks“ angeklickt wird
+- **THEN** öffnet sich `/tipps-und-tricks/`
+
+#### Scenario: Kein Dropdown
+- **WHEN** der Mauszeiger über „Themen“ steht oder es den Fokus erhält
+- **THEN** erscheint kein Untermenü, und die Topbar enthält das Wort „Kategorien“ nicht
 
 #### Scenario: Tastatur
-- **WHEN** mit Tab auf den Knopf von „Kategorien“ gewechselt und Enter gedrückt wird
-- **THEN** öffnet sich das Untermenü, der Knopf meldet `aria-expanded="true"`, und Escape schließt es wieder
-
-#### Scenario: Ohne JavaScript
-- **WHEN** die Seite ohne JavaScript geöffnet und der Mauszeiger über „Kategorien“ bewegt wird
-- **THEN** erscheint das Untermenü mit den Kategorien
+- **WHEN** mit Tab durch die Topbar gewechselt wird
+- **THEN** folgen nach dem Titel die Links Beiträge, Themen, Tipps und Tricks, danach das Suchfeld
 
 ### Requirement: Topbar auf dem Handy
-Auf Fenstern unter 48 em SHALL die Topbar den Titel, das Suchfeld bzw. einen Such-Knopf und einen Hamburger-Knopf (Symbol mit drei Strichen, zugänglicher Name „Menü“, mindestens 44 × 44 px) zeigen, Titel und Knopf in einer Zeile, das Suchfeld darunter. Der Knopf klappt eine Liste mit „Beiträge“ und „Kategorien“ samt Unterpunkten auf und beim zweiten Antippen wieder zu; die Liste ist ohne JavaScript über ein `details`-Element bedienbar.
+Auf Fenstern unter 48 em SHALL die Topbar den Titel, das Suchfeld bzw. einen Such-Knopf und einen Hamburger-Knopf (Symbol mit drei Strichen, zugänglicher Name „Menü“, mindestens 44 × 44 px) zeigen, Titel und Knopf in einer Zeile, das Suchfeld darunter. Der Knopf klappt eine Liste mit „Beiträge“, „Themen“ und „Tipps und Tricks“ auf und beim zweiten Antippen wieder zu; die Liste ist ohne JavaScript über ein `details`-Element bedienbar.
 
 #### Scenario: Menü am Handy
 - **WHEN** eine Seite bei 360 px Breite geöffnet und der Menü-Knopf gedrückt wird
-- **THEN** erscheinen „Beiträge“ und „Kategorien“ mit den Kategorien als Unterpunkten untereinander
+- **THEN** erscheinen „Beiträge“, „Themen“ und „Tipps und Tricks“ untereinander
 
 #### Scenario: Hamburger-Knopf
 - **WHEN** eine Seite bei 360 px Breite geöffnet wird

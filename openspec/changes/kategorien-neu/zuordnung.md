@@ -1,3 +1,5 @@
+> Hinweis: Kategorien gibt es nicht mehr (Entscheidung beim Review). Die Spalte „Kategorie“ unten steht jetzt als **Schlagwort** in `tags` jedes Beitrags; die Übersicht bleibt zur Dokumentation der Zuordnung erhalten.
+
 # Vorschlag: neue Kategorien und Zuordnung der 194 Beiträge
 
 Zur Prüfung. Jeder Beitrag erhält genau eine Kategorie; neue Schlagworte sind kursiv gesetzt in der Spalte „Schlagworte neu“. „Alt“ ist die bisherige Kategorie.

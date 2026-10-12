@@ -39,8 +39,7 @@ date: 2026-11-01 10:00:00        # oder nur 2026-11-01; Zeitzone Europe/Berlin
 author: Ermeline
 image: "muetze.jpg"              # Vorschaubild auf der Startseite und beim Teilen
 excerpt: "Kurzer Text für die Startseite, den Feed und Suchmaschinen."
-category: wolle                  # Pflicht: genau eine Kategorie aus content/categories.yaml (die `id`)
-tags: [Mützen und Stirnbänder, Häkeln]   # optional: Schlagworte aus content/tags.yaml
+tags: [Wolle, Mützen und Stirnbänder, Häkeln]   # optional: Themen (Schlagworte) aus content/tags.yaml
 ---
 
 Text in Markdown …
@@ -63,35 +62,35 @@ Text in Markdown …
 - **Bildgruppen:** Stehen mehrere Bilder ohne Leerzeile untereinander, entsteht ein wischbares Karussell; ein Klick
   öffnet das Vollbild. Der Text in `![…]` ist die Bildunterschrift.
 
-### Kategorien, Schlagworte und Suche
+### Themen und Suche
 
-Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi links, rechts die Menüs **Beiträge** und
-**Kategorien** sowie die Suche; auf dem Handy hinter einem Hamburger-Knopf; „About me“ steht im Footer), die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro
-Kategorie (`/kategorie/<name>/`) und Schlagwort (`/tag/<name>/`) sowie die Suche (`/suche/`).
+Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi links, rechts die Links **Beiträge**,
+**Themen** und **Tipps und Tricks** sowie die Suche; auf dem Handy hinter einem Hamburger-Knopf; „About me“ und
+„Impressum“ stehen im Footer), die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro Thema
+(`/tag/<name>/`) sowie die Suche (`/suche/`). Es gibt keine Kategorien: alles läuft über Themen (Schlagworte).
 
 - **Startseite:** Überschrift, Begrüßungstext aus `content/start.md` (Markdown, ohne oder mit Frontmatter), die zehn
   neuesten Beiträge und rechts die Tag-Cloud (nur dort).
 - **Beiträge** (`/beitraege/`): die zehn neuesten Beiträge und das Archiv nach Jahr und Monat (einklappbar; neuestes Jahr
-  und Monat offen). Das Menü „Beiträge“ zeigt dieselben zehn. Die früheren Blätterseiten (`/page/<N>/`) bleiben unter
+  und Monat offen). Die früheren Blätterseiten (`/page/<N>/`) bleiben unter
   ihren Adressen erreichbar, werden aber nicht mehr verlinkt.
-- **Kategorieseite:** Name, Reim (`motto`), kurzer Einleitungstext (`intro`), alle Beiträge der Kategorie und das
-  Archiv der Kategorie. Das Menü „Kategorien“ listet alle Kategorien aus `content/categories.yaml` in Dateireihenfolge.
-
-- **Kategorie:** genau eine, Pflicht (fehlt sie, bricht der Build ab). Die erlaubten stehen in `content/categories.yaml` (`id`, `name`, `image`
-  als Pfad unter `content/static/`, `motto`, optional `intro` als kurzer Markdown-Text für die Kategorieseite). Neue
-  Kategorie = neuer Eintrag dort; sie erscheint im Menü „Kategorien“.
+- **Themenseite:** Name mit Anzahl, alle Beiträge des Themas und daneben das Archiv nach Jahr und Monat nur dieses
+  Themas. „Themen“ in der Topbar führt auf die Übersicht aller Themen.
+- **Alte Adressen:** `content/redirects.yaml` ordnet frühere Adressen neuen zu (`/kategorie/basteln/: /tag/basteln/`);
+  der Build erzeugt dafür Weiterleitungsseiten (mit `noindex` und kanonischer URL) und prüft Ziel und Kollisionen.
+- **Kategorien** gibt es nicht mehr. Ein altes Feld `category` im Frontmatter wird mit einer Warnung ignoriert; der Wert
+  gehört als Schlagwort in `tags`.
 - **Ähnliche Beiträge:** Unter jedem Beitrag stehen bis zu sechs ähnliche Beiträge. Ausgewählt wird über gemeinsame
-  Schlagworte (seltene zählen mehr, `1 / Anzahl der Beiträge mit dem Schlagwort`) mit einem kleinen Bonus für dieselbe
-  Kategorie; fehlende Plätze füllen die neuesten Beiträge der Kategorie. Je genauer die Schlagworte, desto besser die
-  Auswahl (z. B. „Filzen“, „Stricken“, „Häkeln“ innerhalb der Kategorie „Wolle“).
-- **Schlagworte:** beliebig viele, optional, als Liste oder durch Komma getrennt. Erlaubt sind nur die aus
+  Schlagworte (seltene zählen mehr, `1 / Anzahl der Beiträge mit dem Schlagwort`); ohne gemeinsames Schlagwort gibt es
+  keine Karte. Je genauer die Schlagworte, desto besser die Auswahl.
+- **Themen (Schlagworte):** beliebig viele, optional, als Liste oder durch Komma getrennt. Erlaubt sind nur die aus
   `content/tags.yaml`; ein Tippfehler bricht den Build ab und nennt das ähnlichste Schlagwort („Meintest du …?“).
   Ein neues Schlagwort zuerst dort eintragen. Ein Schlagwort mit weniger als zwei Beiträgen erzeugt eine Warnung.
 - **Suche:** Der Index entsteht beim Build mit [Pagefind](https://pagefind.app/) (als Rust-Bibliothek, kein
-  zusätzliches Programm) und liegt unter `/pagefind/`. Durchsucht werden Titel, Text, Kategorie und Schlagworte aller
-  Beiträge und Einzelseiten; die Suche läuft im Browser, ohne Dienste von Dritten. Das Ergebnis des Index wird in
+  zusätzliches Programm) und liegt unter `/pagefind/`. Durchsucht werden Titel, Text und Schlagworte aller
+  Beiträge und Einzelseiten; die Treffer lassen sich nach „Thema“ filtern; die Suche läuft im Browser, ohne Dienste von Dritten. Das Ergebnis des Index wird in
   `.cache/` zu den Eingaben gemerkt, damit ein Build ohne Änderungen nichts neu schreibt.
-- Die Pfade `/themen/`, `/suche/`, `/beitraege/`, `/kategorie/`, `/tag/` und `/pagefind/` sind reserviert.
+- Die Pfade `/themen/`, `/suche/`, `/beitraege/`, `/tag/` und `/pagefind/` sind reserviert.
 
 ### Kontakt, Social-Links und Karten
 
@@ -99,7 +98,7 @@ Die Kontaktadresse und die Social-Links (Instagram, Mastodon) stehen als Konstan
 (`CONTACT_EMAIL`, `INSTAGRAM_URL`, `MASTODON_URL`) und erscheinen im Footer jeder Seite; die Icons sind inline SVG in
 `templates/partials/icon-*.html`. Jeder `mailto:`-Betreff enthält „Flauschiversum“ (Spamfilter): `render::mailto()` bricht
 sonst den Build ab. Die Menüs der Topbar, das Archiv und die Tag-Cloud entstehen
-automatisch aus `content/categories.yaml`, `content/tags.yaml` und den Beiträgen; die Schriftgröße eines Schlagworts
+automatisch aus `content/tags.yaml` und den Beiträgen; die Schriftgröße eines Schlagworts
 folgt der Zahl seiner Beiträge. Das Maskottchen (`content/static/images/flauschi_normal.svg` und `flauschi_surprised.svg`,
 beim Überfahren des Titels) hat in beiden Dateien dieselbe `viewBox`, damit der Wechsel nichts verschiebt.
 
@@ -124,7 +123,8 @@ Tritanopie) prüft `tests/browser/theme.mjs`.
 |---|---|
 | `content/posts/` | Posts mit ihren Medien |
 | `content/pages/` | Einzelseiten |
-| `content/categories.yaml`, `content/tags.yaml` | erlaubte Kategorien und Schlagworte |
+| `content/tags.yaml` | erlaubte Themen (Schlagworte) |
+| `content/redirects.yaml` | Weiterleitungen alter Adressen |
 | `content/static/` | unverändert ausgelieferte Dateien (Schriften, Favicon, Bilder der Einzelseiten) |
 | `content/style/` | Gestaltung als normales CSS (`main.css` mit `@import`), wird zu `/style.css` gebündelt |
 | `templates/` | HTML-Templates ([Askama](https://askama.readthedocs.io/)), werden beim Kompilieren geprüft |

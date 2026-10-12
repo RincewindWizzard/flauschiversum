@@ -18,14 +18,14 @@ Die Startseite SHALL alle Schlagworte mit mindestens einem veröffentlichten Bei
 - **THEN** führt „Alle Themen“ auf `/themen/`
 
 #### Scenario: Nur auf der Startseite
-- **WHEN** eine Beitragsseite, eine Kategorieseite oder `/beitraege/` geöffnet wird
+- **WHEN** eine Beitragsseite, eine Themenseite oder `/beitraege/` geöffnet wird
 - **THEN** gibt es dort keine Tag-Cloud
 
 ## REMOVED Requirements
 
 ### Requirement: Kategorien in der Seitenspalte
-**Reason**: Die Kategorien stehen im Menü „Kategorien“ der Topbar (Spec `topbar`); es gibt keine Seitenspalten mehr.
-**Migration**: Kategorien über die Topbar erreichen.
+**Reason**: Es gibt keine Kategorien mehr, Themen sind Schlagworte (Link „Themen“ in der Topbar); Seitenspalten gibt es auch nicht mehr.
+**Migration**: Themen über „Themen“ in der Topbar erreichen.
 
 ### Requirement: Sidebar ohne JavaScript und ohne Dienste von Dritten
 **Reason**: Die Sidebar entfällt. Die Tag-Cloud auf der Startseite entsteht weiterhin im Build und ohne JavaScript; das folgt aus „Inhalte ohne JavaScript nutzbar“ und „Keine Ressourcen von Drittanbietern“.

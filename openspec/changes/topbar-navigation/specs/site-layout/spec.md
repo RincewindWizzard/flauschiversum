@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Seitenaufbau mit Topbar
-Jede Seite SHALL aus Topbar, Inhalt und Fußzeile bestehen. Es gibt keine linke Navigationsspalte und keine allgemeine Sidebar mehr. Ergänzende Karten (Tag-Cloud auf der Startseite, Archiv auf Beiträge- und Kategorieseiten) stehen ab 64 em rechts neben dem Inhalt, auf schmaleren Fenstern darunter. Der Seitenrahmen ist bis etwa 1200 px breit, der Lesetext höchstens etwa 40 em.
+Jede Seite SHALL aus Topbar, Inhalt und Fußzeile bestehen. Es gibt keine linke Navigationsspalte und keine allgemeine Sidebar mehr. Ergänzende Karten (Tag-Cloud auf der Startseite, Archiv auf Beiträge- und Themenseiten) stehen ab 64 em rechts neben dem Inhalt, auf schmaleren Fenstern darunter. Der Seitenrahmen ist bis etwa 1200 px breit, der Lesetext höchstens etwa 40 em.
 
 #### Scenario: Beitragsseite
 - **WHEN** eine Beitragsseite bei 1440 px Breite geöffnet wird
@@ -18,16 +18,35 @@ Jede Seite SHALL aus Topbar, Inhalt und Fußzeile bestehen. Es gibt keine linke 
 - **THEN** stehen ergänzende Karten unter dem Inhalt, und die Seite scrollt nicht waagerecht
 
 ### Requirement: Karten für ergänzende Blöcke
-Tag-Cloud und Archiv SHALL auf Karten liegen: heller Hintergrund, abgerundete Ecken, feiner Rand oder Schatten und Innenabstand. Die Untermenüs der Topbar sind ebenfalls Karten mit Schatten über dem Inhalt.
+Tag-Cloud und Archiv SHALL auf Karten liegen: heller Hintergrund, abgerundete Ecken, feiner Rand oder Schatten und Innenabstand.
 
 #### Scenario: Karten sichtbar
 - **WHEN** die Startseite bei 1440 px Breite geöffnet wird
 - **THEN** liegt die Tag-Cloud auf einer Karte mit abgerundeten Ecken und hellem Hintergrund
 
+### Requirement: Titel der Seiten
+Jede HTML-Seite SHALL einen nicht leeren `<title>` mit korrekt maskierten Sonderzeichen tragen. Post-Seiten, Einzelseiten und Schlagwortseiten heißen „<Titel> – Flauschiversum“, die Startseite „Flauschiversum – Mehr als nur eine Masche“, die Liste „Alle Beiträge – Flauschiversum“ mit Folgeseiten „Alle Beiträge – Seite <N> – Flauschiversum“, die Übersicht „Themen – Flauschiversum“ und die Suche „Suche – Flauschiversum“.
+
+#### Scenario: Titel eines Posts
+- **WHEN** die Seite des Posts „Alraune“ geöffnet wird
+- **THEN** lautet der Dokumenttitel „Alraune – Flauschiversum“
+
+#### Scenario: Titel der Startseite
+- **WHEN** `/` geöffnet wird
+- **THEN** lautet der Dokumenttitel „Flauschiversum – Mehr als nur eine Masche“
+
+#### Scenario: Titel einer Folgeseite
+- **WHEN** `/page/1/` geöffnet wird
+- **THEN** lautet der Dokumenttitel „Alle Beiträge – Seite 2 – Flauschiversum“
+
+#### Scenario: Titel eines Themas
+- **WHEN** `/tag/filzen/` geöffnet wird
+- **THEN** lautet der Dokumenttitel „Filzen – Flauschiversum“
+
 ## MODIFIED Requirements
 
 ### Requirement: Fußzeile
-Jede Seite SHALL am Ende eine Fußzeile haben, die genau dem Layout der Fußzeile der Segelgruppe Kiel (segelgruppe-kiel.de) folgt: ein Band über die volle Breite mit Innenabstand 2 em, gedämpfter heller Schrift (`#afafaf`) auf dunklem Grund und zwei Spalten in einer Zeile, mittig angeordnet. Die linke Spalte ist ein Block, in dem eine Navigation mit den Icons der Kontaktwege nach der Spec `contact-links` (eine Zeile, gleichmäßig verteilt, Höhe 3 em) über dem Hinweis „© <Jahr> Ermeline Wollknoll“ steht. Die rechte Spalte ist eine Navigation mit den Links „Tipps und Tricks“ (`/tipps-und-tricks/`), „About me“ (`/about/`) und „Impressum“ (`/impressum/`) als Liste untereinander, ohne Aufzählungszeichen und ohne Unterstreichung, jeweils mit 0,2 em Innenabstand. Links behalten ihre Farbe auch nach dem Besuch. Das Jahr ist das Jahr des Builds. Auf dem Handy steht das Copyright immer als letztes Element der Fußzeile.
+Jede Seite SHALL am Ende eine Fußzeile haben, die genau dem Layout der Fußzeile der Segelgruppe Kiel (segelgruppe-kiel.de) folgt: ein Band über die volle Breite mit Innenabstand 2 em, gedämpfter heller Schrift (`#afafaf`) auf dunklem Grund und zwei Spalten in einer Zeile, mittig angeordnet. Die linke Spalte ist ein Block, in dem eine Navigation mit den Icons der Kontaktwege nach der Spec `contact-links` (eine Zeile, gleichmäßig verteilt, Höhe 3 em) über dem Hinweis „© <Jahr> Ermeline Wollknoll“ steht. Die rechte Spalte ist eine Navigation mit den Links „About me“ (`/about/`) und „Impressum“ (`/impressum/`) als Liste untereinander, ohne Aufzählungszeichen und ohne Unterstreichung, jeweils mit 0,2 em Innenabstand. Links behalten ihre Farbe auch nach dem Besuch. Das Jahr ist das Jahr des Builds. Auf dem Handy steht das Copyright immer als letztes Element der Fußzeile.
 
 #### Scenario: Jahr im Copyright
 - **WHEN** die Seite im Jahr 2021 gebaut wurde
@@ -35,11 +54,11 @@ Jede Seite SHALL am Ende eine Fußzeile haben, die genau dem Layout der Fußzeil
 
 #### Scenario: Seitenlinks in der Fußzeile
 - **WHEN** eine beliebige Seite geöffnet wird
-- **THEN** enthält die Fußzeile die Links „Tipps und Tricks“, „About me“ und „Impressum“ mit den genannten Zielen untereinander, aber keinen Link „Abonnieren“
+- **THEN** enthält die Fußzeile die Links „About me“ und „Impressum“ mit den genannten Zielen untereinander, aber keine Links „Abonnieren“ und „Tipps und Tricks“ (der steht in der Topbar)
 
 #### Scenario: Anordnung wie das Vorbild
 - **WHEN** eine Seite bei 1280 px Breite geöffnet wird
-- **THEN** spannt die Fußzeile die volle Breite mit dunklem Hintergrund und Schriftfarbe `#afafaf`, links stehen die Icons in einer Zeile mit dem Copyright linksbündig darunter, und rechts neben diesem Block stehen die drei Links untereinander
+- **THEN** spannt die Fußzeile die volle Breite mit dunklem Hintergrund und Schriftfarbe `#afafaf`, links stehen die Icons in einer Zeile mit dem Copyright linksbündig darunter, und rechts neben diesem Block stehen die zwei Links untereinander
 
 #### Scenario: Größe der Icons
 - **WHEN** die Fußzeile angezeigt wird
@@ -72,6 +91,40 @@ Jedes Suchfeld der Seite (Topbar, Startseite, Suchseite ohne JavaScript) SHALL a
 - **WHEN** Text eingegeben und Enter gedrückt oder die Lupe angeklickt wird
 - **THEN** öffnet sich `/suche/?q=<Begriff>`
 
+### Requirement: Staging-Leiste mit Branchname
+Im Staging-Modus SHALL jede HTML-Seite ganz oben, noch vor dem Seitenkopf, eine deutlich sichtbare Leiste mit dem Text „Staging“ und dem Namen des Branches zeigen, aus dem gebaut wurde. Die Leiste ist auch ohne JavaScript sichtbar, scrollt mit der Seite oder bleibt oben stehen, ohne Inhalt zu verdecken, und ist bei jeder Fensterbreite lesbar. Ohne Staging-Modus gibt es sie nicht. Weiterleitungsseiten sind davon ausgenommen.
+
+#### Scenario: Leiste auf der Startseite
+- **WHEN** aus dem Branch `claude/beautiful-darwin-66rwab` im Staging-Modus gebaut wird
+- **THEN** steht ganz oben auf `/` „Staging: claude/beautiful-darwin-66rwab“
+
+#### Scenario: Leiste auf jeder Seite
+- **WHEN** im Staging-Modus gebaut wird
+- **THEN** zeigen Beitrag, Thema, Suche und Einzelseite dieselbe Leiste
+
+#### Scenario: Lange Branchnamen am Handy
+- **WHEN** der Branchname länger ist als die Zeile
+- **THEN** wird er umgebrochen, und die Seite scrollt nicht waagerecht
+
+#### Scenario: Produktion
+- **WHEN** ohne Staging-Modus gebaut wird
+- **THEN** enthält keine Seite die Leiste
+
+### Requirement: Typografie
+Die Schrift „Lobster“ SHALL nur für das Logo und für Titel (Überschriften der Seiten, Abschnitte und Karten) verwendet werden. Navigationslinks, Tag-Cloud, Themenlisten, Knöpfe und Feldbeschriftungen SHALL in der Textschrift „Lora“ stehen, mindestens 0,9 em groß und, wo sie Navigation sind, halbfett statt in Zierschrift. Es gibt eine gemeinsame Skala mit festen Größen für Titel, Zwischentitel, Fließtext und Kleintext.
+
+#### Scenario: Navigation in Textschrift
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** sind die Links in Topbar und Fußzeile nicht in Lobster gesetzt
+
+#### Scenario: Titel in Lobster
+- **WHEN** die Startseite geöffnet wird
+- **THEN** sind Logo und die Abschnittstitel der Karten in Lobster gesetzt
+
+#### Scenario: Lesbarkeit im Footer
+- **WHEN** die Fußzeile angezeigt wird
+- **THEN** haben ihre Links mindestens 0,9 em Schriftgröße und die Textschrift
+
 ## REMOVED Requirements
 
 ### Requirement: Kopfbereich
@@ -79,8 +132,8 @@ Jedes Suchfeld der Seite (Topbar, Startseite, Suchseite ohne JavaScript) SHALL a
 **Migration**: Der Titel „Flauschiversum“ links in der Topbar verlinkt auf `/`.
 
 ### Requirement: Hauptnavigation
-**Reason**: Die Navigation besteht jetzt aus den Menüs der Topbar (Spec `topbar`); „Tipps und Tricks“, „Impressum“ und „Abonnieren“ stehen weiter in der Fußzeile.
-**Migration**: Start über den Titel, Beiträge und Kategorien über die Menüs, About über „About me“.
+**Reason**: Die Navigation besteht jetzt aus den Menüs der Topbar (Spec `topbar`); „Impressum“ steht in der Fußzeile, „Tipps und Tricks“ in der Topbar.
+**Migration**: Start über den Titel, Beiträge, Themen und Tipps und Tricks über die Links der Topbar, About über „About me“ in der Fußzeile.
 
 ### Requirement: Suchfeld im Kopf
 **Reason**: Das Suchfeld steht in der Topbar (Spec `topbar`, „Suchfeld in der Topbar“).
@@ -92,7 +145,7 @@ Jedes Suchfeld der Seite (Topbar, Startseite, Suchseite ohne JavaScript) SHALL a
 
 ### Requirement: Navigationsspalte wie ein Inhaltsverzeichnis
 **Reason**: Die Navigation steht in der Topbar.
-**Migration**: Kategorien im Menü „Kategorien“, Seiten über die übrigen Menüs.
+**Migration**: Themen unter „Themen“ in der Topbar, Seiten über die übrigen Links.
 
 ### Requirement: Zweispaltiges Layout auf mittleren Fenstern
 **Reason**: Ersetzt durch „Seitenaufbau mit Topbar“.
@@ -109,3 +162,7 @@ Jedes Suchfeld der Seite (Topbar, Startseite, Suchseite ohne JavaScript) SHALL a
 ### Requirement: Seitenspalten auf Karten
 **Reason**: Ersetzt durch „Karten für ergänzende Blöcke“.
 **Migration**: Keine.
+
+### Requirement: Seitentitel
+**Reason**: Kategorien entfallen, Themen sind Schlagworte; die Anforderung wird unter dem Namen „Titel der Seiten“ ohne Kategorien neu gefasst.
+**Migration**: Siehe „Titel der Seiten“.

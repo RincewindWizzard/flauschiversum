@@ -1,11 +1,11 @@
 ## Purpose
 
-Auswahl ähnlicher Beiträge für jede Beitragsseite anhand von Schlagworten und Kategorie.
+Auswahl ähnlicher Beiträge für jede Beitragsseite anhand gemeinsamer Schlagworte.
 
 ## ADDED Requirements
 
 ### Requirement: Ähnlichkeit über Schlagworte
-Für jeden veröffentlichten Beitrag SHALL der Build bis zu 6 andere veröffentlichte Beiträge als ähnlich auswählen. Der Wert eines Kandidaten ist die Summe über alle gemeinsamen Schlagworte von `1 / Anzahl der Beiträge mit diesem Schlagwort`, plus 0,25 bei gleicher Kategorie, sofern mindestens ein Schlagwort gemeinsam ist. Kandidaten ohne gemeinsames Schlagwort zählen nicht. Der Beitrag selbst und nicht veröffentlichte Beiträge sind ausgeschlossen.
+Für jeden veröffentlichten Beitrag SHALL der Build bis zu 6 andere veröffentlichte Beiträge als ähnlich auswählen. Der Wert eines Kandidaten ist die Summe über alle gemeinsamen Schlagworte von `1 / Anzahl der Beiträge mit diesem Schlagwort`. Kandidaten ohne gemeinsames Schlagwort zählen nicht. Der Beitrag selbst und nicht veröffentlichte Beiträge sind ausgeschlossen.
 
 #### Scenario: Seltenes Schlagwort zählt mehr
 - **WHEN** Beitrag A mit B nur das häufige Schlagwort „Wolle“ (50 Beiträge) und mit C das seltene „Gelenkpuppen“ (2 Beiträge) teilt
@@ -26,19 +26,19 @@ Die ähnlichen Beiträge SHALL nach Wert absteigend, dann nach Datum absteigend,
 - **WHEN** ein Kandidat ein Datum in der Zukunft hat
 - **THEN** erscheint er nicht in der Auswahl
 
-### Requirement: Auffüllen aus der Kategorie
-Bleiben weniger als 6 Kandidaten mit gemeinsamem Schlagwort, SHALL die Auswahl mit den neuesten Beiträgen derselben Kategorie aufgefüllt werden, die noch nicht enthalten sind. Hat ein Beitrag keine Schlagworte, besteht die Auswahl nur daraus.
+### Requirement: Kein Auffüllen
+Hat ein Beitrag weniger als 6 Kandidaten mit gemeinsamem Schlagwort, SHALL die Auswahl entsprechend kürzer bleiben. Hat er keine Schlagworte oder teilt keines, ist die Auswahl leer.
 
 #### Scenario: Beitrag ohne Schlagworte
-- **WHEN** ein Beitrag keine Schlagworte hat und seine Kategorie weitere Beiträge enthält
-- **THEN** zeigt die Auswahl die neuesten anderen Beiträge dieser Kategorie
-
-#### Scenario: Kategorie mit einem Beitrag
-- **WHEN** ein Beitrag weder gemeinsame Schlagworte noch weitere Beiträge in seiner Kategorie hat
+- **WHEN** ein Beitrag keine Schlagworte hat
 - **THEN** ist die Auswahl leer
 
+#### Scenario: Nur ein Kandidat
+- **WHEN** nur ein anderer Beitrag ein gemeinsames Schlagwort hat
+- **THEN** besteht die Auswahl aus diesem einen Beitrag
+
 ### Requirement: Anzeige der gemeinsamen Schlagworte
-Jeder Eintrag der Auswahl SHALL den Titel als Link und, wenn vorhanden, die gemeinsamen Schlagworte zeigen. Aufgefüllte Einträge zeigen keine Schlagworte.
+Jeder Eintrag der Auswahl SHALL den Titel als Link und die gemeinsamen Schlagworte zeigen.
 
 #### Scenario: Gemeinsame Schlagworte
 - **WHEN** zwei Beiträge die Schlagworte „Filzen“ und „Katzen“ teilen

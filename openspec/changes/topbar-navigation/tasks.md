@@ -22,7 +22,7 @@
 
 ## 4. Absicherung
 
-- [ ] 4.1 Gesamtseitentest erweitern: alle Live-URLs inklusive `/page/<N>/`, `/themen/`, `/tag/<name>/` und `/kategorie/<name>/` existieren weiter; Menüs und Archiv-Links zeigen auf existierende Seiten; Sitemap und Link-Prüfung ohne neue Warnungen; prüfen: `cargo test --release -- --include-ignored` grün
+- [ ] 4.1 Gesamtseitentest erweitern: alle Live-URLs inklusive `/page/<N>/`, `/themen/`, `/tag/<name>/` existieren weiter und `/kategorie/<name>/` leitet weiter; Menüs und Archiv-Links zeigen auf existierende Seiten; Sitemap und Link-Prüfung ohne neue Warnungen; prüfen: `cargo test --release -- --include-ignored` grün
 - [x] 4.2 Bestehende Tests und Snapshots anpassen (Spalten-Tests in `tests/browser/layout.mjs` auf die Topbar umstellen, `navigation.mjs`, `staging.mjs`, `frontend.mjs`, Snapshots); prüfen: `cargo test` und alle Playwright-Skripte grün
 - [ ] 4.3 Vergleichsbilder (Startseite, Beiträge, Kategorie, Beitrag, geöffnetes Menü, Handy mit offenem Menü, jeweils Desktop und Handy) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
 
@@ -31,9 +31,18 @@
 - [x] 4a.1 Topbar auf einer Linie zentrieren (Suchfeld-Außenabstand entfernt), „Beiträge“ ohne Dropdown, „About me“ in den Footer, Hamburger-Knopf am Handy; prüfen: Test auf Mittelpunkte, kein Beiträge-Untermenü, Hamburger-Knopf mindestens 44 px
 - [x] 4a.2 Footer nach Vorbild der Segelgruppe Kiel (dunkles Band, links Icons mit Copyright darunter, rechts Links untereinander), „Abonnieren“ entfernt; prüfen: Test auf Anordnung und Höhe, `cargo test` und Browser-Tests grün
 
+## 4b. Nur noch Themen
+
+- [x] 4b.1 Kategorien aus Code, Daten und Templates entfernen (`Category`, `categories.yaml`, Kategorieseiten, Menü, Etiketten); alle 194 Beiträge: `category` weg, Wert als Schlagwort; prüfen: `cargo test` grün, `check` ohne Fehler, keine Beitrags-URL ändert sich
+- [x] 4b.2 Topbar: Themen und Tipps und Tricks als einfache Links, kein Dropdown; Footer nur About me und Impressum; Tablet 770 px einzeilig; prüfen: `tests/browser/topbar.mjs` und `layout.mjs`
+- [x] 4b.3 Themenseite mit Archiv, Themenübersicht nur Schlagworte, Suche mit Filter „Thema“; prüfen: `navigation.mjs`
+- [x] 4b.4 `content/redirects.yaml` und Weiterleitungsseiten für `/kategorie/<name>/`; prüfen: Test auf alle früheren Kategorieadressen, Sitemap ohne Weiterleitungen
+- [x] 4b.5 Konzentrische Lupe in Topbar und Suchseite; prüfen: Test auf gleiche Abstände oben, unten und rechts
+- [x] 4b.6 Alle Playwright-Skripte (`topbar`, `layout`, `navigation`, `theme`, `frontend`, `staging`) und Snapshots anpassen; prüfen: alle grün
+
 ## 5. Dokumentation
 
-- [x] 5.1 `README.md` (Topbar, Archiv, `content/start.md`, `intro` in `categories.yaml`) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Schritte funktionieren (Text ändern erscheint auf der Startseite)
+- [x] 5.1 `README.md` (Topbar, Archiv, Themen, `content/start.md`, `content/redirects.yaml`) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Schritte funktionieren (Text ändern erscheint auf der Startseite)
 
 ## Workflow follow-up
 

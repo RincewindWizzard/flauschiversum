@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Startseite mit Begrüßung
-Die Startseite SHALL unter `/` und `/index.html` erreichbar sein und, in dieser Reihenfolge, zeigen: einen kurzen Begrüßungstext aus `content/start.md` und direkt danach die letzten Beiträge. Der Titel „Flauschiversum“ steht nur in der Topbar und wird im Inhalt nicht wiederholt. Es gibt kein Suchfeld im Inhalt (die Suche steht in der Topbar), keine Kategoriekacheln und keine Blätterliste.
+Die Startseite SHALL unter `/` und `/index.html` erreichbar sein und, in dieser Reihenfolge, zeigen: einen kurzen Begrüßungstext aus `content/start.md` und direkt danach die letzten Beiträge. Der Titel „Flauschiversum“ steht nur in der Topbar und wird im Inhalt nicht wiederholt. Es gibt kein Suchfeld im Inhalt (die Suche steht in der Topbar), keine Kacheln und keine Blätterliste.
 
 #### Scenario: Aufbau der Startseite
 - **WHEN** `/` geöffnet wird
@@ -36,11 +36,11 @@ Die Startseite SHALL die zehn neuesten veröffentlichten Beiträge zeigen, jewei
 
 ### Requirement: Handbuch-Startseite
 **Reason**: Ersetzt durch „Startseite mit Begrüßung“; Suchfeld, Kacheln und „Neu im Flauschiversum“ entfallen im Inhalt.
-**Migration**: Die Suche steht in der Topbar, die Kategorien im Menü, die Beiträge direkt unter der Begrüßung.
+**Migration**: Die Suche steht in der Topbar, die Themen unter „Themen“, die Beiträge direkt unter der Begrüßung.
 
 ### Requirement: Kategoriekacheln
-**Reason**: Die Kategorien stehen im Menü „Kategorien“ der Topbar.
-**Migration**: Kategorien über die Topbar erreichen; Bild und Reim bleiben in `content/categories.yaml` und erscheinen auf der Kategorieseite.
+**Reason**: Es gibt keine Kategorien mehr; Themen stehen als Tag-Cloud auf der Startseite und unter „Themen“ in der Topbar.
+**Migration**: Themen über die Tag-Cloud oder `/themen/` erreichen.
 
 ### Requirement: Neu im Flauschiversum
 **Reason**: Ersetzt durch „Letzte Beiträge auf der Startseite“ mit zehn statt vier Einträgen.
