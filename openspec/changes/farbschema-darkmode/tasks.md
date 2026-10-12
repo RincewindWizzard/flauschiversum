@@ -1,6 +1,6 @@
 ## 1. Entscheidung
 
-- [ ] 1.1 Autorin wählt eine Themenfamilie in `themen-vorschau.html` (Flauschi-Nebel empfohlen); Besonderheiten (Sterne stärker/schwächer, Akzentfarbe) im Gespräch festlegen; prüfen: Entscheidung und Änderungswünsche stehen in `design.md`
+- [x] 1.1 Themenfamilie gewählt: Flauschi-Nebel; prüfen: Entscheidung steht in `proposal.md` und `design.md` (Feinheiten wie Sternendichte und Akzent können bei der Abnahme der Screenshots angepasst werden)
 
 ## 2. Tokens
 

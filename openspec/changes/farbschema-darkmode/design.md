@@ -9,11 +9,15 @@
 
 ## Decisions
 
-### 1. Vier Themenfamilien (Autorin wählt eine)
+### 1. Themenfamilie: Flauschi-Nebel (entschieden)
+
+Die Autorin hat sich für **Flauschi-Nebel** entschieden. Verbindlich sind die Werte der Zeilen „Flauschi-Nebel“ in der Tabelle unten; die anderen Familien sind verworfene Alternativen und stehen nur zur Nachvollziehbarkeit hier. Folgen für den Rest der Seite: Der Footer (`#263329`, grünlich) bekommt einen Nebel-Ton aus dem Dunkelmodus-Hintergrund (`#0e0b1f`) bzw. `#191537` bei gleicher Struktur und Schriftfarbe `#afafaf`; Cloud-Chips, Archiv, Kategorie-Tag und Knöpfe nutzen Akzent `#6d4fe0` (hell) bzw. `#8f73f5` (dunkel) mit der Schrift der Spalte „Schrift auf Akzent“; das Staging-Rot bleibt.
+
+**Vorschläge zur Auswahl (Archiv):**
 
 | Familie | Charakter | Hell | Dunkel |
 |---|---|---|---|
-| **Flauschi-Nebel** (Empfehlung) | Violett/Indigo wie das Fell des Maskottchens, Cyan und Gold als Sternenlicht; passt am besten zum Icon | Lavendelweiß, Indigo-Links, Violett-Akzent | Tiefes Nachtviolett, helle Lavendel-Links, Gold-Sterne |
+| **Flauschi-Nebel** (gewählt) | Violett/Indigo wie das Fell des Maskottchens, Cyan und Gold als Sternenlicht; passt am besten zum Icon | Lavendelweiß, Indigo-Links, Violett-Akzent | Tiefes Nachtviolett, helle Lavendel-Links, Gold-Sterne |
 | **Mitternachtsblau** | Nachthimmel mit goldenen Sternen; Blau/Orange ist für alle Formen von Farbfehlsichtigkeit am besten trennbar | Warmes Weiß, Blau-Links, Bernstein-Akzent | Dunkelblau, Hellblau-Links, Gold-Akzent |
 | **Orchideen-Galaxie** | Magenta und Petrol wie ein Emissionsnebel; verspielt, warm | Rosé-Weiß, Beeren-Links, Petrol-Akzent | Dunkelviolett, Rosa-Links, Türkis-Akzent |
 | **Salbei-Kosmos** | Das heutige Salbeigrün, nachts als „Waldnacht“; ruhigste Änderung | Cremeweiß wie heute | Dunkelgrün, helle Salbei-Links, Gold-Sterne |
