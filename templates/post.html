@@ -2,6 +2,7 @@
 {% block header %}
 <div class="post-header">
   <h1>{{ title }}</h1>
+  <p class="post-date"><time datetime="{{ date_iso }}">{{ date_human }}</time></p>
   {%- if let Some(t) = thumb %}
   <div class="center"><img src="{{ t.src }}" width="{{ t.width }}" height="{{ t.height }}" alt=""></div>
   {%- endif %}
@@ -10,9 +11,6 @@
     {%- for t in tags %}<a class="tag" href="{{ t.url }}">{{ t.name }}</a>{% endfor %}
   </p>
   {%- endif %}
-  <div class="center">
-    <small>Schreibe Ihr eine <a href="{{ mail_href }}" class="mailto">Nachricht</a>!</small>
-  </div>
 </div>
 {% endblock %}
 {% block content %}
@@ -21,18 +19,14 @@
 {%- if let Some(a) = author %}
 <p class="author">Von <a href="/about/" class="author">{{ a }}</a></p>
 {%- endif %}
+<p class="contact"><small>Schreibe Ihr eine <a href="{{ mail_href }}" class="mailto">Nachricht</a>!</small></p>
 </main>
 {%- if !related.is_empty() %}
 <aside class="related card" aria-labelledby="aehnlich-titel">
   <h2 class="side-title" id="aehnlich-titel">Ähnliche Beiträge</h2>
-  <ul>
-    {%- for r in related %}
-    <li>
-      <a href="{{ r.url }}">{{ r.title }}</a>
-      {%- if !r.shared.is_empty() %}
-      <span class="shared">{% for t in r.shared %}<a class="tag" href="{{ t.url }}">{{ t.name }}</a>{% endfor %}</span>
-      {%- endif %}
-    </li>
+  <ul class="entries">
+    {%- for entry in related %}
+    {% include "partials/entry.html" %}
     {%- endfor %}
   </ul>
 </aside>

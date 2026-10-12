@@ -13,6 +13,13 @@
     margin: 0.83em 0;
   }
 
+  /* Datum über dem Beitrag: gut lesbar, in Textgröße */
+  & p.post-date {
+    margin: -0.4em 0 0.8em;
+    font-size: var(--fs-ui);
+    color: var(--muted);
+  }
+
   & img {
     height: 5em;
     width: auto;
@@ -23,4 +30,10 @@
   & p {
     text-align: center;
   }
+}
+
+/* Hinweis zum Schreiben am Ende des Beitrags */
+main.page p.contact {
+  margin-top: 1.5em;
+  text-align: center;
 }

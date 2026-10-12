@@ -125,12 +125,6 @@ pub struct NavLink {
 }
 
 /// Ähnlicher Beitrag mit den gemeinsamen Schlagworten (leer bei aufgefüllten Einträgen).
-pub struct RelatedLink {
-    pub url: String,
-    pub title: String,
-    pub shared: Vec<TopicLink>,
-}
-
 #[derive(Template)]
 #[template(path = "index.html")]
 pub struct IndexTemplate {
@@ -194,7 +188,9 @@ pub struct PostTemplate {
     pub has_media: bool,
     pub script_href: String,
     pub tags: Vec<TopicLink>,
-    pub related: Vec<RelatedLink>,
+    pub related: Vec<Entry>,
+    pub date_iso: String,
+    pub date_human: String,
 }
 
 #[derive(Template)]
@@ -373,7 +369,7 @@ pub struct PostPageInput<'a> {
     pub older: Option<&'a Post>,
     pub has_media: bool,
     pub tags: Vec<TopicLink>,
-    pub related: Vec<RelatedLink>,
+    pub related: Vec<Entry>,
 }
 
 pub fn render_post(input: PostPageInput, common: &Common) -> String {
@@ -409,6 +405,8 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         script_href: common.script_href.clone(),
         tags: input.tags,
         related: input.related,
+        date_iso: seo::iso(post),
+        date_human: date_human(post),
     }
     .render()
     .expect("Post-Template")

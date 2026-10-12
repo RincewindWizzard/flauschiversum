@@ -99,6 +99,7 @@ details.menu-toggle > summary {
   font-family: var(--font-text);
   font-weight: 700;
   font-size: var(--fs-ui);
+  white-space: nowrap;
 }
 
 .topnav > ul > li > a {

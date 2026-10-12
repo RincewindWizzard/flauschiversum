@@ -327,6 +327,28 @@ await test('Farben: Hintergrund Lavendelweiß (Flauschi-Nebel), Kontrast von Tex
   for (const neon of ['#bdf239', '#82e536', '#eefc3c']) assert.ok(!css.toLowerCase().includes(neon), `Neongrün ${neon} im Stylesheet`);
 });
 
+await test('Beitragsseite: Datum unter dem Titel lesbar, Hinweis „Schreibe Ihr eine Nachricht“ am Ende', async () => {
+  for (const scheme of ['light', 'dark']) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: scheme });
+    const page = await ctx.newPage();
+    await page.goto(BASE + POST);
+    const [title, date, main, contact, author, related] = [await box(page, '.post-header h1'), await box(page, '.post-header .post-date time'), await box(page, 'main.page'), await box(page, 'main.page p.contact'), await box(page, 'main.page p.author'), await box(page, 'aside.related')];
+    assert.ok(title.y + title.height <= date.y + 1 && date.y + date.height <= main.y + 1, `${scheme}: Datum zwischen Titel und Text`);
+    assert.equal((await page.locator('.post-header .post-date').textContent()).trim(), '31. Oktober 2020');
+    assert.match(await page.locator('.post-header time').getAttribute('datetime'), /^2020-10-31/);
+    const fs = await page.evaluate(() => [parseFloat(getComputedStyle(document.querySelector('.post-header .post-date')).fontSize), parseFloat(getComputedStyle(document.querySelector('main.page p:not(.author):not(.contact)')).fontSize)]);
+    assert.ok(fs[0] >= fs[1] - 0.5, `${scheme}: Datum mindestens Fließtextgröße (${fs})`);
+    const c = await contrast(page, '.post-header .post-date');
+    assert.ok(c >= 4.5, `${scheme}: Kontrast Datum ${c.toFixed(2)}`);
+    assert.equal(await page.locator('.post-header').getByText('Nachricht').count(), 0, 'Hinweis nicht im Kopf');
+    assert.ok(contact.y >= author.y + author.height - 1, 'Hinweis nach der Autorenzeile');
+    if (related) assert.ok(contact.y + contact.height <= related.y + 1, 'Hinweis vor den ähnlichen Beiträgen');
+    const href = await page.locator('main.page p.contact a.mailto').getAttribute('href');
+    assert.match(decodeURIComponent(href), /^mailto:ermeline@flauschiversum\.de\?subject=\[Flauschiversum\] /);
+    await ctx.close();
+  }
+});
+
 await browser.close();
 for (const r of results) console.log(r.join(' – '));
 process.exit(results.every((r) => r[0] === 'ok') ? 0 : 1);

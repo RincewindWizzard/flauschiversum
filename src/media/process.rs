@@ -285,6 +285,25 @@ pub fn process(bytes: &[u8], format: Format, badge: &Badge, need: [bool; 3]) -> 
 mod tests {
     use super::*;
 
+    /// Das Wasserzeichen steht im Farbschema „Flauschi-Nebel“: keine Grüntöne, Schrift auf Fläche mit Kontrast ≥ 7 : 1.
+    #[test]
+    fn badge_uses_the_nebula_colors() {
+        let img = image::load_from_memory(include_bytes!("../../assets/badge.png")).unwrap().to_rgba8();
+        assert_eq!((img.width(), img.height()), (800, 133));
+        let visible: Vec<_> = img.pixels().filter(|p| p.0[3] > 0).collect();
+        assert!(visible.iter().all(|p| !(p.0[1] as i32 > p.0[0] as i32 + 20 && p.0[1] as i32 > p.0[2] as i32 + 20)), "keine Grüntöne");
+        let lin = |c: u8| {
+            let c = c as f64 / 255.0;
+            if c <= 0.03928 { c / 12.92 } else { ((c + 0.055) / 1.055).powf(2.4) }
+        };
+        let lum = |p: &image::Rgba<u8>| 0.2126 * lin(p.0[0]) + 0.7152 * lin(p.0[1]) + 0.0722 * lin(p.0[2]);
+        let fill = img.get_pixel(400, 8);
+        assert!(fill.0[3] > 0 && fill.0[3] < 255, "Fläche halbtransparent");
+        let ink = visible.iter().copied().min_by(|a, b| lum(a).total_cmp(&lum(b))).unwrap();
+        let (hi, lo) = (lum(fill).max(lum(ink)), lum(fill).min(lum(ink)));
+        assert!((hi + 0.05) / (lo + 0.05) >= 7.0, "Kontrast Schrift/Fläche");
+    }
+
     fn badge() -> Badge {
         Badge::from_png(include_bytes!("../../assets/badge.png")).unwrap()
     }

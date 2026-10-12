@@ -1,4 +1,4 @@
-/* Ähnliche Beiträge unter einem Beitrag */
+/* Ähnliche Beiträge unter einem Beitrag: die Einträge stehen als Liste wie auf der Startseite (topics.css) */
 aside.related {
   max-width: var(--contentwidth);
   margin: 0 auto 1.5em;
@@ -7,47 +7,10 @@ aside.related {
     font-family: var(--font-display);
     font-weight: 400;
     font-size: 1.25em;
-    margin: 0 0 0.4em;
+    margin: 0 0 0.2em;
   }
 
-  & ul {
-    list-style: none;
-  }
-
-  & li {
-    padding: 0.4em 0;
-    border-top: 1px dashed var(--bordercolor);
-  }
-
-  & li:first-child {
+  & ul.entries li.entry:first-child {
     border-top: 0;
-  }
-
-  & li > a {
-    text-decoration: none;
-    font-weight: 700;
-  }
-
-  & li > a:hover {
-    text-decoration: underline;
-  }
-
-  & .shared {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3em;
-    margin-top: 0.2em;
-  }
-
-  & .shared a.tag {
-    padding: 0 0.6em;
-    border: 1px solid var(--bordercolor);
-    border-radius: 20em;
-    font-size: var(--fs-small);
-    text-decoration: none;
-  }
-
-  & .shared a.tag:hover {
-    background-color: var(--accent-soft);
   }
 }

@@ -8,7 +8,7 @@ use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, CloudTag, Common, Entry, PostCard, PostPageInput, RelatedLink, Thumb, TopicLink, TopicPageInput};
+use crate::render::{self, CloudTag, Common, Entry, PostCard, PostPageInput, Thumb, TopicLink, TopicPageInput};
 use std::sync::Arc;
 use crate::search::{self, SearchDoc};
 use crate::seo;
@@ -169,16 +169,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     // Post-Seiten
     let posts = &site.posts;
     let counts = topics::tag_counts(posts);
-    let related_links = |i: usize| -> Vec<RelatedLink> {
-        topics::related(posts, i, &counts)
-            .into_iter()
-            .map(|r| RelatedLink {
-                url: urls::encode_path(&r.post.url),
-                title: r.post.title.clone(),
-                shared: r.shared.iter().map(|t| TopicLink { url: topics::tag_url(&urls::slugify(t)), name: t.to_string(), count: None }).collect(),
-            })
-            .collect()
-    };
+    let related_links = |i: usize| -> Vec<Entry> { topics::related(posts, i, &counts).into_iter().map(|r| entry_of(r.post)).collect() };
     let post_parts: Vec<(Option<feed::FeedEntry>, SearchDoc)> = posts
         .par_iter()
         .enumerate()
@@ -860,9 +851,18 @@ pub mod tests {
         // Grüne Mütze teilt LARP und Hüte, Kürbis nur Hüte: Mütze zuerst; Alraune selbst und der geplante Beitrag fehlen
         assert!(card.find("Grüne Mütze").unwrap() < card.find("Kürbis").unwrap());
         assert!(!card.contains("Alraune") && !card.contains("Morgen"));
-        assert!(card.contains("<a class=\"tag\" href=\"/tag/larp/\">LARP</a><a class=\"tag\" href=\"/tag/huete/\">Hüte</a>"), "{card}");
+        // Einträge wie in der Beitragsliste: Liste `entries`, Titel-Link, Datum; keine Schlagwort-Chips
+        assert!(card.contains("<ul class=\"entries\">") && card.contains("class=\"entry-meta\"") && card.contains("<time datetime="), "{card}");
+        assert!(!card.contains("class=\"tag\"") && !card.contains("class=\"shared\""));
         assert!(card.contains("<a href=\"/2020/10/kurbis/\">Kürbis</a>"));
-        // Karte nach dem Autor, vor der Navigation zum älteren und neueren Beitrag
+        // Datum im Kopf, über dem Beitragstext; Kontakt-Hinweis am Ende nach dem Autor und vor den ähnlichen Beiträgen
+        assert!(post.find("class=\"post-date\"").unwrap() < post.find("<main class=\"page\">").unwrap());
+        assert!(post.contains("<p class=\"post-date\"><time datetime=\"2014-01-04"));
+        let header = between(post, "<div class=\"post-header\">", "<main class=\"page\">");
+        assert!(!header.contains("Nachricht"), "Hinweis steht nicht im Kopf");
+        assert!(post.find("class=\"author\">Von").unwrap() < post.find("class=\"contact\"").unwrap());
+        assert!(post.find("class=\"contact\"").unwrap() < post.find("class=\"related card\"").unwrap());
+        // Karte vor der Navigation zum älteren und neueren Beitrag
         assert!(post.find("class=\"author\">Von").unwrap() < post.find("class=\"related card\"").unwrap());
         assert!(post.find("class=\"related card\"").unwrap() < post.find("class=\"post-nav\"").unwrap());
         // Einordnung nur über Schlagworte, keine Kategorien

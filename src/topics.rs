@@ -11,6 +11,8 @@ pub const RELATED_MAX: usize = 6;
 /// Ein ähnlicher Beitrag mit den gemeinsamen Schlagworten 
 pub struct Related<'a> {
     pub post: &'a Post,
+    /// Gemeinsame Schlagworte (die Anzeige nutzt sie nicht, die Tests prüfen damit die Auswahl).
+    #[cfg_attr(not(test), allow(dead_code))]
     pub shared: Vec<&'a str>,
 }
 

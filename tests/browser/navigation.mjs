@@ -59,19 +59,29 @@ await test('Beitrag zeigt seine Schlagworte, Link führt auf die Themenseite', a
   await page.close();
 });
 
-await test('Ähnliche Beiträge: Filz-Beitrag zeigt bis zu sechs verwandte Beiträge mit gemeinsamen Schlagworten', async () => {
+await test('Ähnliche Beiträge: Filz-Beitrag zeigt bis zu sechs verwandte Beiträge im Aufbau der Startseitenliste', async () => {
   const page = await browser.newPage();
   await page.goto(BASE + '/2016/05/alltagshute/');
   const items = page.locator('aside.related li');
   const n = await items.count();
   assert.ok(n >= 3 && n <= 6, `Anzahl ${n}`);
-  assert.ok((await page.locator('aside.related li a.tag', { hasText: 'Filzen' }).count()) > 0, 'gemeinsames Schlagwort Filzen');
+  assert.equal(await page.locator('aside.related a.tag').count(), 0, 'keine Schlagwort-Chips');
   assert.equal(await page.locator('aside.related li a[href="/2016/05/alltagshute/"]').count(), 0, 'nicht der Beitrag selbst');
-  const titles = await page.locator('aside.related li > a:first-child').allTextContents();
+  const titles = await page.locator('aside.related .entry-title a').allTextContents();
   assert.equal(new Set(titles).size, titles.length, 'keine Doppelten');
   const [rel, nav] = [await page.locator('aside.related').boundingBox(), await page.locator('nav.post-nav').boundingBox()];
   assert.ok(rel.y + rel.height <= nav.y + 1, 'vor der Navigation zum älteren Beitrag');
-  await page.locator('aside.related li > a:first-child').first().click();
+  // gleicher Aufbau und gleiche Gestalt wie ein Eintrag auf der Startseite
+  const style = (p, sel) => p.locator(sel).first().evaluate((el) => { const s = getComputedStyle(el); const r = el.getBoundingClientRect(); return [s.fontStyle, s.fontSize, s.fontFamily, el.tagName === 'IMG' ? Math.round(r.width) + 'x' + Math.round(r.height) : ''].join('|'); });
+  const home = await browser.newPage();
+  await home.goto(BASE + '/');
+  for (const sel of ['.entry-title', '.entry-meta', '.entry-image img']) {
+    assert.equal(await style(page, `aside.related ${sel}`), await style(home, `.news ${sel}`), `${sel} wie auf der Startseite`);
+  }
+  assert.equal(await page.locator('aside.related li.entry').count(), n);
+  assert.equal(await page.locator('aside.related li.entry .entry-meta time').count(), n, 'Datum je Eintrag');
+  await home.close();
+  await page.locator('aside.related .entry-title a').first().click();
   await page.waitForURL(/\/20\d\d\/\d\d\//);
   await page.close();
 });

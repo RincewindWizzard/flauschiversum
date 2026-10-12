@@ -63,7 +63,7 @@ Text in Markdown …
   Verzeichnis `grüne-mütze`. Bestehende Posts tragen ihre bisherige URL als `permalink:` – diese Zeile nie ändern.
 - **Veröffentlichung:** Posts mit einem Datum in der Zukunft erscheinen erst beim ersten Build nach diesem Zeitpunkt.
 - **Bilder** (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`) werden in drei Größen ausgeliefert: `200x/` (Vorschau),
-  `700x/` (im Text) und `1000x/` (Vollbild), mit Wasserzeichen-Badge (außer `200x`) und Rechteangaben in den
+  `700x/` (im Text) und `1000x/` (Vollbild), mit Wasserzeichen-Badge im Farbschema „Flauschi-Nebel“ (Lavendel, Indigo; außer `200x`; neu erzeugbar mit `openspec/changes/archive/*-post-ansicht-ueberarbeiten/assets/make_badge.py`, nach dem Archivieren unter `archive/`; Änderung am Badge berechnet alle Bilder neu) und Rechteangaben in den
   Metadaten. GPS- und Kameradaten werden entfernt. Handyfotos dürfen groß sein; sie werden automatisch verkleinert.
 - **Animierte GIFs und Videos** (`.mp4`, `.webm`) werden unverändert ausgeliefert. Videos laufen stumm in Schleife.
   Ab 20 MB warnt der Build.
@@ -91,6 +91,8 @@ Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi l
 - **Ähnliche Beiträge:** Unter jedem Beitrag stehen bis zu sechs ähnliche Beiträge. Ausgewählt wird über gemeinsame
   Schlagworte (seltene zählen mehr, `1 / Anzahl der Beiträge mit dem Schlagwort`); ohne gemeinsames Schlagwort gibt es
   keine Karte. Je genauer die Schlagworte, desto besser die Auswahl.
+  Die Einträge sehen aus wie die Beitragsliste der Startseite (Bild, Titel, Datum, Kurztext). Auf der Beitragsseite steht das
+  Datum unter dem Titel und der Hinweis „Schreibe Ihr eine Nachricht!“ am Ende, vor den ähnlichen Beiträgen.
 - **Themen (Schlagworte):** beliebig viele, optional, als Liste oder durch Komma getrennt. Erlaubt sind nur die aus
   `content/tags.yaml`; ein Tippfehler bricht den Build ab und nennt das ähnlichste Schlagwort („Meintest du …?“).
   Ein neues Schlagwort zuerst dort eintragen. Ein Schlagwort mit weniger als zwei Beiträgen erzeugt eine Warnung.
