@@ -402,6 +402,18 @@ for (const scheme of ['light', 'dark']) {
   });
 }
 
+await test('Favicon: drei Icons verlinkt und mit passendem Medientyp ausgeliefert', async () => {
+  const page = await open('/', 1280);
+  const hrefs = await page.locator('head link[rel~="icon"], head link[rel="apple-touch-icon"]').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  assert.deepEqual(hrefs, ['/favicon.ico', '/favicon.svg', '/apple-touch-icon.png']);
+  await page.close();
+  for (const [path, type] of [['/favicon.ico', /image\/(x-icon|vnd\.microsoft\.icon)/], ['/favicon.svg', /image\/svg\+xml/], ['/apple-touch-icon.png', /image\/png/]]) {
+    const r = await fetch(BASE + path);
+    assert.equal(r.status, 200, path);
+    assert.match(r.headers.get('content-type') ?? '', type, path);
+  }
+});
+
 await browser.close();
 for (const r of results) console.log(r.join(' – '));
 process.exit(results.every((r) => r[0] === 'ok') ? 0 : 1);

@@ -14,7 +14,9 @@ expression: "stable(&read(root, \"suche/index.html\"))"
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://flauschiversum.de/suche/">
 <link rel="stylesheet" href="/style.css?v=HASH">
-<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
 <meta property="og:site_name" content="Flauschiversum">
 <meta property="og:locale" content="de_DE">

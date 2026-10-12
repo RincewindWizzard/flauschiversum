@@ -139,7 +139,7 @@ Tritanopie) prüft `tests/browser/theme.mjs`.
 | `content/pages/` | Einzelseiten |
 | `content/tags.yaml` | erlaubte Themen (Schlagworte) |
 | `content/redirects.yaml` | Weiterleitungen alter Adressen |
-| `content/static/` | unverändert ausgelieferte Dateien (Schriften, Favicon, Bilder der Einzelseiten) |
+| `content/static/` | unverändert ausgelieferte Dateien (Schriften, Favicon in drei Formaten, Bilder der Einzelseiten) |
 | `content/style/` | Gestaltung als normales CSS (`main.css` mit `@import`), wird zu `/style.css` gebündelt |
 | `templates/` | HTML-Templates ([Askama](https://askama.readthedocs.io/)), werden beim Kompilieren geprüft |
 | `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite, Topbar und Archiv) und die Badge-Vorlage |
@@ -204,3 +204,11 @@ Einmalige Einrichtung (GitHub und DNS): `CNAME staging → rincewindwizzard.gith
 
 Das frühere Docker-Deployment wurde entfernt. Die gebaute Seite in `dist/` muss nur auf einen Webserver für
 statische Dateien kopiert werden. Das Produktiv-Deployment aus `main` ist als eigene Änderung geplant.
+
+### Favicon
+
+Das Favicon ist das normale Maskottchen Flauschi in vereinfachter Fassung (`content/static/favicon.svg`, ohne Fransen und
+Kleindetails, damit es bei 16 px erkennbar bleibt). `favicon.ico` (16, 32, 48 px) und `apple-touch-icon.png` (180 px)
+entstehen daraus mit `node openspec/changes/favicon-maskottchen/assets/make_favicons.mjs` (aus dem Projektverzeichnis; Chromium
+und ImageMagick nötig, `--preview` erzeugt Vorschaubilder; nach dem Archivieren liegt das Skript unter
+`openspec/changes/archive/2026-10-12-favicon-maskottchen/assets/`). Die Dateien sind eingecheckt, der Build erzeugt sie nicht.

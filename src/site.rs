@@ -674,6 +674,42 @@ pub mod tests {
         }
     }
 
+    /// Die Favicon-Dateien sind die echten aus `content/static/`: ICO mit 16, 32 und 48 px, SVG mit `viewBox`, Apple-Icon 180 × 180.
+    #[test]
+    fn favicon_files_are_valid() {
+        let repo = Path::new(env!("CARGO_MANIFEST_DIR")).join("content/static");
+        let ico = fs::read(repo.join("favicon.ico")).unwrap();
+        assert_eq!(&ico[..4], &[0, 0, 1, 0], "ICO-Kopf");
+        let n = u16::from_le_bytes([ico[4], ico[5]]) as usize;
+        let sizes: Vec<u8> = (0..n).map(|i| ico[6 + i * 16]).collect();
+        assert_eq!(sizes, [16, 32, 48]);
+        let svg = fs::read_to_string(repo.join("favicon.svg")).unwrap();
+        assert!(svg.len() < 10_000 && svg.contains("viewBox=\"0 0 64 64\"") && svg.trim_end().ends_with("</svg>"));
+        assert!(svg.matches('<').count() == svg.matches('>').count(), "wohlgeformt");
+        let png = image::load_from_memory(&fs::read(repo.join("apple-touch-icon.png")).unwrap()).unwrap().to_rgba8();
+        assert_eq!((png.width(), png.height()), (180, 180));
+        assert!(png.pixels().all(|p| p.0[3] == 255), "deckend");
+        assert!(fs::metadata(repo.join("apple-touch-icon.png")).unwrap().len() < 40_000);
+    }
+
+    #[test]
+    fn favicons_are_linked_and_served() {
+        let dir = tempfile::tempdir().unwrap();
+        let root = dir.path();
+        fixture_site(root);
+        write(root, "content/static/favicon.svg", "<svg/>");
+        write(root, "content/static/apple-touch-icon.png", "png");
+        let (g, _) = generate_with(root, "https://flauschiversum.de", None);
+        for url in ["/favicon.ico", "/favicon.svg", "/apple-touch-icon.png"] {
+            assert!(g.outputs.contains(url), "{url}");
+        }
+        for (path, html) in g.outputs.snapshot_html().iter().filter(|(_, h)| !h.contains("http-equiv=\"refresh\"")) {
+            for l in ["href=\"/favicon.ico\"", "href=\"/favicon.svg\"", "href=\"/apple-touch-icon.png\""] {
+                assert!(html.contains(l), "{path}: {l}");
+            }
+        }
+    }
+
     #[test]
     fn page_toc_from_headings() {
         let dir = tempfile::tempdir().unwrap();
