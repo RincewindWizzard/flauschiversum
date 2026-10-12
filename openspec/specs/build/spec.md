@@ -110,21 +110,6 @@ Fehler und Warnungen SHALL die betroffene Datei (relativer Pfad) und, wo möglic
 - **WHEN** eine `index.md` `date: 31.10.2020` enthält
 - **THEN** nennt die Fehlermeldung den Pfad der Datei, das Feld `date` und das erwartete Format `YYYY-MM-DD`
 
-### Requirement: Kategorien und Schlagworte prüfen
-Der Build SHALL jede Kategorie und jedes Schlagwort eines Posts gegen `content/categories.yaml` und `content/tags.yaml` prüfen. Eine unbekannte Kategorie oder ein unbekanntes Schlagwort bricht den Build ab und nennt Post, Wert und – wenn vorhanden – das ähnlichste erlaubte Schlagwort. Doppelte Schlagworte in einem Post, ein nicht vorhandenes Kategoriebild und Schlagworte, die weniger als zwei Posts tragen, werden als Warnung gemeldet bzw. bei fehlendem Bild als Fehler.
-
-#### Scenario: Tippfehler im Schlagwort
-- **WHEN** ein Post `tags: [Kazen]` angibt und „Katzen“ erlaubt ist
-- **THEN** bricht der Build ab und nennt den Post, „Kazen“ und den Vorschlag „Katzen“
-
-#### Scenario: Unbekannte Kategorie
-- **WHEN** ein Post `category: stricken` angibt, die Liste diese aber nicht enthält
-- **THEN** bricht der Build ab und nennt den Post, „stricken“ und die erlaubten Kategorien
-
-#### Scenario: Schlagwort nur einmal benutzt
-- **WHEN** ein erlaubtes Schlagwort nur von einem Post getragen wird
-- **THEN** meldet der Build eine Warnung, und die Seite des Schlagworts wird trotzdem erzeugt
-
 ### Requirement: Suchindex im Build
 Der Build SHALL aus allen veröffentlichten Posts und Einzelseiten den Suchindex erzeugen und seine Dateien wie alle anderen Ausgaben ins Ausgabeverzeichnis schreiben und im Manifest führen. Der Index kommt aus dem Speicher des Builds, ohne zusätzliches Programm und ohne Zwischenverzeichnis.
 
@@ -183,3 +168,37 @@ Die Fortschrittsmeldungen SHALL nur von den Kommandos ausgelöst werden; Tests u
 #### Scenario: Test-Build
 - **WHEN** ein Test die Seite über `generate` baut
 - **THEN** werden keine Fortschrittsmeldungen ausgegeben
+
+### Requirement: Weiterleitungen prüfen und erzeugen
+Der Build SHALL die Datei `content/redirects.yaml` (Liste `von: nach`, jeweils interne Pfade mit führendem und abschließendem `/`) auswerten und für jeden Eintrag unter dem alten Pfad eine Weiterleitungsseite erzeugen. Verweist ein Eintrag auf sich selbst, hat ein Ziel, das nicht existiert, oder liegt die alte Adresse auf einer vorhandenen Seite, bricht der Build mit der Angabe des Eintrags ab. Die Datei darf fehlen.
+
+#### Scenario: Gültige Weiterleitung
+- **WHEN** `content/redirects.yaml` den Eintrag `/kategorie/basteln/: /tag/basteln/` enthält
+- **THEN** gibt es unter `/kategorie/basteln/` eine Weiterleitungsseite auf `/tag/basteln/`
+
+#### Scenario: Ziel existiert nicht
+- **WHEN** ein Eintrag auf `/tag/gibtsnicht/` verweist
+- **THEN** bricht der Build ab und nennt den Eintrag
+
+#### Scenario: Alte Adresse belegt
+- **WHEN** die alte Adresse eines Eintrags bereits eine Seite hat
+- **THEN** bricht der Build ab und nennt die Adresse
+
+#### Scenario: Keine Datei
+- **WHEN** `content/redirects.yaml` fehlt
+- **THEN** baut der Build ohne Weiterleitungen und ohne Fehler
+
+### Requirement: Schlagworte prüfen
+Der Build SHALL jedes Schlagwort eines Posts gegen `content/tags.yaml` prüfen. Ein unbekanntes Schlagwort bricht den Build ab und nennt Post, Wert und – wenn vorhanden – das ähnlichste erlaubte Schlagwort. Doppelte Schlagworte in einem Post und Schlagworte, die weniger als zwei Posts tragen, werden als Warnung gemeldet. Hat ein Post noch ein Feld `category`, meldet der Build eine Warnung mit dem Hinweis, den Wert als Schlagwort zu führen; das Feld wird sonst ignoriert.
+
+#### Scenario: Tippfehler im Schlagwort
+- **WHEN** ein Post `tags: [Kazen]` angibt und „Katzen“ erlaubt ist
+- **THEN** bricht der Build ab und nennt den Post, „Kazen“ und den Vorschlag „Katzen“
+
+#### Scenario: Altes Feld category
+- **WHEN** ein Post noch `category: basteln` im Frontmatter hat
+- **THEN** baut der Build weiter und meldet eine Warnung, die Post und Feld nennt und rät, „basteln“ in `tags` zu führen
+
+#### Scenario: Schlagwort nur einmal benutzt
+- **WHEN** ein erlaubtes Schlagwort nur von einem Post getragen wird
+- **THEN** meldet der Build eine Warnung, und die Seite des Schlagworts wird trotzdem erzeugt

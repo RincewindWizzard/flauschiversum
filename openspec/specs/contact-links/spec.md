@@ -51,8 +51,8 @@ Die Icons SHALL Teil des ausgelieferten HTML sein (inline SVG). Beim Laden einer
 - **WHEN** die Seite im hellen Standarddesign angezeigt wird
 - **THEN** haben Icons und Beschriftungen ausreichenden Kontrast zum Hintergrund und passen zu den Farben der Seite
 
-### Requirement: RSS-Feed-Icon im Footer
-Jede Seite SHALL in der Fußzeile neben den Icons für E-Mail, Instagram und Mastodon als letztes ein RSS-Icon zeigen, das auf `/rss.xml` verlinkt. Der Link hat den zugänglichen Namen „RSS-Feed abonnieren“, einen Tooltip, `rel="alternate"` und `type="application/rss+xml"`, ist per Tastatur erreichbar, hat einen sichtbaren Fokus und eine Klickfläche von mindestens 44 × 44 px. Das Icon liegt inline als SVG im HTML. Der Textlink „Abonnieren“ in der Fußzeile bleibt bestehen.
+### Requirement: RSS-Feed-Icon ohne Textlink
+Jede Seite SHALL in der Fußzeile neben den Icons für E-Mail, Instagram und Mastodon als letztes ein RSS-Icon zeigen, das auf `/rss.xml` verlinkt. Der Link hat den zugänglichen Namen „RSS-Feed abonnieren“, einen Tooltip, `rel="alternate"` und `type="application/rss+xml"`, ist per Tastatur erreichbar, hat einen sichtbaren Fokus und eine Klickfläche von mindestens 44 × 44 px. Das Icon liegt inline als SVG im HTML. Einen zusätzlichen Textlink „Abonnieren“ gibt es nicht.
 
 #### Scenario: Icon sichtbar
 - **WHEN** eine beliebige Seite geöffnet wird
@@ -70,9 +70,9 @@ Jede Seite SHALL in der Fußzeile neben den Icons für E-Mail, Instagram und Mas
 - **WHEN** die Fußzeile angezeigt wird
 - **THEN** stehen die Icons in der Reihenfolge E-Mail, Instagram, Mastodon, RSS
 
-#### Scenario: Textlink bleibt
+#### Scenario: Kein Textlink
 - **WHEN** die Fußzeile angezeigt wird
-- **THEN** enthält die Linkgruppe weiterhin „Abonnieren“ mit Ziel `/rss.xml`
+- **THEN** gibt es keinen Textlink „Abonnieren“; `/rss.xml` ist nur über das Icon verlinkt
 
 #### Scenario: Keine Anfragen an Dritte
 - **WHEN** eine Seite geladen wird

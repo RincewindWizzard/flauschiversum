@@ -7,7 +7,7 @@ Beschreibt die Startseite und ihre Folgeseiten: die chronologische Liste aller v
 ## Requirements
 
 ### Requirement: Reihenfolge und Seitengröße
-Die chronologische Liste unter `/beitraege/` und `/page/<N>/` SHALL alle veröffentlichten Posts nach Datum absteigend (neueste zuerst) zeigen, mit 4 Posts pro Seite. Die erste Seite `/beitraege/` enthält die neuesten Posts.
+Die Seite `/beitraege/` SHALL die zehn neuesten veröffentlichten Beiträge nach Datum absteigend zeigen, ohne Paginierung, und daneben das Archiv aller Beiträge (Spec `post-archive`). Die Folgeseiten `/page/<N>/` bleiben unverändert erreichbar und zeigen weiter je 4 Beiträge in derselben chronologischen Reihenfolge; sie werden aus der Navigation nicht mehr verlinkt.
 
 #### Scenario: Neuester Post zuerst
 - **WHEN** der neueste Post „Kürbis“ vom 31. Oktober 2020 ist
@@ -15,7 +15,11 @@ Die chronologische Liste unter `/beitraege/` und `/page/<N>/` SHALL alle veröff
 
 #### Scenario: Letzte Seite unvollständig
 - **WHEN** es 194 veröffentlichte Posts gibt
-- **THEN** gibt es 49 Seiten der Liste, und die letzte enthält 2 Posts
+- **THEN** gibt es unter `/page/<N>/` weiterhin die Seiten bis `/page/48/`, und die letzte enthält 2 Posts
+
+#### Scenario: Zehn Einträge auf Beiträge
+- **WHEN** `/beitraege/` geöffnet wird
+- **THEN** zeigt die Liste genau zehn Beiträge und keine Seitennummern
 
 ### Requirement: Veröffentlichungsdatum
 Ein Post mit einem Datum in der Zukunft (bezogen auf den Zeitpunkt des Builds) SHALL weder auf den Indexseiten erscheinen noch bei Seitenzahl und Verteilung der Posts auf die Seiten mitzählen.
@@ -40,11 +44,11 @@ Jeder Eintrag SHALL Folgendes zeigen: das Datum im Format „<Tag>. <Monatsname>
 - **THEN** zeigt der Eintrag kein Vorschaubild, aber Datum, Titel, Excerpt und „weiterlesen“
 
 ### Requirement: Paginierung
-Über und unter der Liste SHALL eine Paginierung stehen. Sie enthält: „«“ zur vorherigen Seite (nicht auf der ersten Seite), die Seitennummern (beginnend bei 1) im Bereich von zwei Seiten vor bis zwei Seiten nach der aktuellen, begrenzt auf existierende Seiten, wobei die aktuelle hervorgehoben ist, und „»“ zur nächsten Seite (nicht auf der letzten Seite). Jeder Link führt auf eine existierende Indexseite.
+Auf den Folgeseiten `/page/<N>/` SHALL über und unter der Liste eine Paginierung stehen: „«“ zur vorherigen Seite (auf `/page/1/` zu `/beitraege/`), die Seitennummern im Bereich von zwei Seiten vor bis zwei nach der aktuellen, begrenzt auf existierende Seiten, die aktuelle hervorgehoben, und „»“ zur nächsten Seite (nicht auf der letzten). Auf `/beitraege/` gibt es keine Paginierung.
 
 #### Scenario: Erste Seite
-- **WHEN** die erste Indexseite angezeigt wird
-- **THEN** zeigt die Paginierung „1“ (hervorgehoben), „2“, „3“ und „»“ mit Link auf `/page/1/`, aber kein „«“
+- **WHEN** die erste Folgeseite `/page/1/` angezeigt wird
+- **THEN** zeigt die Paginierung „«“ mit Link auf `/beitraege/`, „1“ (Link auf `/beitraege/`), „2“ (hervorgehoben), „3“, „4“ und „»“ mit Link auf `/page/2/`
 
 #### Scenario: Mittlere Seite
 - **WHEN** die zehnte Indexseite (`/page/9/`) angezeigt wird
@@ -56,4 +60,4 @@ Jeder Eintrag SHALL Folgendes zeigen: das Datum im Format „<Tag>. <Monatsname>
 
 #### Scenario: Nur eine Seite
 - **WHEN** es höchstens 4 veröffentlichte Posts gibt
-- **THEN** zeigt die Paginierung nur „1“ (hervorgehoben), ohne „«“ und „»“
+- **THEN** gibt es keine Folgeseiten und keine Paginierung

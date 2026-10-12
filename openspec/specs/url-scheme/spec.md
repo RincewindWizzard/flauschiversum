@@ -116,19 +116,8 @@ Alle vom Generator in HTML, Feed und Sitemap geschriebenen URLs SHALL nach RFC 3
 - **WHEN** ein Post das Bild `Schwacher Moment.jpg` einbindet
 - **THEN** endet die URL im `src`-Attribut auf `700x/Schwacher%20Moment.jpg`
 
-### Requirement: URLs der Themenseiten
-Es SHALL folgende URLs geben: `/themen/` (Übersicht), `/kategorie/<name>/` je Kategorie, `/tag/<name>/` je Schlagwort und `/suche/` (Suchseite). Der Name ist der Slug der `id` der Kategorie bzw. des Namens des Schlagworts (Kleinschreibung, `ä`→`ae`, `ö`→`oe`, `ü`→`ue`, `ß`→`ss`).
-
-#### Scenario: Kategorie mit Umlaut
-- **WHEN** die Kategorie `id: nähen` heißt
-- **THEN** ist ihre Seite unter `/kategorie/naehen/` erreichbar
-
-#### Scenario: Schlagwort mit Umlaut
-- **WHEN** das Schlagwort „Hüte“ existiert
-- **THEN** ist seine Seite unter `/tag/huete/` erreichbar
-
 ### Requirement: Reservierte Pfade
-Einzelseiten und Posts SHALL keine URL verwenden, die mit den Pfaden `/themen/`, `/suche/`, `/beitraege/`, `/kategorie/`, `/tag/` oder `/pagefind/` übereinstimmt oder darunter liegt. Eine Kollision bricht den Build ab.
+Einzelseiten und Posts SHALL keine URL verwenden, die mit den Pfaden `/themen/`, `/suche/`, `/beitraege/`, `/tag/` oder `/pagefind/` übereinstimmt oder darunter liegt. Eine Kollision bricht den Build ab.
 
 #### Scenario: Einzelseite mit reserviertem Titel
 - **WHEN** eine Einzelseite den Titel „Themen“ hat
@@ -152,3 +141,29 @@ Der Build SHALL eine Basis-URL (Standard `https://flauschiversum.de`) annehmen k
 #### Scenario: Ungültige Basis
 - **WHEN** die Basis-URL nicht mit `http://` oder `https://` beginnt, einen Pfadanteil hat oder auf `/` endet
 - **THEN** bricht der Build ab und nennt den Wert und das erwartete Format
+
+### Requirement: Weiterleitung alter Adressen
+Jede Adresse aus `content/redirects.yaml` SHALL eine statische HTML-Seite unter `<alter Pfad>index.html` erhalten, die mit `<meta http-equiv="refresh" content="0; url=<neuer Pfad>">` sofort weiterleitet, eine kanonische URL (`rel="canonical"`) auf das Ziel und `noindex` trägt und einen sichtbaren Link auf das Ziel zeigt. Weiterleitungsseiten sind keine Seiten im Sinne von Kopf, Fußzeile oder Staging-Leiste.
+
+#### Scenario: Alte Kategorieadresse
+- **WHEN** `/kategorie/basteln/` aufgerufen wird und die Datei `/kategorie/basteln/: /tag/basteln/` enthält
+- **THEN** leitet der Browser sofort auf `/tag/basteln/` weiter
+
+#### Scenario: Suchmaschine
+- **WHEN** eine Suchmaschine `/kategorie/basteln/` liest
+- **THEN** findet sie `noindex` und die kanonische URL `/tag/basteln/`
+
+#### Scenario: Ohne JavaScript
+- **WHEN** JavaScript deaktiviert ist
+- **THEN** funktioniert die Weiterleitung trotzdem, und der Link im Text führt auf das Ziel
+
+### Requirement: URLs der Themen
+Es SHALL folgende URLs geben: `/themen/` (Übersicht), `/tag/<name>/` je Schlagwort und `/suche/` (Suchseite). Der Name ist der Slug des Namens des Schlagworts (Kleinschreibung, `ä`→`ae`, `ö`→`oe`, `ü`→`ue`, `ß`→`ss`). Die früheren Adressen `/kategorie/<name>/` bleiben als Weiterleitungen erhalten.
+
+#### Scenario: Schlagwort mit Umlaut
+- **WHEN** das Schlagwort „Hüte“ existiert
+- **THEN** ist seine Seite unter `/tag/huete/` erreichbar
+
+#### Scenario: Frühere Kategorieadresse
+- **WHEN** `/kategorie/naehen/` aufgerufen wird
+- **THEN** leitet sie auf `/tag/naehen/` weiter

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Beschreibt die Volltextsuche des Flauschiversums: Besucher finden Beiträge über Begriffe aus Titel, Text, Kategorie und Schlagworten, direkt im Browser und ohne Dienste von Dritten.
+Beschreibt die Volltextsuche des Flauschiversums: Besucher finden Beiträge über Begriffe aus Titel, Text und Schlagworten, direkt im Browser und ohne Dienste von Dritten.
 
 ## Requirements
 
@@ -22,7 +22,7 @@ Unter `/suche/` SHALL die Suchseite stehen. Mit dem Parameter `q` (z.B. `/suche/
 - **THEN** meldet die Seite „Keine Treffer“ und verweist auf `/themen/`
 
 ### Requirement: Durchsuchter Bestand
-Die Suche SHALL die Texte aller veröffentlichten Beiträge und Einzelseiten sowie Kategorien und Schlagworte der Beiträge berücksichtigen. Startseite, Beitragslisten, Themenseiten und die Suchseite selbst sind nicht Teil des Bestands.
+Die Suche SHALL die Texte aller veröffentlichten Beiträge und Einzelseiten sowie die Schlagworte der Beiträge berücksichtigen. Startseite, Beitragslisten, Themenseiten und die Suchseite selbst sind nicht Teil des Bestands.
 
 #### Scenario: Begriff aus dem Text
 - **WHEN** ein Begriff nur im Fließtext eines Beitrags von 2014 vorkommt
@@ -50,17 +50,6 @@ Die Suche SHALL Groß- und Kleinschreibung ignorieren, Umlaute und ihre Umschrei
 #### Scenario: Wortanfang
 - **WHEN** nach „filz“ gesucht wird
 - **THEN** erscheinen Beiträge, die „Filz“, „Filzen“ oder „Filzstift“ enthalten
-
-### Requirement: Filter nach Kategorie
-Die Suchseite SHALL die Treffer nach Kategorie einschränken können. Die Auswahl zeigt jede Kategorie mit der Zahl der Treffer.
-
-#### Scenario: Auf Kategorie einschränken
-- **WHEN** nach „Mütze“ gesucht und die Kategorie „Wolle“ gewählt wird
-- **THEN** bleiben nur Treffer der Kategorie „Wolle“ übrig
-
-#### Scenario: Beitrag ohne Kategorie
-- **WHEN** ein Beitrag keine Kategorie hat
-- **THEN** erscheint er in der Suche ohne Filter, aber in keiner Kategorieauswahl
 
 ### Requirement: Suchfeld auf der Startseite
 Die Startseite SHALL das Suchfeld deutlich sichtbar zeigen. Eine abgeschickte Suche öffnet `/suche/?q=<Begriff>`.
@@ -93,3 +82,25 @@ Ohne JavaScript SHALL die Suchseite einen Hinweis zeigen, dass die Suche JavaScr
 #### Scenario: JavaScript deaktiviert
 - **WHEN** `/suche/?q=katze` bei deaktiviertem JavaScript geöffnet wird
 - **THEN** zeigt die Seite den Hinweis und die Links auf `/themen/` und `/beitraege/`
+
+### Requirement: Filter nach Thema
+Die Suchseite SHALL die Treffer nach Thema (Schlagwort) einschränken können. Die Auswahl heißt „Thema“ und zeigt jedes Schlagwort mit der Zahl der Treffer.
+
+#### Scenario: Auf Thema einschränken
+- **WHEN** nach „Mütze“ gesucht und das Thema „Wolle“ gewählt wird
+- **THEN** bleiben nur Treffer mit dem Schlagwort „Wolle“ übrig
+
+#### Scenario: Beitrag ohne Schlagworte
+- **WHEN** ein Beitrag keine Schlagworte hat
+- **THEN** erscheint er in der Suche ohne Filter, aber in keiner Themenauswahl
+
+### Requirement: Konzentrische Lupe
+Der Suchknopf SHALL als Kreis im Suchfeld sitzen, dessen Mittelpunkt auf dem Mittelpunkt der Rundung am rechten Rand des Feldes liegt (konzentrisch): oben, unten und rechts hat er denselben Abstand zum Rand des Feldes. Das gilt für jedes Suchfeld (Topbar, Suchseite) in jeder Schriftgröße.
+
+#### Scenario: Gleiche Abstände
+- **WHEN** ein Suchfeld angezeigt wird
+- **THEN** sind die Abstände der Lupe zum Feldrand oben, unten und rechts gleich (Abweichung höchstens 1,5 px), und der Knopf ist rund
+
+#### Scenario: Größeres Suchfeld
+- **WHEN** das Suchfeld der Suchseite, das größer als das der Topbar ist, angezeigt wird
+- **THEN** sind die Abstände ebenfalls gleich

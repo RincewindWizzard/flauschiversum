@@ -7,7 +7,7 @@ Sorgt dafür, dass Suchmaschinen, Feedreader und soziale Netzwerke die Inhalte d
 ## Requirements
 
 ### Requirement: Sitemap
-Unter `/sitemap.xml` SHALL eine XML-Sitemap nach sitemaps.org stehen. Sie enthält die absoluten URLs der Startseite, von `/themen/`, aller Kategorie- und Schlagwortseiten, aller veröffentlichten Posts und aller Einzelseiten. Bei Posts ist `lastmod` das Datum des Posts. Folgeseiten der Liste, die Suchseite und Medien-URLs gehören nicht hinein.
+Unter `/sitemap.xml` SHALL eine XML-Sitemap nach sitemaps.org stehen. Sie enthält die absoluten URLs der Startseite, von `/themen/`, aller Schlagwortseiten, aller veröffentlichten Posts und aller Einzelseiten. Bei Posts ist `lastmod` das Datum des Posts. Folgeseiten der Liste, Weiterleitungsseiten, die Suchseite und Medien-URLs gehören nicht hinein.
 
 #### Scenario: Post in der Sitemap
 - **WHEN** der Post „Kürbis“ vom 2020-10-31 veröffentlicht ist
@@ -18,8 +18,12 @@ Unter `/sitemap.xml` SHALL eine XML-Sitemap nach sitemaps.org stehen. Sie enthä
 - **THEN** fehlt er in der Sitemap
 
 #### Scenario: Themenseiten
-- **WHEN** die Kategorie „Filzen“ und das Schlagwort „Hüte“ Beiträge haben
-- **THEN** enthält die Sitemap `https://flauschiversum.de/kategorie/filzen/` und `https://flauschiversum.de/tag/huete/`
+- **WHEN** das Schlagwort „Hüte“ Beiträge hat
+- **THEN** enthält die Sitemap `https://flauschiversum.de/tag/huete/`
+
+#### Scenario: Weiterleitung
+- **WHEN** `/kategorie/basteln/` auf `/tag/basteln/` weiterleitet
+- **THEN** enthält die Sitemap `/kategorie/basteln/` nicht
 
 ### Requirement: robots.txt
 Unter `/robots.txt` SHALL eine Datei stehen, die allen Crawlern alles erlaubt und auf `https://flauschiversum.de/sitemap.xml` verweist.
@@ -50,15 +54,15 @@ Jede HTML-Seite SHALL Open-Graph-Angaben tragen: `og:title`, `og:description`, `
 - **THEN** zeigt die Vorschau den Titel „Alraune“, den Excerpt und das Bild `https://flauschiversum.de/2014/01/alraune/1000x/DSCF0527.jpg`
 
 ### Requirement: Strukturierte Daten
-Jede Post-Seite SHALL ein JSON-LD-Objekt vom Typ `BlogPosting` enthalten, mit `headline`, `datePublished` (ISO 8601 mit Zeitzone), `author` (Person mit dem Namen aus `author`), `image` (falls vorhanden), `mainEntityOfPage` (kanonische URL), `articleSection` (Name der Kategorie, falls vorhanden), `keywords` (Namen der Schlagworte, falls vorhanden) und `publisher` (Organisation „Flauschiversum“).
+Jede Post-Seite SHALL ein JSON-LD-Objekt vom Typ `BlogPosting` enthalten, mit `headline`, `datePublished` (ISO 8601 mit Zeitzone), `author` (Person mit dem Namen aus `author`), `image` (falls vorhanden), `mainEntityOfPage` (kanonische URL), `keywords` (Namen der Schlagworte, falls vorhanden) und `publisher` (Organisation „Flauschiversum“).
 
 #### Scenario: Rich-Results-Test
 - **WHEN** eine Post-Seite mit dem Google-Test für Rich-Suchergebnisse geprüft wird
 - **THEN** wird ein gültiges `BlogPosting` ohne Fehler erkannt
 
 #### Scenario: Einordnung im Datensatz
-- **WHEN** der Post „Alraune“ in der Kategorie „Basteln“ liegt und das Schlagwort „LARP“ trägt
-- **THEN** enthält der Datensatz `articleSection` „Basteln“ und `keywords` mit „LARP“
+- **WHEN** der Post „Alraune“ das Schlagwort „LARP“ trägt
+- **THEN** enthält der Datensatz `keywords` mit „LARP“
 
 ### Requirement: Überschriftenstruktur
 Jede Post-Seite und Einzelseite SHALL genau eine `<h1>` mit ihrem Titel haben. Auf den Indexseiten ist das Logo „Flauschiversum“ die `<h1>`, und die Post-Titel sind `<h2>`. Das Erscheinungsbild bleibt dabei gleich.
@@ -73,13 +77,6 @@ Jede HTML-Seite SHALL per `<link rel="alternate" type="application/rss+xml">` au
 #### Scenario: Feed automatisch finden
 - **WHEN** ein Feedreader die Startseite als Adresse bekommt
 - **THEN** findet er den Feed `https://flauschiversum.de/rss.xml`
-
-### Requirement: Meta-Angaben der Themenseiten
-Kategorie-, Schlagwort- und Übersichtsseiten SHALL eine eigene Meta-Beschreibung, eine kanonische URL und Open-Graph-Angaben tragen. Die Beschreibung lautet „<Anzahl> Beiträge zu <Name> im Flauschiversum“, bei Kategorien ergänzt um den Reim.
-
-#### Scenario: Beschreibung einer Kategorie
-- **WHEN** `/kategorie/filzen/` mit 37 Beiträgen erzeugt wird
-- **THEN** beginnt die Meta-Beschreibung mit „37 Beiträge zu Filzen im Flauschiversum“
 
 ### Requirement: Suchseite nicht indexieren
 Die Suchseite SHALL mit `<meta name="robots" content="noindex">` ausgeliefert werden und in `robots.txt` nicht gesperrt sein.
@@ -106,3 +103,10 @@ Im Staging-Modus SHALL jede HTML-Seite `<meta name="robots" content="noindex">` 
 #### Scenario: Produktiv unverändert
 - **WHEN** ohne Staging-Modus gebaut wird
 - **THEN** gibt es kein `noindex` außer auf der Suchseite, und `robots.txt` und Sitemap bleiben wie bisher
+
+### Requirement: Meta-Angaben der Themen- und Übersichtsseiten
+Schlagwort- und Übersichtsseiten SHALL eine eigene Meta-Beschreibung, eine kanonische URL und Open-Graph-Angaben tragen. Die Beschreibung lautet „<Anzahl> Beiträge zu <Name> im Flauschiversum“.
+
+#### Scenario: Beschreibung eines Themas
+- **WHEN** `/tag/filzen/` mit 37 Beiträgen erzeugt wird
+- **THEN** beginnt die Meta-Beschreibung mit „37 Beiträge zu Filzen im Flauschiversum“

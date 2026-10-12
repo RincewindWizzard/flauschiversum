@@ -22,9 +22,9 @@
 
 ## 4. Absicherung
 
-- [ ] 4.1 Gesamtseitentest erweitern: alle Live-URLs inklusive `/page/<N>/`, `/themen/`, `/tag/<name>/` existieren weiter und `/kategorie/<name>/` leitet weiter; Menüs und Archiv-Links zeigen auf existierende Seiten; Sitemap und Link-Prüfung ohne neue Warnungen; prüfen: `cargo test --release -- --include-ignored` grün
+- [x] 4.1 Gesamtseitentest erweitern: alle Live-URLs inklusive `/page/<N>/`, `/themen/`, `/tag/<name>/` existieren weiter und `/kategorie/<name>/` leitet weiter; Menüs und Archiv-Links zeigen auf existierende Seiten; Sitemap und Link-Prüfung ohne neue Warnungen; prüfen: `cargo test --release -- --include-ignored` grün
 - [x] 4.2 Bestehende Tests und Snapshots anpassen (Spalten-Tests in `tests/browser/layout.mjs` auf die Topbar umstellen, `navigation.mjs`, `staging.mjs`, `frontend.mjs`, Snapshots); prüfen: `cargo test` und alle Playwright-Skripte grün
-- [ ] 4.3 Vergleichsbilder (Startseite, Beiträge, Kategorie, Beitrag, geöffnetes Menü, Handy mit offenem Menü, jeweils Desktop und Handy) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
+- [x] 4.3 Vergleichsbilder (Startseite, Beiträge, Kategorie, Beitrag, geöffnetes Menü, Handy mit offenem Menü, jeweils Desktop und Handy) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
 
 ## 4a. Überarbeitung nach Rückmeldung
 
