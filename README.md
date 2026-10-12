@@ -23,6 +23,11 @@ Der erste Build berechnet alle Bilder (ca. 3200 Originale, rund 20–30 Sekunden
 Bilder aus `.cache/`, und ein Build ohne Änderungen dauert unter einer Sekunde. Geschrieben werden nur Dateien,
 deren Inhalt sich geändert hat; was nicht mehr erzeugt wird, wird aus `dist/` gelöscht.
 
+`build`, `serve` und `check` melden auf der Konsole (stderr), woran sie gerade arbeiten, mit verstrichener Zeit und
+Dauer des vorherigen Schritts. Bei den Bildern gibt es alle zwei Sekunden einen Zwischenstand (Zähler, Prozent, neu
+berechnet / aus dem Cache), beim Suchindex den Hinweis, ob er aus dem Cache kommt oder neu berechnet wird. Die beiden
+Zusammenfassungszeilen am Ende stehen weiter auf stdout.
+
 ## Einen Post schreiben
 
 Jeder Post ist ein Verzeichnis unter `content/posts/` mit einer `index.md` und den zugehörigen Medien:

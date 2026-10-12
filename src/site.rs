@@ -71,12 +71,15 @@ pub fn bundle_css(style_dir: &Path) -> Result<String> {
 
 /// Erzeugt alle Ausgaben. Bricht ab, wenn die Inhalte Fehler enthalten.
 pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Result<Generated> {
+    crate::progress::step("Lese Inhalte (Beiträge, Seiten, Kategorien, Schlagworte) …");
     let site = content::load(&opts.root, &opts.now, diag);
     if diag.has_errors() {
         bail!("Inhalte enthalten Fehler");
     }
+    crate::progress::note(&format!("{} Beiträge, {} Seiten, {} Medien", site.posts.len(), site.pages.len(), site.posts.iter().map(|p| p.media.len()).sum::<usize>()));
     let outputs = Outputs::default();
 
+    crate::progress::step("Kopiere statische Dateien und Skripte …");
     // Statische Dateien
     for f in &site.static_files {
         outputs.insert(f.url.clone(), Content::File(f.path.clone()));
@@ -105,6 +108,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     }
 
     // Stylesheet
+    crate::progress::step("Baue Stylesheet und Themenlisten …");
     let css = bundle_css(&site.style_dir).context("Stylesheet")?;
     let topics = Topics::build(&site, diag);
     if diag.has_errors() {
@@ -138,6 +142,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     outputs.insert("/style.css", Content::Bytes(css.into_bytes()));
 
     // Medien
+    crate::progress::step("Verarbeite Bilder und Medien (Größen, Wasserzeichen; beim ersten Lauf lang) …");
     let badge = fs::read(assets.join("badge.png")).context("assets/badge.png fehlt")?;
     let index: MediaIndex = media::build(&site, &badge, &opts.cache, &outputs, diag, stats)?;
     let mut by_post: HashMap<&str, HashMap<String, MediaInfo>> = HashMap::new();
@@ -175,6 +180,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         category: with_category.then(|| category_link(p)),
     };
 
+    crate::progress::step("Rendere Beiträge (Markdown nach HTML) …");
     // Post-Seiten
     let posts = &site.posts;
     let counts = topics::tag_counts(posts);
@@ -246,6 +252,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         .collect();
     let (feed_parts, mut search_docs): (Vec<_>, Vec<_>) = post_parts.into_iter().unzip();
 
+    crate::progress::step("Erzeuge Listen, Archiv, Kategorie- und Schlagwortseiten …");
     // Indexseiten
     let count = render::page_count(posts.len());
     (0..count).into_par_iter().for_each(|index| {
@@ -332,12 +339,14 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         outputs.insert(page.url.clone(), Content::Bytes(render::render_page(page, html, desc, &common).into_bytes()));
     }
 
+    crate::progress::step("Baue den Suchindex …");
     // Suche: Seite und Index
     outputs.insert("/suche/", Content::Bytes(render::render_search(search_script_href, &common).into_bytes()));
     for (path, data) in search::build(search_docs, &opts.cache).context("Suchindex")? {
         outputs.insert(path, Content::Bytes(data));
     }
 
+    crate::progress::step("Erzeuge Feed, Sitemap und robots.txt …");
     // Feed, Sitemap, robots.txt
     let feed_xml = feed::render(&site, feed_parts.into_iter().flatten().collect(), &common.base);
     outputs.insert("/rss.xml", Content::Bytes(feed_xml.into_bytes()));
@@ -353,6 +362,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     for p in &site.pages {
         sources.insert(format!("{}index.html", p.url), p.source.clone());
     }
+    crate::progress::step("Prüfe interne Links …");
     check_links(&outputs, &sources, &common.base, diag);
     Ok(Generated { outputs, site })
 }

@@ -107,11 +107,17 @@ pub fn build(
         .flat_map(|p| p.media.iter().map(move |m| (p, m)))
         .collect();
 
+    let total = jobs.len();
+    let finished = AtomicUsize::new(0);
     let results: Vec<_> = jobs
         .par_iter()
         .map(|(post, media)| {
             let source = format!("{}/{}", post.source.trim_end_matches("index.md").trim_end_matches('/'), media.file_name);
             let r = build_one(&post.url, &media.file_name, &media.path, media.kind, &badge, &badge_hash, &dir, outputs, stats);
+            let done = finished.fetch_add(1, Ordering::Relaxed) + 1;
+            crate::progress::count("Bilder und Medien", done, total, || {
+                format!("· {} neu berechnet, {} aus dem Cache", stats.processed.load(Ordering::Relaxed), stats.cached.load(Ordering::Relaxed))
+            });
             match r {
                 Ok((info, oversized)) => {
                     if oversized {

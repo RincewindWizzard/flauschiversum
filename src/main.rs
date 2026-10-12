@@ -11,6 +11,7 @@ mod feed;
 mod markdown;
 mod media;
 mod output;
+mod progress;
 mod render;
 mod search;
 mod seo;
@@ -92,6 +93,8 @@ fn print_diagnostics(diag: &diag::Diagnostics) {
 
 /// Führt einen Build aus und gibt eine Zusammenfassung aus. Liefert `false` bei Fehlern.
 fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
+    progress::enable();
+    progress::begin();
     let started = std::time::Instant::now();
     let opts = site::BuildOptions {
         root: paths.root.clone(),
@@ -113,6 +116,7 @@ fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
     };
     let posts = generated.site.posts.len();
     let scheduled = generated.site.scheduled;
+    progress::step(&format!("Schreibe Dateien nach {} …", paths.resolve(&paths.out).display()));
     let ws = output::write(&paths.resolve(&paths.out), generated.outputs.into_map())?;
     print_diagnostics(&diag);
     use std::sync::atomic::Ordering::Relaxed;
@@ -136,6 +140,8 @@ fn build_once(paths: &PathArgs, livereload: bool) -> Result<bool> {
 fn run(cli: Cli) -> Result<ExitCode> {
     match cli.command {
         Command::Check(paths) => {
+            progress::enable();
+            progress::begin();
             let opts = site::BuildOptions {
                 root: paths.root.clone(),
                 cache: paths.resolve(&paths.cache),
