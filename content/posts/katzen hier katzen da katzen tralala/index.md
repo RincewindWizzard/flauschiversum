@@ -1,8 +1,7 @@
 ---
 title: "Katzen hier Katzen da Katzen tralala"
 permalink: /2016/09/katzen-hier-katzen-da-katzen-tralala/
-category: nähen
-tags: [Katzen, Taschen]
+tags: [Katzen, Taschen, Nähen]
 author: Ermeline
 date: 2016-09-04 12:50:23
 image: "DSCF5642.JPG"

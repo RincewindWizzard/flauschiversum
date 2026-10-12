@@ -39,29 +39,13 @@ pub struct Post {
     pub excerpt: Option<String>,
     pub markdown: String,
     pub media: Vec<Media>,
-    /// `id` der Kategorie (aus `categories.yaml`); jeder Post hat genau eine.
-    pub category: String,
     /// Schlagworte in der Schreibweise aus `tags.yaml`, in der Reihenfolge des Posts.
     pub tags: Vec<String>,
 }
 
-/// Eine Kategorie aus `content/categories.yaml`.
-#[derive(Debug, Clone, serde::Deserialize)]
-pub struct Category {
-    pub id: String,
-    pub name: String,
-    /// URL-Pfad einer statischen Datei, z.B. `/images/Filzen.jpg`.
-    pub image: String,
-    pub motto: String,
-    /// Kurzer Einleitungstext (Markdown) für die Kategorieseite.
-    #[serde(default)]
-    pub intro: Option<String>,
-}
-
-/// Erlaubte Kategorien und Schlagworte.
+/// Erlaubte Schlagworte.
 #[derive(Debug, Clone, Default)]
 pub struct Vocabulary {
-    pub categories: Vec<Category>,
     pub tags: Vec<String>,
 }
 
@@ -94,8 +78,9 @@ pub struct Site {
     pub pages: Vec<Page>,
     pub static_files: Vec<StaticFile>,
     pub style_dir: PathBuf,
-    pub categories: Vec<Category>,
     pub tags: Vec<String>,
+    /// Weiterleitungen alter Adressen (aus `content/redirects.yaml`): (alte Adresse, neue Adresse), sortiert.
+    pub redirects: Vec<(String, String)>,
     /// Begrüßungstext der Startseite (Markdown aus `content/start.md`), falls vorhanden.
     pub start: Option<String>,
 }
@@ -242,34 +227,35 @@ fn closest<'a>(value: &str, allowed: impl Iterator<Item = &'a str>) -> Option<&'
         .map(|(_, a)| a)
 }
 
-fn list_values(items: &[String]) -> String {
-    items.iter().map(|i| format!("`{i}`")).collect::<Vec<_>>().join(", ")
+/// Lädt `content/redirects.yaml`: Zuordnung alter Adressen zu neuen (beide mit `/` am Anfang und Ende).
+fn load_redirects(root: &Path, diag: &Diagnostics) -> Vec<(String, String)> {
+    let source = "content/redirects.yaml";
+    let Ok(text) = fs::read_to_string(root.join(source)) else { return Vec::new() };
+    let map: std::collections::BTreeMap<String, String> = match serde_yaml_ng::from_str(&text) {
+        Ok(m) => m,
+        Err(e) => {
+            diag.error(source, format!("Datei ist ungültig (erwartet `/alte-adresse/: /neue-adresse/`): {e}"));
+            return Vec::new();
+        }
+    };
+    let valid = |p: &str| p.starts_with('/') && p.ends_with('/') && !p.contains(' ') && !p.contains("//") && p != "/";
+    let mut out = Vec::new();
+    for (from, to) in map {
+        if !valid(&from) || !valid(&to) {
+            diag.error(source, format!("Weiterleitung `{from}` → `{to}`: Adressen müssen mit `/` beginnen und enden"));
+        } else if from == to {
+            diag.error(source, format!("Weiterleitung `{from}` zeigt auf sich selbst"));
+        } else {
+            out.push((from, to));
+        }
+    }
+    out
 }
 
-/// Lädt `categories.yaml` und `tags.yaml` und prüft sie. Fehlende Dateien gelten als leere Listen.
+/// Lädt `tags.yaml` und prüft sie. Fehlende Dateien gelten als leere Listen.
 pub fn load_vocabulary(root: &Path, diag: &Diagnostics) -> Vocabulary {
     let content = root.join("content");
     let mut vocab = Vocabulary::default();
-
-    let cat_source = "content/categories.yaml";
-    if let Ok(text) = fs::read_to_string(content.join("categories.yaml")) {
-        match serde_yaml_ng::from_str::<Vec<Category>>(&text) {
-            Ok(list) => {
-                for c in list {
-                    if urls::slugify(&c.id).is_empty() {
-                        diag.error(cat_source, format!("Kategorie `{}`: `id` ergibt keine gültige Adresse (erlaubt sind Buchstaben und Ziffern)", c.id));
-                    } else if let Some(o) = vocab.categories.iter().find(|o| urls::slugify(&o.id) == urls::slugify(&c.id)) {
-                        diag.error(cat_source, format!("Kategorie `{}` ergibt dieselbe Adresse wie `{}`", c.id, o.id));
-                    } else if c.name.trim().is_empty() {
-                        diag.error(cat_source, format!("Kategorie `{}`: `name` fehlt", c.id));
-                    } else {
-                        vocab.categories.push(c);
-                    }
-                }
-            }
-            Err(e) => diag.error(cat_source, format!("Datei ist ungültig (erwartet eine Liste mit `id`, `name`, `image`, `motto`): {e}")),
-        }
-    }
 
     let tag_source = "content/tags.yaml";
     if let Ok(text) = fs::read_to_string(content.join("tags.yaml")) {
@@ -292,28 +278,9 @@ pub fn load_vocabulary(root: &Path, diag: &Diagnostics) -> Vocabulary {
     vocab
 }
 
-/// Prüft `category` und `tags` eines Posts gegen die erlaubten Werte.
-fn resolve_topics(
-    source: &str,
-    category: Option<String>,
-    tags: Vec<String>,
-    vocab: &Vocabulary,
-    diag: &Diagnostics,
-) -> Option<(String, Vec<String>)> {
+/// Prüft die `tags` eines Posts gegen die erlaubten Schlagworte.
+fn resolve_tags(source: &str, tags: Vec<String>, vocab: &Vocabulary, diag: &Diagnostics) -> Option<Vec<String>> {
     let mut ok = true;
-    if category.is_none() {
-        let ids: Vec<String> = vocab.categories.iter().map(|v| v.id.clone()).collect();
-        diag.error(source, format!("Pflichtfeld `category` fehlt. Erlaubt: {}", list_values(&ids)));
-        ok = false;
-    }
-    if let Some(c) = &category
-        && !vocab.categories.iter().any(|v| &v.id == c)
-    {
-        let ids: Vec<String> = vocab.categories.iter().map(|v| v.id.clone()).collect();
-        let hint = closest(c, ids.iter().map(String::as_str)).map(|s| format!(" Meintest du `{s}`?")).unwrap_or_default();
-        diag.error(source, format!("Feld `category`: `{c}` ist keine bekannte Kategorie.{hint} Erlaubt: {}", list_values(&ids)));
-        ok = false;
-    }
     let mut resolved: Vec<String> = Vec::new();
     for t in tags {
         match vocab.tags.iter().find(|v| v.to_lowercase() == t.to_lowercase()) {
@@ -328,7 +295,7 @@ fn resolve_topics(
             }
         }
     }
-    if ok { category.map(|c| (c, resolved)) } else { None }
+    ok.then_some(resolved)
 }
 
 fn read_frontmatter(path: &Path, source: &str, diag: &Diagnostics) -> Option<Frontmatter> {
@@ -370,6 +337,9 @@ fn load_post(root: &Path, dir: &Path, vocab: &Vocabulary, diag: &Diagnostics) ->
     let index = dir.join("index.md");
     let source = rel(root, &index);
     let fm = read_frontmatter(&index, &source, diag)?;
+    if fm.fields.contains_key("category") {
+        diag.warning(&source, "Feld `category` wird nicht mehr verwendet (es gibt keine Kategorien mehr); bitte als Schlagwort in `tags` führen");
+    }
     let f = |k: &str| fm.fields.get(k).filter(|v| !v.is_empty()).cloned();
 
     let title = f("title");
@@ -434,7 +404,7 @@ fn load_post(root: &Path, dir: &Path, vocab: &Vocabulary, diag: &Diagnostics) ->
         }
     }
 
-    let (category, tags) = resolve_topics(&source, f("category"), fm.tags.clone(), vocab, diag)?;
+    let tags = resolve_tags(&source, fm.tags.clone(), vocab, diag)?;
 
     Some(Post {
         source,
@@ -446,7 +416,6 @@ fn load_post(root: &Path, dir: &Path, vocab: &Vocabulary, diag: &Diagnostics) ->
         excerpt: f("excerpt"),
         markdown: fm.markdown,
         media,
-        category,
         tags,
     })
 }
@@ -530,12 +499,6 @@ pub fn load(root: &Path, now: &Zoned, diag: &Diagnostics) -> Site {
         .collect();
     static_files.sort_by(|a, b| a.url.cmp(&b.url));
 
-    for c in &vocab.categories {
-        if !static_files.iter().any(|f| f.url == c.image) {
-            diag.error("content/categories.yaml", format!("Kategorie `{}`: Bild `{}` existiert nicht unter content/static", c.id, c.image));
-        }
-    }
-
     let start = match fs::read_to_string(content.join("start.md")) {
         Ok(text) => {
             let body = match split_frontmatter(&text) {
@@ -550,14 +513,16 @@ pub fn load(root: &Path, now: &Zoned, diag: &Diagnostics) -> Site {
         }
     };
 
+    let redirects = load_redirects(root, diag);
+
     Site {
         start,
+        redirects,
         posts: all_posts,
         scheduled,
         pages,
         static_files,
         style_dir: content.join("style"),
-        categories: vocab.categories,
         tags: vocab.tags,
     }
 }
@@ -608,15 +573,7 @@ mod tests {
     fn write_post(root: &Path, dir: &str, frontmatter: &str) {
         let d = root.join("content/posts").join(dir);
         fs::create_dir_all(&d).unwrap();
-        // Kategorie ist Pflicht: Tests, die sie nicht prüfen, bekommen eine Standardkategorie samt Liste
-        let with_category = if frontmatter.contains("category:") { frontmatter.to_string() } else { format!("{frontmatter}category: filzen\n") };
-        fs::write(d.join("index.md"), format!("---\n{with_category}---\nText\n")).unwrap();
-        let cats = root.join("content/categories.yaml");
-        if !cats.exists() {
-            fs::create_dir_all(root.join("content/static/images")).unwrap();
-            fs::write(root.join("content/static/images/f.jpg"), b"x").unwrap();
-            fs::write(cats, "- id: filzen\n  name: Filzen\n  image: /images/f.jpg\n  motto: x\n").unwrap();
-        }
+        fs::write(d.join("index.md"), format!("---\n{frontmatter}---\nText\n")).unwrap();
         let start = root.join("content/start.md");
         if !start.exists() {
             fs::write(start, "Hallo!\n").unwrap();
@@ -688,9 +645,7 @@ mod tests {
 
     fn write_vocab(root: &Path) {
         let c = root.join("content");
-        fs::create_dir_all(c.join("static/images")).unwrap();
-        fs::write(c.join("static/images/f.jpg"), b"x").unwrap();
-        fs::write(c.join("categories.yaml"), "- id: filzen\n  name: Filzen\n  image: /images/f.jpg\n  motto: |\n    Wolle\n    Seife\n- id: wolle\n  name: Wolle\n  image: /images/f.jpg\n  motto: x\n").unwrap();
+        fs::create_dir_all(&c).unwrap();
         fs::write(c.join("tags.yaml"), "- name: Katzen\n- name: Hüte\n- name: Taschen\n").unwrap();
     }
 
@@ -699,35 +654,34 @@ mod tests {
     }
 
     #[test]
-    fn reads_tags_as_list_or_text_and_category() {
+    fn reads_tags_as_list_or_text() {
         let root = tempfile::tempdir().unwrap();
         write_vocab(root.path());
-        write_post(root.path(), "a", "title: A\ndate: 2020-01-01\ncategory: filzen\ntags: [katzen, Hüte]\n");
+        write_post(root.path(), "a", "title: A\ndate: 2020-01-01\ntags: [katzen, Hüte]\n");
         write_post(root.path(), "b", "title: B\ndate: 2020-01-02\ntags:\n  - Katzen\n  - Hüte\n");
         write_post(root.path(), "c", "title: C\ndate: 2020-01-03\ntags: Katzen, Taschen\n");
-        write_post(root.path(), "d", "title: D\ndate: 2020-01-04\ncategory: wolle\n");
+        write_post(root.path(), "d", "title: D\ndate: 2020-01-04\n");
         let diag = Diagnostics::default();
         let site = load(root.path(), &now(), &diag);
         assert!(!diag.has_errors(), "{:?}", messages(&diag));
         let by = |t: &str| site.posts.iter().find(|p| p.title == t).unwrap();
         assert_eq!(by("A").tags, ["Katzen", "Hüte"]);
-        assert_eq!(by("A").category, "filzen");
         assert_eq!(by("B").tags, ["Katzen", "Hüte"]);
         assert_eq!(by("C").tags, ["Katzen", "Taschen"]);
-        assert!(by("D").tags.is_empty() && by("D").category == "wolle");
-        assert_eq!(by("C").category, "filzen");
+        assert!(by("D").tags.is_empty(), "Schlagworte sind optional");
     }
 
     #[test]
-    fn unknown_category_names_path_value_and_allowed() {
+    fn old_category_field_is_ignored_with_a_warning() {
         let root = tempfile::tempdir().unwrap();
         write_vocab(root.path());
-        write_post(root.path(), "a", "title: A\ndate: 2020-01-01\ncategory: filtzen\n");
+        write_post(root.path(), "a", "title: A\ndate: 2020-01-01\ncategory: wolle\ntags: [Katzen]\n");
         let diag = Diagnostics::default();
-        load(root.path(), &now(), &diag);
+        let site = load(root.path(), &now(), &diag);
+        assert!(!diag.has_errors());
+        assert_eq!(site.posts.len(), 1);
         let m = messages(&diag).join("\n");
-        assert!(m.contains("content/posts/a/index.md") && m.contains("`filtzen`"), "{m}");
-        assert!(m.contains("Meintest du `filzen`?") && m.contains("`filzen`, `wolle`"), "{m}");
+        assert!(m.contains("content/posts/a/index.md") && m.contains("`category`") && m.contains("tags"), "{m}");
     }
 
     #[test]
@@ -748,14 +702,12 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let c = root.path().join("content");
         fs::create_dir_all(&c).unwrap();
-        fs::write(c.join("categories.yaml"), "- id: filzen\n  name: Filzen\n  image: /images/fehlt.jpg\n  motto: x\n").unwrap();
         fs::write(c.join("tags.yaml"), "- name: Katzen\n- name: katzen\n").unwrap();
         write_post(root.path(), "a", "title: A\ndate: 2020-01-01\ntags: [Katzen]\n");
         let diag = Diagnostics::default();
         load(root.path(), &now(), &diag);
         let m = messages(&diag).join("\n");
         assert!(m.contains("content/tags.yaml: Schlagwort `katzen` kommt doppelt vor (schon als `Katzen`)"), "{m}");
-        assert!(m.contains("content/categories.yaml") && m.contains("/images/fehlt.jpg"), "{m}");
         assert!(m.contains("Schlagwort `Katzen` hat nur 1 Beitrag"), "{m}");
     }
 
@@ -810,33 +762,4 @@ mod tests {
         assert_eq!(site.start.as_deref(), Some("Hallo!\n"));
     }
 
-    #[test]
-    fn category_intro_is_optional() {
-        let root = tempfile::tempdir().unwrap();
-        write_vocab(root.path());
-        let c = root.path().join("content/categories.yaml");
-        let mut text = fs::read_to_string(&c).unwrap();
-        text.push_str("- id: malen\n  name: Malen\n  image: /images/f.jpg\n  motto: m\n  intro: Pinsel und Stift.\n");
-        fs::write(&c, text).unwrap();
-        let site = load(root.path(), &now(), &Diagnostics::default());
-        let intro = |id: &str| site.categories.iter().find(|c| c.id == id).unwrap().intro.clone();
-        assert_eq!(intro("malen").as_deref(), Some("Pinsel und Stift."));
-        assert_eq!(intro("filzen"), None);
-    }
-
-    #[test]
-    fn post_without_category_is_an_error_naming_path_and_field() {
-        let root = tempfile::tempdir().unwrap();
-        write_vocab(root.path());
-        let d = root.path().join("content/posts/ohne");
-        fs::create_dir_all(&d).unwrap();
-        fs::write(d.join("index.md"), "---\ntitle: Ohne\ndate: 2020-01-01\n---\nText\n").unwrap();
-        write_post(root.path(), "mit", "title: Mit\ndate: 2020-01-02\ncategory: wolle\n");
-        let diag = Diagnostics::default();
-        let site = load(root.path(), &now(), &diag);
-        let m = messages(&diag);
-        assert!(diag.has_errors());
-        assert!(m.iter().any(|x| x.contains("content/posts/ohne/index.md") && x.contains("`category`") && x.contains("`filzen`, `wolle`")), "{m:?}");
-        assert_eq!(site.posts.len(), 1, "fehlerhafter Post wird nicht geladen");
-    }
 }

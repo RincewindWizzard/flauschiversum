@@ -38,13 +38,8 @@ expression: "stable(&read(root, \"index.html\"))"
       <nav class="topnav" aria-label="Hauptnavigation">
         <ul>
           <li><a href="/beitraege/">Beiträge</a></li>
-          <li class="has-menu">
-            <a href="/themen/">Kategorien</a>
-            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
-            <ul class="submenu card" id="menu-kategorien">
-              <li><a href="/kategorie/basteln/">Basteln</a></li>
-            </ul>
-          </li>
+          <li><a href="/themen/">Themen</a></li>
+          <li><a href="/tipps-und-tricks/">Tipps und Tricks</a></li>
         </ul>
       </nav>
     </details>
@@ -78,7 +73,7 @@ expression: "stable(&read(root, \"index.html\"))"
       <li class="entry">
   <div class="entry-text">
     <p class="entry-title"><a href="/2026/01/gruene-muetze/">Grüne Mütze</a></p>
-    <p class="entry-meta"><time datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time> · <a href="/kategorie/basteln/">Basteln</a></p>
+    <p class="entry-meta"><time datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time></p>
     <p class="excerpt">Ohne Bild.</p>
   </div>
 </li>
@@ -86,7 +81,7 @@ expression: "stable(&read(root, \"index.html\"))"
   <a href="/2020/10/kurbis/" class="entry-image" tabindex="-1" aria-hidden="true"><img src="/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png" width="200" height="150" alt="" loading="lazy"></a>
   <div class="entry-text">
     <p class="entry-title"><a href="/2020/10/kurbis/">Kürbis</a></p>
-    <p class="entry-meta"><time datetime="2020-10-31T00:00:00+01:00">31. Oktober 2020</time> · <a href="/kategorie/basteln/">Basteln</a></p>
+    <p class="entry-meta"><time datetime="2020-10-31T00:00:00+01:00">31. Oktober 2020</time></p>
     <p class="excerpt">Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.</p>
   </div>
 </li>
@@ -94,7 +89,7 @@ expression: "stable(&read(root, \"index.html\"))"
   <a href="/2014/01/alraune/" class="entry-image" tabindex="-1" aria-hidden="true"><img src="/2014/01/alraune/200x/DSCF0527.jpg" width="200" height="150" alt="" loading="lazy"></a>
   <div class="entry-text">
     <p class="entry-title"><a href="/2014/01/alraune/">Alraune</a></p>
-    <p class="entry-meta"><time datetime="2014-01-04T19:10:28+01:00">4. Januar 2014</time> · <a href="/kategorie/basteln/">Basteln</a></p>
+    <p class="entry-meta"><time datetime="2014-01-04T19:10:28+01:00">4. Januar 2014</time></p>
     <p class="excerpt">Mal wieder etwas für das Hobby LARP.</p>
   </div>
 </li>
@@ -129,7 +124,6 @@ expression: "stable(&read(root, \"index.html\"))"
       <p class="copyright">&copy; 2026 Ermeline Wollknoll</p>
     </div>
     <nav class="footer-links" aria-label="Weitere Seiten">
-      <a href="/tipps-und-tricks/">Tipps und Tricks</a>
       <a href="/about/">About me</a>
       <a href="/impressum/">Impressum</a>
     </nav>

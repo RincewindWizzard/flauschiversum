@@ -1,8 +1,7 @@
 ---
 title: "Nadelfilzen"
 permalink: /2016/10/nadelfilzen/
-category: wolle
-tags: [Filzen]
+tags: [Filzen, Wolle]
 author: Ermeline
 date: 2016-10-09 15:28:57
 image: "DSCF5788.JPG"

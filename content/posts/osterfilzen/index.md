@@ -1,8 +1,7 @@
 ---
 title: "Osterfilzen"
 permalink: /2017/04/osterfilzen/
-category: wolle
-tags: [Geschenke, Filzen]
+tags: [Geschenke, Filzen, Wolle]
 author: Ermeline
 date: 2017-04-23
 image: "osterfilzen_thumb.jpg"

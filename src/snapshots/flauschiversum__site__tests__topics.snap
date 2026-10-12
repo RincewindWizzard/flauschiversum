@@ -10,7 +10,7 @@ expression: "stable(&read(root, \"themen/index.html\"))"
 <meta name="color-scheme" content="light dark">
 <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>Themen – Flauschiversum</title>
-<meta name="description" content="Alle Kategorien und Schlagworte im Flauschiversum: 1 Kategorien, 3 Schlagworte.">
+<meta name="description" content="Alle Themen im Flauschiversum: 3 Themen zum Stöbern.">
 <link rel="canonical" href="https://flauschiversum.de/themen/">
 <link rel="stylesheet" href="/style.css?v=HASH">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
@@ -19,7 +19,7 @@ expression: "stable(&read(root, \"themen/index.html\"))"
 <meta property="og:locale" content="de_DE">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Themen">
-<meta property="og:description" content="Alle Kategorien und Schlagworte im Flauschiversum: 1 Kategorien, 3 Schlagworte.">
+<meta property="og:description" content="Alle Themen im Flauschiversum: 3 Themen zum Stöbern.">
 <meta property="og:url" content="https://flauschiversum.de/themen/">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -38,13 +38,8 @@ expression: "stable(&read(root, \"themen/index.html\"))"
       <nav class="topnav" aria-label="Hauptnavigation">
         <ul>
           <li><a href="/beitraege/">Beiträge</a></li>
-          <li class="has-menu">
-            <a href="/themen/">Kategorien</a>
-            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
-            <ul class="submenu card" id="menu-kategorien">
-              <li><a href="/kategorie/basteln/">Basteln</a></li>
-            </ul>
-          </li>
+          <li><a href="/themen/">Themen</a></li>
+          <li><a href="/tipps-und-tricks/">Tipps und Tricks</a></li>
         </ul>
       </nav>
     </details>
@@ -70,21 +65,13 @@ expression: "stable(&read(root, \"themen/index.html\"))"
 <main class="topic topics-overview">
   <header class="topic-head">
     <h1>Themen</h1>
+    <p class="count">3 Themen zum Stöbern</p>
   </header>
-  <section aria-labelledby="kategorien">
-    <h2 id="kategorien">Kategorien</h2>
-    <ul class="taglist">
-      <li><a href="/kategorie/basteln/">Basteln <span class="count">(3)</span></a></li>
-    </ul>
-  </section>
-  <section aria-labelledby="schlagworte">
-    <h2 id="schlagworte">Schlagworte</h2>
-    <ul class="taglist">
-      <li><a href="/tag/halloween/">Halloween <span class="count">(1)</span></a></li>
-      <li><a href="/tag/huete/">Hüte <span class="count">(3)</span></a></li>
-      <li><a href="/tag/larp/">LARP <span class="count">(2)</span></a></li>
-    </ul>
-  </section>
+  <ul class="taglist">
+    <li><a href="/tag/halloween/">Halloween <span class="count">(1)</span></a></li>
+    <li><a href="/tag/huete/">Hüte <span class="count">(3)</span></a></li>
+    <li><a href="/tag/larp/">LARP <span class="count">(2)</span></a></li>
+  </ul>
 </main>
 
   </div>
@@ -103,7 +90,6 @@ expression: "stable(&read(root, \"themen/index.html\"))"
       <p class="copyright">&copy; 2026 Ermeline Wollknoll</p>
     </div>
     <nav class="footer-links" aria-label="Weitere Seiten">
-      <a href="/tipps-und-tricks/">Tipps und Tricks</a>
       <a href="/about/">About me</a>
       <a href="/impressum/">Impressum</a>
     </nav>

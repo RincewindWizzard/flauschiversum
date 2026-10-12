@@ -1,8 +1,7 @@
 ---
 title: "Trickfilm Gelenkpuppen"
 permalink: /2016/11/trickfilm-gelenkpuppen/
-category: basteln
-tags: [Puppen]
+tags: [Puppen, Basteln]
 author: Ermeline
 date: 2016-11-20 19:42:16
 image: "DSCF5954.JPG"

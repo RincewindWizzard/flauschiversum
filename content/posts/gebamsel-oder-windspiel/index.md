@@ -1,7 +1,7 @@
 ---
 title: "Gebamsel oder Windspiel"
 permalink: /2017/04/gebamsel-oder-windspiel/
-category: basteln
+tags: [Basteln]
 author: Lucy
 date: 2017-04-16
 image: "gebamsel-oder-windspiel_thumb.jpg"

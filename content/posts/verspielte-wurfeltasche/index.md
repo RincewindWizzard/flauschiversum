@@ -1,8 +1,7 @@
 ---
 title: "verspielte Würfeltasche"
 permalink: /2017/08/verspielte-wurfeltasche/
-category: brandings
-tags: [Taschen, Leder]
+tags: [Taschen, Leder, Brandings]
 author: Ermeline
 date: 2017-08-20
 image: "verspielte-wurfeltasche_thumb.jpg"

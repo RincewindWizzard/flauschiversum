@@ -50,7 +50,7 @@ const colorsOf = (page, specs) => page.evaluate((specs) => {
   });
 }, specs);
 
-const PAGES = ['/', '/2020/10/kurbis/', '/kategorie/wolle/', '/impressum/'];
+const PAGES = ['/', '/2020/10/kurbis/', '/tag/wolle/', '/impressum/'];
 
 for (const scheme of ['light', 'dark']) {
   await test(`Kontraste im ${scheme === 'light' ? 'Hell' : 'Dunkel'}modus (WCAG AA) auf allen Seitentypen`, async () => {
@@ -58,7 +58,7 @@ for (const scheme of ['light', 'dark']) {
       const page = await newPage(scheme, path);
       const found = (await colorsOf(page, [
         ['main p', 'text'], ['main a', 'link'], ['.entry-meta', 'muted'], ['.cloud a', 'cloud'], ['.topnav > ul > li > a', 'nav'],
-        ['.searchbox button', 'lens'], ['.post-header a.category', 'category'], ['.archive summary', 'archive'], ['#blogfooter .footer-links a', 'footer'], ['#blogfooter .copyright', 'copyright'],
+        ['.searchbox button', 'lens'], ['.archive summary', 'archive'], ['#blogfooter .footer-links a', 'footer'], ['#blogfooter .copyright', 'copyright'],
       ])).filter(Boolean);
       for (const f of found) {
         const r = ratio(f.color, f.bg);
@@ -69,7 +69,7 @@ for (const scheme of ['light', 'dark']) {
             assert.ok(rc >= 4.5, `${path} ${f.what} bei ${name}: ${rc.toFixed(2)}`);
           }
         }
-        if (f.what === 'lens' || f.what === 'category') for (const [name, m] of Object.entries(MACHADO)) assert.ok(ratio(simulate(f.color, m), simulate(f.bg, m)) >= 4.5, `${path} ${f.what} bei ${name}`);
+        if (f.what === 'lens') for (const [name, m] of Object.entries(MACHADO)) assert.ok(ratio(simulate(f.color, m), simulate(f.bg, m)) >= 4.5, `${path} ${f.what} bei ${name}`);
       }
       // Bedienelemente: Rand des Suchfelds und Akzentfläche gegen den Untergrund mindestens 3 : 1
       const ui = (await colorsOf(page, [['.topsearch input[type=search]', 'Suchfeldrand'], ['.searchbox button', 'Akzentfläche']])).filter(Boolean);
@@ -205,16 +205,15 @@ await test('Erhöhter Kontrast: keine Sterne und kein Nebel', async () => {
   await ctx.close();
 });
 
-await test('Suche und Menü im Dunkelmodus dunkel mit hellem Text', async () => {
+await test('Suche und Topbar im Dunkelmodus dunkel mit hellem Text', async () => {
   const page = await newPage('dark', '/suche/?q=m%C3%BCtze');
   await page.waitForSelector('.pagefind-ui__result');
   const [text, bg] = await page.evaluate(() => { const t = document.querySelector('.pagefind-ui__result-title a'); const f = document.querySelector('.pagefind-ui'); return [getComputedStyle(t).color, getComputedStyle(f).getPropertyValue('--pagefind-ui-background').trim()]; });
   const rgb = text.match(/\d+/g).slice(0, 3).map(Number);
   assert.ok(lum(rgb) > 0.3, `Treffertitel hell: ${text}`);
   assert.ok(bg !== '' && !/^#fff/i.test(bg), `Suchoberfläche dunkel (${bg})`);
-  await page.hover('.topnav li.has-menu >> nth=0');
-  const menuBg = await page.evaluate(() => getComputedStyle(document.querySelector('.topnav .submenu')).backgroundColor);
-  assert.ok(lum(menuBg.match(/\d+/g).slice(0, 3).map(Number)) < 0.1, `Untermenü dunkel: ${menuBg}`);
+  const barBg = await page.evaluate(() => getComputedStyle(document.querySelector('.topbar')).backgroundColor);
+  assert.ok(lum(barBg.match(/\d+/g).slice(0, 3).map(Number)) < 0.1, `Topbar dunkel: ${barBg}`);
   await page.screenshot({ path: '/tmp/flausch-theme-suche-dunkel.png' });
   await page.context().close();
 });
@@ -243,7 +242,7 @@ await test('Handy 360 px: Umschalter neben dem Hamburger-Knopf, kein waagerechte
 
 await test('Screenshots für die Abnahme', async () => {
   for (const scheme of ['light', 'dark']) {
-    for (const [path, name] of [['/', 'start'], ['/2016/05/alltagshute/', 'beitrag'], ['/beitraege/', 'beitraege'], ['/kategorie/wolle/', 'kategorie']]) {
+    for (const [path, name] of [['/', 'start'], ['/2016/05/alltagshute/', 'beitrag'], ['/beitraege/', 'beitraege'], ['/tag/wolle/', 'thema']]) {
       const page = await newPage(scheme, path);
       await page.screenshot({ path: `/tmp/flausch-theme-${scheme}-${name}.png` });
       await page.context().close();

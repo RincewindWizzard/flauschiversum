@@ -5,10 +5,11 @@
   {%- if let Some(t) = thumb %}
   <div class="center"><img src="{{ t.src }}" width="{{ t.width }}" height="{{ t.height }}" alt=""></div>
   {%- endif %}
+  {%- if !tags.is_empty() %}
   <p class="classification">
-    <a class="category" href="{{ category.url }}">{{ category.name }}</a>
     {%- for t in tags %}<a class="tag" href="{{ t.url }}">{{ t.name }}</a>{% endfor %}
   </p>
+  {%- endif %}
   <div class="center">
     <small>Schreibe Ihr eine <a href="{{ mail_href }}" class="mailto">Nachricht</a>!</small>
   </div>

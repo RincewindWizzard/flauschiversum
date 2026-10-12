@@ -1,8 +1,7 @@
 ---
 title: "Filzen Filzen Filzen"
 permalink: /2015/07/filzen-filzen-filzen/
-category: wolle
-tags: [Filzen]
+tags: [Filzen, Wolle]
 author: Ermeline
 date: 2015-07-30 19:21:38
 image: "DSCF3086.jpg"

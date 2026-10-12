@@ -1,8 +1,7 @@
 ---
 title: "Frühlingserwachen"
 permalink: /2017/04/fruhlingserwachen/
-category: wolle
-tags: [Schule und Ausbildung, Filzen]
+tags: [Schule und Ausbildung, Filzen, Wolle]
 author: Ermeline
 date: 2017-04-02
 image: "fruelingserwachen_thumb.jpg"

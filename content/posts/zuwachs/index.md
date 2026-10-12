@@ -1,8 +1,7 @@
 ---
 title: "Zuwachs"
 permalink: /2016/10/zuwachs/
-category: sonstiges
-tags: [Katzen]
+tags: [Katzen, Sonstiges]
 author: Ermeline
 date: 2016-10-23 17:41:25
 image: "DSCF5821.JPG"

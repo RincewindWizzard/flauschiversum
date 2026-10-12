@@ -1,7 +1,6 @@
 ---
 title: "Popupbox"
 permalink: /2016/04/popupbox/
-category: papier
 tags: [Geschenke, Papier]
 author: Ermeline
 date: 2016-04-24 21:50:11

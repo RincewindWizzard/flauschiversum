@@ -1,8 +1,7 @@
 ---
 title: "Stifteaufbewahrung"
 permalink: /2018/04/stifteaufbewahrung/
-category: basteln
-tags: [Upcycling]
+tags: [Upcycling, Basteln]
 author: Ermeline
 date: 2018-04-08
 image: "stifteaufbewahrung_thumb.jpg"

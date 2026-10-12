@@ -1,7 +1,7 @@
 ---
 title: "Das Wollfass"
 permalink: /2016/04/das-wollfass/
-category: basteln
+tags: [Basteln]
 author: Ermeline
 date: 2016-04-03 20:50:11
 image: "DSCF4144.JPG"

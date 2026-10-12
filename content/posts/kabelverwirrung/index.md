@@ -1,8 +1,7 @@
 ---
 title: "Kabelverwirrung"
 permalink: /2014/04/kabelverwirrung/
-category: basteln
-tags: [Upcycling]
+tags: [Upcycling, Basteln]
 author: Ermeline
 date: 2014-04-28 21:54:55
 image: "DSCF2329.jpg"

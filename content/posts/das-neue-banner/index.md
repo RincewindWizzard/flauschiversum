@@ -1,8 +1,7 @@
 ---
 title: "das neue Banner"
 permalink: /2014/08/das-neue-banner/
-category: wolle
-tags: [LARP, Filzen]
+tags: [LARP, Filzen, Wolle]
 author: Ermeline
 date: 2014-08-31 18:45:53
 image: "DSCF1536.jpg"

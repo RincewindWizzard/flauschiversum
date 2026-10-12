@@ -1,7 +1,7 @@
 ---
 title: "der heisse Draht"
 permalink: /2017/06/der-heisse-draht/
-category: basteln
+tags: [Basteln]
 author: Ermeline
 date: 2017-06-25
 image: "der-heisse-draht_thumb.jpg"

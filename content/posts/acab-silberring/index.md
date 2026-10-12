@@ -1,7 +1,6 @@
 ---
 title: "ACAB-Silberring"
 permalink: /2017/06/acab-silberring/
-category: schmuck
 tags: [Schmuck]
 author: Ermeline
 date: 2017-06-18

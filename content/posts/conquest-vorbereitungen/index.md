@@ -1,8 +1,7 @@
 ---
 title: "ConQuest-Vorbereitungen"
 permalink: /2016/07/conquest-vorbereitungen/
-category: basteln
-tags: [LARP]
+tags: [LARP, Basteln]
 author: Ermeline
 date: 2016-07-31 14:50:11
 image: "DSCF5265.JPG"

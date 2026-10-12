@@ -1,8 +1,7 @@
 ---
 title: "Herzchenschuhe"
 permalink: /2019/03/herzchenschuhe/
-category: brandings
-tags: [Leder]
+tags: [Leder, Brandings]
 author: Ermeline
 date: 2019-03-17
 image: "herzchenschuhe_thumb.jpg"

@@ -12,14 +12,13 @@ pub struct SearchDoc {
     pub title: String,
     /// Kodierte URL des Vorschaubilds, falls vorhanden.
     pub image: Option<String>,
-    pub category: Option<String>,
     pub tags: Vec<String>,
     /// Gerenderter Inhalt (HTML) ohne Seitenrahmen.
     pub body_html: String,
 }
 
-/// Name des Kategoriefilters im Index (so heißt er auch in der Oberfläche).
-pub const CATEGORY_FILTER: &str = "Kategorie";
+/// Name des Filters nach Themen (Schlagworten) im Index (so heißt er auch in der Oberfläche).
+pub const TOPIC_FILTER: &str = "Thema";
 
 fn attr(value: &str) -> String {
     let mut out = String::new();
@@ -40,15 +39,13 @@ fn document(doc: &SearchDoc) -> String {
     if let Some(image) = &doc.image {
         html.push_str(&format!("<span data-pagefind-meta=\"image:{}\"></span>", attr(image)));
     }
-    if let Some(category) = &doc.category {
-        html.push_str(&format!("<span data-pagefind-filter=\"{CATEGORY_FILTER}:{}\"></span>", attr(category)));
-        html.push_str(&format!("<span data-pagefind-meta=\"{CATEGORY_FILTER}:{}\"></span>", attr(category)));
+    for tag in &doc.tags {
+        html.push_str(&format!("<span data-pagefind-filter=\"{TOPIC_FILTER}:{}\"></span>", attr(tag)));
     }
     html.push_str(&doc.body_html);
-    // Kategorie und Schlagworte sind durchsuchbar; am Ende, damit Ausschnitte bevorzugt den Text zeigen
-    let topics: Vec<&str> = doc.category.iter().map(String::as_str).chain(doc.tags.iter().map(String::as_str)).collect();
-    if !topics.is_empty() {
-        html.push_str(&format!("<p data-pagefind-weight=\"3\">{}</p>", text(&topics.join(" "))));
+    // Schlagworte sind durchsuchbar; am Ende, damit Ausschnitte bevorzugt den Text zeigen
+    if !doc.tags.is_empty() {
+        html.push_str(&format!("<p data-pagefind-weight=\"3\">{}</p>", text(&doc.tags.join(" "))));
     }
     html.push_str("</body></html>");
     html
@@ -161,18 +158,17 @@ mod tests {
     use super::*;
 
     fn docs() -> Vec<SearchDoc> {
-        let doc = |url: &str, title: &str, category: Option<&str>, tags: &[&str], body: &str| SearchDoc {
+        let doc = |url: &str, title: &str, tags: &[&str], body: &str| SearchDoc {
             url: url.into(),
             title: title.into(),
             image: None,
-            category: category.map(String::from),
             tags: tags.iter().map(|t| t.to_string()).collect(),
             body_html: body.into(),
         };
         vec![
-            doc("/2020/10/kurbis/", "Kürbis", Some("Basteln"), &["Halloween"], "<p>Ein gefilzter Kürbis für den Herbst.</p>"),
-            doc("/2014/01/katzenmuetze/", "Katzenmütze", Some("Wolle"), &["Katzen", "Mützen und Stirnbänder"], "<p>Eine Mütze mit Ohren.</p>"),
-            doc("/2016/05/tasche/", "Tasche", None, &["Taschen"], "<p>Aus altem Filz genäht.</p>"),
+            doc("/2020/10/kurbis/", "Kürbis", &["Basteln", "Halloween"], "<p>Ein gefilzter Kürbis für den Herbst.</p>"),
+            doc("/2014/01/katzenmuetze/", "Katzenmütze", &["Wolle", "Katzen", "Mützen und Stirnbänder"], "<p>Eine Mütze mit Ohren.</p>"),
+            doc("/2016/05/tasche/", "Tasche", &["Taschen"], "<p>Aus altem Filz genäht.</p>"),
         ]
     }
 

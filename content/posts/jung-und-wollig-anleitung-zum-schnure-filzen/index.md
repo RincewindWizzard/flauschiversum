@@ -1,8 +1,7 @@
 ---
 title: "jung und wollig / Anleitung zum Schnüre filzen"
 permalink: /2014/08/jung-und-wollig-anleitung-zum-schnure-filzen/
-category: wolle
-tags: [Filzen]
+tags: [Filzen, Wolle]
 author: Ermeline
 date: 2014-08-02 14:06:49
 image: "DSCF1420.jpg"

@@ -1,8 +1,7 @@
 ---
 title: "Das Buch Angela"
 permalink: /2014/06/das-buch-angela/
-category: sonstiges
-tags: [Bücher]
+tags: [Bücher, Sonstiges]
 author: Lucy
 date: 2014-06-12 16:05:04
 image: "DSCF0890.jpg"

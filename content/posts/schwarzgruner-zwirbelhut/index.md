@@ -1,8 +1,7 @@
 ---
 title: "Schwarzgrüner Zwirbelhut"
 permalink: /2014/07/schwarzgruner-zwirbelhut/
-category: wolle
-tags: [Hüte, Filzen]
+tags: [Hüte, Filzen, Wolle]
 author: Ermeline
 date: 2014-07-23 11:07:27
 image: DSCF1407.jpg

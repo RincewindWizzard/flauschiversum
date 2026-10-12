@@ -1,8 +1,7 @@
 ---
 title: "Stricklies'ln & Häkelpetra's"
 permalink: /2013/07/stricklies-ln-hakelpetra-s/
-category: wolle
-tags: [Stricken, Häkeln]
+tags: [Stricken, Häkeln, Wolle]
 author: Ermeline
 date: 2013-07-27 22:46:08
 excerpt: "Ravelry das absolute Paradies für Strick- und Häkelfreunde"

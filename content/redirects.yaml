@@ -1,0 +1,13 @@
+# Weiterleitungen alter Adressen auf neue (Cool URIs don't change): `/alte-adresse/: /neue-adresse/`.
+# Die frühere Ordnung nach Kategorien ist den Themen (Schlagworten) gewichen.
+/kategorie/wolle/: /tag/wolle/
+/kategorie/filzen/: /tag/filzen/
+/kategorie/naehen/: /tag/naehen/
+/kategorie/basteln/: /tag/basteln/
+/kategorie/brandings/: /tag/brandings/
+/kategorie/malen/: /tag/malen/
+/kategorie/papier/: /tag/papier/
+/kategorie/schmuck/: /tag/schmuck/
+/kategorie/feste/: /tag/feste/
+/kategorie/material/: /tag/einkaufen/
+/kategorie/sonstiges/: /tag/sonstiges/

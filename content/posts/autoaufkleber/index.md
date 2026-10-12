@@ -1,7 +1,7 @@
 ---
 title: "Autoaufkleber"
 permalink: /2014/05/autoaufkleber/
-category: basteln
+tags: [Basteln]
 author: Ermeline
 date: 2014-05-22 15:05:28
 image: "DSCF0641.JPG"

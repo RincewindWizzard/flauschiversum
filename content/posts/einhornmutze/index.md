@@ -1,8 +1,7 @@
 ---
 title: "Einhornmütze"
 permalink: /2018/07/einhornmutze/
-category: wolle
-tags: [Häkeln, Mützen und Stirnbänder, Einhörner]
+tags: [Häkeln, Mützen und Stirnbänder, Einhörner, Wolle]
 author: Ermeline
 date: 2018-07-22
 image: "einhornmutze_thumb.jpg"

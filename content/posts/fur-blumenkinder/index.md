@@ -1,8 +1,7 @@
 ---
 title: "für Blumenkinder"
 permalink: /2014/01/fur-blumenkinder/
-category: wolle
-tags: [Hüte, Filzen]
+tags: [Hüte, Filzen, Wolle]
 author: Ermeline
 date: 2014-01-02 22:46:33
 image: "DSCF0500.jpg"

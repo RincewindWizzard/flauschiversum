@@ -1,8 +1,7 @@
 ---
 title: "Langzieh-Waaaaaas??"
 permalink: /2014/05/langzieh-waaaaaas/
-category: wolle
-tags: [Häkeln]
+tags: [Häkeln, Wolle]
 author: Ermeline
 date: 2014-05-18 17:42:09
 image: "DSCF0637.JPG"

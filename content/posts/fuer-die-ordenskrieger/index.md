@@ -1,8 +1,7 @@
 ---
 title: "für die Ordenskrieger"
 permalink: /2014/01/fur-die-ordenskrieger/
-category: basteln
-tags: [Schule und Ausbildung]
+tags: [Schule und Ausbildung, Basteln]
 author: Ermeline
 date: 2014-01-02 20:49:25
 image: "DSCF0478.JPG"

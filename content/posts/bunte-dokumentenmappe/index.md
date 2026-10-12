@@ -1,8 +1,7 @@
 ---
 title: "bunte Dokumentenmappe"
 permalink: /2016/06/bunte-dokumentenmappe/
-category: nähen
-tags: [Mappen und Etuis]
+tags: [Mappen und Etuis, Nähen]
 author: Ermeline
 date: 2016-06-12 21:30:23
 image: "DSCF4747.JPG"

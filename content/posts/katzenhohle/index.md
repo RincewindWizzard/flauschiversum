@@ -1,8 +1,7 @@
 ---
 title: "Katzenhöhle"
 permalink: /2015/07/katzenhohle/
-category: wolle
-tags: [Katzen, Filzen]
+tags: [Katzen, Filzen, Wolle]
 author: Ermeline
 date: 2015-07-27 11:01:13
 image: "DSCF3001.jpg"

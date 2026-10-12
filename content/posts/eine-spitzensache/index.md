@@ -1,8 +1,7 @@
 ---
 title: "Eine Spitzensache"
 permalink: /2016/01/eine-spitzensache/
-category: nähen
-tags: [Schmuck, Mappen und Etuis]
+tags: [Schmuck, Mappen und Etuis, Nähen]
 author: Lucy
 date: 2016-01-31 15:30:23
 image: "DSCF3742.JPG"

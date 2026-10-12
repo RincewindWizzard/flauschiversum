@@ -34,7 +34,7 @@ pub fn iso(post: &Post) -> String {
 }
 
 /// JSON-LD `BlogPosting` für eine Post-Seite.
-pub fn blog_posting(post: &Post, image: Option<&str>, section: Option<&str>, base: &Base) -> String {
+pub fn blog_posting(post: &Post, image: Option<&str>, base: &Base) -> String {
     let url = base.absolute(&post.url);
     let mut v = json!({
         "@context": "https://schema.org",
@@ -55,9 +55,6 @@ pub fn blog_posting(post: &Post, image: Option<&str>, section: Option<&str>, bas
     if let Some(e) = &post.excerpt {
         v["description"] = json!(e);
     }
-    if let Some(name) = section {
-        v["articleSection"] = json!(name);
-    }
     if !post.tags.is_empty() {
         v["keywords"] = json!(post.tags.join(", "));
     }
@@ -76,12 +73,7 @@ pub fn sitemap(site: &Site, topics: &Topics, base: &Base) -> String {
     );
     let _ = writeln!(out, "  <url><loc>{}/</loc></url>", base.as_str());
     let _ = writeln!(out, "  <url><loc>{}/themen/</loc></url>", base.as_str());
-    let topic_urls = topics
-        .categories
-        .iter()
-        .map(|c| topics::category_url(&c.slug))
-        .chain(topics.tags.iter().map(|t| topics::tag_url(&t.slug)));
-    for url in topic_urls {
+    for url in topics.tags.iter().map(|t| topics::tag_url(&t.slug)) {
         let _ = writeln!(out, "  <url><loc>{}</loc></url>", xml_escape(&base.absolute(&url)));
     }
     for post in &site.posts {

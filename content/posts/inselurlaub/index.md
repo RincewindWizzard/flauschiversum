@@ -1,8 +1,7 @@
 ---
 title: "Inselurlaub"
 permalink: /2019/10/inselurlaub/
-category: wolle
-tags: [Spinnen, Stricken, Schals]
+tags: [Spinnen, Stricken, Schals, Wolle]
 author: Ermeline
 date: 2019-10-27 12:19:50
 image: "_1220243.jpg"

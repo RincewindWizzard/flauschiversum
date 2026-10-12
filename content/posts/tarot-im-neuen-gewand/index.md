@@ -1,8 +1,7 @@
 ---
 title: "Tarot im neuen Gewand"
 permalink: /2015/02/tarot-im-neuen-gewand/
-category: brandings
-tags: [Leder, Bücher]
+tags: [Leder, Bücher, Brandings]
 author: Ermeline
 date: 2015-02-10 15:57:25
 image: DSC00014.jpg

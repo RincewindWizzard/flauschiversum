@@ -1,14 +1,14 @@
 //! Ablauf eines Builds: Laden → Medien → Rendern → Ausgaben (ohne zu schreiben).
 
 use crate::archive;
-use crate::config::{HOME_NEWS, POSTS_LATEST, POSTS_PER_PAGE, TIME_ZONE};
+use crate::config::{BLOG_NAME, HOME_NEWS, POSTS_LATEST, POSTS_PER_PAGE, TIME_ZONE};
 use crate::content::{self, Site};
 use crate::diag::Diagnostics;
 use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, CloudTag, Common, Entry, Menu, PostCard, PostPageInput, RelatedLink, Thumb, TopicLink, TopicPageInput};
+use crate::render::{self, CloudTag, Common, Entry, PostCard, PostPageInput, RelatedLink, Thumb, TopicLink, TopicPageInput};
 use std::sync::Arc;
 use crate::search::{self, SearchDoc};
 use crate::seo;
@@ -71,7 +71,7 @@ pub fn bundle_css(style_dir: &Path) -> Result<String> {
 
 /// Erzeugt alle Ausgaben. Bricht ab, wenn die Inhalte Fehler enthalten.
 pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Result<Generated> {
-    crate::progress::step("Lese Inhalte (Beiträge, Seiten, Kategorien, Schlagworte) …");
+    crate::progress::step("Lese Inhalte (Beiträge, Seiten, Schlagworte) …");
     let site = content::load(&opts.root, &opts.now, diag);
     if diag.has_errors() {
         bail!("Inhalte enthalten Fehler");
@@ -114,13 +114,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     if diag.has_errors() {
         bail!("Inhalte enthalten Fehler");
     }
-    let menu = Arc::new(Menu {
-        categories: topics
-            .categories
-            .iter()
-            .map(|c| TopicLink { url: topics::category_url(&c.slug), name: c.category.name.clone(), count: None })
-            .collect(),
-    });
     let cloud = Arc::new(
         topics
             .cloud()
@@ -136,7 +129,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         livereload: opts.livereload,
         base: opts.base.clone(),
         staging: opts.staging.clone(),
-        menu,
         cloud,
     };
     outputs.insert("/style.css", Content::Bytes(css.into_bytes()));
@@ -158,26 +150,19 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         Some(Thumb { src: urls::encode_path(&urls::variant_path(&post.url, 200, name)), width: size.width, height: size.height })
     };
 
-    let category_name = |id: &str| site.categories.iter().find(|c| c.id == id).map(|c| c.name.clone());
-    let category_link = |post: &content::Post| -> TopicLink {
-        let id = post.category.as_str();
-        let name = category_name(id).expect("Kategorie wurde beim Laden geprüft");
-        TopicLink { url: topics::category_url(&urls::slugify(id)), name, count: None }
-    };
     let tag_links = |post: &content::Post| -> Vec<TopicLink> {
         post.tags
             .iter()
             .map(|t| TopicLink { url: topics::tag_url(&urls::slugify(t)), name: t.clone(), count: None })
             .collect()
     };
-    let entry_of = |p: &content::Post, with_category: bool| Entry {
+    let entry_of = |p: &content::Post| Entry {
         url: urls::encode_path(&p.url),
         title: p.title.clone(),
         date_iso: seo::iso(p),
         date_human: render::date_human(p),
         thumb: thumb_of(p),
         excerpt: p.excerpt.clone().unwrap_or_default(),
-        category: with_category.then(|| category_link(p)),
     };
 
     crate::progress::step("Rendere Beiträge (Markdown nach HTML) …");
@@ -213,7 +198,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                 url: post.url.clone(),
                 title: post.title.clone(),
                 image: thumb_of(post).map(|t| t.src),
-                category: category_name(&post.category),
                 tags: post.tags.clone(),
                 body_html: rendered.html.clone(),
             };
@@ -226,7 +210,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
                     newer: i.checked_sub(1).map(|j| &posts[j]),
                     older: posts.get(i + 1),
                     has_media,
-                    category: category_link(post),
                     related: related_links(i),
                     tags: tag_links(post),
                 },
@@ -252,7 +235,7 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         .collect();
     let (feed_parts, mut search_docs): (Vec<_>, Vec<_>) = post_parts.into_iter().unzip();
 
-    crate::progress::step("Erzeuge Listen, Archiv, Kategorie- und Schlagwortseiten …");
+    crate::progress::step("Erzeuge Listen, Archiv und Themenseiten …");
     // Indexseiten
     let count = render::page_count(posts.len());
     (0..count).into_par_iter().for_each(|index| {
@@ -276,52 +259,54 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
     });
     {
         let all: Vec<&content::Post> = posts.iter().collect();
-        let latest = posts.iter().take(POSTS_LATEST).map(|p| entry_of(p, true)).collect();
+        let latest = posts.iter().take(POSTS_LATEST).map(entry_of).collect();
         let html = render::render_posts(latest, archive::build(&all), &common);
         outputs.insert(render::index_url(0), Content::Bytes(html.into_bytes()));
     }
 
-    // Startseite, Themenübersicht, Kategorie- und Schlagwortseiten
-    let news = posts.iter().take(HOME_NEWS).map(|p| entry_of(p, true)).collect();
+    // Startseite, Themenübersicht und Themenseiten
+    let news = posts.iter().take(HOME_NEWS).map(entry_of).collect();
     let welcome = site.start.as_deref().map(markdown::render_page);
     outputs.insert("/", Content::Bytes(render::render_home(welcome, news, &common).into_bytes()));
 
     let link_of = |url: String, name: &str, n: usize| TopicLink { url, name: name.to_string(), count: Some(n) };
-    let overview_categories = topics.categories.iter().map(|c| link_of(topics::category_url(&c.slug), &c.category.name, c.posts.len())).collect();
     let overview_tags = topics.tags.iter().map(|t| link_of(topics::tag_url(&t.slug), t.name, t.posts.len())).collect();
-    outputs.insert("/themen/", Content::Bytes(render::render_topics(overview_categories, overview_tags, &common).into_bytes()));
+    outputs.insert("/themen/", Content::Bytes(render::render_topics(overview_tags, &common).into_bytes()));
 
-    for c in &topics.categories {
-        let url = topics::category_url(&c.slug);
-        let html = render::render_topic(
-            TopicPageInput {
-                url: url.clone(),
-                name: c.category.name.clone(),
-                motto: Some(c.category.motto.trim().to_string()),
-                intro: c.category.intro.as_deref().map(markdown::render_page),
-                count: c.posts.len(),
-                archive: archive::build(&c.posts),
-                entries: c.posts.iter().map(|p| entry_of(p, false)).collect(),
-            },
-            &common,
-        );
-        outputs.insert(url, Content::Bytes(html.into_bytes()));
-    }
     for t in &topics.tags {
         let url = topics::tag_url(&t.slug);
         let html = render::render_topic(
             TopicPageInput {
                 url: url.clone(),
                 name: t.name.to_string(),
-                motto: None,
-                intro: None,
                 count: t.posts.len(),
-                archive: Vec::new(),
-                entries: t.posts.iter().map(|p| entry_of(p, true)).collect(),
+                archive: archive::build(&t.posts),
+                entries: t.posts.iter().map(|p| entry_of(p)).collect(),
             },
             &common,
         );
         outputs.insert(url, Content::Bytes(html.into_bytes()));
+    }
+
+    // Weiterleitungen alter Adressen (Cool URIs): kleine Seite mit Meta-Refresh und kanonischem Verweis
+    for (from, to) in &site.redirects {
+        if outputs.contains(from) {
+            diag.error("content/redirects.yaml", format!("Weiterleitung `{from}`: unter dieser Adresse gibt es schon eine Seite"));
+            continue;
+        }
+        if !outputs.contains(to) {
+            diag.error("content/redirects.yaml", format!("Weiterleitung `{from}` → `{to}`: Ziel existiert nicht"));
+            continue;
+        }
+        let target = urls::encode_path(to);
+        let canonical = common.base.absolute(to);
+        let html = format!(
+            "<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n<meta charset=\"utf-8\">\n<title>Weiterleitung – {BLOG_NAME}</title>\n<meta name=\"robots\" content=\"noindex\">\n<link rel=\"canonical\" href=\"{canonical}\">\n<meta http-equiv=\"refresh\" content=\"0; url={target}\">\n</head>\n<body>\n<p>Diese Seite ist umgezogen: <a href=\"{target}\">{target}</a></p>\n</body>\n</html>\n"
+        );
+        outputs.insert(from.clone(), Content::Bytes(html.into_bytes()));
+    }
+    if diag.has_errors() {
+        bail!("Inhalte enthalten Fehler");
     }
 
     // Einzelseiten
@@ -332,7 +317,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
             url: page.url.clone(),
             title: page.title.clone(),
             image: None,
-            category: None,
             tags: Vec::new(),
             body_html: html.clone(),
         });
@@ -463,19 +447,13 @@ pub mod tests {
             write(root, &format!("content/static/images/{mascot}"), fs::read(repo.join("content/static/images").join(mascot)).unwrap());
         }
         write(root, "content/start.md", "Willkommen im **Flauschiversum**!\n");
-        write(root, "content/static/images/basteln.jpg", jpeg(300, 225, 120));
-        write(root, "content/static/images/wolle.jpg", jpeg(300, 225, 60));
-        write(
-            root,
-            "content/categories.yaml",
-            "- id: basteln\n  name: Basteln\n  image: /images/basteln.jpg\n  motto: |\n    Papier und Schere,\n    mehr brauchst du nicht.\n  intro: Alles mit *Klebe* und Schere.\n- id: wolle\n  name: Wolle\n  image: /images/wolle.jpg\n  motto: |\n    Maschen\n    ohne Ende\n",
-        );
         write(root, "content/tags.yaml", "- name: LARP\n- name: Hüte\n- name: Halloween\n");
+        write(root, "content/redirects.yaml", "/kategorie/basteln/: /tag/larp/\n");
         write(root, "content/pages/about.md", "---\ntitle: \"About\"\n---\n\n# Das Flauschiversum\n\nEin Blog über Wolle & Filz.\n\n[Kürbis](/2020/10/kurbis/)\n");
         write(
             root,
             "content/posts/alraune/index.md",
-            "---\ntitle: \"Alraune\"\npermalink: /2014/01/alraune/\nauthor: Ermeline\ncategory: basteln\ntags: [LARP, Hüte]\ndate: 2014-01-04 19:10:28\nimage: \"DSCF0527.jpg\"\nexcerpt: \"Mal wieder etwas für das Hobby LARP.\"\n---\n\n![Alraune oben](DSCF0527.jpg)\n![Alraune nah oben](DSCF0528.jpg)\n![Clip](clip.mp4)\n\nMal wieder etwas für das Hobby LARP.\n\n![Ohrenschützer](DSCF0531.jpg)\n\nSiehe [Kürbis](/2020/10/kurbis/) und [kaputt](/2014/01/gibts-nicht/).\n",
+            "---\ntitle: \"Alraune\"\npermalink: /2014/01/alraune/\nauthor: Ermeline\ntags: [LARP, Hüte]\ndate: 2014-01-04 19:10:28\nimage: \"DSCF0527.jpg\"\nexcerpt: \"Mal wieder etwas für das Hobby LARP.\"\n---\n\n![Alraune oben](DSCF0527.jpg)\n![Alraune nah oben](DSCF0528.jpg)\n![Clip](clip.mp4)\n\nMal wieder etwas für das Hobby LARP.\n\n![Ohrenschützer](DSCF0531.jpg)\n\nSiehe [Kürbis](/2020/10/kurbis/) und [kaputt](/2014/01/gibts-nicht/).\n",
         );
         write(root, "content/posts/alraune/DSCF0527.jpg", jpeg(800, 600, 40));
         write(root, "content/posts/alraune/DSCF0528.jpg", jpeg(600, 800, 90));
@@ -485,11 +463,11 @@ pub mod tests {
         write(
             root,
             "content/posts/kuerbis/index.md",
-            "---\ntitle: \"Kürbis\"\npermalink: /2020/10/kurbis/\nauthor: Ermeline\ncategory: basteln\ntags: [Halloween, Hüte]\ndate: 2020-10-31\nimage: \"kürbis thumb.png\"\nexcerpt: \"Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.\"\n---\n\n![Kürbis](kürbis thumb.png)\n",
+            "---\ntitle: \"Kürbis\"\npermalink: /2020/10/kurbis/\nauthor: Ermeline\ntags: [Halloween, Hüte]\ndate: 2020-10-31\nimage: \"kürbis thumb.png\"\nexcerpt: \"Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.\"\n---\n\n![Kürbis](kürbis thumb.png)\n",
         );
         write(root, "content/posts/kuerbis/kürbis thumb.png", png(400, 300));
-        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ncategory: basteln\ntags: [Hüte, LARP]\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
-        write(root, "content/posts/morgen/index.md", "---\ntitle: \"Morgen\"\ncategory: wolle\ntags: [Halloween]\ndate: 2099-01-01\nimage: \"bild.jpg\"\n---\n\n![Bild](bild.jpg)\n");
+        write(root, "content/posts/grüne-mütze/index.md", "---\ntitle: \"Grüne Mütze\"\ntags: [Hüte, LARP]\ndate: 2026-01-05\nexcerpt: \"Ohne Bild.\"\n---\n\nText.\n");
+        write(root, "content/posts/morgen/index.md", "---\ntitle: \"Morgen\"\ntags: [Halloween]\ndate: 2099-01-01\nimage: \"bild.jpg\"\n---\n\n![Bild](bild.jpg)\n");
         write(root, "content/posts/morgen/bild.jpg", jpeg(300, 200, 10));
     }
 
@@ -552,7 +530,8 @@ pub mod tests {
         insta::assert_snapshot!("post_alraune", stable(&read(root, "2014/01/alraune/index.html")));
         insta::assert_snapshot!("index", stable(&read(root, "beitraege/index.html")));
         insta::assert_snapshot!("home", stable(&read(root, "index.html")));
-        insta::assert_snapshot!("category_basteln", stable(&read(root, "kategorie/basteln/index.html")));
+        insta::assert_snapshot!("tag_larp", stable(&read(root, "tag/larp/index.html")));
+        insta::assert_snapshot!("redirect_kategorie", stable(&read(root, "kategorie/basteln/index.html")));
         insta::assert_snapshot!("tag_huete", stable(&read(root, "tag/huete/index.html")));
         insta::assert_snapshot!("topics", stable(&read(root, "themen/index.html")));
         insta::assert_snapshot!("search", stable(&read(root, "suche/index.html")));
@@ -583,6 +562,9 @@ pub mod tests {
         assert!(html.len() > 10);
         for (path, page) in &html {
             assert!(page.contains("<meta name=\"robots\" content=\"noindex\">"), "noindex fehlt: {path}");
+            if page.contains("http-equiv=\"refresh\"") {
+                continue; // Weiterleitungsseiten sind ohne Seitenrahmen
+            }
             let bar = format!("<div class=\"staging-bar\" role=\"note\">Staging: {branch}</div>");
             assert!(page.contains(&bar), "Leiste fehlt: {path}");
             assert!(page.find("staging-bar").unwrap() < page.find("<header").unwrap(), "Leiste nicht oben: {path}");
@@ -623,7 +605,8 @@ pub mod tests {
         let (g, _) = generate_with(root, "https://flauschiversum.de", None);
         for (path, page) in g.outputs.snapshot_html() {
             assert!(!page.contains("staging-bar"), "{path}");
-            assert_eq!(page.contains("noindex"), path == "/suche/index.html", "{path}");
+            // noindex nur auf der Suchseite und auf Weiterleitungen alter Adressen
+            assert_eq!(page.contains("noindex"), path == "/suche/index.html" || page.contains("http-equiv=\"refresh\""), "{path}");
         }
         assert!(g.outputs.contains("/sitemap.xml"));
         let robots = String::from_utf8(g.outputs.snapshot_bytes("/robots.txt")).unwrap();
@@ -645,18 +628,21 @@ pub mod tests {
         let pages = g.outputs.snapshot_html();
         assert!(pages.len() > 10);
         for (path, html) in &pages {
+            if html.contains("http-equiv=\"refresh\"") {
+                continue; // Weiterleitungsseiten haben keinen Seitenrahmen
+            }
             // Topbar: Marke mit Maskottchen, drei Menüs, Suchfeld; keine Seitenspalten mehr
             let bar = between(html, "<header class=\"topbar\"", "</header>");
             assert!(bar.contains("<a class=\"brand\" href=\"/\">"), "{path}");
             assert!(bar.find("mascot-normal").unwrap() < bar.find("brand-name").unwrap(), "{path}: Maskottchen vor dem Titel");
             assert!(bar.contains("src=\"/images/flauschi_normal.svg\"") && bar.contains("src=\"/images/flauschi_surprised.svg\""), "{path}");
             let top = between(html, "<nav class=\"topnav", "</nav>");
-            for (href, text) in [("/beitraege/", "Beiträge"), ("/themen/", "Kategorien")] {
+            for (href, text) in [("/beitraege/", "Beiträge"), ("/themen/", "Themen"), ("/tipps-und-tricks/", "Tipps und Tricks")] {
                 assert!(top.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
             }
-            assert!(top.find(">Beiträge</a>").unwrap() < top.find(">Kategorien</a>").unwrap());
+            assert!(top.find(">Beiträge</a>").unwrap() < top.find(">Themen</a>").unwrap() && top.find(">Themen</a>").unwrap() < top.find(">Tipps und Tricks</a>").unwrap());
             assert!(!top.contains("About"), "{path}: About me steht in der Fußzeile");
-            assert_eq!(top.matches("aria-expanded=\"false\"").count(), 1, "nur Kategorien hat ein Untermenü: {path}");
+            assert!(!top.contains("aria-expanded") && !top.contains("submenu") && !top.contains("Kategorie"), "keine Dropdowns, keine Kategorien: {path}");
             assert!(bar.contains("<summary aria-label=\"Menü\">"), "{path}: Hamburger-Knopf");
             assert!(bar.contains("class=\"theme-toggle\" data-state=\"auto\""), "{path}: Umschalter für das Farbschema");
             // Farbschema: Meta-Angabe und Skript gegen das Aufblitzen stehen im head, vor dem Stylesheet
@@ -667,7 +653,7 @@ pub mod tests {
             assert!(!html.contains("sitenav") && !html.contains("<aside class=\"sidebar\"") && !html.contains("blogheader"), "{path}");
             // Fußzeile: vier Seitenlinks, Kontakt, Socials, Copyright
             let footer = between(html, "<footer id=\"blogfooter\"", "</footer>");
-            for (href, text) in [("/tipps-und-tricks/", "Tipps und Tricks"), ("/about/", "About me"), ("/impressum/", "Impressum")] {
+            for (href, text) in [("/about/", "About me"), ("/impressum/", "Impressum")] {
                 assert!(footer.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
             }
             assert!(footer.contains("href=\"mailto:ermeline@flauschiversum.de?subject=Flauschiversum\""), "{path}");
@@ -684,7 +670,7 @@ pub mod tests {
             assert!(footer.find(rss).unwrap() > footer.find("aria-label=\"Mastodon\"").unwrap(), "{path}: RSS nach Mastodon");
             assert!(footer.find("aria-label=\"Instagram\"").unwrap() > footer.find("aria-label=\"E-Mail schreiben\"").unwrap(), "{path}: Reihenfolge E-Mail, Instagram");
             assert_eq!(footer.matches("href=\"/rss.xml\"").count(), 1, "nur das RSS-Icon, kein Textlink: {path}");
-            assert!(!footer.contains("Abonnieren"), "{path}");
+            assert!(!footer.contains("Abonnieren") && !footer.contains("Tipps und Tricks"), "{path}: Tipps und Tricks steht in der Topbar");
             // Links Icons mit dem Copyright darunter, rechts die Seitenlinks untereinander
             assert!(footer.find("class=\"socials\"").unwrap() < footer.find("class=\"copyright\"").unwrap() && footer.find("class=\"copyright\"").unwrap() < footer.find("class=\"footer-links\"").unwrap(), "{path}");
             assert!(footer.contains("&copy; 2026 Ermeline Wollknoll"), "{path}");
@@ -706,22 +692,24 @@ pub mod tests {
         let (g, _) = generate_with(root, "https://flauschiversum.de", None);
         let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
 
-        // Menü auf jeder Seite gleich: Beiträge als einfacher Link, Kategorien in Dateireihenfolge, leere entfallen
+        // Menü auf jeder Seite gleich (Beiträge, Themen, Tipps und Tricks als einfache Links)
         let mut menus = std::collections::BTreeSet::new();
         for (path, html) in &pages {
+            if html.contains("http-equiv=\"refresh\"") {
+                assert!(["/kategorie/basteln/index.html"].contains(&path.as_str()), "unerwartete Weiterleitung {path}");
+                continue;
+            }
             menus.insert(between(html, "<nav class=\"topnav", "</nav>").to_string());
             // Cloud nur auf der Startseite
             assert_eq!(html.contains("class=\"cloud\""), path == "/index.html", "{path}");
-            // Archiv nur auf Beiträge- und Kategorieseiten
-            let has_archive = path == "/beitraege/index.html" || path == "/kategorie/basteln/index.html";
+            // Archiv nur auf der Beiträge-Seite und auf Themenseiten
+            let has_archive = path == "/beitraege/index.html" || path.starts_with("/tag/");
             assert_eq!(html.contains("class=\"archive card\""), has_archive, "{path}");
             assert_eq!(html.contains("class=\"has-aside"), path == "/index.html" || has_archive, "{path}");
         }
         assert_eq!(menus.len(), 1, "Menüs auf allen Seiten gleich");
         let menu = menus.into_iter().next().unwrap();
-        let cats = between(&menu, "id=\"menu-kategorien\"", "</ul>");
-        assert!(cats.contains("<li><a href=\"/kategorie/basteln/\">Basteln</a></li>"));
-        assert!(!cats.contains("Wolle"), "Kategorie nur mit geplantem Beitrag fehlt");
+        assert!(menu.contains("<a href=\"/themen/\">Themen</a>") && !menu.contains("Kategorien"));
 
         // Startseite: h1, Begrüßung, Beiträge, Cloud rechts; kein Suchfeld im Inhalt, keine Kacheln
         let home = &pages["/index.html"];
@@ -748,15 +736,20 @@ pub mod tests {
         assert_eq!(archive.matches("<details class=\"month\" open>").count(), 1);
         assert!(archive.contains("<a href=\"/2020/10/kurbis/\">Kürbis</a>") && archive.contains("<span class=\"day\">31.</span>"));
         assert!(archive.contains("Oktober <span class=\"count\">(1)</span>") && archive.contains("Januar <span class=\"count\">(1)</span>"));
-        // Kategorie: Reim, Einleitung, dann Beiträge; Archiv nur dieser Kategorie, auf schmalen Fenstern früh
-        let cat = &pages["/kategorie/basteln/index.html"];
-        assert!(cat.contains("class=\"has-aside aside-early\""));
-        assert!(cat.find("Papier und Schere").unwrap() < cat.find("<p>Alles mit <em>Klebe</em> und Schere.</p>").unwrap());
-        assert!(cat.find("Alles mit <em>Klebe</em>").unwrap() < cat.find("<ul class=\"entries\"").unwrap());
-        let cat_archive = between(cat, "<aside class=\"archive card\"", "</aside>");
-        assert!(cat_archive.contains("Alraune") && cat_archive.contains("Kürbis") && cat_archive.contains("Mütze") && !cat_archive.contains("Morgen"));
+        // Themenseite: Beiträge und Archiv nur dieses Themas, auf schmalen Fenstern früh
+        let topic = &pages["/tag/huete/index.html"];
+        assert!(topic.contains("class=\"has-aside aside-early\"") && topic.contains("3 Beiträge"));
+        assert!(!topic.contains("class=\"motto\"") && !topic.contains("class=\"intro\""));
+        let topic_archive = between(topic, "<aside class=\"archive card\"", "</aside>");
+        assert!(topic_archive.contains("Alraune") && topic_archive.contains("Kürbis") && topic_archive.contains("Mütze") && !topic_archive.contains("Morgen"));
+        let halloween = &pages["/tag/halloween/index.html"];
+        assert!(between(halloween, "<aside class=\"archive card\"", "</aside>").contains("Kürbis") && !between(halloween, "<aside class=\"archive card\"", "</aside>").contains("Alraune"));
 
-        // Tag-Seiten ohne Archiv; Suchfeld in der Topbar und (Suchseite) groß im Inhalt, verschiedene ids
+        // Alte Kategorie-Adresse leitet auf das Thema weiter (Cool URIs)
+        let redirect = &pages["/kategorie/basteln/index.html"];
+        assert!(redirect.contains("<meta http-equiv=\"refresh\" content=\"0; url=/tag/larp/\">") && redirect.contains("<link rel=\"canonical\" href=\"https://flauschiversum.de/tag/larp/\">") && redirect.contains("noindex"));
+
+        // Suchfeld in der Topbar und (Suchseite) groß im Inhalt, verschiedene ids
         let post = &pages["/2014/01/alraune/index.html"];
         assert_eq!(post.matches("type=\"search\"").count(), 1);
         assert!(post.contains("<button type=\"submit\" aria-label=\"Suchen\" title=\"Suchen\"><svg"), "Lupe als Icon");
@@ -834,10 +827,11 @@ pub mod tests {
         // Karte nach dem Autor, vor der Navigation zum älteren und neueren Beitrag
         assert!(post.find("class=\"author\">Von").unwrap() < post.find("class=\"related card\"").unwrap());
         assert!(post.find("class=\"related card\"").unwrap() < post.find("class=\"post-nav\"").unwrap());
-        // Kategorie gehört immer zur Einordnung
+        // Einordnung nur über Schlagworte, keine Kategorien
         for (path, html) in pages.iter().filter(|(p, _)| p.starts_with("/20")) {
-            assert!(html.contains("<a class=\"category\" href=\"/kategorie/basteln/\">Basteln</a>"), "{path}");
+            assert!(!html.contains("class=\"category\"") && !html.contains("/kategorie/"), "{path}");
         }
+        assert!(post.contains("<p class=\"classification\"><a class=\"tag\" href=\"/tag/larp/\">LARP</a>") || post.contains("class=\"classification\""));
     }
 
     #[test]
@@ -846,7 +840,7 @@ pub mod tests {
         let root = dir.path();
         fixture_site(root);
         for i in 1..=10 {
-            write(root, &format!("content/posts/p{i:02}/index.md"), format!("---\ntitle: \"Beitrag {i:02}\"\ncategory: wolle\ndate: 2021-{:02}-15\n---\nText\n", i.min(12)));
+            write(root, &format!("content/posts/p{i:02}/index.md"), format!("---\ntitle: \"Beitrag {i:02}\"\ntags: [Halloween]\ndate: 2021-{:02}-15\n---\nText\n", i.min(12)));
         }
         let (g, _) = generate_with(root, "https://flauschiversum.de", None);
         let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
@@ -856,13 +850,11 @@ pub mod tests {
         assert_eq!(between(home, "<main", "</main>").matches("<li class=\"entry\"").count(), 10);
         let index = &pages["/beitraege/index.html"];
         assert_eq!(between(index, "<main", "</main>").matches("<li class=\"entry\"").count(), 10);
-        // Archiv enthält alle 13, nach Jahr gruppiert; Kategorie Wolle erscheint im Menü nach Basteln (Dateireihenfolge)
+        // Archiv enthält alle 13, nach Jahr gruppiert
         let archive = between(index, "<aside class=\"archive card\"", "</aside>");
         assert_eq!(archive.matches("<li><span class=\"day\">").count(), 13);
         assert!(archive.contains("<summary>2021 <span class=\"count\">(10)</span>"));
         assert!(archive.find("2026").unwrap() < archive.find("2021").unwrap() && archive.find("2021").unwrap() < archive.find("2014").unwrap());
-        let cats = between(home, "id=\"menu-kategorien\"", "</ul>");
-        assert!(cats.find("Basteln").unwrap() < cats.find("Wolle").unwrap());
         // Bisherige Blätterseiten bleiben: 13 Beiträge, 4 je Seite
         for n in 1..=3 {
             assert!(g.outputs.contains(&format!("/page/{n}/")), "/page/{n}/");
@@ -870,8 +862,8 @@ pub mod tests {
         assert!(!g.outputs.contains("/page/4/"));
         assert!(pages["/page/1/index.html"].contains("class=\"pagination\""));
         assert!(!pages["/page/1/index.html"].contains("class=\"archive"));
-        let cat = &pages["/kategorie/wolle/index.html"];
-        assert_eq!(between(cat, "<main", "</main>").matches("<li class=\"entry\"").count(), 10, "alle Beiträge der Kategorie auf einer Seite");
+        let topic = &pages["/tag/halloween/index.html"];
+        assert_eq!(between(topic, "<main", "</main>").matches("<li class=\"entry\"").count(), 11, "alle Beiträge des Themas auf einer Seite");
     }
 
     #[test]
@@ -941,20 +933,15 @@ pub mod tests {
         assert_eq!(index.matches("<h1").count(), 1);
         let png_src = "/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png";
         assert!(index.contains(png_src), "kodierte Thumbnail-URL");
-        // Themenseiten: je eine h1, Kategorie nur auf Schlagwortseiten, Zählung ohne geplanten Beitrag
-        for page in ["kategorie/basteln/", "tag/huete/", "tag/larp/", "themen/", "beitraege/"] {
+        // Themenseiten: je eine h1, Zählung ohne geplanten Beitrag
+        for page in ["tag/huete/", "tag/larp/", "themen/", "beitraege/"] {
             assert_eq!(read(root, &format!("{page}index.html")).matches("<h1").count(), 1, "{page}");
         }
-        let cat = read(root, "kategorie/basteln/index.html");
-        assert!(cat.contains("<title>Basteln – Flauschiversum</title>"));
-        assert!(cat.contains("content=\"3 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.\""));
-        assert!(!cat.contains("taglist"), "keine Schlagwortliste in der Kategorie");
         let tag = read(root, "tag/huete/index.html");
         assert!(tag.contains("3 Beiträge"));
         assert!(tag.find("Grüne Mütze").unwrap() < tag.find("Alraune").unwrap(), "neueste zuerst");
-        assert!(tag.contains(" · <a href=\"/kategorie/basteln/\">Basteln</a>"));
-        // Schlagwort nur am geplanten Beitrag: Kategorie „Wolle“ und ihre Seite entfallen
-        assert!(!root.join("dist/kategorie/wolle").exists());
+        assert!(tag.contains("<title>Hüte – Flauschiversum</title>") && tag.contains("content=\"3 Beiträge zu Hüte im Flauschiversum\""));
+        assert!(!tag.contains("Kategorie"));
         assert!(read(root, "tag/halloween/index.html").contains("1 Beitrag"));
         // Suchseite: noindex, kein Suchfeld im Kopf, eine h1, Index ausgeliefert
         let search = read(root, "suche/index.html");
@@ -971,9 +958,9 @@ pub mod tests {
         // Themenübersicht alphabetisch
         let themen = read(root, "themen/index.html");
         assert!(themen.find("Halloween").unwrap() < themen.find("Hüte").unwrap() && themen.find("Hüte").unwrap() < themen.find("LARP").unwrap());
-        // Beitrag trägt Einordnung auch im Datensatz
-        assert!(post.contains("<a class=\"category\" href=\"/kategorie/basteln/\">Basteln</a>"));
-        assert_eq!(ld["articleSection"], "Basteln");
+        // Beitrag trägt Schlagworte auch im Datensatz, keine Kategorie
+        assert!(post.contains("<a class=\"tag\" href=\"/tag/larp/\">LARP</a>"));
+        assert!(ld.get("articleSection").is_none());
         assert_eq!(ld["keywords"], "LARP, Hüte");
         assert!(read(root, "robots.txt").contains("Sitemap: https://flauschiversum.de/sitemap.xml"));
     }
@@ -997,29 +984,13 @@ pub mod tests {
         for page in ["/", "/about/", "/impressum/", "/tipps-und-tricks/", "/rss.xml", "/sitemap.xml", "/robots.txt", "/style.css", "/favicon.ico"] {
             assert!(g.outputs.contains(page), "{page}");
         }
-        // Themen: jeder Beitrag mit Kategorie steht auf genau einer Kategorieseite, jeder auf den Seiten seiner Schlagworte
+        // Themen: jeder Beitrag steht auf den Seiten seiner Schlagworte; es gibt keine Kategorien mehr
         let pages: HashMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
         let page = |url: &str| -> String {
             pages.get(&format!("{url}index.html")).unwrap_or_else(|| panic!("Seite fehlt: {url}")).clone()
         };
         let site = &g.site;
-        let mut pages_of_category: HashMap<&str, usize> = HashMap::new();
-        for c in &site.categories {
-            let full = page(&format!("/kategorie/{}/", urls::slugify(&c.id)));
-            let html = &full[full.find("<main").unwrap()..full.find("</main>").unwrap()];
-            for p in &site.posts {
-                let linked = html.contains(&format!("href=\"{}\"", urls::encode_path(&p.url)));
-                if p.category == c.id {
-                    assert!(linked, "{} fehlt auf Kategorie {}", p.url, c.id);
-                    *pages_of_category.entry(p.url.as_str()).or_default() += 1;
-                } else {
-                    assert!(!linked, "{} gehört nicht zu {}", p.url, c.id);
-                }
-            }
-        }
-        for p in site.posts.iter() {
-            assert_eq!(pages_of_category.get(p.url.as_str()), Some(&1), "{}", p.url);
-        }
+        assert!(site.posts.iter().all(|p| !p.tags.is_empty()), "jeder Beitrag hat mindestens ein Schlagwort");
         for p in &site.posts {
             for t in &p.tags {
                 let html = page(&format!("/tag/{}/", urls::slugify(t)));
@@ -1036,7 +1007,7 @@ pub mod tests {
         }
         // Jeder mailto-Link der ganzen Seite hat „Flauschiversum“ im Betreff; Menüs überall gleich, Cloud nur auf der Startseite
         let mut menus = std::collections::BTreeSet::new();
-        for (path, html) in &pages {
+        for (path, html) in pages.iter().filter(|(_, h)| !h.contains("http-equiv=\"refresh\"")) {
             for (i, _) in html.match_indices("mailto:") {
                 let link = &html[i..i + html[i..].find(|c| c == '"' || c == ')').unwrap()];
                 let subject = urls::decode_path(link.split("subject=").nth(1).unwrap_or_else(|| panic!("{path}: kein Betreff in {link}")));
@@ -1046,18 +1017,24 @@ pub mod tests {
             assert_eq!(html.contains("class=\"cloud\""), path == "/index.html", "{path}");
         }
         assert_eq!(menus.len(), 1);
-        // Archiv: jede Kategorie und /beitraege/ führen alle ihre Beiträge auf (Zahl der Archiv-Einträge = Zahl der Beiträge)
+        // Archiv: jedes Thema und /beitraege/ führen alle ihre Beiträge auf (Zahl der Archiv-Einträge = Zahl der Beiträge)
         let entries = |html: &str| {
             let a = &html[html.find("<aside class=\"archive card\"").unwrap()..];
             a[..a.find("</aside>").unwrap()].matches("<li><span class=\"day\">").count()
         };
         assert_eq!(entries(&page("/beitraege/")), site.posts.len());
-        for c in &site.categories {
-            let n = site.posts.iter().filter(|p| p.category == c.id).count();
+        for t in &site.tags {
+            let n = site.posts.iter().filter(|p| p.tags.contains(t)).count();
             if n > 0 {
-                assert_eq!(entries(&page(&format!("/kategorie/{}/", urls::slugify(&c.id)))), n, "{}", c.id);
+                assert_eq!(entries(&page(&format!("/tag/{}/", urls::slugify(t)))), n, "{t}");
             }
         }
+        // Alte Kategorie-Adressen leiten weiter (Cool URIs)
+        for (from, to) in &site.redirects {
+            assert!(g.outputs.contains(from) && g.outputs.contains(to), "{from} → {to}");
+            assert!(page(from).contains(&format!("url={to}")), "{from}");
+        }
+        assert!(site.redirects.iter().any(|(f, _)| f == "/kategorie/basteln/") && site.redirects.iter().any(|(f, _)| f == "/kategorie/brandings/"));
         // Alle Medien-Referenzen lösen auf: Warnungen betreffen nur Seitenlinks in den Inhalten
         for d in diag.all() {
             let is_media = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".webm", ".css", ".js"]

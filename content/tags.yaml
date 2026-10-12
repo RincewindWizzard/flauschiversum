@@ -1,13 +1,17 @@
 # Erlaubte Schlagworte (Tags). Beiträge nennen sie im Frontmatter: tags: [Katzen, Hüte]
 # Neue Schlagworte hier ergänzen; unbekannte Schlagworte lässt der Build nicht durch.
+# Die Schlagworte sind die einzige Ordnung der Beiträge (keine Kategorien): grobe Themen wie Wolle, Nähen oder Basteln stehen neben feinen wie Filzen oder Quilten.
 - name: Amigurumi
+- name: Basteln
 - name: Blog
+- name: Brandings
 - name: Bücher
 - name: Challenge
 - name: Decken
 - name: Einhörner
 - name: Einkaufen
 - name: Fasching
+- name: Feste
 - name: Filzen
 - name: Geschenke
 - name: Häkeln
@@ -21,16 +25,20 @@
 - name: LARP
 - name: Leder
 - name: Linktipps
+- name: Malen
 - name: Mappen und Etuis
 - name: Mützen und Stirnbänder
+- name: Nähen
 - name: Papier
 - name: Puppen
 - name: Quilten
 - name: Schals
 - name: Schmuck
 - name: Schule und Ausbildung
+- name: Sonstiges
 - name: Spinnen
 - name: Stricken
 - name: Taschen
 - name: Upcycling
 - name: Weihnachten
+- name: Wolle

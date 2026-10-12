@@ -1,8 +1,7 @@
 ---
 title: "Zerknautschter Hut, ist immer gut."
 permalink: /2014/08/zerknautschter-hut-ist-immer-gut/
-category: wolle
-tags: [Hüte, Filzen]
+tags: [Hüte, Filzen, Wolle]
 author: Ermeline
 date: 2014-08-01 14:23:27
 image: DSCF1451.jpg

@@ -1,7 +1,7 @@
 ---
 title: "Gib´s mir!… - Audrey II"
 permalink: /2014/05/gibs-mir-audrey-ii/
-category: basteln
+tags: [Basteln]
 author: Tomcat
 date: 2014-05-26 21:01:23
 image: "Audrey1.jpg"

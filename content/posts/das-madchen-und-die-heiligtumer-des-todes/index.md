@@ -1,8 +1,7 @@
 ---
 title: "Das Mädchen und die Heiligtümer des Todes"
 permalink: /2015/01/das-madchen-und-die-heiligtumer-des-todes/
-category: papier
-tags: [Schule und Ausbildung, Bücher]
+tags: [Schule und Ausbildung, Bücher, Papier]
 author: Ermeline
 date: 2015-01-07 18:10:57
 image: "IMG_4273.JPG"

@@ -1,7 +1,6 @@
 ---
 title: "der neue Eisenhenkel"
 permalink: /2013/07/der-neue-eisenhenkel/
-category: material
 tags: [Einkaufen, Leder]
 author: Ermeline
 date: 2013-07-28 01:01:34

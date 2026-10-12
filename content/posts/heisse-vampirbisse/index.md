@@ -1,8 +1,7 @@
 ---
 title: "heiße Vampirbisse"
 permalink: /2019/03/heisse-vampirbisse/
-category: wolle
-tags: [Schals, Filzen]
+tags: [Schals, Filzen, Wolle]
 author: Ermeline
 date: 2019-03-03
 image: "heisse-vampirbisse_thumb.jpg"

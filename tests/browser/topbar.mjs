@@ -24,11 +24,11 @@ const noHScroll = async (page, label) => {
   assert.ok(sw <= cw, `${label}: scrollWidth ${sw} > clientWidth ${cw}`);
 };
 
-await test('Topbar am Desktop: Maskottchen und Titel links, rechts Beiträge, Kategorien, Suche – alles auf einer Linie', async () => {
+await test('Topbar am Desktop: Maskottchen und Titel links, rechts Beiträge, Themen, Tipps und Tricks, Suche – alles auf einer Linie', async () => {
   const page = await open('/2020/10/kurbis/', 1280);
-  const [mascot, brand, posts, cats, search, bar] = [await box(page, '.mascot'), await box(page, '.brand-name'), await box(page, '.topnav a[href="/beitraege/"]'), await box(page, '.topnav a[href="/themen/"]'), await box(page, '.topsearch'), await box(page, '.topbar-inner')];
+  const [mascot, brand, posts, cats, tips, search, bar] = [await box(page, '.mascot'), await box(page, '.brand-name'), await box(page, '.topnav a[href="/beitraege/"]'), await box(page, '.topnav a[href="/themen/"]'), await box(page, '.topnav a[href="/tipps-und-tricks/"]'), await box(page, '.topsearch'), await box(page, '.topbar-inner')];
   assert.ok(mascot.x < brand.x && brand.x + brand.width < posts.x, 'Maskottchen, Titel, dann Menüs');
-  assert.ok(posts.x < cats.x && cats.x + cats.width <= search.x + 1, 'Reihenfolge der Menüs, Suche zuletzt');
+  assert.ok(posts.x < cats.x && cats.x < tips.x && tips.x + tips.width <= search.x + 1, 'Reihenfolge der Menüs, Suche zuletzt');
   assert.ok(mascot.x < 200, 'ganz links');
   const toggle = await box(page, '.theme-toggle');
   assert.ok(toggle.x + toggle.width > 1280 - 100 && posts.x > 300, 'Menüs rechtsbündig');
@@ -38,7 +38,7 @@ await test('Topbar am Desktop: Maskottchen und Titel links, rechts Beiträge, Ka
   // vertikal auf einer Linie: alle Mittelpunkte auf der Mittellinie der Leiste
   const mid = (b) => b.y + b.height / 2;
   const center = mid(bar);
-  for (const [name, b] of [['Maskottchen', mascot], ['Titel', brand], ['Beiträge', posts], ['Kategorien', cats], ['Suche', search]]) {
+  for (const [name, b] of [['Maskottchen', mascot], ['Titel', brand], ['Beiträge', posts], ['Themen', cats], ['Tipps und Tricks', tips], ['Suche', search]]) {
     assert.ok(Math.abs(mid(b) - center) <= 2, `${name} vertikal zentriert (Mitte ${mid(b)} statt ${center})`);
   }
   const btn = await box(page, '.topsearch .searchbox button');
@@ -99,61 +99,54 @@ await test('Beiträge ist ein einfacher Link auf /beitraege/ ohne Dropdown', asy
   await page.close();
 });
 
-await test('Menü Kategorien: alle Kategorien, Klick auf Kategorien öffnet /themen/', async () => {
-  const page = await open('/themen/', 1280);
-  const expected = await page.locator('main section:first-of-type ul.taglist a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
-  await page.hover('.topnav li.has-menu >> nth=0');
-  assert.ok(await page.locator('#menu-kategorien').isVisible());
-  const hrefs = await page.locator('#menu-kategorien a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
-  assert.deepEqual(hrefs, expected, 'dieselben Kategorien wie auf /themen/');
+await test('Themen und Tipps und Tricks sind einfache Links ohne Dropdown und ohne Kategorien', async () => {
+  const page = await open('/', 1280);
+  assert.equal(await page.locator('.topnav .submenu, .topnav button, .topnav [aria-expanded]').count(), 0, 'keine Dropdowns');
+  assert.equal((await page.locator('.topnav').textContent()).includes('Kategori'), false);
+  const names = await page.locator('.topnav a').allTextContents();
+  assert.deepEqual(names.map((n) => n.trim()), ['Beiträge', 'Themen', 'Tipps und Tricks']);
+  await page.hover('.topnav a[href="/themen/"]');
+  assert.equal(await page.locator('.topnav li ul:visible').count(), 0);
+  await page.click('.topnav a[href="/themen/"]');
+  await page.waitForURL('**/themen/');
+  await page.goto(BASE + '/');
+  await page.click('.topnav a[href="/tipps-und-tricks/"]');
+  await page.waitForURL('**/tipps-und-tricks/');
   await page.close();
-  const p2 = await open('/', 1280);
-  await p2.click('.topnav a[href="/themen/"]');
-  await p2.waitForURL('**/themen/');
-  await p2.close();
 });
 
-await test('About me steht im Footer und öffnet /about/', async () => {
+await test('About me steht im Footer und öffnet /about/, Tipps und Tricks nicht im Footer', async () => {
   const page = await open('/', 1280);
+  assert.equal(await page.locator('#blogfooter').getByRole('link', { name: 'Tipps und Tricks' }).count(), 0);
   await page.locator('#blogfooter').getByRole('link', { name: 'About me', exact: true }).click();
   await page.waitForURL('**/about/');
   await page.close();
 });
 
-await test('Tastatur: Knopf öffnet, aria-expanded, Pfeile, Escape, Klick außerhalb', async () => {
+await test('Tastatur: Tab-Reihenfolge Marke, Beiträge, Themen, Tipps und Tricks, Suche, Umschalter', async () => {
   const page = await open('/', 1280);
-  const btn = page.locator('.submenu-toggle').first();
-  assert.equal(await page.locator('.submenu-toggle').count(), 1, 'nur Kategorien hat ein Untermenü');
-  await btn.focus();
-  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
-  await page.keyboard.press('Enter');
-  assert.equal(await btn.getAttribute('aria-expanded'), 'true');
-  assert.ok(await page.locator('#menu-kategorien').isVisible());
-  await page.keyboard.press('ArrowDown');
-  assert.equal(await page.evaluate(() => document.activeElement.closest('#menu-kategorien') !== null), true, 'Fokus im Untermenü');
-  await page.keyboard.press('Escape');
-  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
-  assert.equal(await page.locator('#menu-kategorien').isVisible(), false);
-  assert.equal(await page.evaluate(() => document.activeElement.classList.contains('submenu-toggle')), true, 'Fokus zurück auf dem Knopf');
-  await btn.click();
-  assert.equal(await btn.getAttribute('aria-expanded'), 'true', 'Klick auf den Knopf hält das Menü offen, auch wenn der Mauszeiger es schon geöffnet hat');
-  await page.mouse.click(300, 600);
-  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
+  await page.focus('.brand');
+  const seen = [];
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Tab');
+    seen.push(await page.evaluate(() => document.activeElement.getAttribute('href') ?? document.activeElement.getAttribute('name') ?? document.activeElement.getAttribute('aria-label') ?? document.activeElement.tagName));
+  }
+  assert.deepEqual(seen.slice(0, 3), ['/beitraege/', '/themen/', '/tipps-und-tricks/']);
+  assert.equal(seen[3], 'q');
+  const outline = await page.evaluate(() => { const s = getComputedStyle(document.querySelector('.topnav a')); return s.outlineStyle; });
+  assert.ok(outline);
   await page.close();
 });
 
-await test('Ohne JavaScript: Hover öffnet das Kategorien-Untermenü, Links stehen im Quelltext', async () => {
+await test('Ohne JavaScript: alle Menülinks stehen im Quelltext, nichts klappt auf', async () => {
   const ctx = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
   await page.goto(BASE + '/');
-  assert.equal(await page.locator('#menu-kategorien').isVisible(), false);
-  await page.hover('.topnav li.has-menu >> nth=0');
-  assert.ok(await page.locator('#menu-kategorien').isVisible());
-  assert.ok((await page.locator('#menu-kategorien a').count()) >= 6);
+  for (const href of ['/beitraege/', '/themen/', '/tipps-und-tricks/']) assert.ok(await page.locator(`.topnav a[href="${href}"]`).isVisible(), href);
   await ctx.close();
 });
 
-await test('Handy 360 px: Hamburger-Knopf, Liste mit Beiträgen und Kategorien samt Unterpunkten, Klickflächen, kein waagerechtes Scrollen', async () => {
+await test('Handy 360 px: Hamburger-Knopf, Liste mit Beiträgen, Themen und Tipps und Tricks, Klickflächen, kein waagerechtes Scrollen', async () => {
   const page = await open('/2020/10/kurbis/', 360, 740, { hasTouch: true, isMobile: true });
   assert.ok(await page.locator('.brand-name').isVisible() && await page.locator('.mascot').isVisible());
   assert.equal(await page.locator('.topnav').isVisible(), false, 'Menü zunächst zu');
@@ -167,9 +160,8 @@ await test('Handy 360 px: Hamburger-Knopf, Liste mit Beiträgen und Kategorien s
   await noHScroll(page, 'Handy zu');
   await page.locator('details.menu-toggle > summary').tap();
   assert.ok(await page.locator('.topnav').isVisible());
-  for (const name of ['Beiträge', 'Kategorien']) assert.ok(await page.locator('.topnav > ul > li > a', { hasText: new RegExp(`^${name}$`) }).isVisible(), name);
-  assert.equal(await page.locator('.topnav > ul > li > a', { hasText: /About/ }).count(), 0, 'About me nur im Footer');
-  assert.ok(await page.locator('#menu-kategorien a').first().isVisible(), 'Unterpunkte sichtbar');
+  for (const name of ['Beiträge', 'Themen', 'Tipps und Tricks']) assert.ok(await page.locator('.topnav > ul > li > a', { hasText: new RegExp(`^${name}$`) }).isVisible(), name);
+  assert.equal(await page.locator('.topnav > ul > li > a', { hasText: /About|Kategori/ }).count(), 0);
   const heights = await page.locator('.topnav a').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
   assert.ok(Math.min(...heights) >= 40, `Klickflächen (min ${Math.min(...heights)} px)`);
   await noHScroll(page, 'Handy offen');
@@ -249,27 +241,35 @@ await test('Archiv am Handy unter der Liste', async () => {
   await page.close();
 });
 
-await test('Kategorieseite: Text vor den Beiträgen, Archiv nur dieser Kategorie, jeder Beitrag im Archiv', async () => {
+await test('Themenseite: Beiträge und Archiv nur dieses Themas, jeder Beitrag im Archiv, Handy: Archiv vor den Beiträgen', async () => {
   const page = await open('/themen/', 1440);
-  const hrefs = await page.locator('main section:first-of-type ul.taglist a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  const hrefs = (await page.locator('main ul.taglist a').evaluateAll((els) => els.map((e) => e.getAttribute('href')))).filter((h) => ['/tag/wolle/', '/tag/halloween/', '/tag/filzen/'].includes(h));
   await page.close();
-  assert.ok(hrefs.length >= 1);
+  assert.equal(hrefs.length, 3, 'große und kleine Themen stehen in der Übersicht');
   for (const href of hrefs) {
     const p = await open(href, 1440);
-    const intro = await box(p, '.topic-head .intro');
-    const firstEntry = await box(p, 'main .entry');
-    assert.ok(intro && intro.y + intro.height <= firstEntry.y, `${href}: Einleitungstext vor den Beiträgen`);
     const listed = await p.locator('main .entry').count();
-    assert.equal(await p.locator('.archive details.month li').count(), listed, `${href}: Archiv = Beiträge der Kategorie`);
+    assert.ok(listed >= 3, `${href}: Beiträge`);
+    assert.equal(await p.locator('.archive details.month li').count(), listed, `${href}: Archiv = Beiträge des Themas`);
+    assert.equal(await p.locator('.topic-head .motto, .topic-head .intro').count(), 0, 'kein Reim, keine Kategorie-Einleitung');
     const [content, archive] = [await box(p, 'main'), await box(p, 'aside.archive')];
     assert.ok(content.x + content.width <= archive.x + 1, `${href}: Archiv rechts`);
     await p.close();
   }
   const small = await open(hrefs[0], 360, 740, { hasTouch: true, isMobile: true });
   const [head, archive, list] = [await box(small, '.topic-head'), await box(small, 'aside.archive'), await box(small, 'main')];
-  assert.ok(head.y + head.height <= archive.y + 1 && archive.y + archive.height <= list.y + 1, 'Handy: Text, Archiv, Beiträge');
-  await noHScroll(small, 'Kategorie Handy');
+  assert.ok(head.y + head.height <= archive.y + 1 && archive.y + archive.height <= list.y + 1, 'Handy: Titel, Archiv, Beiträge');
+  await noHScroll(small, 'Themenseite Handy');
   await small.close();
+});
+
+await test('Alte Kategorie-Adressen leiten auf die Themen weiter', async () => {
+  for (const [from, to] of [['/kategorie/basteln/', '/tag/basteln/'], ['/kategorie/brandings/', '/tag/brandings/'], ['/kategorie/material/', '/tag/einkaufen/'], ['/kategorie/naehen/', '/tag/naehen/']]) {
+    const page = await open(from, 1280);
+    await page.waitForURL(`**${to}`);
+    assert.ok((await page.locator('main .entry').count()) > 3, to);
+    await page.close();
+  }
 });
 
 await test('Blätterseiten /page/<N>/ bleiben erreichbar und sind nicht verlinkt', async () => {
@@ -282,7 +282,7 @@ await test('Blätterseiten /page/<N>/ bleiben erreichbar und sind nicht verlinkt
 });
 
 await test('Cloud nur auf der Startseite', async () => {
-  for (const [path, expected] of [['/', 1], ['/beitraege/', 0], ['/kategorie/wolle/', 0], ['/2020/10/kurbis/', 0], ['/themen/', 0]]) {
+  for (const [path, expected] of [['/', 1], ['/beitraege/', 0], ['/tag/wolle/', 0], ['/2020/10/kurbis/', 0], ['/themen/', 0]]) {
     const page = await open(path, 1280);
     assert.equal(await page.locator('.cloud').count(), expected, path);
     await page.close();
@@ -290,7 +290,7 @@ await test('Cloud nur auf der Startseite', async () => {
 });
 
 await test('Screenshots für die Abnahme', async () => {
-  for (const [path, w, name] of [['/', 1440, 'home'], ['/beitraege/', 1440, 'beitraege'], ['/kategorie/wolle/', 1440, 'kategorie'], ['/', 390, 'home-mobil']]) {
+  for (const [path, w, name] of [['/', 1440, 'home'], ['/beitraege/', 1440, 'beitraege'], ['/tag/wolle/', 1440, 'thema'], ['/', 390, 'home-mobil']]) {
     const page = await open(path, w, 900);
     await page.screenshot({ path: `/tmp/flausch-${name}.png` });
     await page.close();

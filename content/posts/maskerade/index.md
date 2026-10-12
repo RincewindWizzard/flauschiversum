@@ -1,8 +1,7 @@
 ---
 title: "Maskerade"
 permalink: /2014/10/maskerade/
-category: feste
-tags: [Fasching]
+tags: [Fasching, Feste]
 author: Ermeline
 date: 2014-10-24 20:15:05
 image: DSCF1828-e1421937578797.jpg

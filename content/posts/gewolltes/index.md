@@ -1,7 +1,7 @@
 ---
 title: "Gewolltes"
 permalink: /2016/06/gewolltes/
-category: wolle
+tags: [Wolle]
 author: Ermeline
 date: 2016-06-19 16:11:47
 image: "IMG_4421.JPG"

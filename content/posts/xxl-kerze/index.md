@@ -1,8 +1,7 @@
 ---
 title: "XXL Kerze"
 permalink: /2017/04/xxl-kerze/
-category: basteln
-tags: [Upcycling]
+tags: [Upcycling, Basteln]
 author: Ermeline
 date: 2017-04-09
 image: "xxl-kerze_thumb.jpg"

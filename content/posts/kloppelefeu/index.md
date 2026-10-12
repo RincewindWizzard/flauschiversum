@@ -1,8 +1,7 @@
 ---
 title: "Klöppelefeu"
 permalink: /2019/02/kloppelefeu/
-category: wolle
-tags: [Klöppeln]
+tags: [Klöppeln, Wolle]
 author: Ermeline
 date: 2019-02-03
 image: "kloppelefeu_thumb.jpg"

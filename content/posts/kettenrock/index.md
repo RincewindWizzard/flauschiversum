@@ -1,8 +1,7 @@
 ---
 title: "Kettenrock"
 permalink: /2014/01/kettenrock/
-category: brandings
-tags: [LARP, Leder]
+tags: [LARP, Leder, Brandings]
 author: Ermeline
 date: 2014-01-04 20:42:50
 image: "DSC00679.jpg"

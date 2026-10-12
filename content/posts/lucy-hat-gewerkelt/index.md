@@ -1,7 +1,7 @@
 ---
 title: "Lucy hat gewerkelt"
 permalink: /2017/02/lucy-hat-gewerkelt/
-category: nähen
+tags: [Nähen]
 author: Lucy
 date: 2017-02-12
 image: "lucy-hat-gewerkelt_thumb.jpg"

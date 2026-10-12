@@ -1,7 +1,7 @@
 ---
 title: "Werke der letzten Woche"
 permalink: /2016/03/werke-der-letzten-woche/
-category: nähen
+tags: [Nähen]
 author: Ermeline
 date: 2016-03-28 15:42:16
 image: "DSCF4094.JPG"

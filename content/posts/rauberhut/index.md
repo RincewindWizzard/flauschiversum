@@ -1,8 +1,7 @@
 ---
 title: "Räuberhut"
 permalink: /2015/04/rauberhut/
-category: wolle
-tags: [Hüte, Filzen]
+tags: [Hüte, Filzen, Wolle]
 author: Ermeline
 date: 2015-04-17 08:15:26
 image: "DSCF2723.jpg"

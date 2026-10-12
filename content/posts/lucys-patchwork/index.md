@@ -1,8 +1,7 @@
 ---
 title: "Lucys Patchwork"
 permalink: /2016/01/lucys-patchwork/
-category: nähen
-tags: [Decken, Quilten]
+tags: [Decken, Quilten, Nähen]
 author: Lucy
 date: 2016-01-10 12:03:47
 image: "DSCF3738.JPG"

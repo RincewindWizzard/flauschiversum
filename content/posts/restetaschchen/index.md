@@ -1,8 +1,7 @@
 ---
 title: "Restetäschchen"
 permalink: /2016/02/restetaschchen/
-category: nähen
-tags: [Taschen, Upcycling]
+tags: [Taschen, Upcycling, Nähen]
 author: Ermeline
 date: 2016-02-07 17:42:16
 image: "DSCF3819.JPG"

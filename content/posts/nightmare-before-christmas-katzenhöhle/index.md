@@ -1,8 +1,7 @@
 ---
 title: "Nightmare-Before-Christmas-Katzenhöhle"
 permalink: /2016/10/nightmare-before-christmas-katzenhohle/
-category: wolle
-tags: [Katzen, Filzen]
+tags: [Katzen, Filzen, Wolle]
 author: Ermeline
 date: 2016-10-30 15:28:57
 image: "Arthos_1.jpg"

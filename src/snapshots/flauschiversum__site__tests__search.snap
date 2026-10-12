@@ -40,13 +40,8 @@ expression: "stable(&read(root, \"suche/index.html\"))"
       <nav class="topnav" aria-label="Hauptnavigation">
         <ul>
           <li><a href="/beitraege/">Beiträge</a></li>
-          <li class="has-menu">
-            <a href="/themen/">Kategorien</a>
-            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
-            <ul class="submenu card" id="menu-kategorien">
-              <li><a href="/kategorie/basteln/">Basteln</a></li>
-            </ul>
-          </li>
+          <li><a href="/themen/">Themen</a></li>
+          <li><a href="/tipps-und-tricks/">Tipps und Tricks</a></li>
         </ul>
       </nav>
     </details>
@@ -103,7 +98,6 @@ expression: "stable(&read(root, \"suche/index.html\"))"
       <p class="copyright">&copy; 2026 Ermeline Wollknoll</p>
     </div>
     <nav class="footer-links" aria-label="Weitere Seiten">
-      <a href="/tipps-und-tricks/">Tipps und Tricks</a>
       <a href="/about/">About me</a>
       <a href="/impressum/">Impressum</a>
     </nav>

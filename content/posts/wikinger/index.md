@@ -1,8 +1,7 @@
 ---
 title: "Wikinger"
 permalink: /2014/01/wikinger/
-category: brandings
-tags: [Leder]
+tags: [Leder, Brandings]
 author: Ermeline
 date: 2014-01-04 19:34:32
 image: DSC00624-e1423509985673.jpg

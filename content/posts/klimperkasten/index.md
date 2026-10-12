@@ -1,7 +1,7 @@
 ---
 title: "Klimperkasten"
 permalink: /2016/02/klimperkasten/
-category: basteln
+tags: [Basteln]
 author: Ermeline
 date: 2016-02-21 15:45:57
 image: "DSCF3921.JPG"

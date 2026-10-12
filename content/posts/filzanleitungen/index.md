@@ -1,8 +1,7 @@
 ---
 title: "Filzanleitungen"
 permalink: /2014/07/filzanleitungen/
-category: wolle
-tags: [Linktipps, Filzen]
+tags: [Linktipps, Filzen, Wolle]
 author: Ermeline
 date: 2014-07-28 20:40:10
 excerpt: "Neben den Anleitungen, die du bei mir findest, gibt es auch noch viele..."

@@ -1,8 +1,7 @@
 ---
 title: "Hut des verrückten Hutmachers"
 permalink: /2017/02/hut-des-verruckten-hutmachers/
-category: nähen
-tags: [Fasching, Hüte]
+tags: [Fasching, Hüte, Nähen]
 author: Ermeline
 date: 2017-02-26
 image: "hut-des-verruckten-hutmachers_thumb.jpg"

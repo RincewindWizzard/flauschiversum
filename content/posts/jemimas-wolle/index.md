@@ -1,8 +1,7 @@
 ---
 title: "Jemimas Wolle"
 permalink: /2018/03/jemimas-wolle/
-category: wolle
-tags: [Katzen, Spinnen]
+tags: [Katzen, Spinnen, Wolle]
 author: Ermeline
 date: 2018-03-18
 image: "jemimas-wolle_thumb.jpg"

@@ -1,8 +1,7 @@
 ---
 title: "Nekronomikon"
 permalink: /2014/01/nekronomikon/
-category: papier
-tags: [Bücher]
+tags: [Bücher, Papier]
 author: Ermeline
 date: 2014-01-02 20:25:10
 image: "DSCF0496.jpg"

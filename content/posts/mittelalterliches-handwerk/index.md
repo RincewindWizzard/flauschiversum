@@ -1,8 +1,7 @@
 ---
 title: "Mittelalterliches Handwerk"
 permalink: /2013/07/mittelalterliches-handwerk/
-category: wolle
-tags: [Linktipps]
+tags: [Linktipps, Wolle]
 author: Ermeline
 date: 2013-07-28 22:19:21
 excerpt: "Wenn man schon auf einem Mittelaltermarkt war"

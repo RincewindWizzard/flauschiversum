@@ -1,7 +1,7 @@
 ---
 title: "Leseratte Büchereule Bücherwurm"
 permalink: /2016/10/leseratte-buchereule-bucherwurm/
-category: malen
+tags: [Malen]
 author: Ermeline
 date: 2016-10-16 20:09:53
 image: "Bücherwürmer_Farbe_0001.jpg"

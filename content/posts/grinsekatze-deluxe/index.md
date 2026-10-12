@@ -1,8 +1,7 @@
 ---
 title: "Grinsekatze deluxe"
 permalink: /2015/05/grinsekatze-deluxe/
-category: malen
-tags: [Katzen]
+tags: [Katzen, Malen]
 author: Ermeline
 date: 2015-05-11 15:09:53
 image: "DSCF2812.jpg"

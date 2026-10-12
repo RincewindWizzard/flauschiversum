@@ -1,8 +1,7 @@
 ---
 title: "die Immatrikulationstüte"
 permalink: /2018/03/die-immatrikulationstute/
-category: basteln
-tags: [Schule und Ausbildung]
+tags: [Schule und Ausbildung, Basteln]
 author: Ermeline
 date: 2018-03-25
 image: "die-immatrikulationstute_thumb.jpg"

@@ -1,7 +1,7 @@
 ---
 title: "Magic Switchboard"
 permalink: /2017/07/magic-switchboard/
-category: basteln
+tags: [Basteln]
 author: Ehrlich
 date: 2017-07-01
 image: "_1100730.jpg"

@@ -1,7 +1,6 @@
 ---
 title: "Hübsche Schmuckanhänger "
 permalink: /2017/03/hubsche-schmuckanhanger/
-category: schmuck
 tags: [Schmuck]
 author: Lucy
 date: 2017-03-19

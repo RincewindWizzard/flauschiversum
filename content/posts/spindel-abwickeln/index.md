@@ -1,8 +1,7 @@
 ---
 title: "Spindel abwickeln"
 permalink: /2016/05/spindel-abwickeln/
-category: wolle
-tags: [Spinnen]
+tags: [Spinnen, Wolle]
 author: Ermeline
 date: 2016-05-15 16:58:09
 image: "DSCF2867.JPG"

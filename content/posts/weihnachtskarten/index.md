@@ -1,8 +1,7 @@
 ---
 title: "Weihnachtskarten"
 permalink: /2018/12/weihnachtskarten/
-category: feste
-tags: [Papier, Weihnachten]
+tags: [Papier, Weihnachten, Feste]
 author: Ermeline
 date: 2018-12-23
 image: "Weihnachstkarte.JPG"

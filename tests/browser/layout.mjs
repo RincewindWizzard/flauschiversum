@@ -91,7 +91,7 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
     const fb = await footer.boundingBox();
     const docH = await page.evaluate(() => document.documentElement.scrollHeight);
     assert.ok(Math.abs(fb.y + fb.height - docH) < 60, 'Footer steht am Seitenende');
-    for (const name of ['Tipps und Tricks', 'About me', 'Impressum']) {
+    for (const name of ['About me', 'Impressum']) {
       assert.ok(await footer.getByRole('link', { name, exact: true }).isVisible(), name);
     }
     for (const [name, href] of [['Instagram', 'https://www.instagram.com/ermelinewollknoll/'], ['Mastodon', 'https://chaos.social/@ErmelineWollknoll']]) {
@@ -125,9 +125,9 @@ await test('Footer wie die Segelgruppe: dunkles Band, links Icons mit Copyright 
   const [r, g, b] = bg.match(/\d+/g).map(Number);
   assert.ok(r + g + b < 3 * 110, `dunkler Hintergrund ${bg}`);
   const links = await f.locator('.footer-links a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.height]; }));
-  assert.equal(links.length, 3);
+  assert.equal(links.length, 2);
   assert.ok(links.every((l) => Math.abs(l[0] - links[0][0]) < 1), 'Links stehen in einer Spalte');
-  assert.ok(links[0][1] < links[1][1] && links[1][1] < links[2][1], 'untereinander');
+  assert.ok(links[0][1] < links[1][1], 'untereinander');
   const icons = await f.locator('.socials a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y]; }));
   assert.equal(icons.length, 4);
   assert.ok(icons.every((i) => Math.abs(i[1] - icons[0][1]) < 1) && icons[0][0] < icons[3][0], 'Icons in einer Zeile');
@@ -206,7 +206,7 @@ await test('Footer: Mastodon-Link trägt rel=me, externe Links rel=noopener', as
   await page.close();
 });
 
-for (const path of ['/', POST, '/kategorie/filzen/', '/impressum/', '/suche/?q=katze']) {
+for (const path of ['/', POST, '/tag/filzen/', '/impressum/', '/suche/?q=katze']) {
   await test(`Keine Anfragen an fremde Server: ${path}`, async () => {
     const page = await browser.newPage();
     const hosts = new Set();
@@ -236,13 +236,10 @@ const cardStyle = (page, sel) =>
     return { alpha: alpha(s.backgroundColor), radius: parseFloat(s.borderTopLeftRadius), pad: parseFloat(s.paddingLeft) };
   });
 
-await test('Karten: Cloud, Archiv und Untermenü liegen auf hellen, abgerundeten Karten', async () => {
+await test('Karten: Cloud und Archiv liegen auf hellen, abgerundeten Karten', async () => {
   const home = await open('/', 1440);
   const c = await cardStyle(home, 'aside.cloud-card');
   assert.ok(c.alpha > 0 && c.radius >= 8 && c.pad >= 8, `Cloud: ${JSON.stringify(c)}`);
-  await home.hover('.topnav li.has-menu >> nth=0');
-  const m = await cardStyle(home, '.topnav .submenu');
-  assert.ok(m.alpha > 0 && m.radius >= 8, `Untermenü: ${JSON.stringify(m)}`);
   await home.close();
   const arch = await open('/beitraege/', 1440);
   const a = await cardStyle(arch, 'aside.archive');
@@ -256,6 +253,10 @@ const searchBoxChecks = async (page, root) => {
   assert.ok(button.x >= input.x && button.x + button.width <= input.x + input.width + 1, `Lupe liegt im Feld (${root})`);
   assert.ok(button.y >= input.y && button.y + button.height <= input.y + input.height + 1, `Lupe liegt vertikal im Feld (${root})`);
   assert.ok(input.height < 70, `Feld ist einzeilig (${root})`);
+  // konzentrisch: gleicher Abstand der Lupe oben, unten und rechts, Rundung folgt dem Feld
+  const gapTop = button.y - input.y, gapBottom = input.y + input.height - (button.y + button.height), gapRight = input.x + input.width - (button.x + button.width);
+  assert.ok(Math.abs(gapTop - gapBottom) < 1.5 && Math.abs(gapTop - gapRight) < 1.5, `Lupe konzentrisch (${root}): oben ${gapTop}, unten ${gapBottom}, rechts ${gapRight}`);
+  assert.ok(Math.abs(button.width - button.height) < 1.5, `Lupe ist rund (${root})`);
   assert.equal(await page.locator(`${root} .searchbox button`).first().getAttribute('aria-label'), 'Suchen');
 };
 
@@ -313,7 +314,7 @@ const contrast = (page, sel, bgSel) =>
 await test('Farben: Hintergrund Lavendelweiß (Flauschi-Nebel), Kontrast von Text, Links, Knopf und Tag mindestens 4,5 : 1', async () => {
   const page = await open(POST, 1440);
   assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(246, 243, 252)');
-  for (const [sel, name] of [['main.page p', 'Text'], ['main.page a', 'Link im Text'], ['.topnav a', 'Navigation'], ['.searchbox button', 'Lupe'], ['.post-header a.category', 'Kategorie-Tag'], ['.post-header a.tag', 'Schlagwort-Tag'], ['#blogfooter .footer-links a', 'Footer'], ['#blogfooter .copyright', 'Copyright']]) {
+  for (const [sel, name] of [['main.page p', 'Text'], ['main.page a', 'Link im Text'], ['.topnav a', 'Navigation'], ['.searchbox button', 'Lupe'], ['.post-header a.tag', 'Schlagwort-Tag'], ['#blogfooter .footer-links a', 'Footer'], ['#blogfooter .copyright', 'Copyright']]) {
     const c = await contrast(page, sel);
     assert.ok(c >= 4.5, `${name}: Kontrast ${c.toFixed(2)}`);
   }

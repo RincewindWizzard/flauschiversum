@@ -1,7 +1,6 @@
 ---
 title: "Besteckschmuck"
 permalink: /2016/10/besteckschmuck/
-category: schmuck
 tags: [Schmuck, Upcycling]
 author: Ermeline
 date: 2016-10-02 21:16:47

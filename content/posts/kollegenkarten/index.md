@@ -1,7 +1,7 @@
 ---
 title: "Kollegenkarten"
 permalink: /2018/03/kollegenkarten/
-category: malen
+tags: [Malen]
 author: Ermeline
 date: 2018-03-04
 image: "kollegenkarten_thumb.jpg"

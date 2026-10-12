@@ -53,15 +53,8 @@
       <nav class="topnav" aria-label="Hauptnavigation">
         <ul>
           <li><a href="/beitraege/">Beiträge</a></li>
-          <li class="has-menu">
-            <a href="/themen/">Kategorien</a>
-            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
-            <ul class="submenu card" id="menu-kategorien">
-              {%- for c in head.menu.categories %}
-              <li><a href="{{ c.url }}">{{ c.name }}</a></li>
-              {%- endfor %}
-            </ul>
-          </li>
+          <li><a href="/themen/">Themen</a></li>
+          <li><a href="/tipps-und-tricks/">Tipps und Tricks</a></li>
         </ul>
       </nav>
     </details>
@@ -98,7 +91,6 @@
       <p class="copyright">&copy; {{ head.year }} Ermeline Wollknoll</p>
     </div>
     <nav class="footer-links" aria-label="Weitere Seiten">
-      <a href="/tipps-und-tricks/">Tipps und Tricks</a>
       <a href="/about/">About me</a>
       <a href="/impressum/">Impressum</a>
     </nav>

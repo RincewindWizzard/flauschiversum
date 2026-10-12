@@ -1,8 +1,7 @@
 ---
 title: "Amigurumi Babyeinhorn"
 permalink: /2018/02/amigurumi-babyeinhorn/
-category: wolle
-tags: [Amigurumi, Häkeln, Einhörner]
+tags: [Amigurumi, Häkeln, Einhörner, Wolle]
 author: Ermeline
 date: 2018-02-25
 image: "amigurumi-babyeinhorn_thumb.jpg"

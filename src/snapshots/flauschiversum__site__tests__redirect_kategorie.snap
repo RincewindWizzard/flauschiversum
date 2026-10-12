@@ -1,0 +1,17 @@
+---
+source: src/site.rs
+expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Weiterleitung – Flauschiversum</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://flauschiversum.de/tag/larp/">
+<meta http-equiv="refresh" content="0; url=/tag/larp/">
+</head>
+<body>
+<p>Diese Seite ist umgezogen: <a href="/tag/larp/">/tag/larp/</a></p>
+</body>
+</html>

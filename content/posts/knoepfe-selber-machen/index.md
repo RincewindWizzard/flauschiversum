@@ -1,7 +1,7 @@
 ---
 title: "Knöpfe selber machen"
 permalink: /2014/09/knopfe-selber-machen/
-category: schmuck
+tags: [Schmuck]
 author: Ermeline
 date: 2014-09-28 12:26:36
 image: "DSCF1729.jpg"

@@ -1,8 +1,7 @@
 ---
 title: "Hüte stärken"
 permalink: /2014/01/hute-starken/
-category: wolle
-tags: [Hüte, Filzen]
+tags: [Hüte, Filzen, Wolle]
 author: Ermeline
 date: 2014-01-02 22:17:59
 excerpt: "Also wenn man einen Verkäufer fragt, wie man einen Hut steifen kann, so wird er vermutlich auf teure Kleiderstärke verweisen."

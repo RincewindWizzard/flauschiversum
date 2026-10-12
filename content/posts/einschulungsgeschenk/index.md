@@ -1,8 +1,7 @@
 ---
 title: "Einschulungsgeschenk"
 permalink: /2015/08/einschulungsgeschenk/
-category: basteln
-tags: [Geschenke]
+tags: [Geschenke, Basteln]
 author: Ermeline
 date: 2015-08-30 11:45:00 
 image: "Korb.jpg"

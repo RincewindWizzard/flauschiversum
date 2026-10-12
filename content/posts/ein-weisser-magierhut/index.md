@@ -1,8 +1,7 @@
 ---
 title: "ein weißer Magierhut"
 permalink: /2018/02/ein-weisser-magierhut/
-category: wolle
-tags: [Hüte, LARP, Filzen]
+tags: [Hüte, LARP, Filzen, Wolle]
 author: Ermeline
 date: 2018-02-11
 image: "ein-weisser-magierhut_thumb.jpg"

@@ -1,7 +1,6 @@
 ---
 title: "Wolle & Hobby"
 permalink: /2013/07/wolle-hobby/
-category: material
 tags: [Einkaufen, Linktipps]
 author: Ermeline
 date: 2013-07-28 00:41:25

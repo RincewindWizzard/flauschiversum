@@ -1,8 +1,7 @@
 ---
 title: "Warum liegt denn hier Kürbis...?"
 permalink: /2014/10/warum-liegt-denn-hier-kurbis/
-category: feste
-tags: [Halloween]
+tags: [Halloween, Feste]
 author: Ermeline
 date: 2014-10-25 18:21:13
 image: "Werkzeug.jpg"

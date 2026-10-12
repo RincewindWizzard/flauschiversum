@@ -1,8 +1,7 @@
 ---
 title: "bekritzelte Schultasche"
 permalink: /2016/05/bekritzelte-schultasche/
-category: brandings
-tags: [Taschen, Upcycling, Leder]
+tags: [Taschen, Upcycling, Leder, Brandings]
 author: Ermeline
 date: 2016-05-01 18:58:10
 image: "DSCF4412.JPG"

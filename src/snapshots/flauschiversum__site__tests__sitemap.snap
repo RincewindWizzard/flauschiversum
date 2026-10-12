@@ -6,7 +6,6 @@ expression: "read(root, \"sitemap.xml\")"
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://flauschiversum.de/</loc></url>
   <url><loc>https://flauschiversum.de/themen/</loc></url>
-  <url><loc>https://flauschiversum.de/kategorie/basteln/</loc></url>
   <url><loc>https://flauschiversum.de/tag/halloween/</loc></url>
   <url><loc>https://flauschiversum.de/tag/huete/</loc></url>
   <url><loc>https://flauschiversum.de/tag/larp/</loc></url>

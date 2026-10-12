@@ -1,8 +1,7 @@
 ---
 title: "Winter Is Coming"
 permalink: /2016/09/winter-is-coming/
-category: wolle
-tags: [Stricken, Schals]
+tags: [Stricken, Schals, Wolle]
 author: Ermeline
 date: 2016-09-25 18:39:18
 image: "Schwacher Moment.jpg"

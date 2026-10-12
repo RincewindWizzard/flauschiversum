@@ -1,8 +1,7 @@
 ---
 title: "Sternmütze"
 permalink: /2016/12/sternmutze/
-category: wolle
-tags: [Stricken, Mützen und Stirnbänder, Geschenke]
+tags: [Stricken, Mützen und Stirnbänder, Geschenke, Wolle]
 author: Ermeline
 date: 2016-12-11 12:25:10
 image: "IMG_20161204_212834.jpg"

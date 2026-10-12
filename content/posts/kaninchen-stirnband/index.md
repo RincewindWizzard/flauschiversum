@@ -1,8 +1,7 @@
 ---
 title: "Kaninchen-Stirnband"
 permalink: /2015/11/kaninchen-stirnband/
-category: wolle
-tags: [Häkeln, Mützen und Stirnbänder]
+tags: [Häkeln, Mützen und Stirnbänder, Wolle]
 author: Ermeline
 date: 2015-11-22 18:40:11
 image: "DSCF3502.JPG"

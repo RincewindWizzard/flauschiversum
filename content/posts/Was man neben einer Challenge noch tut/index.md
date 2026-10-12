@@ -1,8 +1,7 @@
 ---
 title: "Was man neben einer Challenge noch tut"
 permalink: /2016/04/was-man-neben-einer-challenge-noch-tut/
-category: sonstiges
-tags: [Challenge]
+tags: [Challenge, Sonstiges]
 author: Lucy, Ermeline
 date: 2016-04-18 13:50:11
 image: "IMG_20160410_105223.jpg"

@@ -1,8 +1,7 @@
 ---
 title: "Vlies Kammzug Rolag Fauxlag Punis"
 permalink: /2019/03/vlies-kammzug-rolag-fauxlag-punis/
-category: wolle
-tags: [Spinnen]
+tags: [Spinnen, Wolle]
 author: Ermeline
 date: 2019-03-10
 image: "vlies-kammzug-rolag-fauxlag-punis_thumb.jpg"

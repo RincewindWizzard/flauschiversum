@@ -106,87 +106,15 @@ details.menu-toggle > summary {
   border-radius: 20em;
 }
 
-.topnav li.has-menu {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.topnav li.has-menu > a {
-  padding-right: 0.3em;
-}
-
-.submenu-toggle {
-  margin: 0 0.3em 0 -0.1em;
-  padding: 0.3em 0.4em;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  color: var(--acolor);
-  font: inherit;
-  line-height: 1;
-  cursor: pointer;
-}
 
 .topnav > ul > li > a:hover,
-.topnav > ul > li > a:focus-visible,
-.submenu-toggle:hover,
-.submenu-toggle:focus-visible,
-.topnav li.open > a {
+.topnav > ul > li > a:focus-visible {
   background-color: var(--accent-soft);
 }
 
-.topnav a:focus-visible,
-.submenu-toggle:focus-visible {
+.topnav a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
-}
-
-/* Untermenüs: Karten über dem Inhalt, rechts am Eintrag ausgerichtet */
-.topnav .submenu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 60;
-  min-width: 14em;
-  max-width: min(24em, 90vw);
-  box-shadow: var(--shadow-lg);
-  padding: 0.4em;
-
-  & li { display: block; }
-
-  & a {
-    display: block;
-    padding: 0.4em 0.7em;
-    border-radius: 8px;
-    font-weight: 400;
-    overflow-wrap: anywhere;
-  }
-
-  & a:hover,
-  & a:focus-visible {
-    background-color: var(--accent-soft);
-  }
-
-  & li.all a {
-    margin-top: 0.3em;
-    border-top: 1px dashed var(--bordercolor);
-    border-radius: 0 0 8px 8px;
-    font-weight: 700;
-    font-style: italic;
-  }
-}
-
-/* Ohne JavaScript öffnen Hover und Fokus, mit JavaScript die Klasse `open` */
-html:not(.js) .topnav li.has-menu:hover > .submenu,
-html:not(.js) .topnav li.has-menu:focus-within > .submenu,
-.topnav li.has-menu.open > .submenu {
-  display: block;
-}
-
-html:not(.js) .submenu-toggle {
-  display: none;
 }
 
 /* Suchfeld */
@@ -199,8 +127,9 @@ html:not(.js) .submenu-toggle {
     max-width: none;
   }
 
-  & input[type="search"] {
-    height: 2.3em;
+  & .searchbox {
+    --sb-height: 2.4em;
+    --sb-gap: 0.25em;
   }
 }
 
@@ -210,9 +139,8 @@ html:not(.js) .submenu-toggle {
   .brand-name { font-size: 1.2em; }
   .mascot { width: 2.4em; height: 2.13em; }
   .topnav > ul { gap: 0; }
-  .topnav > ul > li > a { padding: 0.4em 0.4em; }
-  .submenu-toggle { margin-right: 0; padding: 0.3em 0.25em; }
-  .topbar form.topsearch { flex-basis: 9em; min-width: 7em; }
+  .topnav > ul > li > a { padding: 0.4em 0.5em; font-size: 0.95em; }
+  .topbar form.topsearch { flex-basis: 8em; min-width: 6em; }
 }
 
 /* Handy: Titel, Menü-Knopf; die Suche steht in einer zweiten Zeile, das Menü klappt unter der Leiste auf */
@@ -291,22 +219,6 @@ html:not(.js) .submenu-toggle {
     display: block;
     padding: 0.7em 0.5em;
     border-radius: 8px;
-  }
-
-  .topnav li.has-menu { display: block; }
-  .submenu-toggle { display: none !important; }
-
-  .topnav .submenu {
-    display: block !important;
-    position: static;
-    min-width: 0;
-    max-width: none;
-    padding: 0 0 0.4em 1em;
-    border: 0;
-    box-shadow: none;
-    background: none;
-
-    & a { padding: 0.7em 0.5em; }
   }
 
   .topbar form.topsearch {

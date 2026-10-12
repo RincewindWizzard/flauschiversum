@@ -1,8 +1,7 @@
 ---
 title: "Klöppelherz"
 permalink: /2018/08/kloppelherz/
-category: wolle
-tags: [Klöppeln]
+tags: [Klöppeln, Wolle]
 author: Ermeline
 date: 2018-08-12
 image: "kloppelherz_thumb.jpg"

@@ -1,8 +1,7 @@
 ---
 title: "Autumn Shawl"
 permalink: /2016/09/autumn-shawl/
-category: wolle
-tags: [Stricken, Schals]
+tags: [Stricken, Schals, Wolle]
 author: Ermeline
 date: 2016-09-11 18:39:18
 image: "DSCF5702.JPG"

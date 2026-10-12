@@ -1,8 +1,7 @@
 ---
 title: "Ärmelschal"
 permalink: /2017/01/armelschal/
-category: wolle
-tags: [Stricken, Schals]
+tags: [Stricken, Schals, Wolle]
 author: Ermeline
 date: 2017-01-15
 image: "armelschal_thumb.jpg"

@@ -1,8 +1,7 @@
 ---
 title: "ein Jubiläumsgeschenk"
 permalink: /2018/04/ein-jubilaumsgeschenk/
-category: basteln
-tags: [Geschenke, Katzen]
+tags: [Geschenke, Katzen, Basteln]
 author: Ermeline
 date: 2018-04-15
 image: "ein-jubilaumsgeschenk_thumb.jpg"

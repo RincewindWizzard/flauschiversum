@@ -35,8 +35,6 @@ pub struct Head {
     /// Branchname im Staging-Modus (zeigt die Staging-Leiste).
     pub staging: Option<String>,
     pub feed_url: String,
-    /// Menüs der Topbar (auf jeder Seite gleich).
-    pub menu: Arc<Menu>,
     /// Klassen des `body`: `has-aside` (Karte neben dem Inhalt), `aside-early` (auf schmalen Fenstern vor der Liste).
     pub body_class: &'static str,
     pub topbar_script_href: String,
@@ -56,11 +54,6 @@ pub struct CloudTag {
     pub level: u8,
 }
 
-/// Menüdaten der Topbar: alle Kategorien.
-pub struct Menu {
-    pub categories: Vec<TopicLink>,
-}
-
 pub struct OgImage {
     pub url: String,
     pub width: u32,
@@ -78,7 +71,6 @@ pub struct Common {
     pub base: Base,
     /// Staging-Modus mit Branchname: noindex und Staging-Leiste auf jeder Seite.
     pub staging: Option<String>,
-    pub menu: Arc<Menu>,
     /// Tag-Cloud (nur auf der Startseite).
     pub cloud: Arc<Vec<CloudTag>>,
 }
@@ -113,7 +105,6 @@ pub struct Entry {
     pub date_human: String,
     pub thumb: Option<Thumb>,
     pub excerpt: String,
-    pub category: Option<TopicLink>,
 }
 
 pub struct PageLink {
@@ -170,9 +161,7 @@ pub struct HomeTemplate {
 pub struct TopicTemplate {
     pub head: Head,
     pub title: String,
-    pub motto: Option<String>,
     pub count_text: String,
-    pub intro: Option<String>,
     pub archive: Vec<ArchiveYear>,
     pub entries: Vec<Entry>,
 }
@@ -181,7 +170,6 @@ pub struct TopicTemplate {
 #[template(path = "topics.html")]
 pub struct TopicsTemplate {
     pub head: Head,
-    pub categories: Vec<TopicLink>,
     pub tags: Vec<TopicLink>,
 }
 
@@ -205,7 +193,6 @@ pub struct PostTemplate {
     pub next: Option<NavLink>,
     pub has_media: bool,
     pub script_href: String,
-    pub category: TopicLink,
     pub tags: Vec<TopicLink>,
     pub related: Vec<RelatedLink>,
 }
@@ -270,7 +257,6 @@ fn base_head(common: &Common, title: String, og_title: String, description: Stri
         noindex: common.staging.is_some(),
         staging: common.staging.clone(),
         feed_url: format!("{}/rss.xml", common.base.as_str()),
-        menu: common.menu.clone(),
         body_class: "",
         topbar_script_href: common.topbar_script_href.clone(),
         mail_href: mailto(BLOG_NAME),
@@ -327,24 +313,18 @@ pub fn render_home(welcome: Option<String>, news: Vec<Entry>, common: &Common) -
     HomeTemplate { head, welcome, news, cloud: common.cloud.clone() }.render().expect("Start-Template")
 }
 
-/// Seite einer Kategorie oder eines Schlagworts.
+/// Seite eines Themas (Schlagworts).
 pub struct TopicPageInput {
     pub url: String,
     pub name: String,
-    pub motto: Option<String>,
-    /// Einleitungstext als HTML (nur Kategorien).
-    pub intro: Option<String>,
     pub count: usize,
-    /// Archiv der Beiträge (nur Kategorien); leer bei Schlagworten.
+    /// Archiv der Beiträge des Themas nach Jahr und Monat.
     pub archive: Vec<ArchiveYear>,
     pub entries: Vec<Entry>,
 }
 
 pub fn render_topic(input: TopicPageInput, common: &Common) -> String {
-    let mut description = format!("{} zu {} im {BLOG_NAME}", count_text(input.count), input.name);
-    if let Some(m) = &input.motto {
-        description = format!("{description}. {}", m.split_whitespace().collect::<Vec<_>>().join(" "));
-    }
+    let description = format!("{} zu {} im {BLOG_NAME}", count_text(input.count), input.name);
     let mut head = base_head(
         common,
         format!("{} – {BLOG_NAME}", input.name),
@@ -358,9 +338,7 @@ pub fn render_topic(input: TopicPageInput, common: &Common) -> String {
     TopicTemplate {
         head,
         title: input.name,
-        motto: input.motto,
         count_text: count_text(input.count),
-        intro: input.intro,
         archive: input.archive,
         entries: input.entries,
     }
@@ -380,10 +358,10 @@ pub fn render_search(script_href: String, common: &Common) -> String {
     SearchTemplate { head, script_href }.render().expect("Such-Template")
 }
 
-pub fn render_topics(categories: Vec<TopicLink>, tags: Vec<TopicLink>, common: &Common) -> String {
-    let description = format!("Alle Kategorien und Schlagworte im {BLOG_NAME}: {} Kategorien, {} Schlagworte.", categories.len(), tags.len());
+pub fn render_topics(tags: Vec<TopicLink>, common: &Common) -> String {
+    let description = format!("Alle Themen im {BLOG_NAME}: {} Themen zum Stöbern.", tags.len());
     let head = base_head(common, format!("Themen – {BLOG_NAME}"), "Themen".to_string(), description, common.base.absolute("/themen/"));
-    TopicsTemplate { head, categories, tags }.render().expect("Themenübersicht-Template")
+    TopicsTemplate { head, tags }.render().expect("Themenübersicht-Template")
 }
 
 pub struct PostPageInput<'a> {
@@ -394,7 +372,6 @@ pub struct PostPageInput<'a> {
     pub newer: Option<&'a Post>,
     pub older: Option<&'a Post>,
     pub has_media: bool,
-    pub category: TopicLink,
     pub tags: Vec<TopicLink>,
     pub related: Vec<RelatedLink>,
 }
@@ -417,7 +394,7 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         alt: post.title.clone(),
     });
     head.published_time = Some(seo::iso(post));
-    head.json_ld = Some(seo::blog_posting(post, image_url, Some(input.category.name.as_str()), &common.base));
+    head.json_ld = Some(seo::blog_posting(post, image_url, &common.base));
     let link = |p: &Post| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() };
     PostTemplate {
         head,
@@ -430,7 +407,6 @@ pub fn render_post(input: PostPageInput, common: &Common) -> String {
         next: input.newer.map(link),
         has_media: input.has_media,
         script_href: common.script_href.clone(),
-        category: input.category,
         tags: input.tags,
         related: input.related,
     }

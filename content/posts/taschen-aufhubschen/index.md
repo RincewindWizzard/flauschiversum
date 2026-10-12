@@ -1,8 +1,7 @@
 ---
 title: "Taschen aufhübschen"
 permalink: /2014/01/taschen-aufhubschen/
-category: brandings
-tags: [Taschen, Leder]
+tags: [Taschen, Leder, Brandings]
 author: Ermeline
 date: 2014-01-04 19:39:45
 image: "DSCF0093.JPG"

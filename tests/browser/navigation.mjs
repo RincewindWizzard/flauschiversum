@@ -24,7 +24,7 @@ await test('Startseite: Begrüßung, zehn Beiträge – in dieser Reihenfolge, C
   const ys = [await y('.home-head .welcome'), await y('.news .entries')];
   assert.deepEqual(ys, [...ys].sort((a, b) => a - b));
   assert.equal(await page.locator('main h1, .home-head h1').count(), 0, 'Titel steht nur in der Topbar');
-  assert.equal(await page.locator('ul.tiles').count(), 0, 'keine Kategoriekacheln');
+  assert.equal(await page.locator('ul.tiles').count(), 0, 'keine Kacheln');
   assert.equal(await page.locator('.news .entry').count(), 10);
   assert.equal(await page.locator('main input[type=search]').count(), 0, 'kein Suchfeld im Inhalt');
   assert.ok((await page.locator('.cloud-card .cloud li').count()) > 20, 'Tag-Cloud in der Karte');
@@ -33,16 +33,12 @@ await test('Startseite: Begrüßung, zehn Beiträge – in dieser Reihenfolge, C
   await page.close();
 });
 
-await test('Kategorie aus dem Menü führt auf die Kategorieseite, Schlagwort auf die Schlagwortseite', async () => {
+await test('Themen in der Topbar führt auf die Themenliste, Schlagwort auf die Themenseite', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');
-  await page.hover('.topnav li.has-menu >> nth=0');
-  const first = page.locator('#menu-kategorien a').first();
-  const name = (await first.textContent()).trim();
-  await first.click();
-  await page.waitForURL('**/kategorie/**');
-  assert.equal(await page.locator('h1').textContent(), name);
-  assert.ok((await page.locator('main .entries .entry').count()) > 3, 'alle Beiträge auf einer Seite');
+  await page.click('.topnav a[href="/themen/"]');
+  await page.waitForURL('**/themen/');
+  assert.equal(await page.locator('h1').textContent(), 'Themen');
   await page.goto(BASE + '/');
   await page.locator('.cloud-card .cloud a').first().click();
   await page.waitForURL('**/tag/**');
@@ -50,13 +46,15 @@ await test('Kategorie aus dem Menü führt auf die Kategorieseite, Schlagwort au
   await page.close();
 });
 
-await test('Beitrag zeigt Einordnung, Link führt auf die Kategorie', async () => {
+await test('Beitrag zeigt seine Schlagworte, Link führt auf die Themenseite', async () => {
   const page = await browser.newPage();
   await page.goto(BASE + '/2020/10/kurbis/');
-  const cat = page.locator('.classification a.category');
-  assert.ok((await cat.count()) === 1);
-  const href = await cat.getAttribute('href');
-  await cat.click();
+  assert.equal(await page.locator('.classification a.category').count(), 0);
+  const tag = page.locator('.classification a.tag').first();
+  assert.ok((await page.locator('.classification a.tag').count()) >= 1);
+  const href = await tag.getAttribute('href');
+  assert.match(href, /^\/tag\//);
+  await tag.click();
   await page.waitForURL('**' + href);
   await page.close();
 });
@@ -129,7 +127,7 @@ await test('Suche: alle Dateien von der eigenen Domain', async () => {
   await page.close();
 });
 
-await test('Suche: Kategoriefilter schränkt die Treffer ein', async () => {
+await test('Suche: Themenfilter schränkt die Treffer ein', async () => {
   const page = await browser.newPage();
   await page.goto(`${BASE}/suche/?q=m%C3%BCtze`);
   await waitResults(page);
@@ -138,7 +136,7 @@ await test('Suche: Kategoriefilter schränkt die Treffer ein', async () => {
   const n = Number(/(\d+)\s+Ergebnis/.exec(total)?.[1]);
   assert.ok(n > 0, total);
   await page.locator('.pagefind-ui__filter-label', { hasText: 'Wolle' }).click();
-  assert.ok(await page.locator('#Kategorie-Wolle').isChecked());
+  assert.ok(await page.locator('#Thema-Wolle').isChecked());
   await page.waitForFunction((n) => {
     const m = /(\d+)\s+Ergebnis/.exec(document.querySelector('.pagefind-ui__message')?.textContent ?? '');
     return m && Number(m[1]) < n;
@@ -174,7 +172,7 @@ await test('Ohne JavaScript: Hinweis, Formular und Links zum Stöbern', async ()
   await ctx.close();
 });
 
-for (const path of ['/', '/themen/', '/kategorie/basteln/', '/tag/katzen/', '/suche/?q=katze', '/2020/10/kurbis/', '/beitraege/']) {
+for (const path of ['/', '/themen/', '/tag/basteln/', '/tag/katzen/', '/suche/?q=katze', '/2020/10/kurbis/', '/beitraege/']) {
   await test(`Handy ${path}: kein waagerechtes Scrollen`, async () => {
     const page = await browser.newPage({ viewport: { width: 360, height: 740 }, hasTouch: true, isMobile: true });
     await page.goto(BASE + path);

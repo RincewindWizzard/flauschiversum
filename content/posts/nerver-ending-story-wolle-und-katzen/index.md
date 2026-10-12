@@ -1,8 +1,7 @@
 ---
 title: "Never ending Story Wolle und Katzen"
 permalink: /2016/07/never-ending-story-wolle-und-katzen/
-category: wolle
-tags: [Katzen]
+tags: [Katzen, Wolle]
 author: Ermeline
 date: 2016-07-03 20:11:47
 image: "DSCF4871.JPG"

@@ -15,7 +15,7 @@ const test = async (name, fn) => {
   catch (e) { results.push(['FEHLER', name, e.message.split('\n')[0]]); }
 };
 
-for (const path of ['/', '/2020/10/kurbis/', '/kategorie/wolle/', '/suche/?q=katze', '/impressum/']) {
+for (const path of ['/', '/2020/10/kurbis/', '/tag/wolle/', '/suche/?q=katze', '/impressum/']) {
   await test(`Leiste ganz oben auf ${path}`, async () => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     await page.goto(BASE + path);

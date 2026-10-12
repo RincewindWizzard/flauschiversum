@@ -1,8 +1,7 @@
 ---
 title: "Taschenhelfermonster"
 permalink: /2016/07/taschenhelfermonster/
-category: wolle
-tags: [Häkeln]
+tags: [Häkeln, Wolle]
 author: Ermeline
 date: 2016-07-17 16:58:09
 image: "DSCF5070.JPG"

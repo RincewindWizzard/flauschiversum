@@ -1,8 +1,7 @@
 ---
 title: "sommerliche Handtasche"
 permalink: /2017/05/sommerliche-handtasche/
-category: nähen
-tags: [Taschen]
+tags: [Taschen, Nähen]
 author: Lucy
 date: 2017-05-28
 image: "sommerliche-handtasche_thumb.jpg"

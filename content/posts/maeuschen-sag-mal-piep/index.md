@@ -1,8 +1,7 @@
 ---
 title: "Mäuschen sag mal Piep!"
 permalink: /2014/06/mauschen-sag-mal-piep/
-category: wolle
-tags: [Katzen, Filzen]
+tags: [Katzen, Filzen, Wolle]
 author: Ermeline
 date: 2014-06-08 15:28:57
 image: "DSCF0879.jpg"

@@ -71,7 +71,6 @@ mod tests {
             excerpt: None,
             markdown: String::new(),
             media: Vec::new(),
-            category: String::new(),
             tags: Vec::new(),
         }
     }

@@ -1,8 +1,7 @@
 ---
 title: "Katzenmerchandise"
 permalink: /2017/05/katzenmerchandise/
-category: basteln
-tags: [Katzen]
+tags: [Katzen, Basteln]
 author: Ermeline
 date: 2017-05-14
 image: "katzenmerchandise_thumb.jpg"

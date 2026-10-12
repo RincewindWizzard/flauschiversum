@@ -1,8 +1,7 @@
 ---
 title: "Alraune"
 permalink: /2014/01/alraune/
-category: basteln
-tags: [LARP, Stricken]
+tags: [LARP, Stricken, Basteln]
 author: Ermeline
 date: 2014-01-04 19:10:28
 image: "DSCF0527.jpg"

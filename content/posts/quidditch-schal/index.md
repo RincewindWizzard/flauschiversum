@@ -1,8 +1,7 @@
 ---
 title: "Quidditch-Schal "
 permalink: /2019/02/quidditch-schal/
-category: wolle
-tags: [Stricken, Schals, Geschenke]
+tags: [Stricken, Schals, Geschenke, Wolle]
 author: Ermeline
 date: 2019-02-17
 image: "quidditch-schal_thumb.jpg"

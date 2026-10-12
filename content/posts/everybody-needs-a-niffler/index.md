@@ -1,7 +1,7 @@
 ---
 title: "Everybody needs a Niffler"
 permalink: /2018/04/everybody-needs-a-niffler/
-category: basteln
+tags: [Basteln]
 author: Tomcat
 date: 2018-04-29
 image: "everybody-needs-a-niffler_thumb.jpg"

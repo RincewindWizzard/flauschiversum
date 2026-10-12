@@ -1,7 +1,6 @@
 ---
 title: "Leder Flach"
 permalink: /2013/07/leder-flach/
-category: material
 tags: [Einkaufen, Leder]
 author: Ermeline
 date: 2013-07-28 00:54:42

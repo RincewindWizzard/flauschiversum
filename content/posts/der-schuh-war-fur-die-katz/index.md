@@ -1,8 +1,7 @@
 ---
 title: "der Schuh war für die Katz"
 permalink: /2014/08/der-schuh-war-fur-die-katz/
-category: wolle
-tags: [Katzen, Filzen]
+tags: [Katzen, Filzen, Wolle]
 author: Ermeline
 date: 2014-08-26 14:15:56
 image: "DSCF1523.JPG"

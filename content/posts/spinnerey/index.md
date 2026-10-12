@@ -1,8 +1,7 @@
 ---
 title: "Spinnerey"
 permalink: /2013/07/spinnerey/
-category: wolle
-tags: [Spinnen]
+tags: [Spinnen, Wolle]
 author: Ermeline
 date: 2013-07-27 22:13:00
 excerpt: "Wollt ihr euch an das Spinnen heranwagen"

@@ -1,6 +1,6 @@
 ---
 source: src/site.rs
-expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
+expression: "stable(&read(root, \"tag/larp/index.html\"))"
 ---
 <!DOCTYPE html>
 <html lang="de">
@@ -9,18 +9,18 @@ expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
-<title>Basteln – Flauschiversum</title>
-<meta name="description" content="3 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
-<link rel="canonical" href="https://flauschiversum.de/kategorie/basteln/">
+<title>LARP – Flauschiversum</title>
+<meta name="description" content="2 Beiträge zu LARP im Flauschiversum">
+<link rel="canonical" href="https://flauschiversum.de/tag/larp/">
 <link rel="stylesheet" href="/style.css?v=HASH">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
 <link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
 <meta property="og:site_name" content="Flauschiversum">
 <meta property="og:locale" content="de_DE">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Basteln">
-<meta property="og:description" content="3 Beiträge zu Basteln im Flauschiversum. Papier und Schere, mehr brauchst du nicht.">
-<meta property="og:url" content="https://flauschiversum.de/kategorie/basteln/">
+<meta property="og:title" content="LARP">
+<meta property="og:description" content="2 Beiträge zu LARP im Flauschiversum">
+<meta property="og:url" content="https://flauschiversum.de/tag/larp/">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="has-aside aside-early">
@@ -38,13 +38,8 @@ expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
       <nav class="topnav" aria-label="Hauptnavigation">
         <ul>
           <li><a href="/beitraege/">Beiträge</a></li>
-          <li class="has-menu">
-            <a href="/themen/">Kategorien</a>
-            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
-            <ul class="submenu card" id="menu-kategorien">
-              <li><a href="/kategorie/basteln/">Basteln</a></li>
-            </ul>
-          </li>
+          <li><a href="/themen/">Themen</a></li>
+          <li><a href="/tipps-und-tricks/">Tipps und Tricks</a></li>
         </ul>
       </nav>
     </details>
@@ -65,12 +60,8 @@ expression: "stable(&read(root, \"kategorie/basteln/index.html\"))"
   <div class="page-head">
     
 <header class="topic-head">
-  <h1>Basteln</h1>
-  <p class="motto">Papier und Schere,
-mehr brauchst du nicht.</p>
-  <div class="intro"><p>Alles mit <em>Klebe</em> und Schere.</p>
-</div>
-  <p class="count">3 Beiträge</p>
+  <h1>LARP</h1>
+  <p class="count">2 Beiträge</p>
 </header>
 
   </div>
@@ -83,14 +74,6 @@ mehr brauchst du nicht.</p>
     <p class="entry-title"><a href="/2026/01/gruene-muetze/">Grüne Mütze</a></p>
     <p class="entry-meta"><time datetime="2026-01-05T00:00:00+01:00">5. Januar 2026</time></p>
     <p class="excerpt">Ohne Bild.</p>
-  </div>
-</li>
-    <li class="entry">
-  <a href="/2020/10/kurbis/" class="entry-image" tabindex="-1" aria-hidden="true"><img src="/2020/10/kurbis/200x/k%C3%BCrbis%20thumb.png" width="200" height="150" alt="" loading="lazy"></a>
-  <div class="entry-text">
-    <p class="entry-title"><a href="/2020/10/kurbis/">Kürbis</a></p>
-    <p class="entry-meta"><time datetime="2020-10-31T00:00:00+01:00">31. Oktober 2020</time></p>
-    <p class="excerpt">Es ist wieder die gruselige Jahreszeit und da muss man einen Kürbis haben.</p>
   </div>
 </li>
     <li class="entry">
@@ -120,15 +103,6 @@ mehr brauchst du nicht.</p>
     </details>
   </details>
   <details class="year">
-    <summary>2020 <span class="count">(1)</span></summary>
-    <details class="month">
-      <summary>Oktober <span class="count">(1)</span></summary>
-      <ul>
-        <li><span class="day">31.</span> <a href="/2020/10/kurbis/">Kürbis</a></li>
-      </ul>
-    </details>
-  </details>
-  <details class="year">
     <summary>2014 <span class="count">(1)</span></summary>
     <details class="month">
       <summary>Januar <span class="count">(1)</span></summary>
@@ -154,7 +128,6 @@ mehr brauchst du nicht.</p>
       <p class="copyright">&copy; 2026 Ermeline Wollknoll</p>
     </div>
     <nav class="footer-links" aria-label="Weitere Seiten">
-      <a href="/tipps-und-tricks/">Tipps und Tricks</a>
       <a href="/about/">About me</a>
       <a href="/impressum/">Impressum</a>
     </nav>

@@ -1,5 +1,9 @@
 /* Suchfelder: ein Feld, die Lupe sitzt als Knopf im Feld am rechten Rand */
 .searchbox {
+  /* Feldhöhe und Abstand der Lupe zum Rand: Feld und Knopf sind rund, der Knopf liegt mit gleichem Abstand
+     oben, unten und rechts im Feld und teilt dessen Mittelpunkt der Rundung (konzentrisch) */
+  --sb-height: 2.6em;
+  --sb-gap: 0.3em;
   position: relative;
   display: flex;
   align-items: center;
@@ -11,9 +15,8 @@
     min-width: 0;
     box-sizing: border-box;
     font: inherit;
-    font-size: var(--fs-ui);
-    height: 2.6em;
-    padding: 0 2.9em 0 1em;
+    height: var(--sb-height);
+    padding: 0 calc(var(--sb-height) + 0.1em) 0 1em;
     border: 1px solid var(--border-strong);
     border-radius: 20em;
     background: var(--card-bg);
@@ -32,18 +35,19 @@
 
   & button {
     position: absolute;
-    right: 0.3em;
+    right: var(--sb-gap);
     top: 50%;
     transform: translateY(-50%);
     display: grid;
     place-items: center;
-    width: 2.1em;
-    height: 2.1em;
+    width: calc(var(--sb-height) - 2 * var(--sb-gap));
+    height: calc(var(--sb-height) - 2 * var(--sb-gap));
     padding: 0;
     border: 0;
     border-radius: 50%;
     background: var(--accent);
     color: var(--accent-ink);
+    font: inherit;
     cursor: pointer;
   }
 
@@ -83,9 +87,6 @@ form.search.big {
 
   & .searchbox {
     max-width: 30em;
-  }
-
-  & input[type="search"] {
     font-size: 1.15em;
   }
 }

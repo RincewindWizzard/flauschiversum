@@ -26,7 +26,7 @@ pub const FULL_MAX_BYTES: usize = 1024 * 1024;
 pub const MEDIA_WARN_BYTES: u64 = 20 * 1024 * 1024;
 
 /// Erste Pfadsegmente, die der Generator selbst belegt (Posts und Einzelseiten dürfen sie nicht verwenden).
-pub const RESERVED_PATHS: [&str; 6] = ["themen", "suche", "beitraege", "kategorie", "tag", "pagefind"];
+pub const RESERVED_PATHS: [&str; 5] = ["themen", "suche", "beitraege", "tag", "pagefind"];
 
 /// Anzahl der neuesten Beiträge auf der Startseite und auf `/beitraege/`.
 pub const HOME_NEWS: usize = 10;
