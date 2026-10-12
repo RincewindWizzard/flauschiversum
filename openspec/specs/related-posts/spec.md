@@ -39,9 +39,13 @@ Hat ein Beitrag weniger als 6 Kandidaten mit gemeinsamem Schlagwort, SHALL die A
 - **WHEN** nur ein anderer Beitrag ein gemeinsames Schlagwort hat
 - **THEN** besteht die Auswahl aus diesem einen Beitrag
 
-### Requirement: Anzeige der gemeinsamen Schlagworte
-Jeder Eintrag der Auswahl SHALL den Titel als Link und die gemeinsamen Schlagworte zeigen.
+### Requirement: Anzeige wie in der Beitragsliste
+Jeder Eintrag der Auswahl SHALL im Aufbau der Einträge der Beitragsliste dargestellt werden: Vorschaubild (falls vorhanden), Titel als Link, Datum und Kurztext. Gemeinsame Schlagworte werden nicht eigens angezeigt.
 
-#### Scenario: Gemeinsame Schlagworte
-- **WHEN** zwei Beiträge die Schlagworte „Filzen“ und „Katzen“ teilen
-- **THEN** zeigt der Eintrag „Filzen“ und „Katzen“ unter dem Titel
+#### Scenario: Eintrag mit Bild
+- **WHEN** der ähnliche Beitrag „Kürbis“ ein Vorschaubild hat
+- **THEN** zeigt der Eintrag das runde Bild, den Titel mit Link, „31. Oktober 2020“ und den Kurztext wie in der Liste auf der Startseite
+
+#### Scenario: Ohne Bild und Kurztext
+- **WHEN** ein ähnlicher Beitrag weder Vorschaubild noch Kurztext hat
+- **THEN** zeigt der Eintrag Titel und Datum, ohne leere Flächen

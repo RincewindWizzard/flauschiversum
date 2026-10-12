@@ -63,7 +63,7 @@ Text in Markdown …
   Verzeichnis `grüne-mütze`. Bestehende Posts tragen ihre bisherige URL als `permalink:` – diese Zeile nie ändern.
 - **Veröffentlichung:** Posts mit einem Datum in der Zukunft erscheinen erst beim ersten Build nach diesem Zeitpunkt.
 - **Bilder** (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`) werden in drei Größen ausgeliefert: `200x/` (Vorschau),
-  `700x/` (im Text) und `1000x/` (Vollbild), mit Wasserzeichen-Badge im Farbschema „Flauschi-Nebel“ (Lavendel, Indigo; außer `200x`; neu erzeugbar mit `openspec/changes/archive/*-post-ansicht-ueberarbeiten/assets/make_badge.py`, nach dem Archivieren unter `archive/`; Änderung am Badge berechnet alle Bilder neu) und Rechteangaben in den
+  `700x/` (im Text) und `1000x/` (Vollbild), mit Wasserzeichen-Badge im Farbschema „Flauschi-Nebel“ (Lavendel, Indigo; außer `200x`; neu erzeugbar mit `openspec/changes/archive/2026-10-12-post-ansicht-ueberarbeiten/assets/make_badge.py`; Änderung am Badge berechnet alle Bilder neu) und Rechteangaben in den
   Metadaten. GPS- und Kameradaten werden entfernt. Handyfotos dürfen groß sein; sie werden automatisch verkleinert.
 - **Animierte GIFs und Videos** (`.mp4`, `.webm`) werden unverändert ausgeliefert. Videos laufen stumm in Schleife.
   Ab 20 MB warnt der Build.

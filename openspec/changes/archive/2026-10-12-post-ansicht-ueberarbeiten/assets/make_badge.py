@@ -1,6 +1,6 @@
 """Erzeugt assets/badge.png: Wasserzeichen im Farbschema „Flauschi-Nebel“ (800 × 133, RGBA).
 
-Aufruf (aus dem Projektverzeichnis): python3 openspec/changes/post-ansicht-ueberarbeiten/assets/make_badge.py
+Aufruf (aus dem Projektverzeichnis): python3 openspec/changes/archive/2026-10-12-post-ansicht-ueberarbeiten/assets/make_badge.py
 Farben entsprechen content/style/theme.css (hell): Fläche --accent-soft, Schrift --acolor, Rand --accent.
 """
 from PIL import Image, ImageDraw, ImageFont
