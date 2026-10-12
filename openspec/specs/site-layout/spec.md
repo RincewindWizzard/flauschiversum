@@ -7,7 +7,7 @@ Beschreibt den gemeinsamen Rahmen aller HTML-Seiten des Flauschiversums: Kopfber
 ## Requirements
 
 ### Requirement: Grundgerüst jeder Seite
-Jede HTML-Seite SHALL als deutschsprachiges Dokument (`lang="de"`, UTF-8) mit Viewport-Angabe für Mobilgeräte ausgeliefert werden. Sie bindet das Stylesheet `/style.css` und das Favicon `/favicon.ico` ein. Verweise auf Stylesheet und Skripte tragen einen Versionsparameter aus dem Inhalts-Hash (z.B. `/style.css?v=3f2a91c0`), damit Browser nach einer Änderung keine veraltete Fassung verwenden.
+Jede HTML-Seite SHALL als deutschsprachiges Dokument (`lang="de"`, UTF-8) mit Viewport-Angabe für Mobilgeräte ausgeliefert werden. Sie bindet das Stylesheet `/style.css` und die Favicon-Dateien (`/favicon.ico`, `/favicon.svg`, `/apple-touch-icon.png`, Spec `favicon`) ein. Verweise auf Stylesheet und Skripte tragen einen Versionsparameter aus dem Inhalts-Hash (z.B. `/style.css?v=3f2a91c0`), damit Browser nach einer Änderung keine veraltete Fassung verwenden.
 
 #### Scenario: Seite auf dem Handy
 - **WHEN** eine beliebige Seite auf einem Mobilgerät geöffnet wird
@@ -16,6 +16,10 @@ Jede HTML-Seite SHALL als deutschsprachiges Dokument (`lang="de"`, UTF-8) mit Vi
 #### Scenario: Geändertes Stylesheet
 - **WHEN** sich der Inhalt von `/style.css` ändert und neu gebaut wird
 - **THEN** verweisen alle Seiten mit einem neuen Wert für `v` auf `/style.css`
+
+#### Scenario: Icons verlinkt
+- **WHEN** der Kopf einer beliebigen Seite untersucht wird
+- **THEN** enthält er Verweise auf `/favicon.ico`, `/favicon.svg` und `/apple-touch-icon.png`
 
 ### Requirement: Fußzeile
 Jede Seite SHALL am Ende eine Fußzeile haben, die genau dem Layout der Fußzeile der Segelgruppe Kiel (segelgruppe-kiel.de) folgt: ein Band über die volle Breite mit Innenabstand 2 em, gedämpfter heller Schrift (`#afafaf`) auf dunklem Grund und zwei Spalten in einer Zeile, mittig angeordnet. Die linke Spalte ist ein Block, in dem eine Navigation mit den Icons der Kontaktwege nach der Spec `contact-links` (eine Zeile, gleichmäßig verteilt, Höhe 3 em) über dem Hinweis „© <Jahr> Ermeline Wollknoll“ steht. Die rechte Spalte ist eine Navigation mit den Links „About me“ (`/about/`) und „Impressum“ (`/impressum/`) als Liste untereinander, ohne Aufzählungszeichen und ohne Unterstreichung, jeweils mit 0,2 em Innenabstand. Links behalten ihre Farbe auch nach dem Besuch. Das Jahr ist das Jahr des Builds. Auf dem Handy steht das Copyright immer als letztes Element der Fußzeile.
