@@ -69,7 +69,7 @@ Unter 48 em zeigt die Topbar Titel, Suche (Lupe als Knopf, klappt das Feld auf b
 
 - „Kategorien“ führt beim Klick auf `/themen/` (Übersicht), die Einträge im Untermenü auf die Kategorieseiten.
 - Das Suchfeld bleibt, jetzt in der Topbar (im Auftrag nicht genannt, für die Auffindbarkeit nötig).
-- Footer kompakt: `div.footer-main` mit den Links untereinander (Tipps und Tricks, About me, Impressum) und daneben den Icons in einer Zeile, darunter das Copyright. „Abonnieren“ entfällt, das RSS-Icon genügt. „About me“ steht nur im Footer.
+- Footer nach dem Vorbild der Segelgruppe Kiel: dunkles Band (`#263329`, Text `#dde3da`) über die volle Breite, innen ein Gitter 3 : 2 (`footer-left` mit Icons und Copyright, `footer-links` mit den drei Links untereinander); die Farben sind Variablen am Footer und folgen später dem Farbschema (`farbschema-darkmode`). „Abonnieren“ entfällt, das RSS-Icon genügt. „About me“ steht nur im Footer.
 - `/themen/` und die Schlagwortseiten bleiben erhalten und sind über die Cloud auf der Startseite und über „Kategorien“ erreichbar.
 - Startseite zeigt die zehn neuesten Beiträge wie `/beitraege/`; Archiv: neuestes Jahr und neuester Monat offen, Rest zu.
 

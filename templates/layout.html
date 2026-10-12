@@ -82,23 +82,25 @@
   </div>
   {% block aside %}{% endblock %}
 </div>
+</div>
 <footer id="blogfooter">
-  <div class="footer-main">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <ul class="socials">
+        <li><a class="mail" href="{{ head.mail_href }}" aria-label="E-Mail schreiben" title="{{ head.mail_address }}">{% include "partials/icon-mail.html" %}</a></li>
+        <li><a href="{{ head.instagram_url }}" rel="noopener" aria-label="Instagram" title="Instagram">{% include "partials/icon-instagram.html" %}</a></li>
+        <li><a href="{{ head.mastodon_url }}" rel="me noopener" aria-label="Mastodon" title="Mastodon">{% include "partials/icon-mastodon.html" %}</a></li>
+        <li><a href="/rss.xml" rel="alternate" type="application/rss+xml" aria-label="RSS-Feed abonnieren" title="RSS-Feed abonnieren">{% include "partials/icon-rss.html" %}</a></li>
+      </ul>
+      <p class="copyright">&copy; {{ head.year }} Ermeline Wollknoll</p>
+    </div>
     <nav class="footer-links" aria-label="Weitere Seiten">
       <a href="/tipps-und-tricks/">Tipps und Tricks</a>
       <a href="/about/">About me</a>
       <a href="/impressum/">Impressum</a>
     </nav>
-    <ul class="socials">
-      <li><a class="mail" href="{{ head.mail_href }}" aria-label="E-Mail schreiben" title="{{ head.mail_address }}">{% include "partials/icon-mail.html" %}</a></li>
-      <li><a href="{{ head.instagram_url }}" rel="noopener" aria-label="Instagram" title="Instagram">{% include "partials/icon-instagram.html" %}</a></li>
-      <li><a href="{{ head.mastodon_url }}" rel="me noopener" aria-label="Mastodon" title="Mastodon">{% include "partials/icon-mastodon.html" %}</a></li>
-      <li><a href="/rss.xml" rel="alternate" type="application/rss+xml" aria-label="RSS-Feed abonnieren" title="RSS-Feed abonnieren">{% include "partials/icon-rss.html" %}</a></li>
-    </ul>
   </div>
-  <p class="copyright">&copy; {{ head.year }} Ermeline Wollknoll</p>
 </footer>
-</div>
 <script src="{{ head.topbar_script_href }}"></script>
 {% block scripts %}{% endblock %}
 {%- if head.livereload %}

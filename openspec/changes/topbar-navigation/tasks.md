@@ -29,7 +29,7 @@
 ## 4a. Überarbeitung nach Rückmeldung
 
 - [x] 4a.1 Topbar auf einer Linie zentrieren (Suchfeld-Außenabstand entfernt), „Beiträge“ ohne Dropdown, „About me“ in den Footer, Hamburger-Knopf am Handy; prüfen: Test auf Mittelpunkte, kein Beiträge-Untermenü, Hamburger-Knopf mindestens 44 px
-- [x] 4a.2 Footer kompakt (Links untereinander, Icons daneben, Copyright darunter), „Abonnieren“ entfernt; prüfen: Test auf Anordnung und Höhe, `cargo test` und Browser-Tests grün
+- [x] 4a.2 Footer nach Vorbild der Segelgruppe Kiel (dunkles Band, links Icons mit Copyright darunter, rechts Links untereinander), „Abonnieren“ entfernt; prüfen: Test auf Anordnung und Höhe, `cargo test` und Browser-Tests grün
 
 ## 5. Dokumentation
 

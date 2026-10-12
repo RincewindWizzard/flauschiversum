@@ -670,8 +670,8 @@ pub mod tests {
             assert!(footer.find("aria-label=\"Instagram\"").unwrap() > footer.find("aria-label=\"E-Mail schreiben\"").unwrap(), "{path}: Reihenfolge E-Mail, Instagram");
             assert_eq!(footer.matches("href=\"/rss.xml\"").count(), 1, "nur das RSS-Icon, kein Textlink: {path}");
             assert!(!footer.contains("Abonnieren"), "{path}");
-            // kompakt: Links untereinander und Icons daneben in einem Block, darunter das Copyright
-            assert!(footer.find("class=\"footer-links\"").unwrap() < footer.find("class=\"socials\"").unwrap() && footer.find("class=\"socials\"").unwrap() < footer.find("class=\"copyright\"").unwrap(), "{path}");
+            // Links Icons mit dem Copyright darunter, rechts die Seitenlinks untereinander
+            assert!(footer.find("class=\"socials\"").unwrap() < footer.find("class=\"copyright\"").unwrap() && footer.find("class=\"copyright\"").unwrap() < footer.find("class=\"footer-links\"").unwrap(), "{path}");
             assert!(footer.contains("&copy; 2026 Ermeline Wollknoll"), "{path}");
             assert!(!footer.contains("http-equiv") && !html.contains("fonts.googleapis"), "{path}");
             // Jeder mailto-Link hat einen Betreff mit „Flauschiversum“

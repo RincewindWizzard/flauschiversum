@@ -27,7 +27,7 @@ Tag-Cloud und Archiv SHALL auf Karten liegen: heller Hintergrund, abgerundete Ec
 ## MODIFIED Requirements
 
 ### Requirement: Fußzeile
-Jede Seite SHALL am Ende eine kompakte Fußzeile haben. Links stehen untereinander „Tipps und Tricks“ (`/tipps-und-tricks/`), „About me“ (`/about/`) und „Impressum“ (`/impressum/`), daneben in einer Zeile die Icons der Kontaktwege nach der Spec `contact-links`, darunter der Hinweis „© <Jahr> Ermeline Wollknoll“. Das Jahr ist das Jahr des Builds. Die Fußzeile ist auch ohne JavaScript vollständig und bricht bei schmalen Fenstern um, ohne waagerechtes Scrollen zu verursachen.
+Jede Seite SHALL am Ende eine Fußzeile als dunkles Band über die volle Breite haben (Vorbild: Fußzeile der Segelgruppe Kiel). Der Inhalt steht im Rahmen bis 1200 px in zwei Spalten: links in einer Zeile die großen Icons der Kontaktwege nach der Spec `contact-links` und darunter der Hinweis „© <Jahr> Ermeline Wollknoll“, rechts untereinander die Links „Tipps und Tricks“ (`/tipps-und-tricks/`), „About me“ (`/about/`) und „Impressum“ (`/impressum/`) in großer, normal starker Schrift. Das Jahr ist das Jahr des Builds. Die Fußzeile ist auch ohne JavaScript vollständig; auf schmalen Fenstern stehen die Spalten untereinander, ohne waagerechtes Scrollen zu verursachen.
 
 #### Scenario: Jahr im Copyright
 - **WHEN** die Seite im Jahr 2021 gebaut wurde
@@ -37,9 +37,9 @@ Jede Seite SHALL am Ende eine kompakte Fußzeile haben. Links stehen untereinand
 - **WHEN** eine beliebige Seite geöffnet wird
 - **THEN** enthält die Fußzeile die Links „Tipps und Tricks“, „About me“ und „Impressum“ mit den genannten Zielen untereinander, aber keinen Link „Abonnieren“
 
-#### Scenario: Kompakte Anordnung
+#### Scenario: Anordnung wie das Vorbild
 - **WHEN** eine Seite bei 1280 px Breite geöffnet wird
-- **THEN** stehen die Icons neben den Links in einer Zeile, das Copyright steht darunter, und die Fußzeile ist niedriger als 190 px
+- **THEN** spannt die Fußzeile die volle Breite mit dunklem Hintergrund, links stehen die Icons in einer Zeile mit dem Copyright linksbündig darunter, und rechts stehen die drei Links untereinander
 
 #### Scenario: Handy
 - **WHEN** eine Seite bei 360 px Breite geöffnet wird

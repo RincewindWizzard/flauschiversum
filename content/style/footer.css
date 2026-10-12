@@ -1,54 +1,48 @@
-/* Fußzeile: Seitenlinks, Kontakt mit Icons, Copyright */
+/* Fußzeile: dunkles Band über die ganze Breite. Links die Icons mit dem Copyright darunter, rechts die Seitenlinks untereinander. */
 #blogfooter {
-  margin: 2em 1em 1.5em;
-  padding-top: 0.8em;
-  border-top: 1px dashed var(--bordercolor);
+  --footer-bg: #263329;
+  --footer-text: #dde3da;
+  --footer-hover: #ffffff;
+  margin-top: 3em;
+  padding: 2.4em 1em 2.6em;
+  background: var(--footer-bg);
+  color: var(--footer-text);
 
   & a {
+    color: var(--footer-text);
     text-decoration: none;
   }
 
-  /* Links untereinander, daneben die Icons in einer Zeile */
-  & .footer-main {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.4em 2em;
-  }
-
-  & .footer-links {
-    display: flex;
-    flex-direction: column;
-    font-family: var(--font-text);
-    font-weight: 700;
-    font-size: var(--fs-ui);
-  }
-
-  & .footer-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 1.8em;
-    padding: 0 0.6em;
-    border-radius: 5px;
-    color: var(--acolor);
-  }
-
-  & .footer-links a:hover,
-  & .socials a:hover,
+  & a:hover,
   & a:focus-visible {
-    background-color: var(--accent-soft);
+    color: var(--footer-hover);
   }
 
   & a:focus-visible {
-    outline: 2px solid var(--acolor);
-    outline-offset: 2px;
+    outline: 2px solid var(--footer-hover);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  & .footer-inner {
+    max-width: var(--maxwidth-aside);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: start;
+    gap: 1.5em 3em;
+  }
+
+  & .footer-left {
+    min-width: 0;
   }
 
   & .socials {
     display: flex;
-    gap: 0.2em;
+    flex-wrap: wrap;
+    gap: 0.2em 0.6em;
     list-style: none;
+    margin-left: -0.4em;
   }
 
   & .socials a {
@@ -57,27 +51,40 @@
     justify-content: center;
     min-width: 44px;
     min-height: 44px;
-    border-radius: 5px;
+    padding: 0.2em 0.4em;
     box-sizing: border-box;
-    color: var(--link);
   }
 
   & .icon {
-    width: 1.5em;
-    height: 1.5em;
+    width: 2.6em;
+    height: 2.6em;
     flex: none;
   }
 
   & .copyright {
-    margin-top: 0.4em;
-    text-align: center;
-    font-size: var(--fs-small);
-    color: #5a554a;
+    margin-top: 0.8em;
+    font-size: 1.1em;
+    line-height: 1.4;
+  }
+
+  & .footer-links {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    font-family: var(--font-text);
+    font-size: 1.35em;
+    line-height: 1.4;
+  }
+
+  & .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 }
 
 @media (max-width: 40em) {
-  #blogfooter .footer-links a {
-    min-height: 44px;
+  #blogfooter .footer-inner {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

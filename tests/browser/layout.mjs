@@ -115,9 +115,15 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
   });
 }
 
-await test('Footer kompakt: Links untereinander, Icons daneben in einer Zeile, Copyright darunter', async () => {
+await test('Footer wie die Segelgruppe: dunkles Band, links Icons mit Copyright darunter, rechts Links untereinander', async () => {
   const page = await open(POST, 1280, 800);
   const f = page.locator('#blogfooter');
+  const band = await f.boundingBox();
+  assert.ok(band.width >= 1279, `Band über die volle Breite (${band.width} px)`);
+  const bg = await f.evaluate((el) => getComputedStyle(el).backgroundColor);
+  assert.notEqual(bg, 'rgba(0, 0, 0, 0)');
+  const [r, g, b] = bg.match(/\d+/g).map(Number);
+  assert.ok(r + g + b < 3 * 110, `dunkler Hintergrund ${bg}`);
   const links = await f.locator('.footer-links a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.height]; }));
   assert.equal(links.length, 3);
   assert.ok(links.every((l) => Math.abs(l[0] - links[0][0]) < 1), 'Links stehen in einer Spalte');
@@ -125,10 +131,12 @@ await test('Footer kompakt: Links untereinander, Icons daneben in einer Zeile, C
   const icons = await f.locator('.socials a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y]; }));
   assert.equal(icons.length, 4);
   assert.ok(icons.every((i) => Math.abs(i[1] - icons[0][1]) < 1) && icons[0][0] < icons[3][0], 'Icons in einer Zeile');
-  const [linkBox, socials, copyright, footer] = [await f.locator('.footer-links').boundingBox(), await f.locator('.socials').boundingBox(), await f.locator('.copyright').boundingBox(), await f.boundingBox()];
-  assert.ok(socials.y < linkBox.y + linkBox.height && socials.y + socials.height > linkBox.y, 'Icons neben den Links');
-  assert.ok(copyright.y >= linkBox.y + linkBox.height && copyright.y >= socials.y + socials.height, 'Copyright darunter');
-  assert.ok(footer.height < 190, `Footer kompakt (${footer.height} px)`);
+  const [socials, copyright, linkBox] = [await f.locator('.socials').boundingBox(), await f.locator('.copyright').boundingBox(), await f.locator('.footer-links').boundingBox()];
+  assert.ok(copyright.y >= socials.y + socials.height - 1, 'Copyright unter den Icons');
+  assert.ok(Math.abs(copyright.x - socials.x) < 12, 'Copyright linksbündig unter den Icons');
+  assert.ok(linkBox.x > socials.x + socials.width - 1 && linkBox.x > 640, 'Links rechts neben dem linken Block');
+  assert.ok(await f.locator('.icon').first().evaluate((el) => el.getBoundingClientRect().width) >= 32, 'große Icons');
+  assert.ok(await f.locator('.footer-links a').first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize)) >= 20, 'große Links');
   await f.screenshot({ path: '/tmp/flausch-footer-kompakt.png' });
   await page.close();
 });
@@ -267,7 +275,6 @@ await test('Typografie: Navigation und Footer in Textschrift, Logo und Titel in 
     assert.ok(size >= 0.9 * 16, `${sel}: ${size}px`);
   }
   for (const sel of ['.brand-name', '.home-head h1', '.cloud-card .side-title']) assert.match((await font(sel))[0], /lobster/i, sel);
-  assert.ok(Number((await font('#blogfooter .footer-links a'))[2]) >= 600, 'Footer-Links halbfett');
   assert.ok(Number((await font('.topnav > ul > li > a'))[2]) >= 600, 'Menüs halbfett');
   await page.close();
 });
