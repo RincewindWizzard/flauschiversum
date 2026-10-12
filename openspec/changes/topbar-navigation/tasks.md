@@ -26,6 +26,11 @@
 - [x] 4.2 Bestehende Tests und Snapshots anpassen (Spalten-Tests in `tests/browser/layout.mjs` auf die Topbar umstellen, `navigation.mjs`, `staging.mjs`, `frontend.mjs`, Snapshots); prüfen: `cargo test` und alle Playwright-Skripte grün
 - [ ] 4.3 Vergleichsbilder (Startseite, Beiträge, Kategorie, Beitrag, geöffnetes Menü, Handy mit offenem Menü, jeweils Desktop und Handy) zur Abnahme vorlegen; prüfen: Freigabe im Gespräch am veröffentlichten Staging
 
+## 4a. Überarbeitung nach Rückmeldung
+
+- [x] 4a.1 Topbar auf einer Linie zentrieren (Suchfeld-Außenabstand entfernt), „Beiträge“ ohne Dropdown, „About me“ in den Footer, Hamburger-Knopf am Handy; prüfen: Test auf Mittelpunkte, kein Beiträge-Untermenü, Hamburger-Knopf mindestens 44 px
+- [x] 4a.2 Footer kompakt (Links untereinander, Icons daneben, Copyright darunter), „Abonnieren“ entfernt; prüfen: Test auf Anordnung und Höhe, `cargo test` und Browser-Tests grün
+
 ## 5. Dokumentation
 
 - [x] 5.1 `README.md` (Topbar, Archiv, `content/start.md`, `intro` in `categories.yaml`) und `openspec/config.yaml` (Projektkontext) aktualisieren; prüfen: die beschriebenen Schritte funktionieren (Text ändern erscheint auf der Startseite)

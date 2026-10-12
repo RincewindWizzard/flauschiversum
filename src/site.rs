@@ -1,14 +1,14 @@
 //! Ablauf eines Builds: Laden → Medien → Rendern → Ausgaben (ohne zu schreiben).
 
 use crate::archive;
-use crate::config::{HOME_NEWS, MENU_LATEST, POSTS_LATEST, POSTS_PER_PAGE, TIME_ZONE};
+use crate::config::{HOME_NEWS, POSTS_LATEST, POSTS_PER_PAGE, TIME_ZONE};
 use crate::content::{self, Site};
 use crate::diag::Diagnostics;
 use crate::feed;
 use crate::markdown::{self, PostContext};
 use crate::media::{self, MediaIndex, MediaInfo, Stats};
 use crate::output::{Content, Outputs};
-use crate::render::{self, CloudTag, Common, Entry, Menu, NavLink, PostCard, PostPageInput, RelatedLink, Thumb, TopicLink, TopicPageInput};
+use crate::render::{self, CloudTag, Common, Entry, Menu, PostCard, PostPageInput, RelatedLink, Thumb, TopicLink, TopicPageInput};
 use std::sync::Arc;
 use crate::search::{self, SearchDoc};
 use crate::seo;
@@ -111,7 +111,6 @@ pub fn generate(opts: &BuildOptions, diag: &Diagnostics, stats: &Stats) -> Resul
         bail!("Inhalte enthalten Fehler");
     }
     let menu = Arc::new(Menu {
-        latest: site.posts.iter().take(MENU_LATEST).map(|p| NavLink { url: urls::encode_path(&p.url), title: p.title.clone() }).collect(),
         categories: topics
             .categories
             .iter()
@@ -642,16 +641,18 @@ pub mod tests {
             assert!(bar.find("mascot-normal").unwrap() < bar.find("brand-name").unwrap(), "{path}: Maskottchen vor dem Titel");
             assert!(bar.contains("src=\"/images/flauschi_normal.svg\"") && bar.contains("src=\"/images/flauschi_surprised.svg\""), "{path}");
             let top = between(html, "<nav class=\"topnav", "</nav>");
-            for (href, text) in [("/about/", "About me"), ("/beitraege/", "Beiträge"), ("/themen/", "Kategorien")] {
+            for (href, text) in [("/beitraege/", "Beiträge"), ("/themen/", "Kategorien")] {
                 assert!(top.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
             }
-            assert!(top.find("About me").unwrap() < top.find(">Beiträge</a>").unwrap() && top.find(">Beiträge</a>").unwrap() < top.find(">Kategorien</a>").unwrap());
-            assert_eq!(top.matches("aria-expanded=\"false\"").count(), 2, "{path}");
+            assert!(top.find(">Beiträge</a>").unwrap() < top.find(">Kategorien</a>").unwrap());
+            assert!(!top.contains("About"), "{path}: About me steht in der Fußzeile");
+            assert_eq!(top.matches("aria-expanded=\"false\"").count(), 1, "nur Kategorien hat ein Untermenü: {path}");
+            assert!(bar.contains("<summary aria-label=\"Menü\">"), "{path}: Hamburger-Knopf");
             assert!(bar.find("</nav>").unwrap() < bar.find("class=\"search topsearch\"").unwrap(), "{path}: Suche nach den Menüs");
             assert!(!html.contains("sitenav") && !html.contains("<aside class=\"sidebar\"") && !html.contains("blogheader"), "{path}");
             // Fußzeile: vier Seitenlinks, Kontakt, Socials, Copyright
             let footer = between(html, "<footer id=\"blogfooter\"", "</footer>");
-            for (href, text) in [("/tipps-und-tricks/", "Tipps und Tricks"), ("/about/", "About"), ("/impressum/", "Impressum"), ("/rss.xml", "Abonnieren")] {
+            for (href, text) in [("/tipps-und-tricks/", "Tipps und Tricks"), ("/about/", "About me"), ("/impressum/", "Impressum")] {
                 assert!(footer.contains(&format!("<a href=\"{href}\">{text}</a>")), "{path}: {text}");
             }
             assert!(footer.contains("href=\"mailto:ermeline@flauschiversum.de?subject=Flauschiversum\""), "{path}");
@@ -667,7 +668,10 @@ pub mod tests {
             assert_eq!(footer.matches(rss).count(), 1, "{path}");
             assert!(footer.find(rss).unwrap() > footer.find("aria-label=\"Mastodon\"").unwrap(), "{path}: RSS nach Mastodon");
             assert!(footer.find("aria-label=\"Instagram\"").unwrap() > footer.find("aria-label=\"E-Mail schreiben\"").unwrap(), "{path}: Reihenfolge E-Mail, Instagram");
-            assert_eq!(footer.matches("href=\"/rss.xml\"").count(), 2, "Textlink und Icon: {path}");
+            assert_eq!(footer.matches("href=\"/rss.xml\"").count(), 1, "nur das RSS-Icon, kein Textlink: {path}");
+            assert!(!footer.contains("Abonnieren"), "{path}");
+            // kompakt: Links untereinander und Icons daneben in einem Block, darunter das Copyright
+            assert!(footer.find("class=\"footer-links\"").unwrap() < footer.find("class=\"socials\"").unwrap() && footer.find("class=\"socials\"").unwrap() < footer.find("class=\"copyright\"").unwrap(), "{path}");
             assert!(footer.contains("&copy; 2026 Ermeline Wollknoll"), "{path}");
             assert!(!footer.contains("http-equiv") && !html.contains("fonts.googleapis"), "{path}");
             // Jeder mailto-Link hat einen Betreff mit „Flauschiversum“
@@ -687,7 +691,7 @@ pub mod tests {
         let (g, _) = generate_with(root, "https://flauschiversum.de", None);
         let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
 
-        // Menüs auf jeder Seite gleich: neueste Beiträge (geplanter fehlt), Kategorien in Dateireihenfolge, leere entfallen
+        // Menü auf jeder Seite gleich: Beiträge als einfacher Link, Kategorien in Dateireihenfolge, leere entfallen
         let mut menus = std::collections::BTreeSet::new();
         for (path, html) in &pages {
             menus.insert(between(html, "<nav class=\"topnav", "</nav>").to_string());
@@ -700,11 +704,6 @@ pub mod tests {
         }
         assert_eq!(menus.len(), 1, "Menüs auf allen Seiten gleich");
         let menu = menus.into_iter().next().unwrap();
-        let latest = between(&menu, "id=\"menu-beitraege\"", "</ul>");
-        assert_eq!(latest.matches("<li><a href").count(), 3, "{latest}");
-        assert!(latest.find("Grüne Mütze").unwrap() < latest.find("Kürbis").unwrap() && latest.find("Kürbis").unwrap() < latest.find("Alraune").unwrap());
-        assert!(latest.contains("<li class=\"all\"><a href=\"/beitraege/\">Alle Beiträge</a></li>"));
-        assert!(!latest.contains("Morgen"));
         let cats = between(&menu, "id=\"menu-kategorien\"", "</ul>");
         assert!(cats.contains("<li><a href=\"/kategorie/basteln/\">Basteln</a></li>"));
         assert!(!cats.contains("Wolle"), "Kategorie nur mit geplantem Beitrag fehlt");
@@ -796,10 +795,8 @@ pub mod tests {
         let (g, _) = generate_with(root, "https://flauschiversum.de", None);
         let pages: std::collections::BTreeMap<String, String> = g.outputs.snapshot_html().into_iter().collect();
         let home = &pages["/index.html"];
-        // 13 veröffentlichte Beiträge: zehn neueste im Menü, auf der Startseite und auf /beitraege/
-        let menu = between(home, "id=\"menu-beitraege\"", "</ul>");
-        assert_eq!(menu.matches("<li><a href").count(), 10);
-        assert!(menu.contains("Grüne Mütze") && menu.contains("Beitrag 10") && !menu.contains("Alraune") && !menu.contains("Kürbis"));
+        // 13 veröffentlichte Beiträge: zehn neueste auf der Startseite und auf /beitraege/, kein Beiträge-Dropdown
+        assert!(!home.contains("menu-beitraege"));
         assert_eq!(between(home, "<main", "</main>").matches("<li class=\"entry\"").count(), 10);
         let index = &pages["/beitraege/index.html"];
         assert_eq!(between(index, "<main", "</main>").matches("<li class=\"entry\"").count(), 10);

@@ -7,11 +7,15 @@ Beschreibt die Topbar des Flauschiversums: die einzige Navigation oben auf jeder
 ## ADDED Requirements
 
 ### Requirement: Topbar auf jeder Seite
-Jede Seite SHALL oben eine Topbar zeigen. Links steht der Titel „Flauschiversum“ in Lobster als Link auf `/`. Rechtsbündig stehen in dieser Reihenfolge die Menüs „About me“, „Beiträge“ und „Kategorien“ und danach das Suchfeld. Auf Beitragsseiten wächst oder verdeckt die Topbar den Inhalt nicht, und sie bleibt beim Scrollen oben stehen.
+Jede Seite SHALL oben eine Topbar zeigen. Links steht der Titel „Flauschiversum“ in Lobster als Link auf `/`. Rechtsbündig stehen in dieser Reihenfolge die Menüs „Beiträge“ und „Kategorien“ und danach das Suchfeld. Alle Elemente der Topbar (Maskottchen, Titel, Menüs, Suchfeld samt Lupe) sind vertikal auf einer Linie zentriert. Auf Beitragsseiten wächst oder verdeckt die Topbar den Inhalt nicht, und sie bleibt beim Scrollen oben stehen.
 
 #### Scenario: Aufbau am Desktop
 - **WHEN** eine beliebige Seite bei 1280 px Breite geöffnet wird
-- **THEN** steht links „Flauschiversum“, rechts „About me“, „Beiträge“, „Kategorien“ und das Suchfeld
+- **THEN** steht links „Flauschiversum“, rechts „Beiträge“, „Kategorien“ und das Suchfeld
+
+#### Scenario: Vertikal zentriert
+- **WHEN** eine beliebige Seite bei 1280 px Breite geöffnet wird
+- **THEN** liegen die Mittelpunkte von Maskottchen, Titel, Menüeinträgen und Suchfeld auf derselben Linie (Abweichung höchstens 2 px)
 
 #### Scenario: Titel führt zur Startseite
 - **WHEN** auf einer Beitragsseite „Flauschiversum“ angeklickt wird
@@ -40,31 +44,20 @@ Links neben dem Titel in der Topbar SHALL das Maskottchen Flauschi stehen und zu
 - **WHEN** die Seite bei 360 px Breite geöffnet wird
 - **THEN** sind Maskottchen und Titel sichtbar, und es entsteht kein waagerechtes Scrollen
 
-### Requirement: About me
-„About me“ SHALL ein einfacher Link auf `/about/` sein, ohne Untermenü. Die Seite enthält nur die Informationen über die Autorin.
-
-#### Scenario: About me öffnen
-- **WHEN** „About me“ angeklickt wird
-- **THEN** öffnet sich `/about/`
-
-#### Scenario: Kein Aufklappen
-- **WHEN** der Mauszeiger über „About me“ steht oder es den Fokus erhält
-- **THEN** erscheint kein Untermenü
-
-### Requirement: Menü Beiträge
-„Beiträge“ SHALL ein Link auf `/beitraege/` sein, der beim Überfahren, bei Fokus oder über einen Knopf ein Untermenü mit den zehn neuesten veröffentlichten Beiträgen (neueste zuerst, Titel als Links) und am Ende „Alle Beiträge“ auf `/beitraege/` aufklappt. Geplante Beiträge fehlen.
-
-#### Scenario: Zehn neueste im Untermenü
-- **WHEN** es 194 veröffentlichte Beiträge gibt und das Menü „Beiträge“ aufgeklappt wird
-- **THEN** zeigt es genau die zehn neuesten Beiträge und „Alle Beiträge“
+### Requirement: Beiträge als einfacher Link
+„Beiträge“ SHALL ein einfacher Link auf `/beitraege/` ohne Untermenü sein. „About me“ steht nicht in der Topbar, sondern in der Fußzeile.
 
 #### Scenario: Klick auf Beiträge
-- **WHEN** der Eintrag „Beiträge“ selbst angeklickt wird
+- **WHEN** der Eintrag „Beiträge“ angeklickt wird
 - **THEN** öffnet sich `/beitraege/`
 
-#### Scenario: Beitrag aus dem Untermenü
-- **WHEN** im Untermenü „Kürbis“ angeklickt wird
-- **THEN** öffnet sich `/2020/10/kurbis/`
+#### Scenario: Kein Aufklappen
+- **WHEN** der Mauszeiger über „Beiträge“ steht oder es den Fokus erhält
+- **THEN** erscheint kein Untermenü
+
+#### Scenario: About me nicht in der Topbar
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** enthält die Topbar keinen Link auf `/about/`
 
 ### Requirement: Menü Kategorien
 „Kategorien“ SHALL ein Untermenü mit den Kategorien aus `content/categories.yaml` in der Reihenfolge der Datei aufklappen, jede mit Link auf `/kategorie/<name>/`. Kategorien ohne veröffentlichten Beitrag fehlen. Ein Klick auf „Kategorien“ selbst öffnet `/themen/`.
@@ -82,26 +75,29 @@ Links neben dem Titel in der Topbar SHALL das Maskottchen Flauschi stehen und zu
 - **THEN** öffnet sich die Themenübersicht `/themen/`
 
 ### Requirement: Bedienung der Untermenüs
-Die Untermenüs SHALL per Maus (Überfahren, Klick auf den Knopf), per Tastatur (Tab, Enter/Leertaste auf dem Knopf, Pfeiltasten, Escape zum Schließen) und per Touch bedienbar sein. Der Knopf trägt `aria-expanded` und `aria-controls`. Ein Klick außerhalb oder Escape schließt ein offenes Untermenü, und es ist höchstens eines offen. Ohne JavaScript öffnen sich die Untermenüs bei Überfahren und Fokus (CSS), und die Links sind im Quelltext vorhanden.
+Das Untermenü „Kategorien“ SHALL per Maus (Überfahren, Klick auf den Knopf), per Tastatur (Tab, Enter/Leertaste auf dem Knopf, Pfeiltasten, Escape zum Schließen) und per Touch bedienbar sein. Der Knopf trägt `aria-expanded` und `aria-controls`. Ein Klick außerhalb oder Escape schließt ein geöffnetes Untermenü; hat der Mauszeiger es geöffnet, hält ein Klick auf den Knopf es offen. Ohne JavaScript öffnet es sich bei Überfahren und Fokus (CSS), und die Links sind im Quelltext vorhanden.
 
 #### Scenario: Tastatur
 - **WHEN** mit Tab auf den Knopf von „Kategorien“ gewechselt und Enter gedrückt wird
 - **THEN** öffnet sich das Untermenü, der Knopf meldet `aria-expanded="true"`, und Escape schließt es wieder
 
-#### Scenario: Nur ein Menü offen
-- **WHEN** „Kategorien“ geöffnet wird, während „Beiträge“ offen ist
-- **THEN** schließt sich „Beiträge“
-
 #### Scenario: Ohne JavaScript
-- **WHEN** die Seite ohne JavaScript geöffnet und der Mauszeiger über „Beiträge“ bewegt wird
-- **THEN** erscheint das Untermenü mit den zehn Beiträgen
+- **WHEN** die Seite ohne JavaScript geöffnet und der Mauszeiger über „Kategorien“ bewegt wird
+- **THEN** erscheint das Untermenü mit den Kategorien
 
 ### Requirement: Topbar auf dem Handy
-Auf Fenstern unter 48 em SHALL die Topbar den Titel, das Suchfeld bzw. einen Such-Knopf und einen Menü-Knopf zeigen. Der Menü-Knopf klappt eine Liste mit „About me“, „Beiträge“ und „Kategorien“ samt Unterpunkten auf; die Liste ist ohne JavaScript über ein `details`-Element bedienbar. Die Seite scrollt nie waagerecht, und alle Ziele haben eine Klickfläche von mindestens 44 px Höhe.
+Auf Fenstern unter 48 em SHALL die Topbar den Titel, das Suchfeld bzw. einen Such-Knopf und einen Hamburger-Knopf (Symbol mit drei Strichen, zugänglicher Name „Menü“, mindestens 44 × 44 px) zeigen, Titel und Knopf in einer Zeile, das Suchfeld darunter. Der Knopf klappt eine Liste mit „Beiträge“ und „Kategorien“ samt Unterpunkten auf und beim zweiten Antippen wieder zu; die Liste ist ohne JavaScript über ein `details`-Element bedienbar.
 
 #### Scenario: Menü am Handy
 - **WHEN** eine Seite bei 360 px Breite geöffnet und der Menü-Knopf gedrückt wird
-- **THEN** erscheinen „About me“, „Beiträge“ und „Kategorien“ mit ihren Unterpunkten untereinander
+- **THEN** erscheinen „Beiträge“ und „Kategorien“ mit den Kategorien als Unterpunkten untereinander
+
+#### Scenario: Hamburger-Knopf
+- **WHEN** eine Seite bei 360 px Breite geöffnet wird
+- **THEN** steht rechts neben dem Titel ein Knopf mit drei Strichen auf einer Linie mit dem Titel, und das Menü ist zugeklappt
+
+### Requirement: Handy ohne Überlauf
+Auf dem Handy SHALL die Seite nie waagerecht scrollen, und alle Ziele des Menüs haben eine Klickfläche von mindestens 44 px Höhe.
 
 #### Scenario: Kein waagerechtes Scrollen
 - **WHEN** eine Seite bei 360 px Breite geöffnet wird

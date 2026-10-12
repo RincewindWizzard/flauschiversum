@@ -24,13 +24,22 @@ const noHScroll = async (page, label) => {
   assert.ok(sw <= cw, `${label}: scrollWidth ${sw} > clientWidth ${cw}`);
 };
 
-await test('Topbar am Desktop: Maskottchen und Titel links, About me, Beiträge, Kategorien rechts, dann Suche', async () => {
+await test('Topbar am Desktop: Maskottchen und Titel links, rechts Beiträge, Kategorien, Suche – alles auf einer Linie', async () => {
   const page = await open('/2020/10/kurbis/', 1280);
-  const [mascot, brand, about, posts, cats, search] = [await box(page, '.mascot'), await box(page, '.brand-name'), await box(page, '.topnav a[href="/about/"]'), await box(page, '.topnav a[href="/beitraege/"]'), await box(page, '.topnav a[href="/themen/"]'), await box(page, '.topsearch')];
-  assert.ok(mascot.x < brand.x && brand.x + brand.width < about.x, 'Maskottchen, Titel, dann Menüs');
-  assert.ok(about.x < posts.x && posts.x < cats.x && cats.x + cats.width <= search.x + 1, 'Reihenfolge der Menüs, Suche zuletzt');
+  const [mascot, brand, posts, cats, search, bar] = [await box(page, '.mascot'), await box(page, '.brand-name'), await box(page, '.topnav a[href="/beitraege/"]'), await box(page, '.topnav a[href="/themen/"]'), await box(page, '.topsearch'), await box(page, '.topbar-inner')];
+  assert.ok(mascot.x < brand.x && brand.x + brand.width < posts.x, 'Maskottchen, Titel, dann Menüs');
+  assert.ok(posts.x < cats.x && cats.x + cats.width <= search.x + 1, 'Reihenfolge der Menüs, Suche zuletzt');
   assert.ok(mascot.x < 200, 'ganz links');
-  assert.ok(search.x + search.width > 1280 - 100 && about.x > 300, 'Menüs rechtsbündig');
+  assert.ok(search.x + search.width > 1280 - 100 && posts.x > 300, 'Menüs rechtsbündig');
+  assert.equal(await page.locator('.topnav a[href="/about/"]').count(), 0, 'About me steht nicht in der Topbar');
+  // vertikal auf einer Linie: alle Mittelpunkte auf der Mittellinie der Leiste
+  const mid = (b) => b.y + b.height / 2;
+  const center = mid(bar);
+  for (const [name, b] of [['Maskottchen', mascot], ['Titel', brand], ['Beiträge', posts], ['Kategorien', cats], ['Suche', search]]) {
+    assert.ok(Math.abs(mid(b) - center) <= 2, `${name} vertikal zentriert (Mitte ${mid(b)} statt ${center})`);
+  }
+  const btn = await box(page, '.topsearch .searchbox button');
+  assert.ok(Math.abs(mid(btn) - mid(search)) <= 2, 'Lupe im Suchfeld zentriert');
   assert.equal(await page.locator('.topbar').evaluate((el) => getComputedStyle(el).position), 'sticky');
   await noHScroll(page, 'Desktop');
   await page.close();
@@ -48,7 +57,7 @@ await test('Maskottchen: beide Bilder gleich groß, Mouse-over verschiebt nichts
   const page = await open('/', 1280);
   const [n, s] = [await box(page, '.mascot-normal'), await box(page, '.mascot-surprised')];
   assert.deepEqual([n.x, n.y, n.width, n.height], [s.x, s.y, s.width, s.height], 'gleiche Maße und Lage');
-  const sels = ['.brand-name', '.topnav a[href="/about/"]', '.topsearch'];
+  const sels = ['.brand-name', '.topnav a[href="/beitraege/"]', '.topsearch'];
   const before = [];
   for (const sel of sels) before.push(await box(page, sel));
   const op = (sel) => page.locator(sel).evaluate((el) => getComputedStyle(el).opacity);
@@ -77,16 +86,11 @@ await test('Titel führt zur Startseite', async () => {
   await page.close();
 });
 
-await test('Menü Beiträge: zehn neueste und „Alle Beiträge“; Klick auf Beiträge öffnet /beitraege/', async () => {
+await test('Beiträge ist ein einfacher Link auf /beitraege/ ohne Dropdown', async () => {
   const page = await open('/', 1280);
-  await page.hover('.topnav li.has-menu >> nth=0');
-  assert.ok(await page.locator('#menu-beitraege').isVisible());
-  const links = await page.locator('#menu-beitraege a').evaluateAll((els) => els.map((e) => [e.textContent.trim(), e.getAttribute('href')]));
-  assert.equal(links.length, 11);
-  assert.deepEqual(links.at(-1), ['Alle Beiträge', '/beitraege/']);
-  const homeTitles = await page.locator('.news .entry-title a').allTextContents();
-  assert.deepEqual(links.slice(0, 10).map((l) => l[0]), homeTitles, 'gleiche zehn Beiträge wie auf der Startseite');
-  await page.screenshot({ path: '/tmp/flausch-menu.png' });
+  await page.hover('.topnav a[href="/beitraege/"]');
+  assert.equal(await page.locator('.topnav .submenu:visible').count(), 0);
+  assert.equal(await page.locator('.topnav a[href="/beitraege/"]').locator('xpath=..').locator('.submenu-toggle').count(), 0);
   await page.click('.topnav a[href="/beitraege/"]');
   await page.waitForURL('**/beitraege/');
   await page.close();
@@ -95,7 +99,7 @@ await test('Menü Beiträge: zehn neueste und „Alle Beiträge“; Klick auf Be
 await test('Menü Kategorien: alle Kategorien, Klick auf Kategorien öffnet /themen/', async () => {
   const page = await open('/themen/', 1280);
   const expected = await page.locator('main section:first-of-type ul.taglist a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
-  await page.hover('.topnav li.has-menu >> nth=1');
+  await page.hover('.topnav li.has-menu >> nth=0');
   assert.ok(await page.locator('#menu-kategorien').isVisible());
   const hrefs = await page.locator('#menu-kategorien a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
   assert.deepEqual(hrefs, expected, 'dieselben Kategorien wie auf /themen/');
@@ -106,68 +110,69 @@ await test('Menü Kategorien: alle Kategorien, Klick auf Kategorien öffnet /the
   await p2.close();
 });
 
-await test('About me: einfacher Link ohne Untermenü', async () => {
+await test('About me steht im Footer und öffnet /about/', async () => {
   const page = await open('/', 1280);
-  await page.hover('.topnav a[href="/about/"]');
-  assert.equal(await page.locator('.topnav .submenu:visible').count(), 0);
-  await page.click('.topnav a[href="/about/"]');
+  await page.locator('#blogfooter').getByRole('link', { name: 'About me', exact: true }).click();
   await page.waitForURL('**/about/');
   await page.close();
 });
 
-await test('Tastatur: Knopf öffnet, aria-expanded, Pfeile, Escape; nur ein Menü offen', async () => {
+await test('Tastatur: Knopf öffnet, aria-expanded, Pfeile, Escape, Klick außerhalb', async () => {
   const page = await open('/', 1280);
-  const btn = (i) => page.locator('.submenu-toggle').nth(i);
-  await btn(1).focus();
-  assert.equal(await btn(1).getAttribute('aria-expanded'), 'false');
+  const btn = page.locator('.submenu-toggle').first();
+  assert.equal(await page.locator('.submenu-toggle').count(), 1, 'nur Kategorien hat ein Untermenü');
+  await btn.focus();
+  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
   await page.keyboard.press('Enter');
-  assert.equal(await btn(1).getAttribute('aria-expanded'), 'true');
+  assert.equal(await btn.getAttribute('aria-expanded'), 'true');
   assert.ok(await page.locator('#menu-kategorien').isVisible());
   await page.keyboard.press('ArrowDown');
   assert.equal(await page.evaluate(() => document.activeElement.closest('#menu-kategorien') !== null), true, 'Fokus im Untermenü');
   await page.keyboard.press('Escape');
-  assert.equal(await btn(1).getAttribute('aria-expanded'), 'false');
+  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
   assert.equal(await page.locator('#menu-kategorien').isVisible(), false);
   assert.equal(await page.evaluate(() => document.activeElement.classList.contains('submenu-toggle')), true, 'Fokus zurück auf dem Knopf');
-  // nur ein Menü offen
-  await btn(0).click();
-  assert.equal(await btn(0).getAttribute('aria-expanded'), 'true');
-  await btn(1).click();
-  assert.equal(await btn(0).getAttribute('aria-expanded'), 'false');
-  assert.equal(await btn(1).getAttribute('aria-expanded'), 'true');
-  // Klick außerhalb schließt
+  await btn.click();
+  assert.equal(await btn.getAttribute('aria-expanded'), 'true', 'Klick auf den Knopf hält das Menü offen, auch wenn der Mauszeiger es schon geöffnet hat');
   await page.mouse.click(300, 600);
-  assert.equal(await btn(1).getAttribute('aria-expanded'), 'false');
+  assert.equal(await btn.getAttribute('aria-expanded'), 'false');
   await page.close();
 });
 
-await test('Ohne JavaScript: Hover öffnet das Untermenü, Links stehen im Quelltext', async () => {
+await test('Ohne JavaScript: Hover öffnet das Kategorien-Untermenü, Links stehen im Quelltext', async () => {
   const ctx = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
   await page.goto(BASE + '/');
-  assert.equal(await page.locator('#menu-beitraege').isVisible(), false);
+  assert.equal(await page.locator('#menu-kategorien').isVisible(), false);
   await page.hover('.topnav li.has-menu >> nth=0');
-  assert.ok(await page.locator('#menu-beitraege').isVisible());
-  assert.equal(await page.locator('#menu-beitraege a').count(), 11);
-  await page.hover('.topnav li.has-menu >> nth=1');
   assert.ok(await page.locator('#menu-kategorien').isVisible());
+  assert.ok((await page.locator('#menu-kategorien a').count()) >= 6);
   await ctx.close();
 });
 
-await test('Handy 360 px: Menü-Knopf, Liste mit allen Unterpunkten, Klickflächen, kein waagerechtes Scrollen', async () => {
+await test('Handy 360 px: Hamburger-Knopf, Liste mit Beiträgen und Kategorien samt Unterpunkten, Klickflächen, kein waagerechtes Scrollen', async () => {
   const page = await open('/2020/10/kurbis/', 360, 740, { hasTouch: true, isMobile: true });
   assert.ok(await page.locator('.brand-name').isVisible() && await page.locator('.mascot').isVisible());
   assert.equal(await page.locator('.topnav').isVisible(), false, 'Menü zunächst zu');
+  const hb = await box(page, 'details.menu-toggle > summary');
+  assert.ok(hb.width >= 44 && hb.height >= 44, 'Hamburger-Knopf mindestens 44 px');
+  assert.equal(await page.locator('details.menu-toggle > summary').getAttribute('aria-label'), 'Menü');
+  assert.ok(await page.locator('.menu-icon').isVisible(), 'Hamburger-Symbol');
+  const [brand, search] = [await box(page, '.brand'), await box(page, '.topsearch')];
+  assert.ok(Math.abs((hb.y + hb.height / 2) - (brand.y + brand.height / 2)) <= 3, 'Hamburger und Marke auf einer Linie');
+  assert.ok(search.y >= brand.y + brand.height - 1, 'Suchfeld in eigener Zeile');
   await noHScroll(page, 'Handy zu');
   await page.locator('details.menu-toggle > summary').tap();
   assert.ok(await page.locator('.topnav').isVisible());
-  for (const name of ['About me', 'Beiträge', 'Kategorien']) assert.ok(await page.locator('.topnav > ul > li > a', { hasText: new RegExp(`^${name}$`) }).isVisible(), name);
-  assert.ok(await page.locator('#menu-beitraege a').first().isVisible() && await page.locator('#menu-kategorien a').first().isVisible(), 'Unterpunkte sichtbar');
+  for (const name of ['Beiträge', 'Kategorien']) assert.ok(await page.locator('.topnav > ul > li > a', { hasText: new RegExp(`^${name}$`) }).isVisible(), name);
+  assert.equal(await page.locator('.topnav > ul > li > a', { hasText: /About/ }).count(), 0, 'About me nur im Footer');
+  assert.ok(await page.locator('#menu-kategorien a').first().isVisible(), 'Unterpunkte sichtbar');
   const heights = await page.locator('.topnav a').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
   assert.ok(Math.min(...heights) >= 40, `Klickflächen (min ${Math.min(...heights)} px)`);
-  assert.ok((await box(page, 'details.menu-toggle > summary')).height >= 44);
   await noHScroll(page, 'Handy offen');
   await page.screenshot({ path: '/tmp/flausch-topbar-mobile.png' });
+  await page.locator('details.menu-toggle > summary').tap();
+  assert.equal(await page.locator('.topnav').isVisible(), false, 'zweiter Tipp klappt das Menü zu');
   await page.close();
 });
 

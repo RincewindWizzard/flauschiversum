@@ -26,6 +26,29 @@ Tag-Cloud und Archiv SHALL auf Karten liegen: heller Hintergrund, abgerundete Ec
 
 ## MODIFIED Requirements
 
+### Requirement: Fußzeile
+Jede Seite SHALL am Ende eine kompakte Fußzeile haben. Links stehen untereinander „Tipps und Tricks“ (`/tipps-und-tricks/`), „About me“ (`/about/`) und „Impressum“ (`/impressum/`), daneben in einer Zeile die Icons der Kontaktwege nach der Spec `contact-links`, darunter der Hinweis „© <Jahr> Ermeline Wollknoll“. Das Jahr ist das Jahr des Builds. Die Fußzeile ist auch ohne JavaScript vollständig und bricht bei schmalen Fenstern um, ohne waagerechtes Scrollen zu verursachen.
+
+#### Scenario: Jahr im Copyright
+- **WHEN** die Seite im Jahr 2021 gebaut wurde
+- **THEN** steht in der Fußzeile „© 2021 Ermeline Wollknoll“
+
+#### Scenario: Seitenlinks in der Fußzeile
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** enthält die Fußzeile die Links „Tipps und Tricks“, „About me“ und „Impressum“ mit den genannten Zielen untereinander, aber keinen Link „Abonnieren“
+
+#### Scenario: Kompakte Anordnung
+- **WHEN** eine Seite bei 1280 px Breite geöffnet wird
+- **THEN** stehen die Icons neben den Links in einer Zeile, das Copyright steht darunter, und die Fußzeile ist niedriger als 190 px
+
+#### Scenario: Handy
+- **WHEN** eine Seite bei 360 px Breite geöffnet wird
+- **THEN** sind alle Links der Fußzeile sichtbar und erreichbar, und die Seite scrollt nicht waagerecht
+
+#### Scenario: Reihenfolge am Seitenende
+- **WHEN** eine beliebige Seite geöffnet wird
+- **THEN** steht die Fußzeile nach dem Hauptinhalt als letztes sichtbares Element
+
 ### Requirement: Suchfeld mit eingebauter Lupe
 Jedes Suchfeld der Seite (Topbar, Startseite, Suchseite ohne JavaScript) SHALL aus einem einzigen Eingabefeld bestehen, in dem der Suchknopf mit Lupen-Icon am rechten Rand integriert ist. Eingabefeld und Knopf werden nie getrennt umgebrochen. Der Knopf hat den zugänglichen Namen „Suchen“, und Enter schickt die Suche ab.
 

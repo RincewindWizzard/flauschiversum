@@ -190,7 +190,7 @@ html:not(.js) .submenu-toggle {
 }
 
 /* Suchfeld */
-form.topsearch {
+.topbar form.topsearch {
   flex: 0 1 15em;
   min-width: 9em;
   margin: 0;
@@ -212,7 +212,7 @@ form.topsearch {
   .topnav > ul { gap: 0; }
   .topnav > ul > li > a { padding: 0.4em 0.4em; }
   .submenu-toggle { margin-right: 0; padding: 0.3em 0.25em; }
-  form.topsearch { flex-basis: 9em; min-width: 7em; }
+  .topbar form.topsearch { flex-basis: 9em; min-width: 7em; }
 }
 
 /* Handy: Titel, Menü-Knopf; die Suche steht in einer zweiten Zeile, das Menü klappt unter der Leiste auf */
@@ -231,14 +231,13 @@ form.topsearch {
   }
 
   details.menu-toggle > summary {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    min-height: 2.75em;
-    padding: 0 0.8em;
+    display: grid;
+    place-items: center;
+    width: 2.75em;
+    height: 2.75em;
+    padding: 0;
     border: 1px solid var(--bordercolor);
-    border-radius: 20em;
-    font-weight: 700;
+    border-radius: 12px;
     cursor: pointer;
     list-style: none;
   }
@@ -263,8 +262,11 @@ form.topsearch {
   }
 
   .menu-icon { position: relative; }
-  .menu-icon::before { position: absolute; top: -0.35em; }
-  .menu-icon::after { position: absolute; top: 0.35em; }
+  .menu-icon::before { position: absolute; top: -0.4em; }
+  .menu-icon::after { position: absolute; top: 0.4em; }
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after { width: 1.3em; height: 2.5px; border-radius: 2px; }
 
   .topnav {
     position: absolute;
@@ -307,7 +309,7 @@ form.topsearch {
     & a { padding: 0.7em 0.5em; }
   }
 
-  .topsearch {
+  .topbar form.topsearch {
     order: 3;
     flex: 1 0 100%;
   }

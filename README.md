@@ -60,8 +60,8 @@ Text in Markdown …
 
 ### Kategorien, Schlagworte und Suche
 
-Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi links, rechts die Menüs **About me**,
-**Beiträge**, **Kategorien** und die Suche), die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro
+Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi links, rechts die Menüs **Beiträge** und
+**Kategorien** sowie die Suche; auf dem Handy hinter einem Hamburger-Knopf; „About me“ steht im Footer), die Startseite (`/`), die Themenübersicht (`/themen/`), je eine Seite pro
 Kategorie (`/kategorie/<name>/`) und Schlagwort (`/tag/<name>/`) sowie die Suche (`/suche/`).
 
 - **Startseite:** Überschrift, Begrüßungstext aus `content/start.md` (Markdown, ohne oder mit Frontmatter), die zehn

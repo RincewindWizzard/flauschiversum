@@ -47,20 +47,10 @@
       <span class="brand-name">Flauschiversum</span>
     </a>
     <details class="menu-toggle" open>
-      <summary><span class="menu-icon" aria-hidden="true"></span>Menü</summary>
+      <summary aria-label="Menü"><span class="menu-icon" aria-hidden="true"></span></summary>
       <nav class="topnav" aria-label="Hauptnavigation">
         <ul>
-          <li><a href="/about/">About me</a></li>
-          <li class="has-menu">
-            <a href="/beitraege/">Beiträge</a>
-            <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-beitraege" aria-label="Beiträge-Menü"><span aria-hidden="true">▾</span></button>
-            <ul class="submenu card" id="menu-beitraege">
-              {%- for p in head.menu.latest %}
-              <li><a href="{{ p.url }}">{{ p.title }}</a></li>
-              {%- endfor %}
-              <li class="all"><a href="/beitraege/">Alle Beiträge</a></li>
-            </ul>
-          </li>
+          <li><a href="/beitraege/">Beiträge</a></li>
           <li class="has-menu">
             <a href="/themen/">Kategorien</a>
             <button type="button" class="submenu-toggle" aria-expanded="false" aria-controls="menu-kategorien" aria-label="Kategorien-Menü"><span aria-hidden="true">▾</span></button>
@@ -93,13 +83,12 @@
   {% block aside %}{% endblock %}
 </div>
 <footer id="blogfooter">
-  <nav class="footer-links" aria-label="Weitere Seiten">
-    <a href="/tipps-und-tricks/">Tipps und Tricks</a>
-    <a href="/about/">About</a>
-    <a href="/impressum/">Impressum</a>
-    <a href="/rss.xml">Abonnieren</a>
-  </nav>
-  <div class="footer-contact">
+  <div class="footer-main">
+    <nav class="footer-links" aria-label="Weitere Seiten">
+      <a href="/tipps-und-tricks/">Tipps und Tricks</a>
+      <a href="/about/">About me</a>
+      <a href="/impressum/">Impressum</a>
+    </nav>
     <ul class="socials">
       <li><a class="mail" href="{{ head.mail_href }}" aria-label="E-Mail schreiben" title="{{ head.mail_address }}">{% include "partials/icon-mail.html" %}</a></li>
       <li><a href="{{ head.instagram_url }}" rel="noopener" aria-label="Instagram" title="Instagram">{% include "partials/icon-instagram.html" %}</a></li>

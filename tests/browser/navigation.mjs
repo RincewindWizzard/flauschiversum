@@ -36,7 +36,7 @@ await test('Startseite: Überschrift, Begrüßung, zehn Beiträge – in dieser 
 await test('Kategorie aus dem Menü führt auf die Kategorieseite, Schlagwort auf die Schlagwortseite', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(BASE + '/');
-  await page.hover('.topnav li.has-menu >> nth=1');
+  await page.hover('.topnav li.has-menu >> nth=0');
   const first = page.locator('#menu-kategorien a').first();
   const name = (await first.textContent()).trim();
   await first.click();

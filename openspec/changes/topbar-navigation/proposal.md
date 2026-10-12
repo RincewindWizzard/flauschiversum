@@ -6,14 +6,15 @@ Das Layout hat zuletzt drei Spalten bekommen (Navigation links, Inhalt, Sidebar 
 
 ## What Changes
 
-- **Topbar statt Sidebars:** Oben steht eine Leiste. Ganz links das Maskottchen Flauschi (normal, bei Mouse-over „überrascht“) und daneben der Titel „Flauschiversum“ (Link auf die Startseite), rechtsbündig die Menüs **About me**, **Beiträge** und **Kategorien** und das Suchfeld. Die linke Navigationsspalte und die rechte Sidebar entfallen; Kopfnavigation und Kopfbereich gehen in der Topbar auf.
-- **About me:** Ein einfacher Link auf die Seite über die Autorin (`/about/`), ohne Untermenü.
-- **Beiträge:** Das Menü klappt die zehn neuesten Beiträge als Auswahl auf (plus „Alle Beiträge“). Ein Klick auf „Beiträge“ selbst öffnet `/beitraege/`.
+- **Topbar statt Sidebars:** Oben steht eine Leiste, alles auf einer Linie vertikal zentriert. Ganz links das Maskottchen Flauschi (normal, bei Mouse-over „überrascht“) und daneben der Titel „Flauschiversum“ (Link auf die Startseite), rechtsbündig die Menüs **Beiträge** und **Kategorien** und das Suchfeld. Die linke Navigationsspalte und die rechte Sidebar entfallen; Kopfnavigation und Kopfbereich gehen in der Topbar auf. Auf dem Handy klappt die Topbar über ein Hamburger-Menü auf.
+- **About me:** steht nicht in der Topbar, sondern im Footer (Link auf `/about/`).
+- **Beiträge:** Ein einfacher Link auf `/beitraege/`, ohne Dropdown.
 - **Seite Beiträge (`/beitraege/`):** Zeigt die zehn neuesten Beiträge und daneben ein **Archiv**: alle Beiträge nach Jahr und Monat, jede Gruppe ein- und ausklappbar, jeder Beitrag ein Link. Die bisherige Blätterliste (`/page/<N>/`) bleibt unter ihren Adressen erreichbar, wird aber nicht mehr verlinkt.
 - **Kategorien:** Das Menü klappt alle Kategorien aus `content/categories.yaml` auf. Ein Klick führt auf die Kategorieseite: oben ein kurzer Text zur Kategorie, darunter die Beiträge, daneben dasselbe Archiv nach Monat und Jahr, aber nur mit den Beiträgen dieser Kategorie.
 - **Startseite (Klick auf den Titel):** Zuerst ein kurzer Begrüßungstext (in `content/start.md` pflegbar), direkt danach die neuesten Beiträge. Die Kategoriekacheln entfallen, weil die Kategorien im Menü stehen.
 - **Tag-Cloud nur auf der Startseite:** Die Schlagwort-Cloud steht nur noch dort (Karte neben bzw. unter den Beiträgen). Auf allen anderen Seiten entfallen Cloud und Kategorienliste.
-- **Beibehalten:** Footer (Tipps und Tricks, About, Impressum, Abonnieren, E-Mail, Socials, RSS, Copyright), Farbschema, Typografie und Karten, alle Beitrags-, Schlagwort-, Themen- und Suchseiten samt URLs.
+- **Footer kompakt:** Links „Tipps und Tricks“, „About me“, „Impressum“ untereinander, daneben die Icons (E-Mail, Instagram, Mastodon, RSS) in einer Zeile, darunter das Copyright. Der Textlink „Abonnieren“ entfällt, das RSS-Icon genügt.
+- **Beibehalten:** Farbschema, Typografie und Karten, a
 
 Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext und den Kategorietexten (Entwürfe zur Prüfung), Änderungen an Suche, Feed oder Deployment.
 
@@ -21,7 +22,7 @@ Nicht Teil dieses Changes: neue Inhalte außer dem Begrüßungstext und den Kate
 
 ### New Capabilities
 
-- `topbar`: Die Topbar mit Titel, Menüs About me, Beiträge, Kategorien und Suche, einschließlich Dropdowns, Tastaturbedienung und Handy-Menü.
+- `topbar`: Die Topbar mit Titel, Menüs Beiträge, Kategorien und Suche, einschließlich Kategorien-Dropdown, Tastaturbedienung und Handy-Menü.
 - `post-archive`: Das einklappbare Archiv aller (oder einer Kategorie von) Beiträgen nach Jahr und Monat.
 
 ### Modified Capabilities

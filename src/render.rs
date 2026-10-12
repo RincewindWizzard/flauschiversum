@@ -56,9 +56,8 @@ pub struct CloudTag {
     pub level: u8,
 }
 
-/// Menüdaten der Topbar: die neuesten Beiträge und alle Kategorien.
+/// Menüdaten der Topbar: alle Kategorien.
 pub struct Menu {
-    pub latest: Vec<NavLink>,
     pub categories: Vec<TopicLink>,
 }
 

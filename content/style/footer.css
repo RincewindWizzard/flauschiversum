@@ -1,44 +1,41 @@
 /* Fußzeile: Seitenlinks, Kontakt mit Icons, Copyright */
 #blogfooter {
-  margin: 3em 1em 2em;
-  padding-top: 1.2em;
+  margin: 2em 1em 1.5em;
+  padding-top: 0.8em;
   border-top: 1px dashed var(--bordercolor);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1em 2em;
 
   & a {
     text-decoration: none;
   }
 
-  & .footer-links {
+  /* Links untereinander, daneben die Icons in einer Zeile */
+  & .footer-main {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.2em 0.4em;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4em 2em;
+  }
+
+  & .footer-links {
+    display: flex;
+    flex-direction: column;
     font-family: var(--font-text);
     font-weight: 700;
     font-size: var(--fs-ui);
   }
 
   & .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.8em;
+    padding: 0 0.6em;
+    border-radius: 5px;
     color: var(--acolor);
   }
 
-  & .footer-links a,
-  & .footer-contact a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
-    min-height: 44px;
-    padding: 0 0.6em;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-
   & .footer-links a:hover,
-  & .footer-contact a:hover,
+  & .socials a:hover,
   & a:focus-visible {
     background-color: var(--accent-soft);
   }
@@ -48,19 +45,6 @@
     outline-offset: 2px;
   }
 
-  & .footer-links,
-  & .footer-contact {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  & .footer-contact {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4em 1em;
-  }
-
   & .socials {
     display: flex;
     gap: 0.2em;
@@ -68,9 +52,13 @@
   }
 
   & .socials a {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
     min-width: 44px;
-    padding: 0;
+    min-height: 44px;
+    border-radius: 5px;
+    box-sizing: border-box;
     color: var(--link);
   }
 
@@ -81,7 +69,7 @@
   }
 
   & .copyright {
-    flex-basis: 100%;
+    margin-top: 0.4em;
     text-align: center;
     font-size: var(--fs-small);
     color: #5a554a;
@@ -89,14 +77,7 @@
 }
 
 @media (max-width: 40em) {
-  #blogfooter {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-
-    & .footer-links,
-    & .footer-contact {
-      justify-content: center;
-    }
+  #blogfooter .footer-links a {
+    min-height: 44px;
   }
 }

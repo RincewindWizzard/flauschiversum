@@ -7,8 +7,8 @@
 ## Goals / Non-Goals
 
 **Goals:**
-- Eine einzige Navigation: Topbar mit Titel links und den Menüs About me, Beiträge, Kategorien (rechtsbündig) und Suche.
-- Beiträge finden über Menü (10 neueste), Beiträge-Seite mit Archiv nach Jahr und Monat und Kategorieseiten mit Archiv der Kategorie.
+- Eine einzige Navigation: Topbar mit Titel links und den Menüs Beiträge und Kategorien (rechtsbündig) und Suche, alles vertikal auf einer Linie.
+- Beiträge finden über die Beiträge-Seite mit Archiv nach Jahr und Monat und Kategorieseiten mit Archiv der Kategorie.
 - Startseite als Begrüßung mit direkt folgenden Beiträgen; Cloud nur dort.
 - Alle Menüs und Archive ohne JavaScript brauchbar, mit JavaScript komfortabler.
 
@@ -26,10 +26,7 @@
   <details class="menu-toggle"> … Menü-Knopf für das Handy … </details>
   <nav class="topnav" aria-label="Hauptnavigation">
     <ul>
-      <li><a href="/about/">About me</a></li>
-      <li class="has-menu"><a href="/beitraege/">Beiträge</a>
-        <button aria-expanded="false" aria-controls="menu-beitraege" aria-label="Beiträge-Menü">▾</button>
-        <ul id="menu-beitraege" class="submenu card">… 10 Links, „Alle Beiträge“ …</ul></li>
+      <li><a href="/beitraege/">Beiträge</a></li>
       <li class="has-menu"><a href="/themen/">Kategorien</a> … ein Link je Kategorie …</li>
     </ul>
   </nav>
@@ -72,9 +69,15 @@ Unter 48 em zeigt die Topbar Titel, Suche (Lupe als Knopf, klappt das Feld auf b
 
 - „Kategorien“ führt beim Klick auf `/themen/` (Übersicht), die Einträge im Untermenü auf die Kategorieseiten.
 - Das Suchfeld bleibt, jetzt in der Topbar (im Auftrag nicht genannt, für die Auffindbarkeit nötig).
-- Der Footer bleibt unverändert (Tipps und Tricks, About, Impressum, Abonnieren, Kontakt, Socials, RSS, Copyright).
+- Footer kompakt: `div.footer-main` mit den Links untereinander (Tipps und Tricks, About me, Impressum) und daneben den Icons in einer Zeile, darunter das Copyright. „Abonnieren“ entfällt, das RSS-Icon genügt. „About me“ steht nur im Footer.
 - `/themen/` und die Schlagwortseiten bleiben erhalten und sind über die Cloud auf der Startseite und über „Kategorien“ erreichbar.
-- Startseite zeigt zehn Beiträge wie das Beiträge-Menü; Archiv: neuestes Jahr und neuester Monat offen, Rest zu.
+- Startseite zeigt die zehn neuesten Beiträge wie `/beitraege/`; Archiv: neuestes Jahr und neuester Monat offen, Rest zu.
+
+### 7. Überarbeitung nach der ersten Sichtung
+
+- Alle Elemente der Topbar liegen auf einer Mittellinie (`align-items: center`); das Suchfeld verliert den Außenabstand unten (`form.search` setzte `margin: 0 1em 1em`, deshalb sitzt es höher), geprüft durch einen Test auf die Mittelpunkte.
+- Nur „Kategorien“ hat ein Untermenü; „Beiträge“ ist ein einfacher Link. Damit entfallen die Menüdaten der zehn neuesten Beiträge.
+- Handy: Hamburger-Symbol als quadratischer Knopf (mindestens 44 px, `aria-label="Menü"`) in der Zeile der Marke, die Suche in einer eigenen Zeile darunter; das Menü klappt unter der Leiste auf.
 
 ## Risks / Trade-offs
 

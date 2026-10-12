@@ -91,7 +91,7 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
     const fb = await footer.boundingBox();
     const docH = await page.evaluate(() => document.documentElement.scrollHeight);
     assert.ok(Math.abs(fb.y + fb.height - docH) < 60, 'Footer steht am Seitenende');
-    for (const name of ['Tipps und Tricks', 'About', 'Impressum', 'Abonnieren']) {
+    for (const name of ['Tipps und Tricks', 'About me', 'Impressum']) {
       assert.ok(await footer.getByRole('link', { name, exact: true }).isVisible(), name);
     }
     for (const [name, href] of [['Instagram', 'https://www.instagram.com/ermelinewollknoll/'], ['Mastodon', 'https://chaos.social/@ErmelineWollknoll']]) {
@@ -114,6 +114,24 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
     await page.close();
   });
 }
+
+await test('Footer kompakt: Links untereinander, Icons daneben in einer Zeile, Copyright darunter', async () => {
+  const page = await open(POST, 1280, 800);
+  const f = page.locator('#blogfooter');
+  const links = await f.locator('.footer-links a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.height]; }));
+  assert.equal(links.length, 3);
+  assert.ok(links.every((l) => Math.abs(l[0] - links[0][0]) < 1), 'Links stehen in einer Spalte');
+  assert.ok(links[0][1] < links[1][1] && links[1][1] < links[2][1], 'untereinander');
+  const icons = await f.locator('.socials a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y]; }));
+  assert.equal(icons.length, 4);
+  assert.ok(icons.every((i) => Math.abs(i[1] - icons[0][1]) < 1) && icons[0][0] < icons[3][0], 'Icons in einer Zeile');
+  const [linkBox, socials, copyright, footer] = [await f.locator('.footer-links').boundingBox(), await f.locator('.socials').boundingBox(), await f.locator('.copyright').boundingBox(), await f.boundingBox()];
+  assert.ok(socials.y < linkBox.y + linkBox.height && socials.y + socials.height > linkBox.y, 'Icons neben den Links');
+  assert.ok(copyright.y >= linkBox.y + linkBox.height && copyright.y >= socials.y + socials.height, 'Copyright darunter');
+  assert.ok(footer.height < 190, `Footer kompakt (${footer.height} px)`);
+  await f.screenshot({ path: '/tmp/flausch-footer-kompakt.png' });
+  await page.close();
+});
 
 await test('Footer: Tastatur erreicht die Icons, Fokus ist sichtbar', async () => {
   const page = await open(POST, 1280);
@@ -148,8 +166,7 @@ for (const [width, label] of [[1280, 'Desktop'], [360, 'Handy']]) {
     const res = await page.request.get(BASE + '/rss.xml');
     assert.equal(res.status(), 200);
     assert.match(await res.text(), /<rss[ >]/);
-    // Der Textlink „Abonnieren“ bleibt
-    assert.equal(await footer.getByRole('link', { name: 'Abonnieren', exact: true }).getAttribute('href'), '/rss.xml');
+    assert.equal(await footer.getByRole('link', { name: 'Abonnieren', exact: true }).count(), 0, 'kein Textlink „Abonnieren“, das RSS-Icon genügt');
     if (width > 500) await footer.screenshot({ path: '/tmp/flausch-footer-rss.png' });
     else await footer.screenshot({ path: '/tmp/flausch-footer-rss-handy.png' });
     await page.close();
