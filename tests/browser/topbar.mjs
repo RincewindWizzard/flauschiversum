@@ -82,6 +82,16 @@ await test('Maskottchen: beide Bilder gleich groß, Mouse-over verschiebt nichts
   await page.close();
 });
 
+await test('Suchfeld der Topbar: Platzhalter „Beitrag suchen …“ und passender zugänglicher Name', async () => {
+  const page = await open('/', 1280);
+  const input = page.locator('#q-top');
+  assert.equal(await input.getAttribute('placeholder'), 'Beitrag suchen …');
+  assert.equal((await page.locator('label[for="q-top"]').textContent()).trim(), 'Beitrag suchen');
+  assert.equal(await page.getByRole('searchbox', { name: 'Beitrag suchen' }).count(), 1);
+  assert.equal(await page.locator('body').getByText('Anleitung suchen').count(), 0);
+  await page.close();
+});
+
 await test('Titel führt zur Startseite', async () => {
   const page = await open('/2020/10/kurbis/');
   await page.click('.brand');
