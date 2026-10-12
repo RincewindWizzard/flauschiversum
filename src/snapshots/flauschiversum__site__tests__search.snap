@@ -14,7 +14,6 @@ expression: "stable(&read(root, \"suche/index.html\"))"
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://flauschiversum.de/suche/">
 <link rel="stylesheet" href="/style.css?v=HASH">
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
 <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
 <link rel="alternate" type="application/rss+xml" title="Flauschiversum" href="https://flauschiversum.de/rss.xml">
 <meta property="og:site_name" content="Flauschiversum">
@@ -25,7 +24,7 @@ expression: "stable(&read(root, \"suche/index.html\"))"
 <meta property="og:url" content="https://flauschiversum.de/suche/">
 <meta name="twitter:card" content="summary_large_image">
 </head>
-<body>
+<body class="has-aside aside-early">
 <header class="topbar">
   <div class="topbar-inner">
     <a class="brand" href="/">
@@ -61,21 +60,22 @@ expression: "stable(&read(root, \"suche/index.html\"))"
 <div class="page-layout">
   <div class="page-head">
     
+<header class="topic-head search-head">
+  <h1>Suche</h1>
+  <form class="search big" id="search-form" role="search" action="/suche/" method="get" hidden>
+    <div class="searchbox">
+      <input type="search" id="q" name="q" aria-label="Suchbegriff" placeholder="z. B. Mütze, Katze, Filz …" autocomplete="off">
+      <button type="submit" aria-label="Suchen" title="Suchen"><svg class="icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></button>
+    </div>
+  </form>
+  <p class="search-summary" id="search-summary" role="status" aria-live="polite"></p>
+</header>
+
   </div>
   <div class="page-content">
     
 <main class="topic search-page">
-  <header class="topic-head">
-    <h1>Suche</h1>
-  </header>
-  <form class="search big" id="search-form" action="/suche/" method="get" role="search">
-    <label for="q">Was möchtest du machen?</label>
-    <div class="searchbox">
-      <input type="search" id="q" name="q" placeholder="z.B. Mütze, Katze, Filz …" autocomplete="off">
-      <button type="submit" aria-label="Suchen" title="Suchen"><svg class="icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></button>
-    </div>
-  </form>
-  <div id="search" hidden></div>
+  <ul class="entries" id="search-results"></ul>
   <noscript>
     <p class="notice">Die Suche braucht JavaScript. Ohne kannst du stöbern: in den <a href="/themen/">Themen</a> oder in <a href="/beitraege/">allen Beiträgen</a>.</p>
   </noscript>
@@ -84,6 +84,13 @@ expression: "stable(&read(root, \"suche/index.html\"))"
 
   </div>
   
+<aside class="filters card" id="search-filters" aria-labelledby="filter-titel" hidden>
+  <details id="search-filter-details" open>
+    <summary><h2 class="side-title" id="filter-titel">Thema</h2></summary>
+    <ul class="filter-list" id="search-filter-list"></ul>
+  </details>
+</aside>
+
 </div>
 </div>
 <footer id="blogfooter">
@@ -105,7 +112,7 @@ expression: "stable(&read(root, \"suche/index.html\"))"
 </footer>
 <script src="/assets/js/topbar.js?v=HASH"></script>
 
-<script src="/pagefind/pagefind-ui.js"></script>
+<script src="/pagefind/pagefind-modular-ui.js"></script>
 <script type="module" src="/assets/js/search.js?v=HASH"></script>
 
 </body>

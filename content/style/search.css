@@ -90,3 +90,102 @@ form.search.big {
     font-size: 1.15em;
   }
 }
+
+/* Suchseite: Eingabe im Kopf, Treffer als Beitragsliste, Themenfilter als Seitenleiste */
+.search-head {
+  & form.search.big {
+    margin-top: 0.4em;
+  }
+
+  & .search-summary {
+    min-height: 1.6em;
+    margin: 0.8em 0 0;
+    text-align: center;
+    color: var(--muted);
+  }
+}
+
+.search-page {
+  & mark {
+    background: var(--accent-soft);
+    color: var(--acolor);
+    font-weight: 700;
+  }
+
+  & .entry-loading {
+    opacity: 0.35;
+  }
+
+  & .excerpt {
+    font-size: var(--fs-ui);
+  }
+}
+
+aside.filters {
+  & summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  & summary::-webkit-details-marker {
+    display: none;
+  }
+
+  & summary::after {
+    content: "▾";
+    float: right;
+    color: var(--muted);
+  }
+
+  & details[open] > summary::after {
+    content: "▴";
+  }
+
+  & summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  & .side-title {
+    display: inline;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.25em;
+    margin: 0 0 0.5em;
+  }
+
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  & li {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 2em;
+  }
+
+  & input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    accent-color: var(--accent);
+    flex: none;
+  }
+
+  & label {
+    cursor: pointer;
+  }
+
+  & .count {
+    color: var(--muted);
+    font-size: var(--fs-small);
+  }
+}
+
+/* Das Attribut hidden gilt auch dort, wo eine Regel `display` setzt (Suchfeld und Filter erscheinen erst mit JavaScript) */
+form.search[hidden],
+aside.filters[hidden] {
+  display: none;
+}

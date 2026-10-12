@@ -14,8 +14,9 @@ const test = async (name, fn) => {
   catch (e) { results.push(['FEHLER', name, e.message.split('\n')[0]]); }
 };
 
-const resultTitles = (page) => page.locator('.pagefind-ui__result-title a').allTextContents();
-const waitResults = (page) => page.waitForSelector('.pagefind-ui__result', { timeout: 10000 });
+const resultTitles = (page) => page.locator('#search-results .entry-title a').allTextContents();
+const waitResults = (page) => page.waitForSelector('#search-results .entry:not(.entry-loading)', { timeout: 10000 });
+const count = async (page) => Number(/(\d+) Treffer/.exec(await page.locator('#search-summary').textContent())?.[1] ?? NaN);
 
 await test('Startseite: Begrüßung, zehn Beiträge – in dieser Reihenfolge, Cloud rechts', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -119,10 +120,9 @@ for (const [query, expect] of [
     await waitResults(page);
     const titles = await resultTitles(page);
     assert.ok(titles.length > 0);
-    assert.ok((await page.locator('.pagefind-ui__result mark').count()) > 0, 'Hervorhebung');
-    await page.waitForFunction(() => /Ergebnis/.test(document.querySelector('.pagefind-ui__message')?.textContent ?? ''));
-    assert.match(await page.locator('.pagefind-ui__message').textContent(), /\d+ Ergebnisse? für/);
-    if (query.startsWith('k')) assert.ok(titles.concat(await page.locator('.pagefind-ui__result-excerpt').allTextContents()).some((t) => expect.test(t)));
+    assert.ok((await page.locator('#search-results mark').count()) > 0, 'Hervorhebung');
+    assert.match(await page.locator('#search-summary').textContent(), /\d+ Treffer für/);
+    if (query.startsWith('k')) assert.ok(titles.concat(await page.locator('#search-results .excerpt').allTextContents()).some((t) => expect.test(t)));
     await page.close();
   });
 }
@@ -141,23 +141,51 @@ await test('Suche: Themenfilter schränkt die Treffer ein', async () => {
   const page = await browser.newPage();
   await page.goto(`${BASE}/suche/?q=m%C3%BCtze`);
   await waitResults(page);
-  await page.waitForFunction(() => /Ergebnis/.test(document.querySelector('.pagefind-ui__message')?.textContent ?? ''));
-  const total = await page.locator('.pagefind-ui__message').textContent();
-  const n = Number(/(\d+)\s+Ergebnis/.exec(total)?.[1]);
-  assert.ok(n > 0, total);
-  await page.locator('.pagefind-ui__filter-label', { hasText: 'Wolle' }).click();
-  assert.ok(await page.locator('#Thema-Wolle').isChecked());
+  const n = await count(page);
+  assert.ok(n > 0);
+  await page.locator('#search-filters label', { hasText: 'Wolle' }).click();
+  assert.ok(await page.locator('#search-filters input:checked').count() === 1);
   await page.waitForFunction((n) => {
-    const m = /(\d+)\s+Ergebnis/.exec(document.querySelector('.pagefind-ui__message')?.textContent ?? '');
+    const m = /(\d+) Treffer/.exec(document.querySelector('#search-summary')?.textContent ?? '');
     return m && Number(m[1]) < n;
   }, n);
+  await page.close();
+});
+
+await test('Suche: genau ein Suchfeld im Inhalt, Themenfilter ist eine Seitenleiste neben dem Inhalt', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await page.goto(`${BASE}/suche/?q=m%C3%BCtze`);
+  await waitResults(page);
+  assert.equal(await page.locator('input[type=search]:visible').count(), 2, 'Topbar plus ein Feld im Inhalt');
+  assert.equal(await page.locator('#search-form input').inputValue(), 'mütze');
+  assert.equal(await page.locator('main #search-filters, main aside').count(), 0, 'Filter liegt nicht im main');
+  const [main, side] = [await page.locator('main.search-page').boundingBox(), await page.locator('aside#search-filters').boundingBox()];
+  assert.ok(main.width > 640 && side.x >= main.x + main.width - 1, `Seitenleiste rechts neben dem Inhalt (${main.width}, ${side.x})`);
+  const css = await page.evaluate(() => { const g = (s) => getComputedStyle(document.querySelector(s)); return { title: parseFloat(g('#search-results .entry-title a').fontSize), excerpt: parseFloat(g('#search-results .excerpt').fontSize), filter: parseFloat(g('#search-filters label').fontSize), family: g('#search-results .excerpt').fontFamily, radius: g('#search-results .entry-image img').borderRadius, sticky: g('#search-filters').position }; });
+  assert.ok(css.title >= 16 && css.excerpt >= 16 && css.filter >= 16, JSON.stringify(css));
+  assert.match(css.family, /Lora/);
+  assert.equal(css.sticky, 'sticky');
+  assert.ok(parseFloat(css.radius) >= 20 || css.radius.includes('%') || parseFloat(css.radius) > 0, css.radius);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'kein waagerechtes Scrollen');
+  await page.close();
+});
+
+await test('Suche am Handy: Filterkarte steht zwischen Suchfeld und Treffern, kein waagerechtes Scrollen', async () => {
+  const page = await browser.newPage({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true });
+  await page.goto(`${BASE}/suche/?q=m%C3%BCtze`);
+  await waitResults(page);
+  const [form, side, list] = [await page.locator('#search-form').boundingBox(), await page.locator('#search-filters').boundingBox(), await page.locator('#search-results').boundingBox()];
+  assert.ok(form.y + form.height <= side.y + 1 && side.y + side.height <= list.y + 1, 'Suchfeld, Filterkarte, Treffer');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.locator('#search-filters summary').click();
+  assert.ok(await page.locator('#search-filters label').first().isVisible(), 'Filter lassen sich aufklappen');
   await page.close();
 });
 
 await test('Suche: Adresse folgt der Eingabe', async () => {
   const page = await browser.newPage();
   await page.goto(`${BASE}/suche/`);
-  await page.locator('.pagefind-ui__search-input').fill('hut');
+  await page.locator('#q').fill('hut');
   await page.waitForURL('**/suche/?q=hut');
   await page.close();
 });
@@ -165,9 +193,8 @@ await test('Suche: Adresse folgt der Eingabe', async () => {
 await test('Suche: keine Treffer verweisen auf Themen', async () => {
   const page = await browser.newPage();
   await page.goto(`${BASE}/suche/?q=qqqzzzxxx`);
-  await page.waitForSelector('.pagefind-ui__message');
-  assert.match(await page.locator('.pagefind-ui__message').textContent(), /Keine Ergebnisse|keine/i);
-  assert.ok(await page.locator('a[href="/themen/"]').count());
+  await page.waitForFunction(() => /Keine Treffer/.test(document.querySelector('#search-summary')?.textContent ?? ''));
+  assert.ok(await page.locator('#search-summary a[href="/themen/"]').count());
   await page.close();
 });
 
@@ -176,7 +203,8 @@ await test('Ohne JavaScript: Hinweis, Formular und Links zum Stöbern', async ()
   const page = await ctx.newPage();
   await page.goto(`${BASE}/suche/?q=katze`);
   assert.match(await page.locator('noscript').first().textContent(), /JavaScript/);
-  assert.ok(await page.locator('#search-form input[name=q]').isVisible());
+  assert.equal(await page.locator('#search-form').isVisible(), false, 'das Suchfeld im Inhalt braucht JavaScript');
+  assert.equal(await page.locator('#search-filters').isVisible(), false);
   assert.ok(await page.locator('main a[href="/themen/"]').first().isVisible());
   assert.ok(await page.locator('main a[href="/beitraege/"]').first().isVisible());
   await ctx.close();

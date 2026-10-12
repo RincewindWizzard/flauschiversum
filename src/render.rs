@@ -351,6 +351,7 @@ pub fn render_search(script_href: String, common: &Common) -> String {
         common.base.absolute("/suche/"),
     );
     head.noindex = true;
+    head.body_class = "has-aside aside-early";
     SearchTemplate { head, script_href }.render().expect("Such-Template")
 }
 

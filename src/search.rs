@@ -60,13 +60,13 @@ fn is_needed(path: &str) -> bool {
         || name.starts_with("pagefind.de_")
         || matches!(
             name,
-            "pagefind.js" | "pagefind-worker.js" | "pagefind-ui.js" | "pagefind-ui.css" | "pagefind-entry.json" | "wasm.de.pagefind"
+            "pagefind.js" | "pagefind-worker.js" | "pagefind-modular-ui.js" | "pagefind-entry.json" | "wasm.de.pagefind"
         )
 }
 
 fn input_key(docs: &[SearchDoc]) -> String {
     let mut h = blake3::Hasher::new();
-    h.update(b"pagefind-1.5.2/v1\0");
+    h.update(b"pagefind-1.5.2/v2\0");
     for d in docs {
         let doc = document(d);
         h.update(&(d.url.len() as u64).to_le_bytes());
@@ -180,10 +180,10 @@ mod tests {
     fn index_has_needed_files_and_is_cached() {
         let cache = tempfile::tempdir().unwrap();
         let files = build(docs(), cache.path()).unwrap();
-        for need in ["/pagefind/pagefind.js", "/pagefind/pagefind-ui.js", "/pagefind/wasm.de.pagefind", "/pagefind/pagefind-entry.json"] {
+        for need in ["/pagefind/pagefind.js", "/pagefind/pagefind-modular-ui.js", "/pagefind/wasm.de.pagefind", "/pagefind/pagefind-entry.json"] {
             assert!(files.iter().any(|(p, _)| p == need), "{need}");
         }
-        assert!(files.iter().all(|(p, _)| !p.contains("component") && !p.contains("modular")));
+        assert!(files.iter().all(|(p, _)| !p.contains("component") && !p.contains("playground") && !p.ends_with(".css")));
         assert!(sizes(&files) > 100_000);
         // Zweiter Lauf mit gleichen Eingaben: byte-gleich, auch die Filterdatei
         let again = build(docs(), cache.path()).unwrap();

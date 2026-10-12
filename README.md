@@ -98,7 +98,7 @@ Besucher finden Beiträge über die Topbar (Titel mit dem Maskottchen Flauschi l
   Ein neues Schlagwort zuerst dort eintragen. Ein Schlagwort mit weniger als zwei Beiträgen erzeugt eine Warnung.
 - **Suche:** Der Index entsteht beim Build mit [Pagefind](https://pagefind.app/) (als Rust-Bibliothek, kein
   zusätzliches Programm) und liegt unter `/pagefind/`. Durchsucht werden Titel, Text und Schlagworte aller
-  Beiträge und Einzelseiten; die Treffer lassen sich nach „Thema“ filtern; die Suche läuft im Browser, ohne Dienste von Dritten. Das Ergebnis des Index wird in
+  Beiträge und Einzelseiten; die Treffer lassen sich nach „Thema“ filtern (Seitenleiste neben den Treffern; die Seite nutzt die modulare Pagefind-Oberfläche und rendert Treffer wie die Beitragslisten); die Suche läuft im Browser, ohne Dienste von Dritten. Das Ergebnis des Index wird in
   `.cache/` zu den Eingaben gemerkt, damit ein Build ohne Änderungen nichts neu schreibt.
 - Die Pfade `/themen/`, `/suche/`, `/beitraege/`, `/tag/` und `/pagefind/` sind reserviert.
 

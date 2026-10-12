@@ -1,27 +1,34 @@
 {% extends "layout.html" %}
-{% block head %}
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
-{%- endblock %}
-{% block content %}
-<main class="topic search-page">
-  <header class="topic-head">
-    <h1>Suche</h1>
-  </header>
-  <form class="search big" id="search-form" action="/suche/" method="get" role="search">
-    <label for="q">Was möchtest du machen?</label>
+{% block header %}
+<header class="topic-head search-head">
+  <h1>Suche</h1>
+  <form class="search big" id="search-form" role="search" action="/suche/" method="get" hidden>
     <div class="searchbox">
-      <input type="search" id="q" name="q" placeholder="z.B. Mütze, Katze, Filz …" autocomplete="off">
+      <input type="search" id="q" name="q" aria-label="Suchbegriff" placeholder="z. B. Mütze, Katze, Filz …" autocomplete="off">
       <button type="submit" aria-label="Suchen" title="Suchen">{% include "partials/icon-search.html" %}</button>
     </div>
   </form>
-  <div id="search" hidden></div>
+  <p class="search-summary" id="search-summary" role="status" aria-live="polite"></p>
+</header>
+{% endblock %}
+{% block content %}
+<main class="topic search-page">
+  <ul class="entries" id="search-results"></ul>
   <noscript>
     <p class="notice">Die Suche braucht JavaScript. Ohne kannst du stöbern: in den <a href="/themen/">Themen</a> oder in <a href="/beitraege/">allen Beiträgen</a>.</p>
   </noscript>
   <p class="browse">Lieber stöbern? <a href="/themen/">Themen</a> &middot; <a href="/beitraege/">Alle Beiträge</a></p>
 </main>
 {% endblock %}
+{% block aside %}
+<aside class="filters card" id="search-filters" aria-labelledby="filter-titel" hidden>
+  <details id="search-filter-details" open>
+    <summary><h2 class="side-title" id="filter-titel">Thema</h2></summary>
+    <ul class="filter-list" id="search-filter-list"></ul>
+  </details>
+</aside>
+{% endblock %}
 {% block scripts %}
-<script src="/pagefind/pagefind-ui.js"></script>
+<script src="/pagefind/pagefind-modular-ui.js"></script>
 <script type="module" src="{{ script_href }}"></script>
 {% endblock %}

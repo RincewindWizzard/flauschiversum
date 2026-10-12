@@ -734,7 +734,13 @@ pub mod tests {
             // Archiv nur auf der Beiträge-Seite und auf Themenseiten
             let has_archive = path == "/beitraege/index.html" || path.starts_with("/tag/");
             assert_eq!(html.contains("class=\"archive card\""), has_archive, "{path}");
-            assert_eq!(html.contains("class=\"has-aside"), path == "/index.html" || has_archive, "{path}");
+            assert_eq!(html.contains("class=\"has-aside"), path == "/index.html" || path == "/suche/index.html" || has_archive, "{path}");
+            // Der Themenfilter der Suche ist eine Seitenleiste neben dem Inhalt, nicht Teil des `main`
+            if path == "/suche/index.html" {
+                let main = between(html, "<main", "</main>");
+                assert!(!main.contains("search-filters") && html.contains("<aside class=\"filters card\" id=\"search-filters\""), "Filter ist eine Seitenleiste");
+                assert!(html.matches("type=\"search\"").count() == 2, "Topbar-Feld und ein Suchfeld im Inhalt");
+            }
         }
         assert_eq!(menus.len(), 1, "Menüs auf allen Seiten gleich");
         let menu = menus.into_iter().next().unwrap();
@@ -990,7 +996,7 @@ pub mod tests {
         assert!(!read(root, "robots.txt").contains("suche"));
         assert!(!post.contains("noindex") && !home.contains("noindex"));
         assert!(!read(root, "sitemap.xml").contains("/suche/"));
-        for f in ["pagefind/pagefind.js", "pagefind/pagefind-ui.js", "pagefind/pagefind-ui.css", "assets/js/search.js"] {
+        for f in ["pagefind/pagefind.js", "pagefind/pagefind-modular-ui.js", "assets/js/search.js"] {
             assert!(root.join("dist").join(f).is_file(), "{f}");
         }
         // Themenübersicht alphabetisch

@@ -207,11 +207,11 @@ await test('Erhöhter Kontrast: keine Sterne und kein Nebel', async () => {
 
 await test('Suche und Topbar im Dunkelmodus dunkel mit hellem Text', async () => {
   const page = await newPage('dark', '/suche/?q=m%C3%BCtze');
-  await page.waitForSelector('.pagefind-ui__result');
-  const [text, bg] = await page.evaluate(() => { const t = document.querySelector('.pagefind-ui__result-title a'); const f = document.querySelector('.pagefind-ui'); return [getComputedStyle(t).color, getComputedStyle(f).getPropertyValue('--pagefind-ui-background').trim()]; });
+  await page.waitForSelector('#search-results .entry:not(.entry-loading)');
+  const [text, bg] = await page.evaluate(() => { const t = document.querySelector('#search-results .entry-title a'); return [getComputedStyle(t).color, getComputedStyle(document.querySelector('#search-filters')).backgroundColor]; });
   const rgb = text.match(/\d+/g).slice(0, 3).map(Number);
   assert.ok(lum(rgb) > 0.3, `Treffertitel hell: ${text}`);
-  assert.ok(bg !== '' && !/^#fff/i.test(bg), `Suchoberfläche dunkel (${bg})`);
+  assert.ok(lum(bg.match(/\d+/g).slice(0, 3).map(Number)) < 0.1, `Filterkarte dunkel (${bg})`);
   const barBg = await page.evaluate(() => getComputedStyle(document.querySelector('.topbar')).backgroundColor);
   assert.ok(lum(barBg.match(/\d+/g).slice(0, 3).map(Number)) < 0.1, `Topbar dunkel: ${barBg}`);
   await page.screenshot({ path: '/tmp/flausch-theme-suche-dunkel.png' });
