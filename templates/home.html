@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block header %}
 <div class="home-head">
-  <h1>Flauschiversum</h1>
   {%- if let Some(w) = welcome %}
   <div class="welcome">{{ w|safe }}</div>
   {%- endif %}
