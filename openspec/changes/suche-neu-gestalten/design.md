@@ -4,7 +4,7 @@ Die Suchseite (`templates/search.html`) enthält ein `<main class="topic search-
 
 ## Goals / Non-Goals
 
-**Goals:** ein Suchfeld im Inhalt; Schrift und Größe wie der Rest der Seite; Treffer und Filter im Aufbau der anderen Seiten (Hauptspalte plus Karte rechts); Bedienelemente im Seitenstil.
+**Goals:** ein Suchfeld im Inhalt; Schrift und Größe wie der Rest der Seite; Treffer in der Hauptspalte, der Filter als echte Seitenleiste (`aside` des Seitenrahmens wie Archiv und Tag-Cloud, nicht Teil des `main`); Bedienelemente im Seitenstil.
 **Non-Goals:** Suchlogik, Index, Filterinhalte, Dunkelmodus (Farben aus Variablen).
 
 ## Decisions
@@ -21,7 +21,7 @@ Das große Formular wird gelöscht. Für Besucher ohne JavaScript bleibt der Hin
 
 ### 3. Seitenaufbau wie Archiv und Cloud
 
-Die Suchseite bekommt dieselbe Body-Klasse wie die Seiten mit Karte (`has-aside`, Rahmen 1200 px). Die Oberfläche selbst rendert Pagefind als ein Formular mit Eingabefeld, einem `drawer` und darin Filter links und Treffer rechts. Der `drawer` wird zum Gitter `minmax(0, 1fr) var(--aside-width)`; die Reihenfolge der Spalten wird per `order`/`grid-area` umgedreht (Treffer links, Filterkarte rechts, `position: sticky` wie das Archiv). Die Filterkarte ist ein `.card` (heller Hintergrund, 14 px Rundung, Karten-Schatten, Innenabstand). Unter 64 em: eine Spalte, Filterkarte über den Treffern, damit die Filter nicht am Ende der Liste versteckt sind. Treffer: Trennlinie gestrichelt wie bei Beitragslisten, Vorschaubild rund und 5 em groß wie bei `entry`, Titel kursiv in Linkfarbe, Ausschnitt in normaler Textfarbe, Suchwort mit `mark` in `--accent-soft` und fetter Schrift (ohne grelles Gelb) (Treffer tragen kein Kategorie-Etikett mehr; Kategorien gibt es nicht mehr, der Filter heißt „Thema“).
+Die Suchseite bekommt dieselbe Body-Klasse wie die Seiten mit Karte (`has-aside`, Rahmen 1200 px). Der Filter gehört nicht in den Hauptinhalt, sondern ist wie das Archiv und die Tag-Cloud eine echte Seitenleiste des Seitenrahmens: `templates/search.html` füllt den `aside`-Block des Layouts mit `<aside class="card filters" id="search-filters">` neben `.page-content` (nicht innerhalb von `<main>`). Die Oberfläche selbst rendert Pagefind als ein Formular mit Eingabefeld, einem `drawer` und darin Filter und Treffer; `search.js` verschiebt nach dem Start den Filterbereich (`.pagefind-ui__filter-panel`) per DOM in `#search-filters` (Pagefind bindet seine Ereignisse am Element, das Verschieben ändert nichts am Verhalten) und blendet die Karte aus, solange es keine Filter gibt. Die Karte nutzt dieselbe Gitterspalte, Breite, `position: sticky` und Kartengestalt (`.card`: heller Hintergrund, 14 px Rundung, Schatten, Innenabstand) wie das Archiv. Unter 64 em: eine Spalte, Filterkarte zwischen Suchfeld und Treffern, damit die Filter nicht am Ende der Liste versteckt sind (die Reihenfolge im Quelltext bleibt Inhalt, dann Seitenleiste; die Anzeige ordnet per `order` um). Treffer: Trennlinie gestrichelt wie bei Beitragslisten, Vorschaubild rund und 5 em groß wie bei `entry`, Titel kursiv in Linkfarbe, Ausschnitt in normaler Textfarbe, Suchwort mit `mark` in `--accent-soft` und fetter Schrift (ohne grelles Gelb) (Treffer tragen kein Kategorie-Etikett mehr; Kategorien gibt es nicht mehr, der Filter heißt „Thema“).
 
 ### 4. Tests
 

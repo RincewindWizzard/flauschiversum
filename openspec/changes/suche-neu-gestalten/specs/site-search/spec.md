@@ -40,11 +40,15 @@ Die Suchseite SHALL in der Schrift der Seite (Lora) und in einer Größe dargest
 - **THEN** sind die Bilder rund und einheitlich groß
 
 ### Requirement: Seitenaufbau der Suchseite
-Die Suchseite SHALL den Rahmen der Seiten mit Karte (bis 1200 px) verwenden: Treffer in der Hauptspalte, der Filter „Thema“ als Karte rechts daneben (ab 64 em). Auf schmaleren Fenstern steht die Filterkarte über den Treffern. Die Seite scrollt nie waagerecht.
+Die Suchseite SHALL den Rahmen der Seiten mit Karte (bis 1200 px) verwenden: Treffer in der Hauptspalte (`main`), der Filter „Thema“ als echte Seitenleiste (`aside` des Seitenrahmens, wie bei Archiv und Tag-Cloud, nicht Teil des `main`) als Karte rechts daneben (ab 64 em). Auf schmaleren Fenstern steht die Filterkarte über den Treffern. Die Seite scrollt nie waagerecht.
 
 #### Scenario: Desktop
 - **WHEN** `/suche/?q=mütze` bei 1440 px Breite geöffnet wird
 - **THEN** stehen die Treffer links und der Filter „Thema“ als Karte rechts, und die Hauptspalte ist breiter als 1000 px
+
+#### Scenario: Filter ist eine Seitenleiste
+- **WHEN** `/suche/?q=mütze` mit JavaScript geöffnet wird
+- **THEN** liegt der Filter in einem `aside` neben dem Inhalt und nicht innerhalb von `main`
 
 #### Scenario: Handy
 - **WHEN** `/suche/?q=mütze` bei 360 px Breite geöffnet wird

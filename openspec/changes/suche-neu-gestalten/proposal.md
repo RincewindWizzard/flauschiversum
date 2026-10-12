@@ -8,7 +8,7 @@ Ursache für die falsche Schrift und Größe: Die Suchoberfläche (Pagefind) set
 
 - **Ein Suchfeld auf der Seite:** Das zusätzliche große Formular entfällt. Auf der Suchseite gibt es das Suchfeld der Topbar und das der Suchoberfläche, gestaltet wie das Suchfeld der Seite (rund, Lupe im Feld). Die Topbar-Suche bleibt, aber eine Suche dort lädt die Seite mit dem Begriff und füllt das Feld der Oberfläche.
 - **Lesbare, passende Schrift:** Treffer, Ausschnitt, Filter und Etiketten in Lora und in einer Größe, die zum Rest passt (Titel wie Beitragslisten, Ausschnitt und Filter mindestens 16 px, Etiketten mindestens 14 px bei Desktop-Schrift).
-- **Eigener Seitenaufbau wie die Karten-Seiten:** Rahmen bis 1200 px, Treffer in der Hauptspalte, der Themenfilter als Karte rechts (wie das Archiv), auf schmalen Fenstern über den Treffern. Die Treffer sehen aus wie die Einträge der Beitragslisten (runde Vorschaubilder, Titel kursiv, Datum nicht nötig).
+- **Eigener Seitenaufbau wie die Karten-Seiten:** Rahmen bis 1200 px, Treffer in der Hauptspalte, der Themenfilter als echte Seitenleiste (`aside` im Seitenrahmen, außerhalb von `main`, als Karte rechts wie das Archiv), auf schmalen Fenstern über den Treffern. Die Treffer sehen aus wie die Einträge der Beitragslisten (runde Vorschaubilder, Titel kursiv, Datum nicht nötig).
 - **Bedienelemente im Seitenstil:** Löschen-Knopf, Filter-Häkchen, „Mehr laden“ und Hervorhebung der Suchwörter in den Farben der Seite, ohne harte schwarze Rahmen.
 - Das Verhalten der Suche (Index, Filter, Parameter `q`, Adresse aktualisieren) bleibt unverändert.
 
