@@ -11,7 +11,7 @@
 ## 3. Absicherung und Doku
 
 - [ ] 3.1 Browser-Tests (`layout.mjs`, `navigation.mjs`, `theme.mjs`: Kontrast der Karte in Hell und Dunkel) ergänzen, Snapshots der Seiten aktualisieren; prüfen: `cargo test --release -- --include-ignored` und alle Playwright-Skripte grün
-- [ ] 3.2 README (Einzelseiten, Inhaltsverzeichnis, Anker) aktualisieren; Vergleichsbilder (`/tipps/`, `/autoren/`, Impressum; Desktop, Handy, Hell und Dunkel) zur Abnahme; prüfen: Freigabe im Gespräch
+- [ ] 3.2 README (Einzelseiten, Inhaltsverzeichnis, Anker) aktualisieren; Vergleichsbilder (`/tipps-und-tricks/`, `/about/`, Impressum; Desktop, Handy, Hell und Dunkel) zur Abnahme; prüfen: Freigabe im Gespräch
 
 ## Workflow follow-up
 

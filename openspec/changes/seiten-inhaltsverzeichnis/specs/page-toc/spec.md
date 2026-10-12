@@ -8,7 +8,7 @@ Beschreibt das automatische Inhaltsverzeichnis in der Seitenleiste von Einzelsei
 Jede Einzelseite SHALL eine Karte „Inhalt“ mit Links auf die Überschriften ihres Inhalts zeigen, wenn der Inhalt mindestens zwei Überschriften hat. Das Verzeichnis entsteht beim Build automatisch aus den Überschriften des Markdown, ohne Angabe im Frontmatter; der Seitentitel gehört nicht dazu. Hat die Seite weniger als zwei Überschriften, gibt es keine Karte.
 
 #### Scenario: Tipps und Tricks
-- **WHEN** `/tipps/` geöffnet wird und der Inhalt die Überschriften „Das kreative schwarze Loch“, „Ufo's“ und „Good-2-Know“ enthält
+- **WHEN** `/tipps-und-tricks/` geöffnet wird und der Inhalt die Überschriften „Das kreative schwarze Loch“, „Ufo's“ und „Good-2-Know“ enthält
 - **THEN** zeigt die Karte „Inhalt“ drei Links in dieser Reihenfolge, jeweils auf den Anker der Überschrift
 
 #### Scenario: Überschrift ändern
@@ -53,11 +53,11 @@ Jede Überschrift im Inhalt einer Einzelseite SHALL ein `id` tragen, das aus dem
 Das Verzeichnis SHALL eine Karte der Seitenleiste sein: ab 64 em rechts neben dem Text (beim Scrollen sichtbar bleibend, solange es ins Fenster passt), auf schmaleren Fenstern über dem Text und zunächst zugeklappt, aufklappbar per Klick und Tastatur. Es ist ohne JavaScript benutzbar.
 
 #### Scenario: Desktop
-- **WHEN** `/tipps/` bei 1440 px Breite geöffnet wird
+- **WHEN** `/tipps-und-tricks/` bei 1440 px Breite geöffnet wird
 - **THEN** steht die Karte „Inhalt“ rechts neben dem Text und bleibt beim Scrollen im Bild
 
 #### Scenario: Handy
-- **WHEN** `/tipps/` bei 360 px Breite geöffnet wird
+- **WHEN** `/tipps-und-tricks/` bei 360 px Breite geöffnet wird
 - **THEN** steht die zugeklappte Karte „Inhalt“ über dem Text, lässt sich aufklappen, und die Seite scrollt nicht waagerecht
 
 #### Scenario: Ohne JavaScript
@@ -68,5 +68,5 @@ Das Verzeichnis SHALL eine Karte der Seitenleiste sein: ab 64 em rechts neben de
 Mit JavaScript SHALL das Verzeichnis den Abschnitt hervorheben (`aria-current`), der beim Lesen gerade im Bild ist. Ohne JavaScript bleibt das Verzeichnis eine einfache Linkliste.
 
 #### Scenario: Scrollen
-- **WHEN** auf `/tipps/` bis zur zweiten Überschrift gescrollt wird
+- **WHEN** auf `/tipps-und-tricks/` bis zur zweiten Überschrift gescrollt wird
 - **THEN** ist deren Link im Verzeichnis hervorgehoben und der vorherige nicht mehr
