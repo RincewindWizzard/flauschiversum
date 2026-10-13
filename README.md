@@ -218,7 +218,11 @@ Das Werkzeug ruft dafür das `ssh` (und bei Bedarf `sftp`) des Systems auf, lies
 **Wie übertragen wird:** Der Server (netcup-Webhosting) hat kein `rsync`, deshalb packt das Werkzeug die zu übertragenden
 Dateien selbst und schickt sie als Strom an `tar` auf dem Server; fehlt dort `tar`, geht es per SFTP (`--method tar|sftp`
 legt den Weg fest, `--dry-run` nennt den gewählten). Übertragen wird nur, was sich laut Manifest
-(`.flauschiversum-manifest`, schreibt der Build) geändert hat. Alles geht zuerst in ein Zwischenverzeichnis im Ziel und wird
+(`.flauschiversum-manifest`, schreibt der Build) geändert hat **oder auf dem Server fehlt** (das Werkzeug prüft, ob die Dateien
+wirklich noch dort liegen; ein von Hand geleertes Verzeichnis wird also komplett neu befüllt, auch wenn die Punktdatei
+`.flauschiversum-manifest` stehen blieb). `--full` überträgt unabhängig davon alles neu, z. B. nach Änderungen von Hand auf dem
+Server. Beim Übertragen zeigt eine Fortschrittsanzeige Dateien, MB, Prozent, Geschwindigkeit und Restzeit (im Terminal eine
+sich aktualisierende Zeile, in CI alle paar Sekunden eine Zeile). Alles geht zuerst in ein Zwischenverzeichnis im Ziel und wird
 dann einzeln an seinen Platz verschoben: erst Bilder, Stylesheet, Skripte und Suchindex, dann die Seiten, dann werden
 veraltete Dateien gelöscht, zuletzt wird das Manifest geschrieben. Bricht etwas ab, bleibt die alte Seite lauffähig, und der
 nächste Lauf holt den Rest nach. Auf dem Server laufen dabei nur `tar`, `sh`, `mv`, `mkdir`, `chmod`, `rm` und `rmdir`.

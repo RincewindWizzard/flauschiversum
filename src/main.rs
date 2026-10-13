@@ -61,6 +61,9 @@ enum Command {
         /// Zeigt nur, was übertragen und gelöscht würde.
         #[arg(long)]
         dry_run: bool,
+        /// Überträgt alles neu, auch was laut Manifest schon auf dem Server liegt (z. B. nach Änderungen von Hand dort).
+        #[arg(long)]
+        full: bool,
         /// Überträgt das vorhandene Ausgabeverzeichnis, ohne neu zu bauen (muss ein Produktionsbuild sein).
         #[arg(long)]
         no_build: bool,
@@ -205,7 +208,7 @@ fn run(cli: Cli) -> Result<ExitCode> {
                 }
             }
         }
-        Command::Deploy { paths, target, dry_run, no_build, method } => {
+        Command::Deploy { paths, target, dry_run, full, no_build, method } => {
             if paths.staging.is_some() {
                 eprintln!("Fehler: `deploy` legt nur Produktionsbuilds auf den Server; --staging ist hier nicht erlaubt.");
                 return Ok(ExitCode::FAILURE);
@@ -226,6 +229,7 @@ fn run(cli: Cli) -> Result<ExitCode> {
                 target,
                 base_url: paths.base_url.as_str().to_string(),
                 dry_run,
+                full,
                 method,
                 ssh: std::env::var("DEPLOY_SSH").unwrap_or_else(|_| "ssh".into()),
                 sftp: std::env::var("DEPLOY_SFTP").unwrap_or_else(|_| "sftp".into()),

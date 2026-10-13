@@ -8,7 +8,8 @@
 use crate::output::{self, Entry, MANIFEST};
 use anyhow::{bail, Context, Result};
 use std::collections::{BTreeMap, BTreeSet};
-use std::io::Write;
+use std::io::{IsTerminal, Write};
+use std::time::{Duration, Instant};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
@@ -27,6 +28,8 @@ pub struct Options {
     /// Basis-URL, zu der `dist/` gehören muss.
     pub base_url: String,
     pub dry_run: bool,
+    /// Alles neu übertragen, auch wenn das Manifest des Servers übereinstimmt.
+    pub full: bool,
     pub method: Method,
     /// `ssh`- und `sftp`-Programm (austauschbar für Tests).
     pub ssh: String,
@@ -163,19 +166,22 @@ fn is_page(path: &str) -> bool {
 
 /// Vergleicht die Manifeste: übertragen wird, was dort fehlt oder einen anderen Hash hat; gelöscht, was früher geliefert
 /// wurde und jetzt fehlt.
-pub fn plan(dist: &Path, local: &BTreeMap<String, Entry>, remote: &BTreeMap<String, Entry>) -> Result<Plan> {
+///
+/// `present` sind die Einträge des Server-Manifests, deren Datei auch wirklich auf dem Server liegt; `recorded` ist das
+/// Server-Manifest selbst (bestimmt, was gelöscht werden darf).
+pub fn plan(dist: &Path, local: &BTreeMap<String, Entry>, present: &BTreeMap<String, Entry>, recorded: &BTreeMap<String, Entry>) -> Result<Plan> {
     let mut plan = Plan::default();
     for (key, entry) in local {
         let rel = safe_rel(key)?;
         if !dist.join(&rel).is_file() {
             bail!("laut Manifest vorhandene Datei fehlt in dist/: {rel}");
         }
-        if remote.get(key).map(|e| &e.hash) != Some(&entry.hash) {
+        if present.get(key).map(|e| &e.hash) != Some(&entry.hash) {
             plan.bytes += entry.len;
             if is_page(&rel) { plan.pages.push(rel) } else { plan.assets.push(rel) }
         }
     }
-    for key in remote.keys().filter(|k| !local.contains_key(*k)) {
+    for key in recorded.keys().filter(|k| !local.contains_key(*k)) {
         plan.delete.push(safe_rel(key)?);
     }
     Ok(plan)
@@ -212,22 +218,90 @@ pub fn install_script(root: &str, tmp: &str, plan: &Plan) -> String {
     s
 }
 
+/// Fortschrittsanzeige der Übertragung: im Terminal eine sich aktualisierende Zeile, sonst (z. B. in CI) alle paar Sekunden
+/// eine eigene Zeile.
+struct Progress {
+    total_files: usize,
+    total_bytes: u64,
+    done_files: usize,
+    done_bytes: u64,
+    start: Instant,
+    last: Instant,
+    tty: bool,
+}
+
+/// `4521/10146 Dateien · 212/527 MB (40 %) · 18,3 MB/s · noch 17 s`
+pub fn progress_line(done_files: usize, total_files: usize, done_bytes: u64, total_bytes: u64, elapsed: Duration) -> String {
+    let mb = |b: u64| b as f64 / 1_048_576.0;
+    let percent = if total_bytes == 0 { 100 } else { (done_bytes as f64 * 100.0 / total_bytes as f64).floor() as u64 };
+    let secs = elapsed.as_secs_f64();
+    let rate = if secs > 0.0 { done_bytes as f64 / secs } else { 0.0 };
+    let eta = if rate > 0.0 && total_bytes > done_bytes { format!(" · noch {}", duration_text(((total_bytes - done_bytes) as f64 / rate).ceil() as u64)) } else { String::new() };
+    let speed = if rate > 0.0 { format!(" · {:.1} MB/s", rate / 1_048_576.0).replace('.', ",") } else { String::new() };
+    format!("{done_files}/{total_files} Dateien · {:.0}/{:.0} MB ({percent} %){speed}{eta}", mb(done_bytes), mb(total_bytes))
+}
+
+fn duration_text(secs: u64) -> String {
+    if secs >= 3600 {
+        format!("{} h {} min", secs / 3600, secs % 3600 / 60)
+    } else if secs >= 60 {
+        format!("{} min {} s", secs / 60, secs % 60)
+    } else {
+        format!("{secs} s")
+    }
+}
+
+impl Progress {
+    fn new(total_files: usize, total_bytes: u64) -> Progress {
+        Progress { total_files, total_bytes, done_files: 0, done_bytes: 0, start: Instant::now(), last: Instant::now(), tty: std::io::stderr().is_terminal() }
+    }
+
+    fn advance(&mut self, bytes: u64) {
+        self.done_files += 1;
+        self.done_bytes += bytes;
+        let every = if self.tty { Duration::from_millis(250) } else { Duration::from_secs(5) };
+        if self.last.elapsed() >= every {
+            self.last = Instant::now();
+            self.print(false);
+        }
+    }
+
+    fn print(&self, last: bool) {
+        let line = progress_line(self.done_files, self.total_files, self.done_bytes, self.total_bytes, self.start.elapsed());
+        if self.tty {
+            eprint!("\r    Übertrage: {line}\x1b[K{}", if last { "\n" } else { "" });
+        } else {
+            eprintln!("    Übertrage: {line}");
+        }
+    }
+
+    fn finish(&self) {
+        self.print(true);
+    }
+}
+
 fn upload_tar(target: &Target, dist: &Path, tmp: &str, plan: &Plan) -> Result<()> {
     let cmd = format!("tar -xzf - -C {}", sq(&format!("{}/{tmp}", target.root)));
     target.run_with_input(target.command(&cmd), |w| {
         let gz = flate2::write::GzEncoder::new(w, flate2::Compression::fast());
         let mut tar = tar::Builder::new(gz);
+        let mut progress = Progress::new(plan.upload_count(), plan.bytes);
         for rel in plan.assets.iter().chain(&plan.pages).map(String::as_str).chain(std::iter::once(MANIFEST)) {
             let path = dist.join(rel);
             let mut file = std::fs::File::open(&path).with_context(|| path.display().to_string())?;
+            let len = file.metadata()?.len();
             let mut header = tar::Header::new_gnu();
-            header.set_size(file.metadata()?.len());
+            header.set_size(len);
             header.set_mode(0o644);
             header.set_mtime(0);
             header.set_cksum();
             tar.append_data(&mut header, rel, &mut file).with_context(|| format!("{rel} packen"))?;
+            if rel != MANIFEST {
+                progress.advance(len);
+            }
         }
         tar.into_inner()?.finish()?;
+        progress.finish();
         Ok(())
     })
 }
@@ -241,10 +315,17 @@ fn upload_sftp(target: &Target, dist: &Path, tmp: &str, plan: &Plan) -> Result<(
         for d in &dirs {
             writeln!(w, "-mkdir \"{base}/{d}\"")?;
         }
+        let mut progress = Progress::new(plan.upload_count(), plan.bytes);
         for f in &files {
             writeln!(w, "put \"{}\" \"{base}/{f}\"", dist.join(f).display())?;
             writeln!(w, "chmod 644 \"{base}/{f}\"")?;
+            if *f != MANIFEST {
+                // sftp liest die Befehle der Reihe nach; das Schreiben blockiert, solange es noch zu tun hat
+                w.flush()?;
+                progress.advance(std::fs::metadata(dist.join(f)).map(|m| m.len()).unwrap_or(0));
+            }
         }
+        progress.finish();
         Ok(())
     })
 }
@@ -298,6 +379,34 @@ pub fn lock(path: &Path) -> Result<std::fs::File> {
     }
 }
 
+/// Welche Dateien des Server-Manifests fehlen auf dem Server in Wirklichkeit (von Hand gelöscht, verloren gegangen)?
+/// Das Manifest allein beweist nichts: Es bleibt als Punktdatei auch dann liegen, wenn jemand `rm -rf *` ausführt.
+fn missing_on_server(target: &Target, recorded: &BTreeMap<String, Entry>) -> Result<BTreeSet<String>> {
+    if recorded.is_empty() {
+        return Ok(BTreeSet::new());
+    }
+    let mut script = format!("cd {}\n", sq(&target.root));
+    for key in recorded.keys() {
+        let rel = safe_rel(key)?;
+        script += &format!("[ -f {0} ] || echo {0}\n", sq(&rel));
+    }
+    let mut child = target.command("sh -s").stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::piped()).spawn().context("Prüfung der Dateien auf dem Ziel")?;
+    let mut stdin = child.stdin.take().expect("stdin");
+    // Die Eingabe wird nebenher geschrieben: Fehlen sehr viele Dateien, füllt die Antwort die Pipe, während das Skript noch läuft
+    let writer = std::thread::spawn(move || stdin.write_all(script.as_bytes()));
+    let output = child.wait_with_output()?;
+    let _ = writer.join();
+    if !output.status.success() {
+        bail!("Prüfung der Dateien auf dem Ziel fehlgeschlagen: {}", String::from_utf8_lossy(&output.stderr).trim());
+    }
+    Ok(String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(|l| l.trim_matches('\'').to_string())
+        .filter(|l| !l.is_empty())
+        .map(|l| format!("/{l}"))
+        .collect())
+}
+
 /// Führt das Deployment aus. Gibt Plan und gewählten Weg zurück.
 pub fn run(opts: &Options) -> Result<(Plan, Method)> {
     let local = verify_dist(&opts.dist, &opts.base_url)?;
@@ -310,11 +419,17 @@ pub fn run(opts: &Options) -> Result<(Plan, Method)> {
     }
     let method = detect(&target, opts.method)?;
 
-    let remote: BTreeMap<String, Entry> = {
+    let recorded: BTreeMap<String, Entry> = {
         let out = target.run(&format!("cat {} 2>/dev/null || true", sq(&format!("{}/{MANIFEST}", target.root))))?;
         serde_json::from_slice(&out.stdout).unwrap_or_default()
     };
-    let plan = plan(&opts.dist, &local, &remote)?;
+    let missing = if opts.full { BTreeSet::new() } else { missing_on_server(&target, &recorded)? };
+    let present: BTreeMap<String, Entry> = if opts.full {
+        BTreeMap::new()
+    } else {
+        recorded.iter().filter(|(k, _)| !missing.contains(*k)).map(|(k, v)| (k.clone(), v.clone())).collect()
+    };
+    let plan = plan(&opts.dist, &local, &present, &recorded)?;
     let mb = plan.bytes.div_ceil(1024 * 1024);
     println!("Ziel: {}  ·  Übertragungsweg: {}", target.name(), if method == Method::Tar { "tar über SSH" } else { "SFTP" });
     println!(
@@ -324,7 +439,12 @@ pub fn run(opts: &Options) -> Result<(Plan, Method)> {
         plan.pages.len(),
         plan.delete.len()
     );
-    if remote.is_empty() {
+    if opts.full {
+        println!("Vollständiges Deployment (--full): Alles wird neu übertragen.");
+    } else if !missing.is_empty() {
+        println!("Auf dem Server fehlen {} Dateien, die das Manifest dort verzeichnet; sie werden erneut übertragen.", missing.len());
+    }
+    if recorded.is_empty() {
         let out = target.run(&format!("ls -A {} 2>/dev/null | wc -l", sq(&target.root)))?;
         let foreign: usize = String::from_utf8_lossy(&out.stdout).trim().parse().unwrap_or(0);
         if foreign > 0 {
@@ -448,6 +568,7 @@ mod tests {
                 target: format!("fake:{}/", self.remote.display()),
                 base_url: "https://flauschiversum.de".into(),
                 dry_run,
+                full: false,
                 method,
                 ssh: self.ssh.clone(),
                 sftp: self.sftp.clone(),
@@ -506,6 +627,73 @@ mod tests {
             assert!(!e.remote.join("images/Flauschi.png").exists() && !e.remote.join("images").exists(), "entfernte Datei und leeres Verzeichnis sind weg");
             assert!(e.remote.join("google123.html").is_file() && e.remote.join(".well-known/acme").is_file(), "fremde Dateien bleiben");
         }
+    }
+
+    #[test]
+    fn files_deleted_on_the_server_are_uploaded_again_even_if_the_manifest_remains() {
+        for method in [Method::Tar, Method::Sftp] {
+            let e = env();
+            run(&e.opts(method, false)).unwrap();
+            // „rm -rf *“ lässt Punktdateien stehen: das Manifest bleibt, alles andere ist weg
+            for entry in fs::read_dir(&e.remote).unwrap() {
+                let path = entry.unwrap().path();
+                if path.file_name().unwrap().to_string_lossy().starts_with('.') {
+                    continue;
+                }
+                if path.is_dir() { fs::remove_dir_all(&path).unwrap() } else { fs::remove_file(&path).unwrap() }
+            }
+            assert!(e.remote.join(MANIFEST).is_file() && !e.remote.join("index.html").exists());
+            let (plan, _) = run(&e.opts(method, true)).unwrap();
+            assert_eq!(plan.upload_count(), 7, "Trockenlauf erkennt fehlende Dateien");
+            assert!(!e.remote.join("index.html").exists(), "Trockenlauf ändert nichts");
+            let (plan, _) = run(&e.opts(method, false)).unwrap();
+            assert_eq!(plan.upload_count(), 7);
+            assert_eq!(fs::read_to_string(e.remote.join("2020/10/kurbis/200x/kürbis thumb.jpg")).unwrap(), "jpg");
+            assert_eq!(run(&e.opts(method, false)).unwrap().0.upload_count(), 0, "danach ist alles auf dem Stand");
+            // einzelne Datei fehlt
+            fs::remove_file(e.remote.join("style.css")).unwrap();
+            let (plan, _) = run(&e.opts(method, false)).unwrap();
+            assert_eq!((plan.upload_count(), plan.assets.as_slice()), (1, &["style.css".to_string()][..]));
+        }
+    }
+
+    /// Fehlen Tausende Dateien, ist die Antwort der Prüfung größer als ein Pipe-Puffer; das darf nicht hängen bleiben.
+    #[test]
+    fn thousands_of_missing_files_do_not_block_the_check() {
+        let e = env();
+        for i in 0..2000 {
+            write(&e.dist, &format!("bilder/ein-ziemlich-langer-dateiname-fuer-den-test-der-eine-volle-pipe-erzeugt-{i:05}.jpg"), "x");
+        }
+        write_manifest(&e.dist);
+        let (tx, rx) = std::sync::mpsc::channel();
+        let opts = e.opts(Method::Tar, false);
+        let remote = e.remote.clone();
+        std::thread::spawn(move || {
+            run(&opts).unwrap();
+            for entry in fs::read_dir(&remote).unwrap() {
+                let path = entry.unwrap().path();
+                if !path.file_name().unwrap().to_string_lossy().starts_with('.') {
+                    if path.is_dir() { fs::remove_dir_all(&path).unwrap() } else { fs::remove_file(&path).unwrap() }
+                }
+            }
+            let plan = run(&opts).unwrap().0;
+            tx.send(plan.upload_count()).unwrap();
+        });
+        let uploaded = rx.recv_timeout(Duration::from_secs(60)).expect("die Prüfung der fehlenden Dateien hängt");
+        assert_eq!(uploaded, 2007);
+    }
+
+    #[test]
+    fn full_uploads_everything_again() {
+        let e = env();
+        run(&e.opts(Method::Tar, false)).unwrap();
+        fs::write(e.remote.join("style.css"), "von Hand geändert").unwrap();
+        assert_eq!(run(&e.opts(Method::Tar, false)).unwrap().0.upload_count(), 0, "ohne --full unbemerkt");
+        let mut o = e.opts(Method::Tar, false);
+        o.full = true;
+        let (plan, _) = run(&o).unwrap();
+        assert_eq!(plan.upload_count(), 7);
+        assert_eq!(fs::read_to_string(e.remote.join("style.css")).unwrap(), "css");
     }
 
     #[test]
@@ -607,6 +795,15 @@ mod tests {
         assert!(lock(&path).unwrap_err().to_string().contains("läuft bereits"));
         drop(first);
         assert!(lock(&path).is_ok());
+    }
+
+    #[test]
+    fn progress_line_shows_files_megabytes_percent_speed_and_eta() {
+        let line = progress_line(4521, 10146, 212 * 1_048_576, 527 * 1_048_576, Duration::from_secs(10));
+        assert_eq!(line, "4521/10146 Dateien · 212/527 MB (40 %) · 21,2 MB/s · noch 15 s");
+        assert_eq!(progress_line(0, 3, 0, 0, Duration::ZERO), "0/3 Dateien · 0/0 MB (100 %)");
+        assert!(progress_line(1, 2, 1_048_576, 400 * 1_048_576, Duration::from_secs(1)).contains("noch 6 min"));
+        assert_eq!(duration_text(3700), "1 h 1 min");
     }
 
     #[test]

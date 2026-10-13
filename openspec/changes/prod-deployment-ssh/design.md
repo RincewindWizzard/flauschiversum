@@ -29,7 +29,7 @@ Das Werkzeug liest das Manifest des letzten Deployments vom Server (`ssh … cat
 
 ### 3. Übertragung ohne rsync, Einbau ohne Schleifen
 
-**Was:** nur Pfade, deren Hash im Manifest abweicht oder fehlt (nicht nach Dateizeiten: in der Action liegt `dist/` nicht zwischen Läufen vor); getrennt in Medien/Skripte/Index und Seiten (`*.html`, `*.xml`).
+**Was:** nur Pfade, deren Hash im Manifest abweicht oder fehlt (nicht nach Dateizeiten: in der Action liegt `dist/` nicht zwischen Läufen vor) **oder deren Datei laut Prüfung auf dem Server fehlt**: Das Manifest allein beweist nichts, es bleibt als Punktdatei liegen, wenn jemand das Verzeichnis mit `rm -rf *` leert. Die Prüfung ist ein gerades `sh -s`-Skript mit `[ -f … ] || echo …` je Eintrag; ihre Eingabe wird nebenher geschrieben, weil die Antwort bei Tausenden fehlenden Dateien größer als ein Pipe-Puffer ist (sonst Deadlock). `--full` überspringt den Vergleich und überträgt alles. Während der Übertragung zeigt eine Fortschrittszeile Dateien, MB, Prozent, Geschwindigkeit und Restzeit (Terminal: eine sich aktualisierende Zeile, sonst alle fünf Sekunden eine Zeile); getrennt in Medien/Skripte/Index und Seiten (`*.html`, `*.xml`).
 
 **Transport** (Erkennung: `tar` und `gzip` per `command -v` auf dem Server, sonst `sftp -b -` mit einem Probebefehl):
 - `tar`: Das Werkzeug erzeugt das Archiv selbst (Crates `tar` und `flate2`, Dateimodus 644) und schreibt es als Strom in `ssh <Host> tar -xzf - -C <Zwischenverzeichnis>`. Eine Verbindung, komprimiert, braucht lokal kein `tar`.

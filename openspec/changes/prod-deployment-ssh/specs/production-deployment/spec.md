@@ -46,7 +46,19 @@ Der Befehl SHALL auf dem Server nur Dateien löschen, die ein früheres Deployme
 - **THEN** werden alle Dateien der Seite hochgeladen, nichts gelöscht, und der Befehl nennt die Zahl der fremden Einträge im Ziel
 
 ### Requirement: Übertragung nur des Geänderten in fester Reihenfolge
-Der Befehl SHALL nur Dateien übertragen, deren Inhalts-Hash vom Manifest des Servers abweicht oder dort fehlt, unabhängig von Dateizeiten. Zuerst werden Medien, Stylesheet, Skripte und Suchindex an ihren Platz gebracht, danach HTML-Dateien, Feed und Sitemap, danach werden veraltete Dateien gelöscht, zuletzt wird das neue Manifest geschrieben. Dateien erhalten die Rechte 644 und Verzeichnisse 755, unabhängig vom Übertragungsweg und der umask des Absenders.
+Der Befehl SHALL nur Dateien übertragen, deren Inhalts-Hash vom Manifest des Servers abweicht oder dort fehlt oder deren Datei auf dem Server nicht mehr vorhanden ist, unabhängig von Dateizeiten; `--full` überträgt alles. Zuerst werden Medien, Stylesheet, Skripte und Suchindex an ihren Platz gebracht, danach HTML-Dateien, Feed und Sitemap, danach werden veraltete Dateien gelöscht, zuletzt wird das neue Manifest geschrieben. Dateien erhalten die Rechte 644 und Verzeichnisse 755, unabhängig vom Übertragungsweg und der umask des Absenders.
+
+#### Scenario: Verzeichnis auf dem Server von Hand geleert
+- **WHEN** auf dem Server alle Dateien außer der Punktdatei `.flauschiversum-manifest` gelöscht wurden und erneut deployed wird
+- **THEN** erkennt der Befehl die fehlenden Dateien und überträgt alle Dateien der Seite erneut, auch wenn das Manifest übereinstimmt
+
+#### Scenario: Vollständig neu übertragen
+- **WHEN** `flauschiversum deploy --full` ausgeführt wird
+- **THEN** werden alle Dateien übertragen, auch wenn das Manifest des Servers übereinstimmt
+
+#### Scenario: Fortschritt
+- **WHEN** Dateien übertragen werden
+- **THEN** zeigt der Befehl fortlaufend Dateien, Megabyte, Prozent, Geschwindigkeit und Restzeit der Übertragung (im Terminal in einer sich aktualisierenden Zeile, sonst in einer Zeile alle paar Sekunden)
 
 #### Scenario: Nur Text geändert
 - **WHEN** nach einem Deployment ein Beitragstext geändert wird und neu deployed wird
