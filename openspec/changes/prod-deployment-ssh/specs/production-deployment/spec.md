@@ -5,7 +5,7 @@ Beschreibt, wie die gebaute Seite auf den Produktivserver gelangt: ein Skript, d
 ## ADDED Requirements
 
 ### Requirement: Deploy-Skript
-Das Repository SHALL ein Skript `scripts/deploy.sh` enthalten, das die Seite für Produktion baut (Basis-URL `https://flauschiversum.de`, ohne Staging-Modus) und `dist/` per `rsync` über SSH nach `flauschiversum:/httpdocs/` überträgt. `flauschiversum` ist ein Host-Eintrag der SSH-Konfiguration des Aufrufers einschließlich Schlüssel; das Skript enthält und verlangt weder Benutzer noch Schlüssel noch Passwort. Mit `--dry-run` zeigt es, was übertragen und gelöscht würde, und ändert nichts; mit `--no-build` überträgt es das vorhandene `dist/`. Ziel und Basis-URL sind über `DEPLOY_TARGET` und `FLAUSCHI_BASE_URL` änderbar, ein Ziel ohne `host:` ist ein lokaler Pfad.
+Das Repository SHALL ein Skript `scripts/deploy.sh` enthalten, das die Seite für Produktion baut (Basis-URL `https://flauschiversum.de`, ohne Staging-Modus) und `dist/` über SSH nach `flauschiversum:/httpdocs/` überträgt, ohne dass der Server `rsync` haben muss. `flauschiversum` ist ein Host-Eintrag der SSH-Konfiguration des Aufrufers einschließlich Schlüssel; das Skript enthält und verlangt weder Benutzer noch Schlüssel noch Passwort. Mit `--dry-run` zeigt es, was übertragen und gelöscht würde, und ändert nichts; mit `--no-build` überträgt es das vorhandene `dist/`. Ziel und Basis-URL sind über `DEPLOY_TARGET` und `FLAUSCHI_BASE_URL` änderbar, ein Ziel ohne `host:` ist ein lokaler Pfad.
 
 #### Scenario: Deployment von Hand
 - **WHEN** `scripts/deploy.sh` auf einem Rechner mit SSH-Eintrag `flauschiversum` ausgeführt wird
@@ -20,7 +20,7 @@ Das Repository SHALL ein Skript `scripts/deploy.sh` enthalten, das die Seite fü
 - **THEN** findet sich nichts davon; nur der Hostalias `flauschiversum` kommt vor
 
 ### Requirement: Nur Produktionsbuilds und lauffähige Ziele
-Das Skript SHALL vor der Übertragung abbrechen, wenn `dist/` nicht der Produktionsbuild ist (Staging-Leiste oder `noindex` auf der Startseite, kanonische URL nicht unter der Basis-URL, Manifest oder Startseite fehlen), wenn das Ziel nicht ohne Passwortabfrage per SSH erreichbar ist oder wenn auf dem Server `rsync` fehlt. Es nennt jeweils den Grund.
+Das Skript SHALL vor der Übertragung abbrechen, wenn `dist/` nicht der Produktionsbuild ist (Staging-Leiste oder `noindex` auf der Startseite, kanonische URL nicht unter der Basis-URL, Manifest oder Startseite fehlen), wenn das Ziel nicht ohne Passwortabfrage per SSH erreichbar ist oder wenn auf dem Server kein Übertragungsweg (`tar`, SFTP oder `rsync`) nutzbar ist. Es nennt jeweils den Grund.
 
 #### Scenario: Staging-Build
 - **WHEN** `dist/` mit `--staging` gebaut wurde und `scripts/deploy.sh --no-build` aufgerufen wird
@@ -42,7 +42,7 @@ Das Skript SHALL auf dem Server nur Dateien löschen, die ein früheres Deployme
 - **THEN** werden alle Dateien der Seite hochgeladen, nichts gelöscht, und das Skript nennt die Zahl der fremden Einträge im Ziel
 
 ### Requirement: Übertragung nur des Geänderten in fester Reihenfolge
-Das Skript SHALL nur Dateien übertragen, deren Inhalts-Hash vom Manifest des Servers abweicht oder dort fehlt, unabhängig von Dateizeiten. Zuerst werden Medien, Stylesheet, Skripte und Suchindex übertragen, danach HTML-Dateien, Feed und Sitemap, danach werden veraltete Dateien gelöscht, zuletzt wird das neue Manifest geschrieben. Dateien erhalten die Rechte 644 und Verzeichnisse 755.
+Das Skript SHALL nur Dateien übertragen, deren Inhalts-Hash vom Manifest des Servers abweicht oder dort fehlt, unabhängig von Dateizeiten. Zuerst werden Medien, Stylesheet, Skripte und Suchindex an ihren Platz gebracht, danach HTML-Dateien, Feed und Sitemap, danach werden veraltete Dateien gelöscht, zuletzt wird das neue Manifest geschrieben. Dateien erhalten die Rechte 644 und Verzeichnisse 755, unabhängig vom Übertragungsweg und der umask des Absenders.
 
 #### Scenario: Nur Text geändert
 - **WHEN** nach einem Deployment ein Beitragstext geändert wird und neu deployed wird
@@ -55,6 +55,25 @@ Das Skript SHALL nur Dateien übertragen, deren Inhalts-Hash vom Manifest des Se
 #### Scenario: Neue Seite braucht neue Bilder
 - **WHEN** ein neuer Beitrag mit Bildern deployed wird
 - **THEN** liegen die Bilder auf dem Server, bevor die HTML-Seite des Beitrags dort erscheint
+
+### Requirement: Übertragung ohne rsync
+Das Skript SHALL die Dateien über den ersten nutzbaren Weg übertragen: `rsync` (nur wenn auf dem Server vorhanden), sonst `tar` über SSH, sonst SFTP. Der Weg lässt sich über `DEPLOY_METHOD` festlegen und wird im Trockenlauf genannt. Alle Wege laden zuerst in ein Zwischenverzeichnis im Zielverzeichnis; ein gemeinsamer Einbauschritt setzt die Rechte und verschiebt die Dateien einzeln an ihren Platz, sodass keine halb geschriebene Datei abrufbar ist. Das Zwischenverzeichnis wird auch bei Fehlern entfernt.
+
+#### Scenario: Server ohne rsync
+- **WHEN** auf dem Server `rsync` fehlt (netcup-Webhosting) und `tar` vorhanden ist
+- **THEN** überträgt das Skript per `tar` über SSH und meldet den gewählten Weg
+
+#### Scenario: Weder rsync noch tar
+- **WHEN** auf dem Server weder `rsync` noch `tar` vorhanden ist, aber SFTP geht
+- **THEN** überträgt das Skript per SFTP
+
+#### Scenario: Kein Weg
+- **WHEN** keiner der drei Wege nutzbar ist
+- **THEN** bricht das Skript vor dem Hochladen mit einer Meldung ab, die die geprüften Werkzeuge nennt
+
+#### Scenario: Aufräumen nach Abbruch
+- **WHEN** die Übertragung abbricht
+- **THEN** bleibt kein Zwischenverzeichnis im Ziel zurück
 
 ### Requirement: Keine parallelen Deployments
 Das Skript SHALL pro Arbeitsverzeichnis höchstens einmal gleichzeitig laufen; ein zweiter Aufruf wartet oder bricht mit einer Meldung ab.
@@ -109,7 +128,7 @@ Nach einem Deployment SHALL der Smoke-Test (`scripts/smoke-test.sh` mit `SMOKE_M
 - **THEN** schlägt der Smoke-Test fehl und nennt „Staging-Leiste auf der Produktionsseite“
 
 ### Requirement: Geprüfter Ablauf ohne Server
-Das Deploy-Skript SHALL in einer automatisierten Prüfung (`scripts/test-deploy.sh`) gegen ein lokales Zielverzeichnis getestet werden: erstes Deployment, Folge-Deployment mit geänderter und entfernter Datei, fremde Datei im Ziel, Staging-Build als Abbruchgrund und Trockenlauf.
+Das Deploy-Skript SHALL in einer automatisierten Prüfung (`scripts/test-deploy.sh`) gegen ein lokales Zielverzeichnis getestet werden: erstes Deployment, Folge-Deployment mit geänderter und entfernter Datei, fremde Datei im Ziel, Staging-Build als Abbruchgrund, Trockenlauf und die Transportwege `tar` und SFTP (mit einem lokalen Ersatz für `ssh`, ohne Server).
 
 #### Scenario: Prüfung läuft ohne SSH
 - **WHEN** `scripts/test-deploy.sh` ausgeführt wird
