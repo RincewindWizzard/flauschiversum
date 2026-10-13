@@ -145,8 +145,8 @@ Tritanopie) prüft `tests/browser/theme.mjs`.
 | `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite, Topbar und Archiv) und die Badge-Vorlage |
 | `src/` | Rust-Code des Generators |
 | `tests/` | Referenz der Live-URLs und Browser-Tests |
-| `scripts/` | Smoke-Test der Staging-Seite, Größenprüfung von `dist/` |
-| `.github/workflows/` | Staging-Pipeline |
+| `scripts/` | Produktiv-Deployment (`deploy.sh`, Git-Hook, Tests), Smoke-Test, Größenprüfung von `dist/` |
+| `.github/workflows/` | Staging- und Produktions-Pipeline |
 | `openspec/` | Anforderungen und Änderungen ([OpenSpec](https://github.com/Fission-AI/OpenSpec)) |
 
 Änderungen an `templates/` werden erst nach erneutem Kompilieren sichtbar; für die Arbeit daran
@@ -200,10 +200,57 @@ Einmalige Einrichtung (GitHub und DNS): `CNAME staging → rincewindwizzard.gith
 `github-pages` → Deployment-Branches `dev` und `claude/*`. Die Seite ist rund 550 MB groß; das Pages-Limit liegt bei
 1 GB (der Workflow warnt ab 800 MB).
 
-## Deployment
+## Produktiv-Deployment
 
-Das frühere Docker-Deployment wurde entfernt. Die gebaute Seite in `dist/` muss nur auf einen Webserver für
-statische Dateien kopiert werden. Das Produktiv-Deployment aus `main` ist als eigene Änderung geplant.
+Die fertige Seite geht per SSH auf den Server (`flauschiversum:/httpdocs/`). Ein Skript erledigt das, wahlweise von
+Hand, aus einer GitHub Action oder aus einem Git-Hook:
+
+```bash
+scripts/deploy.sh --dry-run     # nur zeigen: Weg, zu übertragende und zu löschende Dateien (ändert nichts)
+scripts/deploy.sh               # prüfen, bauen (Basis-URL https://flauschiversum.de) und übertragen
+scripts/deploy.sh --no-build    # vorhandenes dist/ übertragen (muss ein Produktionsbuild sein)
+```
+
+**Voraussetzung:** ein Host-Eintrag `flauschiversum` in `~/.ssh/config` mit Benutzer und Schlüssel (nichts davon steht im
+Repository), auf dem Server eine Shell. Kontrolle: `ssh flauschiversum true` muss ohne Passwortabfrage funktionieren.
+
+**Wie übertragen wird:** Der Server (netcup-Webhosting) hat kein `rsync`, deshalb erkennt das Skript den Weg selbst:
+`rsync` (falls vorhanden), sonst `tar` über SSH, sonst SFTP; mit `DEPLOY_METHOD=tar|sftp|rsync` lässt er sich festlegen,
+`--dry-run` nennt den gewählten. Übertragen wird nur, was sich laut Manifest (`.flauschiversum-manifest`, schreibt der
+Build) geändert hat. Alles geht zuerst in ein Zwischenverzeichnis im Ziel und wird dann einzeln an seinen Platz verschoben:
+erst Bilder, Stylesheet, Skripte und Suchindex, dann die Seiten, dann werden veraltete Dateien gelöscht, zuletzt wird das
+Manifest geschrieben. Bricht etwas ab, bleibt die alte Seite lauffähig, und der nächste Lauf holt den Rest nach.
+
+**Sicherheit:** Das Skript bricht ab, wenn `dist/` ein Staging-Build ist, eine andere Basis-URL hat oder das Manifest fehlt.
+Auf dem Server werden **nur Dateien gelöscht, die ein früheres Deployment selbst abgelegt hat**; fremde Dateien in
+`/httpdocs/` (Bestätigungsdateien, `.well-known`, Reste der alten Seite) bleiben. Das **erste Deployment** überlagert nur
+und löscht nichts: Reste der alten Seite müssen einmal von Hand entfernt werden. Immer zuerst `--dry-run`.
+
+Weitere Einstellungen (Umgebungsvariablen): `DEPLOY_TARGET` (Standard `flauschiversum:/httpdocs/`, ein Pfad ohne `host:` ist ein
+lokales Ziel, z. B. wenn der Build auf dem Webserver läuft), `FLAUSCHI_BASE_URL`, `FLAUSCHI_CACHE_DIR`, `DEPLOY_DIST`.
+Geprüft wird das Skript ohne Server mit `scripts/test-deploy.sh` (lokales Ziel, kleine Ersatzprogramme für `ssh` und `sftp`).
+
+### Automatisch: GitHub Action
+
+`.github/workflows/production.yml` läuft bei jedem Push auf `master` (und von Hand unter Actions → Produktion): Tests, dann
+`scripts/deploy.sh`, dann `scripts/smoke-test.sh` mit `SMOKE_MODE=production` gegen die Live-Seite. Einmalig einrichten
+(Settings → Secrets and variables → Actions, am besten in der Umgebung `production`, dort lassen sich auch Freigaben verlangen):
+
+1. Eigenes Schlüsselpaar nur für das Deployment: `ssh-keygen -t ed25519 -f deploy_key -C "flauschiversum-deploy" -N ""`, den
+   öffentlichen Teil beim Hoster für den SSH-Zugang hinterlegen.
+2. Secrets anlegen: `DEPLOY_SSH_KEY` (Inhalt von `deploy_key`), `DEPLOY_HOST`, `DEPLOY_USER`, optional `DEPLOY_PORT`.
+3. `DEPLOY_KNOWN_HOSTS`: `ssh-keyscan -p <Port> <Host>` ausführen, den **Fingerabdruck mit dem vom Hoster genannten vergleichen**
+   (`ssh-keygen -lf <Datei>`) und die Zeile(n) als Secret eintragen. Der Lauf prüft den Server strikt dagegen.
+4. Empfohlen: Branch-Schutz für `master` (nur über Pull Requests), weil jeder Push dorthin live geht.
+
+### Automatisch: Git-Hook (ohne GitHub Actions)
+
+Für ein Repository auf einem eigenen Git-Server: `scripts/install-git-hook.sh <Bare-Repository>` legt den
+`post-receive`-Hook ab. Bei einem Push auf `master` exportiert er den Stand in ein temporäres Verzeichnis und ruft dort
+`scripts/deploy.sh` auf (Bild-Cache und Compiler-Ergebnisse liegen dauerhaft in `~/.cache/flauschiversum`, das Protokoll in
+`deploy.log` daneben; der Pusher sieht die Ausgabe). Auf dem Server nötig: Rust, Git, `tar`, `python3` und der
+SSH-Eintrag `flauschiversum` für den Benutzer des Hooks (oder `DEPLOY_TARGET=/pfad/zu/httpdocs/`, wenn der Hook auf dem
+Webserver selbst läuft). Anderer Branch: `DEPLOY_REF=refs/heads/main`.
 
 ### Favicon
 

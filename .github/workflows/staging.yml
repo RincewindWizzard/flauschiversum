@@ -1,5 +1,5 @@
 # Staging: baut die Seite bei jedem Push auf `dev` und auf Claude-Branches und veröffentlicht sie
-# auf GitHub Pages (https://staging.flauschiversum.de/). Das Produktiv-Deployment ist nicht Teil davon.
+# auf GitHub Pages (https://staging.flauschiversum.de/). Das Produktiv-Deployment steht in production.yml.
 name: Staging
 
 on:

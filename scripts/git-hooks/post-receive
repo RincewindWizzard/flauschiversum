@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Git-Hook für Umgebungen ohne GitHub Actions (eigener Git-Server): deployt bei einem Push auf master.
+# Installation: scripts/install-git-hook.sh <Pfad zum Bare-Repository>
+#
+# Bei einem Push auf DEPLOY_REF (Standard refs/heads/master) wird der gepushte Stand in ein temporäres Verzeichnis
+# exportiert und dort scripts/deploy.sh ausgeführt. Bild-Cache und Compiler-Ergebnisse liegen dauerhaft in
+# DEPLOY_STATE_DIR (Standard ~/.cache/flauschiversum), damit nicht bei jedem Push alles neu entsteht. Die Ausgabe sieht
+# der Pusher ("remote: …") und steht in DEPLOY_STATE_DIR/deploy.log. Pushes auf andere Branches tun nichts.
+# Läuft der Hook auf dem Webserver selbst, genügt DEPLOY_TARGET=/pfad/zu/httpdocs/ (siehe scripts/deploy.sh).
+set -uo pipefail
+
+wanted_ref="${DEPLOY_REF:-refs/heads/master}"
+state="${DEPLOY_STATE_DIR:-$HOME/.cache/flauschiversum}"
+mkdir -p "$state"
+# Rust und andere Werkzeuge des Benutzers liegen in einer Hook-Umgebung nicht im PATH
+# shellcheck disable=SC1091
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+status=0
+while read -r _ new ref; do
+  [ "$ref" = "$wanted_ref" ] || continue
+  case "$new" in
+    0000000*) echo "Branch gelöscht: nichts zu deployen."; continue ;;
+  esac
+  echo "==> Deployment von ${new:0:10} ($ref)"
+  work="$(mktemp -d)"
+  if ! git archive "$new" | tar -x -C "$work"; then
+    echo "Fehler: Der Stand konnte nicht exportiert werden." >&2
+    rm -rf "$work"; status=1; continue
+  fi
+  (
+    cd "$work" || exit 1
+    unset GIT_DIR GIT_WORK_TREE
+    export CARGO_TARGET_DIR="$state/target" FLAUSCHI_CACHE_DIR="$state/images" DEPLOY_LOCK="$state/deploy.lock"
+    scripts/deploy.sh
+  ) 2>&1 | tee -a "$state/deploy.log"
+  if [ "${PIPESTATUS[0]}" = 0 ]; then
+    echo "==> Deployment erfolgreich."
+  else
+    echo "==> Deployment FEHLGESCHLAGEN (Protokoll: $state/deploy.log). Die Seite auf dem Server ist unverändert oder auf dem vorigen Stand." >&2
+    status=1
+  fi
+  rm -rf "$work"
+done
+exit "$status"

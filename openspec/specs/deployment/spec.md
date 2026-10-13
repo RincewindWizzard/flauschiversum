@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Beschreibt, wie die gebaute Seite unter https://flauschiversum.de/ ausgeliefert wird. Der Weg der Dateien auf den Server ist nicht Teil des Ist-Zustands, weil das alte Deployment nicht mehr funktioniert.
+Beschreibt, wie die gebaute Seite unter https://flauschiversum.de/ ausgeliefert wird. Der Weg der Dateien auf den Server (Skript, GitHub Action, Git-Hook) steht in der Spec `production-deployment`.
 
 ## Requirements
 

@@ -1,0 +1,101 @@
+# Produktiv-Deployment: baut die Seite bei jedem Push auf `master` und legt sie per SSH auf den Server
+# (flauschiversum:/httpdocs/, siehe scripts/deploy.sh). Das Staging läuft getrennt in staging.yml.
+#
+# Einmalige Einrichtung (Settings → Secrets and variables → Actions, am besten in der Umgebung `production`):
+#   DEPLOY_SSH_KEY      privater Schlüssel, nur für dieses Deployment
+#   DEPLOY_KNOWN_HOSTS  Zeile(n) des Servers aus `ssh-keyscan`, vorab geprüft (Fingerabdruck vergleichen)
+#   DEPLOY_HOST         Hostname des Servers
+#   DEPLOY_USER         Benutzer auf dem Server
+#   DEPLOY_PORT         (optional) SSH-Port, Standard 22
+name: Produktion
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Deployments laufen nacheinander und werden nie abgebrochen
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  FLAUSCHI_BASE_URL: https://flauschiversum.de
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Tests
+        run: cargo test --locked
+      - name: Deploy-Skript prüfen
+        run: scripts/test-deploy.sh
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://flauschiversum.de/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      # Bild-Cache wie im Staging: immer den letzten Stand laden und nach dem Lauf einen neuen speichern
+      - name: Bild-Cache laden
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: images-${{ github.run_id }}
+          restore-keys: images-
+
+      # Dieselbe SSH-Umgebung wie auf einem Entwicklungsrechner: Host-Eintrag `flauschiversum` mit Schlüssel
+      - name: SSH einrichten
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          for v in DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS DEPLOY_HOST DEPLOY_USER; do
+            if [ -z "${!v}" ]; then echo "::error::Secret $v fehlt (siehe Kopf dieser Datei)"; exit 1; fi
+          done
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host flauschiversum
+            HostName $DEPLOY_HOST
+            User $DEPLOY_USER
+            Port ${DEPLOY_PORT:-22}
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            UserKnownHostsFile ~/.ssh/known_hosts
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Deployen
+        run: scripts/deploy.sh
+
+      - name: Smoke-Test der Live-Seite
+        env:
+          SMOKE_MODE: production
+          SMOKE_RETRIES: '3'
+        run: scripts/smoke-test.sh "$FLAUSCHI_BASE_URL"
+
+      # Der Schlüssel soll nach dem Lauf nirgends liegen bleiben (auch bei Fehlern)
+      - name: Schlüssel entfernen
+        if: always()
+        run: rm -f ~/.ssh/deploy_key ~/.ssh/config ~/.ssh/known_hosts
