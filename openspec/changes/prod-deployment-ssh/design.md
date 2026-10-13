@@ -1,6 +1,6 @@
 ## Context
 
-`dist/` entsteht mit `flauschiversum build` und enthält rund 550 MB (Bilder, Suchindex, HTML). Der Build schreibt nur Geändertes und legt `dist/.flauschiversum-manifest` an (Pfad → Inhalts-Hash), das auch bestimmt, was beim nächsten Build als „verwaist“ gilt. `scripts/` kennt `smoke-test.sh` (Staging) und `dist-size.sh`. Die Staging-Pipeline `.github/workflows/staging.yml` läuft bei `dev` und `claude/**`; `master` ist der Standardbranch und veröffentlicht bisher nichts. Zielserver: SSH-Host `flauschiversum` (Eintrag samt Schlüssel in `~/.ssh/config`), Zielpfad `/httpdocs/`. Ob der Server ein vollständiges Linux mit `rsync` ist, ist nicht bekannt (Annahme unten).
+`dist/` entsteht mit `flauschiversum build` und enthält rund 550 MB (Bilder, Suchindex, HTML). Der Build schreibt nur Geändertes und legt `dist/.flauschiversum-manifest` an (Pfad → Inhalts-Hash), das auch bestimmt, was beim nächsten Build als „verwaist“ gilt. `scripts/` kennt `smoke-test.sh` (Staging) und `dist-size.sh`. Die Staging-Pipeline `.github/workflows/staging.yml` läuft bei `dev` und `claude/**`; `master` ist der Standardbranch und veröffentlicht bisher nichts. Zielserver: SSH-Host `flauschiversum` (Eintrag samt Schlüssel in `~/.ssh/config`), Zielpfad `/httpdocs/`. Der Server ist ein netcup-Webhosting: Es gibt eine SSH-Shell, aber **kein `rsync`** (`rsync: Kommando nicht gefunden`, vom Betreiber festgestellt; der Zugang liegt im Zielpfad `/httpdocs/`). Welche Werkzeuge sonst da sind (`tar`, `sftp`-Subsystem, `find`, `mv`), ist nicht geprüft; das Skript erkennt es zur Laufzeit.
 
 ## Goals / Non-Goals
 
@@ -16,7 +16,7 @@
 1. Sperre (`flock` auf `.deploy.lock`), damit nie zwei Deployments gleichzeitig laufen.
 2. Ohne `--no-build`: `cargo run --release --locked -- check` und `build --base-url "$FLAUSCHI_BASE_URL" --cache "$FLAUSCHI_CACHE_DIR"` (ohne `--staging`).
 3. Prüfung von `dist/`: `index.html` und `.flauschiversum-manifest` vorhanden; kein `class="staging-bar"`, kein `noindex` auf der Startseite, kanonische URL beginnt mit der Basis-URL, sonst Abbruch („falscher Build“). Größe über `scripts/dist-size.sh` (Warnung).
-4. Erreichbarkeit: `ssh -o BatchMode=yes <Host> true` (kein Passwort-Prompt in CI), danach `command -v rsync` auf dem Server.
+4. Erreichbarkeit: `ssh -o BatchMode=yes <Host> true` (kein Passwort-Prompt in CI), danach Erkennen des Übertragungswegs (Entscheidung 3).
 5. Übertragung in zwei Durchgängen (Entscheidung 3) und Aufräumen (Entscheidung 2).
 
 Das Ziel `host:pfad` wird in Host und Pfad zerlegt. Ist das Ziel ein lokaler Pfad (kein Doppelpunkt), arbeitet das Skript ohne SSH: Das ist die Testumgebung (`scripts/test-deploy.sh` deployt in ein temporäres Verzeichnis, ohne Server), aber auch ein gültiger Einsatz, wenn der Build auf dem Webserver selbst läuft (dann zeigt `DEPLOY_TARGET` auf `/httpdocs/`).
@@ -25,11 +25,21 @@ Das Ziel `host:pfad` wird in Host und Pfad zerlegt. Ist das Ziel ein lokaler Pfa
 
 `rsync --delete` würde in `/httpdocs/` alles entfernen, was nicht in `dist/` liegt, auch fremde Dateien (Verifizierungsdateien, `.well-known`, Reste der alten Seite). Stattdessen: Das Skript liest das Manifest des letzten Deployments vom Server (`<Ziel>/.flauschiversum-manifest`, fehlt es: leere Liste), vergleicht es mit dem neuen und löscht nur Pfade, die früher geliefert wurden und jetzt fehlen (`ssh host 'cd /httpdocs && xargs -0 rm -f'`, anschließend leere Verzeichnisse darunter `rmdir`). Fremde Dateien bleiben. Das erste Deployment hat kein Manifest, es überlagert nur; das Skript meldet vorher die Zahl der Einträge im Ziel, die nicht aus `dist/` stammen. Pfade in der Löschliste werden gegen `..` und absolute Anteile geprüft. `--dry-run` zeigt Übertragung (`rsync -n`) und Löschliste, ändert nichts.
 
-### 3. Was übertragen wird und in welcher Reihenfolge
+### 3. Übertragung ohne rsync: austauschbarer Transport, gemeinsamer Einbau
 
-Die Übertragungsliste kommt aus den Manifesten, nicht aus Zeitstempeln: In der Action liegt `dist/` nicht zwischen Läufen vor (alle Dateien sind frisch geschrieben), `rsync` würde allein nach Zeit und Größe alles neu hochladen. Das Skript vergleicht deshalb das lokale Manifest (`Pfad → Hash`) mit dem Manifest auf dem Server und überträgt nur Pfade, deren Hash abweicht oder die dort fehlen (kleines Python-3-Stück aus der Standardbibliothek, `python3` ist auf Runnern und Entwicklungsrechnern vorhanden). Die Liste geht mit `rsync --files-from` in zwei Durchgängen: (a) alles außer `*.html`, `*.xml` (Bilder, Stylesheet, Skripte, Suchindex), (b) HTML-Dateien, Feed und Sitemap. Danach die Löschung veralteter Dateien (Entscheidung 2) und **zuletzt** das neue Manifest. Dadurch verweisen neue Seiten nie auf noch nicht vorhandene Medien; bricht ein Durchgang ab, bleibt das Manifest auf dem Server unverändert, und die nächste Ausführung holt den Rest nach (sie überträgt wieder alles, was dem Manifest nicht entspricht). `--delay-updates` legt je Verzeichnis erst am Ende um. Rechte: `--chmod=D755,F644`, unabhängig von der umask des Absenders. Ohne vorhandenes Server-Manifest (erstes Deployment) wird alles übertragen.
+Das Skript trennt *Bytes übertragen* und *Dateien an ihren Platz bringen*:
 
-*Alternative:* `rsync -a --delete` des ganzen Verzeichnisses. Verworfen: löscht fremde Dateien und lädt in der Action alles neu hoch.
+**Was übertragen wird:** Die Liste kommt aus den Manifesten, nicht aus Zeitstempeln: In der Action liegt `dist/` nicht zwischen Läufen vor (alle Dateien sind frisch geschrieben), eine zeitbasierte Übertragung würde alles neu hochladen. Das Skript vergleicht das lokale Manifest (`Pfad → Hash`) mit dem Manifest auf dem Server (`ssh host cat …/.flauschiversum-manifest`, funktioniert ohne `rsync`) und überträgt nur Pfade, deren Hash abweicht oder die dort fehlen (kleines Python-3-Stück aus der Standardbibliothek lokal; auf dem Server wird kein Python gebraucht). Ohne Server-Manifest (erstes Deployment) wird alles übertragen.
+
+**Transport** (`DEPLOY_METHOD=auto|tar|sftp|rsync`, Standard `auto` in dieser Reihenfolge der Eignung: `rsync` → `tar` → `sftp`; erkannt über `ssh host 'command -v rsync'`, `command -v tar` und einen Probe-`sftp -b`):
+- `tar` (erste Wahl auf Hosting ohne rsync): `tar -czf - --null -T liste | ssh host 'tar -xzf - -C <Zwischenverzeichnis>'`; eine einzige Verbindung, komprimiert, braucht nur `tar` und `gzip` auf dem Server.
+- `sftp`: `sftp -b -` mit `put`-Zeilen aus der Liste (Verzeichnisse vorher per `-mkdir`); braucht nur das SFTP-Subsystem, das Webhosting praktisch immer hat; langsamer bei vielen kleinen Dateien (rund 10 000 Dateien), aber nur beim ersten Deployment relevant.
+- `rsync`: `rsync -rl --files-from=liste` in das Zwischenverzeichnis, falls der Server es doch hat (lokale Ziele nutzen `cp`).
+Alle Transporte schreiben in ein Zwischenverzeichnis `<Ziel>/.deploy-<Kennung>/` auf demselben Dateisystem.
+
+**Einbau** (identisch für alle Transporte, per `ssh host sh -s` mit einem kleinen Skript über die Standardwerkzeuge `find`, `chmod`, `mv`, `mkdir`, `rm`): Rechte setzen (Dateien 644, Verzeichnisse 755, unabhängig von der umask des Absenders), dann **zuerst** alle Nicht-HTML-Dateien (Bilder, Stylesheet, Skripte, Suchindex), **danach** HTML, Feed und Sitemap mit `mv -f` an den endgültigen Pfad (je Datei atomar, weil im selben Dateisystem; Verzeichnisse vorher anlegen), dann die Löschung veralteter Dateien (Entscheidung 2) und **zuletzt** das neue Manifest; schließlich das Zwischenverzeichnis entfernen (auch bei Fehlern per `trap`). Dadurch verweisen neue Seiten nie auf noch nicht vorhandene Medien, Besucher sehen nie halb geschriebene Dateien, und bei einem Abbruch bleibt das Manifest auf dem Server unverändert, sodass die nächste Ausführung alles Fehlende nachholt.
+
+*Alternativen:* (a) `rsync -a --delete` des ganzen Verzeichnisses: geht auf dem Server nicht und würde fremde Dateien löschen. (b) Nur `scp -r dist/*`: überschreibt alles, überträgt immer 550 MB und löscht nichts. (c) Nur SFTP: korrekt, aber bei vielen Dateien langsam, deshalb `tar` zuerst.
 
 ### 4. GitHub Action
 
@@ -51,7 +61,7 @@ SSH einrichten: aus den Secrets `DEPLOY_SSH_KEY` (privater Schlüssel, nur für 
 
 ### 7. Annahmen und offene Voraussetzungen
 
-- `rsync` ist auf dem Server vorhanden. Fehlt es (reiner SFTP-Zugang), bricht das Skript mit klarer Meldung ab; ein SFTP-Pfad wäre ein eigener Change.
+- Der Server hat eine Shell mit den Standardwerkzeugen (`sh`, `find`, `mv`, `chmod`, `rm`) und mindestens `tar` oder das SFTP-Subsystem. Fehlt beides (und `rsync`), bricht das Skript mit klarer Meldung ab. Das ist am netcup-Webhosting noch nicht geprüft; die Umsetzung beginnt deshalb mit einem Erkennungslauf (`--dry-run` zeigt den gewählten Weg), bevor etwas hochgeladen wird.
 - Der Zielpfad `/httpdocs/` ist absolut auf dem Server, der Benutzer hat dort Schreibrechte.
 - Der Branch heißt `master` (Standardbranch des Repositorys); `dev` und `claude/**` bleiben Staging.
 - Das HTTPS-Zertifikat der Produktionsdomain liegt beim Server (nicht Teil dieses Changes).
@@ -62,5 +72,6 @@ SSH einrichten: aus den Secrets `DEPLOY_SSH_KEY` (privater Schlüssel, nur für 
 - [Löschen fremder Dateien] → Löschen nur über das Manifest; `--dry-run`; Pfadprüfung der Löschliste.
 - [Halb übertragene Seite] → Zwei Durchgänge in fester Reihenfolge, Manifest zuletzt, `--delay-updates`; die nächste Ausführung heilt.
 - [SSH-Schlüssel in der CI] → eigener, nur für diesen Server gültiger Schlüssel, feste `known_hosts`, `environment: production` für Schutzregeln; Schlüssel nie in Logs.
+- [Webhosting erlaubt kein `tar` oder hat ein eingeschränktes Shell-Profil (z. B. kein `find`)] → Erkennung vor dem Hochladen; fehlt `find`, nutzt der Einbau eine einfache Schleife über die Liste der übertragenen Pfade statt `find`; `DEPLOY_METHOD` erlaubt, den Weg festzulegen.
 - [Erste Übertragung dauert lang (550 MB)] → einmalig; danach geht nur, was sich laut Manifest geändert hat, auch aus der Action ohne zwischengespeichertes `dist/`.
 - [Manifest auf dem Server veraltet oder von Hand gelöscht] → Die nächste Ausführung überträgt dann alles und löscht nichts (kein Manifest, keine Löschliste); das Ergebnis ist richtig, nur langsamer.
