@@ -1,77 +1,77 @@
 ## Context
 
-`dist/` entsteht mit `flauschiversum build` und enthält rund 550 MB (Bilder, Suchindex, HTML). Der Build schreibt nur Geändertes und legt `dist/.flauschiversum-manifest` an (Pfad → Inhalts-Hash), das auch bestimmt, was beim nächsten Build als „verwaist“ gilt. `scripts/` kennt `smoke-test.sh` (Staging) und `dist-size.sh`. Die Staging-Pipeline `.github/workflows/staging.yml` läuft bei `dev` und `claude/**`; `master` ist der Standardbranch und veröffentlicht bisher nichts. Zielserver: SSH-Host `flauschiversum` (Eintrag samt Schlüssel in `~/.ssh/config`), Zielpfad `/httpdocs/`. Der Server ist ein netcup-Webhosting: Es gibt eine SSH-Shell, aber **kein `rsync`** (`rsync: Kommando nicht gefunden`, vom Betreiber festgestellt; der Zugang liegt im Zielpfad `/httpdocs/`). Welche Werkzeuge sonst da sind (`tar`, `sftp`-Subsystem, `find`, `mv`), ist nicht geprüft; das Skript erkennt es zur Laufzeit.
+`dist/` entsteht mit `flauschiversum build` und enthält rund 550 MB (10 146 Dateien: Bilder, Suchindex, HTML). Der Build schreibt nur Geändertes und legt `dist/.flauschiversum-manifest` an (Pfad → Hash und Länge). Die Staging-Pipeline `.github/workflows/staging.yml` läuft bei `dev` und `claude/**`; `master` ist der Standardbranch. Zielserver: SSH-Host `flauschiversum` (Eintrag samt Schlüssel in `~/.ssh/config`), Zielpfad `/httpdocs/`. Der Server ist ein netcup-Webhosting: eine SSH-Shell, aber **kein `rsync`** (`rsync: Kommando nicht gefunden`, vom Betreiber festgestellt). Welche Werkzeuge es sonst gibt (`tar`, SFTP), ist nicht geprüft; das Werkzeug erkennt es zur Laufzeit.
+
+Ein erster Entwurf als Bash-Skript mit eingebettetem Python wurde verworfen: Er war lang, schwer lesbar und machte die Build-Pipeline unübersichtlich. Die Logik liegt jetzt im Werkzeug.
 
 ## Goals / Non-Goals
 
-**Goals:** ein Befehl, der die fertige Seite sicher auf den Server legt; gleiche Logik in Action und Hook; keine Zugangsdaten im Repository; schnelle Folge-Deployments (nur Geändertes).
-**Non-Goals:** Serverinstallation, Blue/Green mit Verzeichniswechsel (das Zielverzeichnis ist fest vorgegeben), Rollback-Automatik (ein Rollback ist ein Deployment des alten Commits).
+**Goals:** ein Befehl, der die fertige Seite sicher auf den Server legt; gleiche Logik in Action und Hook; keine Zugangsdaten im Repository; schnelle Folge-Deployments (nur Geändertes); Tests ohne Server.
+**Non-Goals:** Serverinstallation, Blue/Green mit Verzeichniswechsel (das Zielverzeichnis ist fest vorgegeben), Rollback-Automatik (ein Rollback ist ein Deployment des alten Commits), SSH-Bibliothek im Werkzeug.
 
 ## Decisions
 
-### 1. Ein Skript für alle Umgebungen
+### 1. Unterbefehl `deploy` im Werkzeug
 
-`scripts/deploy.sh [--dry-run] [--no-build]` in Bash (`set -euo pipefail`), konfigurierbar über Umgebungsvariablen mit den Standardwerten `DEPLOY_TARGET=flauschiversum:/httpdocs/`, `FLAUSCHI_BASE_URL=https://flauschiversum.de`, `FLAUSCHI_CACHE_DIR=.cache`. Ablauf:
+`flauschiversum deploy [--target host:/pfad/] [--dry-run] [--no-build] [--method auto|tar|sftp]` (Standardziel `flauschiversum:/httpdocs/`, auch über `DEPLOY_TARGET`; Basis-URL, Cache und Ausgabe wie bei `build`). Ablauf in `src/deploy.rs`:
 
-1. Sperre (`flock` auf `.deploy.lock`), damit nie zwei Deployments gleichzeitig laufen.
-2. Ohne `--no-build`: `cargo run --release --locked -- check` und `build --base-url "$FLAUSCHI_BASE_URL" --cache "$FLAUSCHI_CACHE_DIR"` (ohne `--staging`).
-3. Prüfung von `dist/`: `index.html` und `.flauschiversum-manifest` vorhanden; kein `class="staging-bar"`, kein `noindex` auf der Startseite, kanonische URL beginnt mit der Basis-URL, sonst Abbruch („falscher Build“). Größe über `scripts/dist-size.sh` (Warnung).
-4. Erreichbarkeit: `ssh -o BatchMode=yes <Host> true` (kein Passwort-Prompt in CI), danach Erkennen des Übertragungswegs (Entscheidung 3).
-5. Übertragung in zwei Durchgängen (Entscheidung 3) und Aufräumen (Entscheidung 2).
+1. Sperre über `.deploy.lock` (`File::try_lock`), damit nie zwei Deployments gleichzeitig laufen. `--staging` wird abgewiesen.
+2. Ohne `--no-build`: derselbe Build wie `flauschiversum build` (der enthält die Prüfung der Inhalte), ohne Staging.
+3. Prüfung von `dist/`: `index.html` und Manifest vorhanden; keine Staging-Leiste, kein `noindex` auf der Startseite, kanonische URL beginnt mit der Basis-URL, sonst Abbruch mit Grund.
+4. Ziel erreichbar: `ssh -o BatchMode=yes <Host> true` (keine Passwortabfrage in CI). Übertragungsweg erkennen (Entscheidung 3).
+5. Abgleich der Manifeste, Übertragen, Einbauen (Entscheidungen 2 und 3).
 
-Das Ziel `host:pfad` wird in Host und Pfad zerlegt. Ist das Ziel ein lokaler Pfad (kein Doppelpunkt), arbeitet das Skript ohne SSH: Das ist die Testumgebung (`scripts/test-deploy.sh` deployt in ein temporäres Verzeichnis, ohne Server), aber auch ein gültiger Einsatz, wenn der Build auf dem Webserver selbst läuft (dann zeigt `DEPLOY_TARGET` auf `/httpdocs/`).
+Das Ziel `host:pfad` wird zerlegt; ein Ziel ohne `host:` ist ein lokaler Pfad (Befehle laufen dann über `sh -c` lokal): Das ist die Testumgebung und zugleich der Weg, wenn der Build auf dem Webserver selbst läuft. SSH läuft über das `ssh`-Programm des Systems (so greift die SSH-Konfiguration samt Schlüssel; Programme sind für Tests austauschbar). Es gibt keine eigene SSH-Bibliothek.
 
 ### 2. Nur eigene Dateien löschen (Manifest statt `--delete`)
 
-`rsync --delete` würde in `/httpdocs/` alles entfernen, was nicht in `dist/` liegt, auch fremde Dateien (Verifizierungsdateien, `.well-known`, Reste der alten Seite). Stattdessen: Das Skript liest das Manifest des letzten Deployments vom Server (`<Ziel>/.flauschiversum-manifest`, fehlt es: leere Liste), vergleicht es mit dem neuen und löscht nur Pfade, die früher geliefert wurden und jetzt fehlen (`ssh host 'cd /httpdocs && xargs -0 rm -f'`, anschließend leere Verzeichnisse darunter `rmdir`). Fremde Dateien bleiben. Das erste Deployment hat kein Manifest, es überlagert nur; das Skript meldet vorher die Zahl der Einträge im Ziel, die nicht aus `dist/` stammen. Pfade in der Löschliste werden gegen `..` und absolute Anteile geprüft. `--dry-run` zeigt Übertragung (`rsync -n`) und Löschliste, ändert nichts.
+Das Werkzeug liest das Manifest des letzten Deployments vom Server (`ssh … cat <Ziel>/.flauschiversum-manifest`; fehlt es: leer), vergleicht es mit dem neuen und löscht nur Pfade, die früher geliefert wurden und jetzt fehlen, danach leere Verzeichnisse darunter. Fremde Dateien bleiben. Das erste Deployment hat kein Manifest und überlagert nur; das Werkzeug nennt vorher die Zahl der fremden Einträge im Ziel. Pfade aus dem Manifest werden geprüft (relativ, kein `..`, keine Anführungszeichen oder Zeilenumbrüche), sonst Abbruch ohne etwas zu ändern. `--dry-run` zeigt Weg, Übertragungs- und Löschliste und ändert nichts.
 
-### 3. Übertragung ohne rsync: austauschbarer Transport, gemeinsamer Einbau
+### 3. Übertragung ohne rsync, Einbau ohne Schleifen
 
-Das Skript trennt *Bytes übertragen* und *Dateien an ihren Platz bringen*:
+**Was:** nur Pfade, deren Hash im Manifest abweicht oder fehlt (nicht nach Dateizeiten: in der Action liegt `dist/` nicht zwischen Läufen vor); getrennt in Medien/Skripte/Index und Seiten (`*.html`, `*.xml`).
 
-**Was übertragen wird:** Die Liste kommt aus den Manifesten, nicht aus Zeitstempeln: In der Action liegt `dist/` nicht zwischen Läufen vor (alle Dateien sind frisch geschrieben), eine zeitbasierte Übertragung würde alles neu hochladen. Das Skript vergleicht das lokale Manifest (`Pfad → Hash`) mit dem Manifest auf dem Server (`ssh host cat …/.flauschiversum-manifest`, funktioniert ohne `rsync`) und überträgt nur Pfade, deren Hash abweicht oder die dort fehlen (kleines Python-3-Stück aus der Standardbibliothek lokal; auf dem Server wird kein Python gebraucht). Ohne Server-Manifest (erstes Deployment) wird alles übertragen.
+**Transport** (Erkennung: `tar` und `gzip` per `command -v` auf dem Server, sonst `sftp -b -` mit einem Probebefehl):
+- `tar`: Das Werkzeug erzeugt das Archiv selbst (Crates `tar` und `flate2`, Dateimodus 644) und schreibt es als Strom in `ssh <Host> tar -xzf - -C <Zwischenverzeichnis>`. Eine Verbindung, komprimiert, braucht lokal kein `tar`.
+- `sftp`: Das Werkzeug erzeugt die Batch-Befehle (`-mkdir`, `put`, `chmod 644`) und schreibt sie an `sftp -b -`. Langsamer bei vielen Dateien, aber nur beim ersten Deployment relevant.
 
-**Transport** (`DEPLOY_METHOD=auto|tar|sftp|rsync`, Standard `auto` in dieser Reihenfolge der Eignung: `rsync` → `tar` → `sftp`; erkannt über `ssh host 'command -v rsync'`, `command -v tar` und einen Probe-`sftp -b`):
-- `tar` (erste Wahl auf Hosting ohne rsync): `tar -czf - --null -T liste | ssh host 'tar -xzf - -C <Zwischenverzeichnis>'`; eine einzige Verbindung, komprimiert, braucht nur `tar` und `gzip` auf dem Server.
-- `sftp`: `sftp -b -` mit `put`-Zeilen aus der Liste (Verzeichnisse vorher per `-mkdir`); braucht nur das SFTP-Subsystem, das Webhosting praktisch immer hat; langsamer bei vielen kleinen Dateien (rund 10 000 Dateien), aber nur beim ersten Deployment relevant.
-- `rsync`: `rsync -rl --files-from=liste` in das Zwischenverzeichnis, falls der Server es doch hat (lokale Ziele nutzen `cp`).
-Alle Transporte schreiben in ein Zwischenverzeichnis `<Ziel>/.deploy-<Kennung>/` auf demselben Dateisystem.
+Beide schreiben in ein Zwischenverzeichnis `<Ziel>/.deploy-<Kennung>/` auf demselben Dateisystem; es wird auch bei Fehlern entfernt.
 
-**Einbau** (identisch für alle Transporte, per `ssh host sh -s` mit einem kleinen Skript über die Standardwerkzeuge `find`, `chmod`, `mv`, `mkdir`, `rm`): Rechte setzen (Dateien 644, Verzeichnisse 755, unabhängig von der umask des Absenders), dann **zuerst** alle Nicht-HTML-Dateien (Bilder, Stylesheet, Skripte, Suchindex), **danach** HTML, Feed und Sitemap mit `mv -f` an den endgültigen Pfad (je Datei atomar, weil im selben Dateisystem; Verzeichnisse vorher anlegen), dann die Löschung veralteter Dateien (Entscheidung 2) und **zuletzt** das neue Manifest; schließlich das Zwischenverzeichnis entfernen (auch bei Fehlern per `trap`). Dadurch verweisen neue Seiten nie auf noch nicht vorhandene Medien, Besucher sehen nie halb geschriebene Dateien, und bei einem Abbruch bleibt das Manifest auf dem Server unverändert, sodass die nächste Ausführung alles Fehlende nachholt.
+**Einbau:** Das Werkzeug erzeugt ein gerades Skript ohne Schleifen und Bedingungen und schickt es an `sh -s` auf dem Server: `mkdir -p` und `chmod 755` der Verzeichnisse, `mv -f` jeder Datei erst für Medien/Index, dann für Seiten, `rm -f` veralteter Dateien, `rmdir` leerer Verzeichnisse (tiefste zuerst), zuletzt `mv -f` des neuen Manifests und Entfernen des Zwischenverzeichnisses. Auf dem Server werden nur `tar`, `sh`, `mv`, `mkdir`, `chmod`, `rm`, `rmdir` und `cat` gebraucht. Dadurch verweisen neue Seiten nie auf noch nicht vorhandene Medien, Besucher sehen nie halb geschriebene Dateien (`mv` im selben Dateisystem ist je Datei atomar), und bei einem Abbruch bleibt das Manifest auf dem Server unverändert; die nächste Ausführung holt alles Fehlende nach.
 
-*Alternativen:* (a) `rsync -a --delete` des ganzen Verzeichnisses: geht auf dem Server nicht und würde fremde Dateien löschen. (b) Nur `scp -r dist/*`: überschreibt alles, überträgt immer 550 MB und löscht nichts. (c) Nur SFTP: korrekt, aber bei vielen Dateien langsam, deshalb `tar` zuerst.
+*Alternativen:* (a) `rsync`: geht auf dem Server nicht. (b) `scp -r dist/`: überträgt immer alles, löscht nichts, zeigt Zwischenstände. (c) Bash-Skript mit Python: verworfen (Wartbarkeit). (d) SSH-Bibliothek (`russh`): eigene Schlüssel- und Konfigurationslogik, die `ssh` ohnehin liefert.
 
 ### 4. GitHub Action
 
-`.github/workflows/production.yml`: Trigger `push` auf `master` und `workflow_dispatch`; `concurrency: production` ohne Abbrechen (ein laufendes Deployment wird nie durch ein neueres unterbrochen); `permissions: contents: read`; `environment: production` (dort lassen sich Schutzregeln ergänzen). Schritte: Checkout, Rust und Cache wie im Staging, `cargo test --locked`, Bild-Cache (`actions/cache`, gleicher Schlüssel wie Staging), SSH einrichten, `scripts/deploy.sh`, Smoke-Test.
+`.github/workflows/production.yml`: Trigger `push` auf `master` und `workflow_dispatch`; `concurrency: production` ohne Abbrechen; `permissions: contents: read`; `environment: production`. Schritte: Checkout, Rust und Cache wie im Staging, `cargo test --locked`, Test des Hooks, Bild-Cache (`actions/cache`), SSH einrichten, `cargo run --release --locked -- deploy`, Smoke-Test.
 
-SSH einrichten: aus den Secrets `DEPLOY_SSH_KEY` (privater Schlüssel, nur für diesen Zweck), `DEPLOY_KNOWN_HOSTS` (Zeile(n) aus `ssh-keyscan`, vorab geprüft – kein blindes `ssh-keyscan` im Lauf), `DEPLOY_HOST`, `DEPLOY_USER`, optional `DEPLOY_PORT` entsteht `~/.ssh/config` mit `Host flauschiversum`, `IdentityFile`, `IdentitiesOnly yes`, `StrictHostKeyChecking yes`. Damit findet `deploy.sh` genau die Umgebung vor, die auch lokal besteht. Der Schlüssel wird nie ausgegeben und nach dem Lauf entfernt.
+SSH einrichten: aus den Secrets `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS` (vorab geprüft, kein blindes `ssh-keyscan`), `DEPLOY_HOST`, `DEPLOY_USER`, optional `DEPLOY_PORT` entsteht `~/.ssh/config` mit `Host flauschiversum`, `IdentityFile`, `IdentitiesOnly yes`, `StrictHostKeyChecking yes`: genau die Umgebung, die auch lokal besteht. Der Schlüssel wird nie ausgegeben und nach dem Lauf entfernt. Das ist der einzige Shell-Anteil in der Pipeline.
 
-*Hinweis:* Das Staging-Spec verlangt „keine eigenen Secrets“ für den Staging-Workflow; das gilt weiter, nur der Produktions-Workflow nutzt Secrets.
+*Hinweis:* Das Staging-Spec verlangt „keine eigenen Secrets“ für den Staging-Workflow; das gilt weiter.
 
 ### 5. Git-Hook für Umgebungen ohne GitHub Actions
 
-`scripts/git-hooks/post-receive`: Liest die Zeilen (`alt neu ref`); nur für `refs/heads/master` (die Ref ist per `DEPLOY_REF` änderbar): legt ein temporäres Arbeitsverzeichnis an (`git archive`, dann `tar`), exportiert `CARGO_TARGET_DIR` und `FLAUSCHI_CACHE_DIR` auf dauerhafte Verzeichnisse (`$HOME/.cache/flauschiversum/{target,images}`, damit Bilder und Compiler-Ergebnisse nicht jedes Mal neu entstehen), ruft `scripts/deploy.sh` auf, schreibt das Protokoll nach `$HOME/.cache/flauschiversum/deploy.log` und räumt auf. Das Ergebnis wird dem Pusher gemeldet (Hook-Ausgabe). `scripts/install-git-hook.sh <bare-Repository>` kopiert den Hook mit Ausführungsrecht. Läuft der Hook auf dem Webserver selbst, genügt `DEPLOY_TARGET=/httpdocs/`.
+`scripts/git-hooks/post-receive` (kurz): Bei einem Push auf `refs/heads/master` (änderbar über `DEPLOY_REF`) exportiert er den Stand per `git archive` in ein temporäres Verzeichnis und führt dort `cargo run --release --locked -- deploy` aus (`DEPLOY_COMMAND` ändert den Befehl), mit dauerhaftem Zustandsverzeichnis `~/.cache/flauschiversum` für Compiler-Ergebnisse und Bild-Cache. Die Ausgabe sieht der Pusher; ein Protokoll liegt im Zustandsverzeichnis; ein Fehler wird als solcher gemeldet. `scripts/install-git-hook.sh <Bare-Repository>` kopiert den Hook mit Ausführungsrecht und überschreibt keinen fremden Hook. `scripts/test-git-hook.sh` prüft ihn mit einem lokalen Bare-Repository.
 
-*Annahme:* „Git-Hook je nach Umgebung“ heißt: ein serverseitiger Hook für ein Repository auf eigenem Git-Server. Ein lokaler `pre-push`-Hook wäre eine Alternative, wurde aber verworfen, weil er vor dem Gelingen des Pushs deployen und bei jedem Entwickler laufen würde.
+*Annahme:* „Git-Hook je nach Umgebung“ heißt: ein serverseitiger Hook für ein Repository auf eigenem Git-Server. Ein lokaler `pre-push`-Hook wurde verworfen, weil er vor dem Gelingen des Pushs deployen würde.
 
 ### 6. Smoke-Test im Produktionsmodus
 
-`scripts/smoke-test.sh <Basis-URL>` bekommt `SMOKE_MODE=production`: Dieselben Statusprüfungen (`/`, `/suche/`, `/pagefind/pagefind.js`, `/style.css`, Beitrag), zusätzlich `/robots.txt` und `/sitemap.xml` (200), die Startseite enthält **kein** `noindex` und **keine** Staging-Leiste, und die kanonische URL beginnt mit der Basis-URL. Der Staging-Modus bleibt der Standard.
+`scripts/smoke-test.sh <Basis-URL>` bekommt `SMOKE_MODE=production`: Statusprüfungen wie bisher, zusätzlich `/robots.txt` und `/sitemap.xml`, die Startseite enthält **kein** `noindex` und **keine** Staging-Leiste, die kanonische URL beginnt mit `SMOKE_CANONICAL` (Standard: die Basis-URL), `robots.txt` sperrt nicht alles. Der Staging-Modus bleibt der Standard. Der Smoke-Test bleibt ein kleines Shell-Skript (nur `curl`); eine Umsetzung in Rust wäre ein eigener Change.
 
 ### 7. Annahmen und offene Voraussetzungen
 
-- Der Server hat eine Shell mit den Standardwerkzeugen (`sh`, `find`, `mv`, `chmod`, `rm`) und mindestens `tar` oder das SFTP-Subsystem. Fehlt beides (und `rsync`), bricht das Skript mit klarer Meldung ab. Das ist am netcup-Webhosting noch nicht geprüft; die Umsetzung beginnt deshalb mit einem Erkennungslauf (`--dry-run` zeigt den gewählten Weg), bevor etwas hochgeladen wird.
-- Der Zielpfad `/httpdocs/` ist absolut auf dem Server, der Benutzer hat dort Schreibrechte.
-- Der Branch heißt `master` (Standardbranch des Repositorys); `dev` und `claude/**` bleiben Staging.
+- Der Server hat eine Shell mit den Standardwerkzeugen (`sh`, `mv`, `chmod`, `rm`, `rmdir`) und `tar` mit `gzip` oder das SFTP-Subsystem. Fehlt beides, bricht der Befehl vor dem Hochladen mit klarer Meldung ab. Das ist am netcup-Webhosting noch nicht geprüft; `deploy --dry-run` nennt den gewählten Weg, bevor etwas hochgeladen wird.
+- Der Zielpfad `/httpdocs/` ist auf dem Server erreichbar und beschreibbar; ein relativer Pfad (`flauschiversum:httpdocs/`) geht ebenso.
+- Der Branch heißt `master` (Standardbranch); `dev` und `claude/**` bleiben Staging.
 - Das HTTPS-Zertifikat der Produktionsdomain liegt beim Server (nicht Teil dieses Changes).
 
 ## Risks / Trade-offs
 
-- [Falscher Build geht live (z. B. mit Staging-Leiste)] → Prüfung von `dist/` im Skript und Smoke-Test nach dem Deployment.
-- [Löschen fremder Dateien] → Löschen nur über das Manifest; `--dry-run`; Pfadprüfung der Löschliste.
-- [Halb übertragene Seite] → Zwei Durchgänge in fester Reihenfolge, Manifest zuletzt, `--delay-updates`; die nächste Ausführung heilt.
-- [SSH-Schlüssel in der CI] → eigener, nur für diesen Server gültiger Schlüssel, feste `known_hosts`, `environment: production` für Schutzregeln; Schlüssel nie in Logs.
-- [Webhosting erlaubt kein `tar` oder hat ein eingeschränktes Shell-Profil (z. B. kein `find`)] → Erkennung vor dem Hochladen; fehlt `find`, nutzt der Einbau eine einfache Schleife über die Liste der übertragenen Pfade statt `find`; `DEPLOY_METHOD` erlaubt, den Weg festzulegen.
-- [Erste Übertragung dauert lang (550 MB)] → einmalig; danach geht nur, was sich laut Manifest geändert hat, auch aus der Action ohne zwischengespeichertes `dist/`.
-- [Manifest auf dem Server veraltet oder von Hand gelöscht] → Die nächste Ausführung überträgt dann alles und löscht nichts (kein Manifest, keine Löschliste); das Ergebnis ist richtig, nur langsamer.
+- [Falscher Build geht live (z. B. mit Staging-Leiste)] → Prüfung von `dist/` im Befehl und Smoke-Test nach dem Deployment.
+- [Löschen fremder Dateien] → Löschen nur über das Manifest; `--dry-run`; Pfadprüfung; getestet.
+- [Halb übertragene Seite] → Zwischenverzeichnis, feste Reihenfolge, Manifest zuletzt; die nächste Ausführung heilt; getestet (abgebrochener Transfer).
+- [SSH-Schlüssel in der CI] → eigener, nur für diesen Server gültiger Schlüssel, feste `known_hosts`, `environment: production` für Schutzregeln; Schlüssel nie in Logs und nach dem Lauf entfernt.
+- [Erste Übertragung dauert (550 MB)] → einmalig (lokal rund 40 s auf einer Platte, über das Netz entsprechend länger); danach geht nur, was sich laut Manifest geändert hat, auch aus der Action ohne zwischengespeichertes `dist/`.
+- [Manifest auf dem Server veraltet oder gelöscht] → Die nächste Ausführung überträgt dann alles und löscht nichts; richtig, nur langsamer.
+- [Webhosting hat weder `tar` noch SFTP] → Abbruch vor dem Hochladen mit Hinweis; ein weiterer Weg wäre ein eigener Change.

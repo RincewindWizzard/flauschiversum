@@ -1,5 +1,5 @@
 # Produktiv-Deployment: baut die Seite bei jedem Push auf `master` und legt sie per SSH auf den Server
-# (flauschiversum:/httpdocs/, siehe scripts/deploy.sh). Das Staging läuft getrennt in staging.yml.
+# (flauschiversum:/httpdocs/, siehe `flauschiversum deploy --help`). Das Staging läuft getrennt in staging.yml.
 #
 # Einmalige Einrichtung (Settings → Secrets and variables → Actions, am besten in der Umgebung `production`):
 #   DEPLOY_SSH_KEY      privater Schlüssel, nur für dieses Deployment
@@ -36,8 +36,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Tests
         run: cargo test --locked
-      - name: Deploy-Skript prüfen
-        run: scripts/test-deploy.sh
+      - name: Git-Hook prüfen
+        run: scripts/test-git-hook.sh
 
   deploy:
     needs: test
@@ -87,7 +87,7 @@ jobs:
           chmod 600 ~/.ssh/config
 
       - name: Deployen
-        run: scripts/deploy.sh
+        run: cargo run --release --locked -- deploy
 
       - name: Smoke-Test der Live-Seite
         env:

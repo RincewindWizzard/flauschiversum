@@ -73,9 +73,17 @@ impl Outputs {
 pub const MANIFEST: &str = ".flauschiversum-manifest";
 
 #[derive(serde::Serialize, serde::Deserialize, Clone, PartialEq, Eq)]
-struct Entry {
-    hash: String,
-    len: u64,
+pub struct Entry {
+    pub hash: String,
+    pub len: u64,
+}
+
+/// Liest das Manifest eines Ausgabeverzeichnisses (URL-Pfad → Hash und Länge).
+pub fn read_manifest(dir: &std::path::Path) -> anyhow::Result<BTreeMap<String, Entry>> {
+    use anyhow::Context;
+    let path = dir.join(MANIFEST);
+    let bytes = std::fs::read(&path).with_context(|| format!("{} lesen", path.display()))?;
+    serde_json::from_slice(&bytes).with_context(|| format!("{} ist kein gültiges Manifest", path.display()))
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]

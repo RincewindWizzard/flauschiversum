@@ -3,10 +3,10 @@
 # Installation: scripts/install-git-hook.sh <Pfad zum Bare-Repository>
 #
 # Bei einem Push auf DEPLOY_REF (Standard refs/heads/master) wird der gepushte Stand in ein temporäres Verzeichnis
-# exportiert und dort scripts/deploy.sh ausgeführt. Bild-Cache und Compiler-Ergebnisse liegen dauerhaft in
+# exportiert und dort `flauschiversum deploy` ausgeführt (DEPLOY_COMMAND ändert den Befehl). Bild-Cache und Compiler-Ergebnisse liegen dauerhaft in
 # DEPLOY_STATE_DIR (Standard ~/.cache/flauschiversum), damit nicht bei jedem Push alles neu entsteht. Die Ausgabe sieht
 # der Pusher ("remote: …") und steht in DEPLOY_STATE_DIR/deploy.log. Pushes auf andere Branches tun nichts.
-# Läuft der Hook auf dem Webserver selbst, genügt DEPLOY_TARGET=/pfad/zu/httpdocs/ (siehe scripts/deploy.sh).
+# Läuft der Hook auf dem Webserver selbst, genügt DEPLOY_TARGET=/pfad/zu/httpdocs/ (siehe `flauschiversum deploy --help`).
 set -uo pipefail
 
 wanted_ref="${DEPLOY_REF:-refs/heads/master}"
@@ -31,8 +31,8 @@ while read -r _ new ref; do
   (
     cd "$work" || exit 1
     unset GIT_DIR GIT_WORK_TREE
-    export CARGO_TARGET_DIR="$state/target" FLAUSCHI_CACHE_DIR="$state/images" DEPLOY_LOCK="$state/deploy.lock"
-    scripts/deploy.sh
+    export CARGO_TARGET_DIR="$state/target"
+    bash -c "${DEPLOY_COMMAND:-cargo run --release --locked -- deploy --cache \"$state/images\"}"
   ) 2>&1 | tee -a "$state/deploy.log"
   if [ "${PIPESTATUS[0]}" = 0 ]; then
     echo "==> Deployment erfolgreich."

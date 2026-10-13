@@ -15,4 +15,4 @@ fi
 install -m 755 "$src" "$dest"
 echo "Hook installiert: $dest"
 echo "Deployt wird bei Pushes auf refs/heads/master (anderer Branch: DEPLOY_REF). Voraussetzungen auf dem Server:"
-echo "  Rust (cargo), Git, tar, python3 und ein SSH-Eintrag 'flauschiversum' für den Benutzer, unter dem der Hook läuft."
+echo "  Rust (cargo), Git, tar und ein SSH-Eintrag 'flauschiversum' für den Benutzer, unter dem der Hook läuft."

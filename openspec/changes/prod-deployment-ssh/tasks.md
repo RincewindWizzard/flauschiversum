@@ -1,21 +1,20 @@
-## 1. Deploy-Skript
+## 1. Deploy-Befehl im Werkzeug
 
-- [x] 1.1 `scripts/deploy.sh` (`--dry-run`, `--no-build`, `DEPLOY_TARGET`, `FLAUSCHI_BASE_URL`, `FLAUSCHI_CACHE_DIR`): Sperre, Produktionsbuild mit `check` und `build`, Prüfung von `dist/` (kein Staging, kanonische URL, Manifest), SSH- und `rsync`-Prüfung, lokales Ziel ohne SSH; prüfen: `shellcheck` ohne Befunde, Aufruf mit Staging-`dist/` bricht ab
-- [x] 1.2 Manifest-Vergleich (nur geänderte Hashes, Manifest vom Server per `ssh cat`), Transport austauschbar (`tar` über SSH, SFTP, `rsync` falls vorhanden; `DEPLOY_METHOD`, automatische Erkennung, Weg im Trockenlauf genannt) in ein Zwischenverzeichnis, gemeinsamer Einbauschritt (Rechte 644/755, Nicht-HTML vor HTML per `mv -f`, Manifest zuletzt, Aufräumen per `trap`); prüfen: im Test zweiter Lauf ohne Änderung überträgt 0 Dateien, geänderter Text nur HTML, kein Zwischenverzeichnis bleibt zurück, bei jedem Transport dasselbe Ergebnis
-- [x] 1.3 Löschung nur über das Manifest des Servers samt Pfadprüfung und `rmdir` leerer Verzeichnisse, Hinweis auf fremde Einträge beim ersten Mal, `--dry-run` zeigt beides; prüfen: fremde Datei bleibt, entfernte Seite verschwindet, `../`-Pfad wird abgewiesen
-- [x] 1.4 `scripts/test-deploy.sh` (erstes Deployment, Folge-Deployment, Änderung, Entfernung, fremde Datei, Staging-Abbruch, Trockenlauf, Transport `tar` und `sftp` mit einem lokalen Ersatz für `ssh`/`sftp` im Test) gegen ein temporäres Verzeichnis mit der Test-Site; prüfen: Skript endet mit 0, Fehlerfälle werden erkannt (Gegenprobe)
-
-- [ ] 1.5 Erkennungslauf am echten Server: `scripts/deploy.sh --dry-run` zeigt, welche Werkzeuge der Server hat und welchen Weg es wählt (Betreiber führt ihn aus, Ergebnis fließt in die README); prüfen: Weg ist `tar` oder `sftp`, kein Abbruch wegen `rsync`
+- [x] 1.1 Unterbefehl `deploy` (`--target`/`DEPLOY_TARGET`, `--dry-run`, `--no-build`, `--method`, Basis-URL, Cache, Ausgabe wie `build`, `--staging` abgewiesen), Sperre `.deploy.lock`, Build ohne Staging, Prüfung von `dist/` (kein Staging, kein `noindex`, kanonische URL, Manifest); prüfen: `flauschiversum deploy --help`, Tests für Staging-Build, `noindex`, falsche URL und fehlendes Manifest
+- [x] 1.2 Abgleich der Manifeste (nur geänderte Hashes, Manifest vom Server per `ssh cat`) und Pfadprüfung; Transport `tar` über SSH (Archiv aus den Crates `tar` und `flate2`, Modus 644) und SFTP (`-mkdir`/`put`/`chmod`), automatische Erkennung, Weg im Trockenlauf genannt; prüfen: Tests mit lokalem Ziel und Ersatzprogrammen für `ssh` und `sftp` (erstes Deployment, zweiter Lauf 0 Dateien, geänderter Text nur Seiten, beide Wege gleiches Ergebnis)
+- [x] 1.3 Einbau als gerades Skript für `sh -s` (Verzeichnisse, erst Medien/Index dann Seiten per `mv -f`, Löschung veralteter Dateien und `rmdir`, Manifest zuletzt, Zwischenverzeichnis auch bei Fehlern entfernt); prüfen: Test der Reihenfolge, fremde Datei bleibt, `../`-Pfad im Server-Manifest wird abgewiesen, abgebrochener Transfer lässt Manifest und alte Seite unverändert
+- [x] 1.4 Fehlerfälle und Hinweise: nicht erreichbarer Server, kein Übertragungsweg, Hinweis auf fremde Einträge beim ersten Mal, Trockenlauf; prüfen: Tests, Lauf gegen die echte Seite (10 146 Dateien) in ein lokales Ziel, zweiter Lauf überträgt nichts
+- [ ] 1.5 Erkennungslauf am echten Server: `flauschiversum deploy --dry-run` zeigt, welchen Weg der Server erlaubt (Betreiber führt ihn aus, Ergebnis fließt in die README); prüfen: Weg ist `tar über SSH` oder `SFTP`
 
 ## 2. Automatisierung
 
 - [x] 2.1 `scripts/smoke-test.sh` um `SMOKE_MODE=production` erweitern (kein `noindex`, keine Staging-Leiste, kanonische URL, `robots.txt`, Sitemap); prüfen: gegen eine lokale Produktions-`serve`-Instanz grün, gegen einen Staging-Build rot
-- [x] 2.2 `.github/workflows/production.yml` (Trigger `master` und manuell, Tests, SSH-Umgebung aus Secrets, `deploy.sh`, Smoke-Test, `concurrency` ohne Abbruch, `environment: production`, nur `contents: read`); prüfen: `actionlint` (falls verfügbar) bzw. YAML-Prüfung, Schlüssel wird nie ausgegeben, Datei nach dem Lauf entfernt
-- [x] 2.3 `scripts/git-hooks/post-receive` und `scripts/install-git-hook.sh` (nur `master`, temporäres Arbeitsverzeichnis, dauerhafte Caches, Protokoll, Meldung an den Pusher); prüfen: Test mit einem lokalen Bare-Repository: Push auf `master` deployed in ein lokales Ziel, Push auf `dev` nicht
+- [x] 2.2 `.github/workflows/production.yml` (Trigger `master` und manuell, Tests, SSH-Umgebung aus Secrets, `flauschiversum deploy`, Smoke-Test, `concurrency` ohne Abbruch, `environment: production`, nur `contents: read`, Schlüssel am Ende entfernt); prüfen: `actionlint` sauber, SSH-Schritt lokal durchgespielt (Konfiguration, Rechte, Abbruch bei fehlendem Secret)
+- [x] 2.3 `scripts/git-hooks/post-receive`, `scripts/install-git-hook.sh` und `scripts/test-git-hook.sh` (nur `master`, temporäres Arbeitsverzeichnis, dauerhaftes Zustandsverzeichnis, Protokoll, Meldung an den Pusher); prüfen: `scripts/test-git-hook.sh` und `shellcheck` sauber
 
 ## 3. Dokumentation
 
-- [x] 3.1 README: Abschnitt „Produktiv-Deployment“ (Skript, Optionen, Übertragungswege und warum kein `rsync` nötig ist (netcup), Voraussetzungen, SSH-Eintrag `flauschiversum`, Einrichtung der Action mit Secrets und `ssh-keyscan`-Prüfung, Hook-Installation, erstes Deployment mit `--dry-run`, Hinweis auf fremde Dateien und das Aufräumen alter Inhalte), `scripts/` und `.github/workflows/` in der Tabelle; prüfen: Anleitung stimmt mit `--help` des Skripts überein
+- [x] 3.1 README: Abschnitt „Produktiv-Deployment“ (Befehl, Optionen, Übertragungswege und warum kein `rsync` nötig ist, Voraussetzungen, SSH-Eintrag `flauschiversum`, Einrichtung der Action mit Secrets und Fingerabdruck-Prüfung, Hook-Installation, erstes Deployment mit `--dry-run`, Hinweis auf fremde Dateien), `scripts/` und `.github/workflows/` in der Tabelle; prüfen: Anleitung stimmt mit `--help` überein
 - [x] 3.2 Die Spec `deployment` verweist im Purpose auf `production-deployment`; prüfen: `openspec validate --specs --strict` ohne Fehler
 
 ## Workflow follow-up

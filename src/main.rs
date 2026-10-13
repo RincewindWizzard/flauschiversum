@@ -6,6 +6,7 @@ use std::process::ExitCode;
 mod archive;
 mod clean;
 mod config;
+mod deploy;
 mod content;
 mod diag;
 mod feed;
@@ -49,6 +50,23 @@ enum Command {
         /// Ausgabeverzeichnis (relativ zum Projektverzeichnis), nur mit `--dist`.
         #[arg(long, default_value = "dist")]
         out: PathBuf,
+    },
+    /// Baut die Seite für Produktion und legt sie per SSH auf den Server (nur Geändertes, kein rsync nötig).
+    Deploy {
+        #[command(flatten)]
+        paths: PathArgs,
+        /// Ziel: `host:/pfad/` (SSH-Host aus ~/.ssh/config) oder ein lokaler Pfad.
+        #[arg(long, env = "DEPLOY_TARGET", default_value = "flauschiversum:/httpdocs/")]
+        target: String,
+        /// Zeigt nur, was übertragen und gelöscht würde.
+        #[arg(long)]
+        dry_run: bool,
+        /// Überträgt das vorhandene Ausgabeverzeichnis, ohne neu zu bauen (muss ein Produktionsbuild sein).
+        #[arg(long)]
+        no_build: bool,
+        /// Übertragungsweg (auto: tar über SSH, sonst SFTP).
+        #[arg(long, value_enum, default_value = "auto", env = "DEPLOY_METHOD")]
+        method: deploy::Method,
     },
     /// Baut die Seite, liefert sie lokal aus und baut bei Änderungen neu.
     Serve {
@@ -181,6 +199,39 @@ fn run(cli: Cli) -> Result<ExitCode> {
                     );
                     Ok(ExitCode::SUCCESS)
                 }
+                Err(e) => {
+                    eprintln!("Fehler: {e:#}");
+                    Ok(ExitCode::FAILURE)
+                }
+            }
+        }
+        Command::Deploy { paths, target, dry_run, no_build, method } => {
+            if paths.staging.is_some() {
+                eprintln!("Fehler: `deploy` legt nur Produktionsbuilds auf den Server; --staging ist hier nicht erlaubt.");
+                return Ok(ExitCode::FAILURE);
+            }
+            let _lock = match deploy::lock(&paths.resolve(&PathBuf::from(".deploy.lock"))) {
+                Ok(l) => l,
+                Err(e) => {
+                    eprintln!("Fehler: {e:#}");
+                    return Ok(ExitCode::FAILURE);
+                }
+            };
+            if !no_build && !build_once(&paths, false)? {
+                eprintln!("Fehler: Der Build ist fehlgeschlagen, es wird nichts übertragen.");
+                return Ok(ExitCode::FAILURE);
+            }
+            let opts = deploy::Options {
+                dist: paths.resolve(&paths.out),
+                target,
+                base_url: paths.base_url.as_str().to_string(),
+                dry_run,
+                method,
+                ssh: std::env::var("DEPLOY_SSH").unwrap_or_else(|_| "ssh".into()),
+                sftp: std::env::var("DEPLOY_SFTP").unwrap_or_else(|_| "sftp".into()),
+            };
+            match deploy::run(&opts) {
+                Ok(_) => Ok(ExitCode::SUCCESS),
                 Err(e) => {
                     eprintln!("Fehler: {e:#}");
                     Ok(ExitCode::FAILURE)
