@@ -18,7 +18,6 @@ Begonnen wird mit einem Magic-loop in den ich 10 Stäbchen häkel.
 
 Die Runde wird mit einer Kettmasche geschlossen und die nächste mit 3 Luftmaschen begonnen.
 
-
 Damit die Mütze wächst, muss zugenommen werden. Also werden in der 2. Runde in jede Masche 2 Stäbchen gehäkelt, in der 3. Runde in jede 2. Masche 2 Stäbchen und in der 4. Runde in jede 3. Masche 2 Stäbchen und so weiter, bis die Mütze groß genug ist um den Kopf von oben zu bedecken.
 
 
