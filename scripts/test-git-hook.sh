@@ -87,7 +87,11 @@ check "deploy-commit: gültiger Commit wird gebaut und deployt" bash -c "[ $rc =
 check "deploy-commit: Ziel und dauerhafter Cache werden übergeben" grep -q "deploy --cache $home/.cache/flauschiversum/images --target ziel:/pfad/" <<<"$out"
 check "deploy-commit: Compiler-Ergebnisse liegen im Cache" grep -q "target=$home/.cache/flauschiversum/target" <<<"$out"
 dir="$(grep -o 'pwd=[^ ]*' <<<"$out" | head -1 | cut -d= -f2)"
-check "deploy-commit: temporäres Verzeichnis wird entfernt" bash -c "[ -n '$dir' ] && [ ! -e '$dir' ]"
+check "deploy-commit: fester Arbeitsbaum im Zustandsverzeichnis" test "$dir" = "$home/.cache/flauschiversum/src"
+m1="$(stat -c %Y.%N "$dir/datei" 2>/dev/null; stat -c %y "$dir/datei")"
+(cd "$base/work" && git checkout -q master && echo neu > neu.txt && git add neu.txt && git commit -q -m neu && git push -q origin master)
+sleep 1.1; run_dc "$(git -C "$base/work" rev-parse master)" >/dev/null
+check "deploy-commit: unveränderte Dateien behalten ihre Zeit, neue kommen dazu" bash -c "[ \"\$(stat -c %y '$dir/datei')\" = \"\$(sed -n 2p <<<'$m1')\" ] && [ -f '$dir/neu.txt' ]"
 check "deploy-commit: Protokoll wird geschrieben" grep -q STUB-CARGO "$home/.cache/flauschiversum/deploy.log"
 for bad in "" abc "${good^^}" "${good}x" "${good:0:39}" "--help"; do
   out="$(run_dc "$bad")"; rc=$?
