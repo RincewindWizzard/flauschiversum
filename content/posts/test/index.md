@@ -11,3 +11,4 @@ Das hier ist nur ein Test
 ## Anhänge
 
 ![FOO](maverick-frame-_ciombXSREU-unsplash.jpg)
+![Schubia](PXL_20261014_102835277.RAW-01.COVER.jpg)
