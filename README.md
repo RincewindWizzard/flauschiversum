@@ -262,7 +262,7 @@ kann der Git-Benutzer nicht lesen. Die Ausgabe sieht der Pusher (`remote: …`),
 #### Server für das Deployment einrichten
 
 Gilt für Debian/Ubuntu. Angenommen: der Git-Server läuft unter dem Benutzer **`git`**, das Bare-Repository liegt in
-`/srv/git/flauschiversum.git`, und dieses Repository ist auf dem Server ausgecheckt in `~/flauschiversum` (für die Skripte
+`/media/git/nadja/flauschiversum`, und dieses Repository ist auf dem Server ausgecheckt in `~/flauschiversum` (für die Skripte
 unter `scripts/`; ein anderer Ort geht genauso). Passe die Namen an. Alle Befehle als `root` (`sudo -i`), sofern nicht anders
 steht. Bedarf: etwa 2 GB RAM und 3 GB Platz, der erste Build dauert einige Minuten.
 
@@ -293,10 +293,13 @@ Damit der Build das Repository lesen, aber nicht verändern kann, kommt `flausch
 
 ```bash
 usermod -aG git flauschiversum
-chmod -R g+rX /srv/git/flauschiversum.git
-git -C /srv/git/flauschiversum.git config core.sharedRepository group
-sudo -u flauschiversum ls /srv/git/flauschiversum.git      # Kontrolle: listet das Repository
+chmod -R g+rX /media/git/nadja/flauschiversum
+git -C /media/git/nadja/flauschiversum config core.sharedRepository group
+sudo -u flauschiversum ls /media/git/nadja/flauschiversum      # Kontrolle: listet das Repository
 ```
+
+Auch die übergeordneten Verzeichnisse (`/media/git`, `/media/git/nadja`) müssen für `flauschiversum` durchsuchbar sein
+(`namei -l /media/git/nadja/flauschiversum` zeigt, wo es scheitert; nötigenfalls `chmod g+x` bzw. `o+x` dort).
 
 **3. Rust und Cargo installieren** (nur im Home von `flauschiversum`, systemweit wird nichts verändert):
 
@@ -345,7 +348,7 @@ cd ~/flauschiversum        # das ausgecheckte Repository
 install -d -o root -g root -m 755 /usr/local/libexec/flauschiversum /etc/flauschiversum
 install -o root -g root -m 755 scripts/server/deploy-commit /usr/local/libexec/flauschiversum/deploy-commit
 install -o root -g root -m 644 scripts/server/deploy.conf.example /etc/flauschiversum/deploy.conf
-editor /etc/flauschiversum/deploy.conf                  # REPO=/srv/git/flauschiversum.git prüfen/anpassen
+editor /etc/flauschiversum/deploy.conf                  # REPO=/media/git/nadja/flauschiversum prüfen/anpassen
 ```
 
 **6. `sudo`-Regel für den Hook.** Der Benutzer `git` darf nur diesen einen Befehl als `flauschiversum` ausführen:
@@ -360,11 +363,11 @@ sudo -l -U git                                          # Kontrolle: nennt (flau
 **7. Hook installieren** (als der Benutzer, dem das Repository gehört, hier `git`):
 
 ```bash
-sudo -u git ~/flauschiversum/scripts/install-git-hook.sh /srv/git/flauschiversum.git
+sudo -u git ~/flauschiversum/scripts/install-git-hook.sh /media/git/nadja/flauschiversum
 ```
 
 **8. Erster Lauf von Hand**, damit der erste Release-Build nicht im Push hängt (Commit-ID:
-`git -C /srv/git/flauschiversum.git rev-parse master`):
+`git -C /media/git/nadja/flauschiversum rev-parse master`):
 
 ```bash
 sudo -u git sudo -n -u flauschiversum /usr/local/libexec/flauschiversum/deploy-commit <40-stellige Commit-ID>

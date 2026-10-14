@@ -15,7 +15,7 @@
 |---|---|---|
 | Benutzer `flauschiversum`, Home `/var/share/flauschiversum` | eigene Gruppe `flauschiversum`, Shell `/usr/sbin/nologin`, kein Passwort | Home `750` (Gruppe und andere ohne Zugriff auf `.ssh`, Schlüssel `600`) |
 | `/usr/local/libexec/flauschiversum/deploy-commit` | `root:root` | `755`, nur `root` schreibt |
-| `/etc/flauschiversum/deploy.conf` | `root:root` | `644`, enthält `REPO=/srv/git/flauschiversum.git`, optional `TARGET` und `REF` |
+| `/etc/flauschiversum/deploy.conf` | `root:root` | `644`, enthält `REPO=/media/git/nadja/flauschiversum`, optional `TARGET` und `REF` |
 | `/etc/sudoers.d/flauschiversum` | `root:root` | `440`, geprüft mit `visudo -cf` |
 | Bare-Repository | Benutzer `git` | Gruppe `git`, gruppenlesbar; `flauschiversum` ist Mitglied der Gruppe `git` (nur lesen) |
 
@@ -47,15 +47,15 @@ Der Platzhalter ist in sudoers kein regulärer Ausdruck (er passt auch auf ander
 
 ### 5. Einrichtung (Inhalt der README, Reihenfolge)
 
-Als `root` auf dem Server (Debian/Ubuntu; Platzhalter `git` für den Benutzer des Git-Servers und `/srv/git/flauschiversum.git` für das Bare-Repository):
+Als `root` auf dem Server (Debian/Ubuntu; Platzhalter `git` für den Benutzer des Git-Servers und `/media/git/nadja/flauschiversum` für das Bare-Repository):
 
 1. Pakete: `apt install git curl ca-certificates build-essential pkg-config openssh-client util-linux sudo` (`build-essential` für den C-Compiler und Linker, `util-linux` für `flock`).
-2. Benutzer: `mkdir -p /var/share && useradd --system --create-home --home-dir /var/share/flauschiversum --shell /usr/sbin/nologin --user-group flauschiversum && chmod 750 /var/share/flauschiversum`; Lesezugriff auf das Repository: `usermod -aG git flauschiversum` und das Repository gruppenlesbar machen (`chmod -R g+rX /srv/git/flauschiversum.git`, `git config core.sharedRepository group` im Repository).
+2. Benutzer: `mkdir -p /var/share && useradd --system --create-home --home-dir /var/share/flauschiversum --shell /usr/sbin/nologin --user-group flauschiversum && chmod 750 /var/share/flauschiversum`; Lesezugriff auf das Repository: `usermod -aG git flauschiversum` und das Repository gruppenlesbar machen (`chmod -R g+rX /media/git/nadja/flauschiversum`, `git config core.sharedRepository group` im Repository).
 3. Rust und Cargo (als `flauschiversum`, nur im Home): `sudo -u flauschiversum -H bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable'`; Kontrolle `sudo -u flauschiversum -H bash -c '~/.cargo/bin/cargo --version'`. Aktualisieren später mit `rustup update`.
 4. SSH-Zugang zum Webserver: `sudo -u flauschiversum -H bash -c 'install -d -m 700 ~/.ssh && ssh-keygen -t ed25519 -N "" -C flauschiversum-deploy -f ~/.ssh/deploy_key'`, den öffentlichen Schlüssel (`~/.ssh/deploy_key.pub`) beim Hoster eintragen; `~/.ssh/config` mit `Host flauschiversum`, `HostName`, `User`, `IdentityFile ~/.ssh/deploy_key`, `IdentitiesOnly yes`; Server-Schlüssel mit `ssh-keyscan` holen, **Fingerabdruck mit dem des Hosters vergleichen** und in `~/.ssh/known_hosts` ablegen; Kontrolle: `sudo -u flauschiversum -H ssh flauschiversum true`.
 5. Einstiegsbefehl und Konfiguration: `install -d -o root -g root -m 755 /usr/local/libexec/flauschiversum /etc/flauschiversum`; `install -o root -g root -m 755 scripts/server/deploy-commit /usr/local/libexec/flauschiversum/`; `/etc/flauschiversum/deploy.conf` aus `scripts/server/deploy.conf.example` anlegen (`REPO=…`).
 6. sudoers: `scripts/server/sudoers` nach `/etc/sudoers.d/flauschiversum` (Benutzername des Git-Servers anpassen), `chmod 440`, prüfen mit `visudo -cf /etc/sudoers.d/flauschiversum`.
-7. Hook: `scripts/install-git-hook.sh /srv/git/flauschiversum.git`.
+7. Hook: `scripts/install-git-hook.sh /media/git/nadja/flauschiversum`.
 8. Erster Lauf von Hand: `sudo -u git sudo -n -u flauschiversum /usr/local/libexec/flauschiversum/deploy-commit <Commit-ID>` (dauert wegen des ersten Release-Builds mehrere Minuten), bevor der erste Push den Hook auslöst. Vorher `flauschiversum deploy --dry-run` als `flauschiversum` im Export prüfen.
 9. Fehlersuche: Protokoll `/var/share/flauschiversum/.cache/flauschiversum/deploy.log`; häufige Ursachen (sudo verlangt Passwort, `safe.directory`, fehlendes `cc`, SSH-Schlüssel nicht eingetragen oder falscher Fingerabdruck).
 
