@@ -269,4 +269,4 @@ und ImageMagick nötig, `--preview` erzeugt Vorschaubilder; nach dem Archivieren
 
 
 # Nichts
-gar ncihts
+gar ncihtsa
