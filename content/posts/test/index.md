@@ -10,4 +10,4 @@ Das hier ist nur ein Test
 
 ## Anhänge
 
-![](maverick-frame-_ciombXSREU-unsplash.jpg)
+![FOO](maverick-frame-_ciombXSREU-unsplash.jpg)
