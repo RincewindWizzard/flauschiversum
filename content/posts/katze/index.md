@@ -11,3 +11,4 @@ excerpt: "nur eine Katze"
  
 Hier steht noch nichts
 ![Schubia](PXL_20261014_102835277.RAW-01.COVER.jpg)
+![Knabberkram Schubia](PXL_20261014_102824183.RAW-01.COVER.jpg)
