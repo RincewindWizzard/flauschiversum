@@ -238,11 +238,12 @@ fn load_redirects(root: &Path, diag: &Diagnostics) -> Vec<(String, String)> {
             return Vec::new();
         }
     };
-    let valid = |p: &str| p.starts_with('/') && p.ends_with('/') && !p.contains(' ') && !p.contains("//") && p != "/";
+    let valid = |p: &str| p.starts_with('/') && p.ends_with('/') && !p.contains(' ') && !p.contains("//");
     let mut out = Vec::new();
     for (from, to) in map {
-        if !valid(&from) || !valid(&to) {
-            diag.error(source, format!("Weiterleitung `{from}` → `{to}`: Adressen müssen mit `/` beginnen und enden"));
+        // Ziel darf die Startseite `/` sein, die alte Adresse nicht (sie würde die Startseite selbst ersetzen)
+        if !valid(&from) || from == "/" || !valid(&to) {
+            diag.error(source, format!("Weiterleitung `{from}` → `{to}`: Adressen müssen mit `/` beginnen und enden (die alte Adresse darf nicht `/` sein)"));
         } else if from == to {
             diag.error(source, format!("Weiterleitung `{from}` zeigt auf sich selbst"));
         } else {

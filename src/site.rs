@@ -445,7 +445,7 @@ pub mod tests {
         }
         write(root, "content/start.md", "Willkommen im **Flauschiversum**!\n");
         write(root, "content/tags.yaml", "- name: LARP\n- name: Hüte\n- name: Halloween\n");
-        write(root, "content/redirects.yaml", "/kategorie/basteln/: /tag/larp/\n");
+        write(root, "content/redirects.yaml", "/kategorie/basteln/: /tag/larp/\n/2026/10/katze/: /\n");
         write(root, "content/pages/about.md", "---\ntitle: \"About\"\n---\n\n# Das Flauschiversum\n\nEin Blog über Wolle & Filz.\n\n[Kürbis](/2020/10/kurbis/)\n");
         write(
             root,
@@ -812,7 +812,7 @@ pub mod tests {
         let mut menus = std::collections::BTreeSet::new();
         for (path, html) in &pages {
             if html.contains("http-equiv=\"refresh\"") {
-                assert!(["/kategorie/basteln/index.html"].contains(&path.as_str()), "unerwartete Weiterleitung {path}");
+                assert!(["/kategorie/basteln/index.html", "/2026/10/katze/index.html"].contains(&path.as_str()), "unerwartete Weiterleitung {path}");
                 continue;
             }
             menus.insert(between(html, "<nav class=\"topnav", "</nav>").to_string());
@@ -1168,6 +1168,7 @@ pub mod tests {
             assert!(g.outputs.contains(from) && g.outputs.contains(to), "{from} → {to}");
             assert!(page(from).contains(&format!("url={to}")), "{from}");
         }
+        assert!(site.redirects.iter().any(|(f, t)| f == "/2026/10/katze/" && t == "/"), "Weiterleitung auf die Startseite");
         assert!(site.redirects.iter().any(|(f, _)| f == "/kategorie/basteln/") && site.redirects.iter().any(|(f, _)| f == "/kategorie/brandings/"));
         // Alle Medien-Referenzen lösen auf: Warnungen betreffen nur Seitenlinks in den Inhalten
         for d in diag.all() {
