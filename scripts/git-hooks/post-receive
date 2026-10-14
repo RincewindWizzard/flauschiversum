@@ -4,11 +4,12 @@
 #
 # Der Hook baut nicht selbst, sondern bittet per sudo den festen Befehl deploy-commit, den gepushten Commit als eigener
 # Benutzer `flauschiversum` zu bauen und zu deployen (Einrichtung: README, "Server für das Deployment einrichten").
-# Die Ausgabe sieht der Pusher ("remote: …"). Pushes auf andere Branches tun nichts.
+# Die Ausgabe sieht der Pusher ("remote: …"). Deployt wird nur ein Push auf den Hauptbranch des Repositorys (HEAD, z. B. main); Pushes auf andere Branches tun nichts.
 # Für Tests ersetzbar: DEPLOY_REF, DEPLOY_USER, DEPLOY_SUDO, DEPLOY_COMMIT_COMMAND.
 set -uo pipefail
 
-wanted_ref="${DEPLOY_REF:-refs/heads/master}"
+# Hauptbranch = der Branch, auf den HEAD des Repositorys zeigt (git symbolic-ref HEAD); DEPLOY_REF überschreibt das.
+wanted_ref="${DEPLOY_REF:-$(git symbolic-ref -q HEAD || echo refs/heads/main)}"
 user="${DEPLOY_USER:-flauschiversum}"
 sudo_cmd="${DEPLOY_SUDO:-sudo}"
 command_path="${DEPLOY_COMMIT_COMMAND:-/usr/local/libexec/flauschiversum/deploy-commit}"
