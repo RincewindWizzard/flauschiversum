@@ -266,3 +266,7 @@ Kleindetails, damit es bei 16 px erkennbar bleibt). `favicon.ico` (16, 32, 48 px
 entstehen daraus mit `node openspec/changes/favicon-maskottchen/assets/make_favicons.mjs` (aus dem Projektverzeichnis; Chromium
 und ImageMagick nötig, `--preview` erzeugt Vorschaubilder; nach dem Archivieren liegt das Skript unter
 `openspec/changes/archive/2026-10-12-favicon-maskottchen/assets/`). Die Dateien sind eingecheckt, der Build erzeugt sie nicht.
+
+
+# Nichts
+gar ncihts
