@@ -2,19 +2,16 @@
 # Git-Hook für Umgebungen ohne GitHub Actions (eigener Git-Server): deployt bei einem Push auf master.
 # Installation: scripts/install-git-hook.sh <Pfad zum Bare-Repository>
 #
-# Bei einem Push auf DEPLOY_REF (Standard refs/heads/master) wird der gepushte Stand in ein temporäres Verzeichnis
-# exportiert und dort `flauschiversum deploy` ausgeführt (DEPLOY_COMMAND ändert den Befehl). Bild-Cache und Compiler-Ergebnisse liegen dauerhaft in
-# DEPLOY_STATE_DIR (Standard ~/.cache/flauschiversum), damit nicht bei jedem Push alles neu entsteht. Die Ausgabe sieht
-# der Pusher ("remote: …") und steht in DEPLOY_STATE_DIR/deploy.log. Pushes auf andere Branches tun nichts.
-# Läuft der Hook auf dem Webserver selbst, genügt DEPLOY_TARGET=/pfad/zu/httpdocs/ (siehe `flauschiversum deploy --help`).
+# Der Hook baut nicht selbst, sondern bittet per sudo den festen Befehl deploy-commit, den gepushten Commit als eigener
+# Benutzer `flauschiversum` zu bauen und zu deployen (Einrichtung: README, "Server für das Deployment einrichten").
+# Die Ausgabe sieht der Pusher ("remote: …"). Pushes auf andere Branches tun nichts.
+# Für Tests ersetzbar: DEPLOY_REF, DEPLOY_USER, DEPLOY_SUDO, DEPLOY_COMMIT_COMMAND.
 set -uo pipefail
 
 wanted_ref="${DEPLOY_REF:-refs/heads/master}"
-state="${DEPLOY_STATE_DIR:-$HOME/.cache/flauschiversum}"
-mkdir -p "$state"
-# Rust und andere Werkzeuge des Benutzers liegen in einer Hook-Umgebung nicht im PATH
-# shellcheck disable=SC1091
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+user="${DEPLOY_USER:-flauschiversum}"
+sudo_cmd="${DEPLOY_SUDO:-sudo}"
+command_path="${DEPLOY_COMMIT_COMMAND:-/usr/local/libexec/flauschiversum/deploy-commit}"
 
 status=0
 while read -r _ new ref; do
@@ -22,24 +19,14 @@ while read -r _ new ref; do
   case "$new" in
     0000000*) echo "Branch gelöscht: nichts zu deployen."; continue ;;
   esac
-  echo "==> Deployment von ${new:0:10} ($ref)"
-  work="$(mktemp -d)"
-  if ! git archive "$new" | tar -x -C "$work"; then
-    echo "Fehler: Der Stand konnte nicht exportiert werden." >&2
-    rm -rf "$work"; status=1; continue
-  fi
-  (
-    cd "$work" || exit 1
-    unset GIT_DIR GIT_WORK_TREE
-    export CARGO_TARGET_DIR="$state/target"
-    bash -c "${DEPLOY_COMMAND:-cargo run --release --locked -- deploy --cache \"$state/images\"}"
-  ) 2>&1 | tee -a "$state/deploy.log"
-  if [ "${PIPESTATUS[0]}" = 0 ]; then
+  echo "==> Deployment von ${new:0:10} ($ref) als Benutzer $user"
+  if "$sudo_cmd" -n -u "$user" "$command_path" "$new"; then
     echo "==> Deployment erfolgreich."
   else
-    echo "==> Deployment FEHLGESCHLAGEN (Protokoll: $state/deploy.log). Die Seite auf dem Server ist unverändert oder auf dem vorigen Stand." >&2
+    echo "==> Deployment FEHLGESCHLAGEN. Die Seite auf dem Server ist unverändert oder auf dem vorigen Stand." >&2
+    echo "    Protokoll: ~$user/.cache/flauschiversum/deploy.log. Falls sudo nichts ausführen durfte:" >&2
+    echo "    Einrichtung prüfen (README, \"Server für das Deployment einrichten\", Schritt sudoers)." >&2
     status=1
   fi
-  rm -rf "$work"
 done
 exit "$status"

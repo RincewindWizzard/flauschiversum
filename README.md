@@ -145,7 +145,7 @@ Tritanopie) prüft `tests/browser/theme.mjs`.
 | `assets/` | vom Generator ausgelieferte Skripte (Karussell, Vollbild mit PhotoSwipe, Suchseite, Topbar und Archiv) und die Badge-Vorlage |
 | `src/` | Rust-Code des Generators |
 | `tests/` | Referenz der Live-URLs und Browser-Tests |
-| `scripts/` | Git-Hook fürs Deployment (und sein Test), Smoke-Test, Größenprüfung von `dist/` |
+| `scripts/` | Git-Hook fürs Deployment, Server-Skripte (`scripts/server/`: `deploy-commit`, sudoers, Konfiguration) und ihr Test, Smoke-Test, Größenprüfung von `dist/` |
 | `.github/workflows/` | Staging- und Produktions-Pipeline |
 | `openspec/` | Anforderungen und Änderungen ([OpenSpec](https://github.com/Fission-AI/OpenSpec)) |
 
@@ -252,12 +252,138 @@ Ziel, z. B. wenn der Build auf dem Webserver läuft), `--base-url`, `--cache`, `
 
 ### Automatisch: Git-Hook (ohne GitHub Actions)
 
-Für ein Repository auf einem eigenen Git-Server: `scripts/install-git-hook.sh <Bare-Repository>` legt den
-`post-receive`-Hook ab. Bei einem Push auf `master` exportiert er den Stand in ein temporäres Verzeichnis und ruft dort
-`flauschiversum deploy` auf (Bild-Cache und Compiler-Ergebnisse liegen dauerhaft in `~/.cache/flauschiversum`, das Protokoll in
-`deploy.log` daneben; der Pusher sieht die Ausgabe). Auf dem Server nötig: Rust, Git, `tar` und der
-SSH-Eintrag `flauschiversum` für den Benutzer des Hooks (oder `DEPLOY_TARGET=/pfad/zu/httpdocs/`, wenn der Hook auf dem
-Webserver selbst läuft). Anderer Branch: `DEPLOY_REF=refs/heads/main`.
+Für ein Repository auf einem eigenen Git-Server: Bei einem Push auf `master` baut der Hook `post-receive` den gepushten Stand
+und deployt ihn. **Der Build läuft nicht unter dem Git-Benutzer, sondern unter dem eigenen Benutzer `flauschiversum`**
+(Home `/var/share/flauschiversum`): Dort liegen der SSH-Schlüssel zum Webserver und die Rust-Installation. Der Hook darf
+per `sudo` genau einen festen Befehl als dieser Benutzer starten (`deploy-commit <Commit-ID>`), sonst nichts; den Schlüssel
+kann der Git-Benutzer nicht lesen. Die Ausgabe sieht der Pusher (`remote: …`), das Protokoll steht in
+`/var/share/flauschiversum/.cache/flauschiversum/deploy.log`. Anderer Branch: `DEPLOY_REF=refs/heads/main` in der Umgebung des Hooks.
+
+#### Server für das Deployment einrichten
+
+Gilt für Debian/Ubuntu. Angenommen: der Git-Server läuft unter dem Benutzer **`git`**, das Bare-Repository liegt in
+`/srv/git/flauschiversum.git`, und dieses Repository ist auf dem Server ausgecheckt in `~/flauschiversum` (für die Skripte
+unter `scripts/`; ein anderer Ort geht genauso). Passe die Namen an. Alle Befehle als `root` (`sudo -i`), sofern nicht anders
+steht. Bedarf: etwa 2 GB RAM und 3 GB Platz, der erste Build dauert einige Minuten.
+
+**1. Pakete.** C-Compiler und Linker braucht Rust für Bibliotheken wie `libwebp`; `flock` stammt aus `util-linux`.
+
+```bash
+apt update
+apt install -y git curl ca-certificates build-essential pkg-config openssh-client util-linux sudo
+```
+
+**2. Den Benutzer `flauschiversum` anlegen.** Ein Systembenutzer ohne Passwort und ohne Login-Shell, mit eigener Gruppe und
+dem Home `/var/share/flauschiversum` (das Verzeichnis `/var/share` gibt es nicht überall, daher zuerst `mkdir -p`):
+
+```bash
+mkdir -p /var/share
+useradd --system --create-home --home-dir /var/share/flauschiversum \
+        --shell /usr/sbin/nologin --user-group flauschiversum
+chmod 750 /var/share/flauschiversum        # Fremde (auch der Benutzer git) kommen nicht hinein
+id flauschiversum                          # Kontrolle: uid=… gid=…(flauschiversum)
+ls -ld /var/share/flauschiversum           # Kontrolle: drwxr-x--- flauschiversum flauschiversum
+```
+
+Eine Login-Shell braucht der Benutzer nicht: `sudo -u flauschiversum <Befehl>` startet den Befehl auch so. Alle
+Einrichtungsbefehle unten laufen deshalb als `sudo -u flauschiversum -H …` von `root` aus.
+
+Damit der Build das Repository lesen, aber nicht verändern kann, kommt `flauschiversum` in die Gruppe von `git`
+(geschrieben wird weiter nur von `git`):
+
+```bash
+usermod -aG git flauschiversum
+chmod -R g+rX /srv/git/flauschiversum.git
+git -C /srv/git/flauschiversum.git config core.sharedRepository group
+sudo -u flauschiversum ls /srv/git/flauschiversum.git      # Kontrolle: listet das Repository
+```
+
+**3. Rust und Cargo installieren** (nur im Home von `flauschiversum`, systemweit wird nichts verändert):
+
+```bash
+sudo -u flauschiversum -H bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable'
+sudo -u flauschiversum -H bash -c '~/.cargo/bin/cargo --version'    # Kontrolle: cargo 1.xx.x
+```
+
+`deploy-commit` setzt `~/.cargo/bin` selbst in den `PATH`. Später aktualisieren:
+`sudo -u flauschiversum -H bash -c '~/.cargo/bin/rustup update'`.
+
+**4. SSH-Zugang zum Webserver.** Eigenes Schlüsselpaar nur für das Deployment, erzeugt als `flauschiversum`:
+
+```bash
+sudo -u flauschiversum -H bash -c 'install -d -m 700 ~/.ssh && ssh-keygen -t ed25519 -N "" -C flauschiversum-deploy -f ~/.ssh/deploy_key'
+cat /var/share/flauschiversum/.ssh/deploy_key.pub       # diesen öffentlichen Teil beim Hoster für den SSH-Zugang eintragen
+```
+
+Dann den Host-Eintrag `flauschiversum` anlegen (`HostName`, `User` und gegebenenfalls `Port` vom Hoster):
+
+```bash
+cat > /var/share/flauschiversum/.ssh/config <<'CONF'
+Host flauschiversum
+    HostName ssh.example.org
+    User u12345
+    IdentityFile ~/.ssh/deploy_key
+    IdentitiesOnly yes
+CONF
+chown flauschiversum:flauschiversum /var/share/flauschiversum/.ssh/config
+chmod 600 /var/share/flauschiversum/.ssh/config
+```
+
+Den Schlüssel des Webservers holen, **den Fingerabdruck mit dem vom Hoster genannten vergleichen** und erst dann übernehmen:
+
+```bash
+sudo -u flauschiversum -H bash -c 'ssh-keyscan -t ed25519 ssh.example.org > ~/.ssh/known_hosts.neu && ssh-keygen -lf ~/.ssh/known_hosts.neu'
+# stimmt der Fingerabdruck?  Dann:
+sudo -u flauschiversum -H bash -c 'mv ~/.ssh/known_hosts.neu ~/.ssh/known_hosts'
+sudo -u flauschiversum -H ssh flauschiversum true       # Kontrolle: Ende ohne Passwortabfrage und ohne Fehler
+```
+
+**5. Den Einstiegsbefehl installieren** (gehört `root`, damit niemand sonst ändern kann, was per `sudo` läuft):
+
+```bash
+cd ~/flauschiversum        # das ausgecheckte Repository
+install -d -o root -g root -m 755 /usr/local/libexec/flauschiversum /etc/flauschiversum
+install -o root -g root -m 755 scripts/server/deploy-commit /usr/local/libexec/flauschiversum/deploy-commit
+install -o root -g root -m 644 scripts/server/deploy.conf.example /etc/flauschiversum/deploy.conf
+editor /etc/flauschiversum/deploy.conf                  # REPO=/srv/git/flauschiversum.git prüfen/anpassen
+```
+
+**6. `sudo`-Regel für den Hook.** Der Benutzer `git` darf nur diesen einen Befehl als `flauschiversum` ausführen:
+
+```bash
+install -o root -g root -m 440 scripts/server/sudoers /etc/sudoers.d/flauschiversum
+editor /etc/sudoers.d/flauschiversum                    # "git" durch den Benutzer ersetzen, falls der Git-Server anders heißt
+visudo -cf /etc/sudoers.d/flauschiversum                # Kontrolle: parsed OK
+sudo -l -U git                                          # Kontrolle: nennt (flauschiversum) NOPASSWD: …/deploy-commit
+```
+
+**7. Hook installieren** (als der Benutzer, dem das Repository gehört, hier `git`):
+
+```bash
+sudo -u git ~/flauschiversum/scripts/install-git-hook.sh /srv/git/flauschiversum.git
+```
+
+**8. Erster Lauf von Hand**, damit der erste Release-Build nicht im Push hängt (Commit-ID:
+`git -C /srv/git/flauschiversum.git rev-parse master`):
+
+```bash
+sudo -u git sudo -n -u flauschiversum /usr/local/libexec/flauschiversum/deploy-commit <40-stellige Commit-ID>
+```
+
+Erst danach pushen. Der erste Lauf überlagert nur, was schon auf dem Webserver liegt, und löscht nichts (siehe „Sicherheit“
+oben). Vorab zeigt `deploy --dry-run` in einem Export, was passieren würde.
+
+**Kontrolle der Trennung:** `sudo -u git cat /var/share/flauschiversum/.ssh/deploy_key` muss mit „Keine Berechtigung“ scheitern.
+
+**Fehlersuche.** Zuerst das Protokoll lesen: `tail -n 50 /var/share/flauschiversum/.cache/flauschiversum/deploy.log`.
+
+| Meldung / Symptom | Ursache |
+|---|---|
+| `sudo: a password is required` / `no tty present` | sudoers-Datei fehlt oder nennt den falschen Benutzer (Schritt 6) |
+| `Permission denied` beim Export | `flauschiversum` ist nicht in der Gruppe `git` oder das Repository nicht gruppenlesbar (Schritt 2) |
+| `linker 'cc' not found` | `build-essential` fehlt (Schritt 1) |
+| `Permission denied (publickey)` / `Host key verification failed` | Schlüssel nicht beim Hoster eingetragen oder `known_hosts` fehlt (Schritt 4) |
+| `Sperre nach … nicht erhalten` | ein anderes Deployment läuft noch (`LOCK_WAIT` in `deploy.conf`) |
 
 ### Favicon
 
