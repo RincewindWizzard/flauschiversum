@@ -7,11 +7,12 @@ date: 2014-01-02 23:31:40
 image: "IMG_3751.jpg"
 excerpt: "Ich finde ja wenn man Muster strickt ist es doof, dass es auf der Rückseite des Strickstücks immer so doofe Fäden gibt..."
 ---
-
 ![lila Außen vorne](IMG_3748.jpg)
 ![orange Außen vorne](IMG_3746.jpg)
 
-Ich finde ja wenn man Muster strickt ist es doof, dass es auf der Rückseite des Strickstücks immer so doofe Fäden gibt... praktisch wenn man das Doppelstricken für sich entdeckt, ich spare mir hier eine Fotoanleitung zu machen, denn es gibt genug gute Anleitungen auf [Youtube](https://www.youtube.com/watch?v=2yhfjOQeQl8), stattdessen sind hier ein paar Fotos von meinem ersten doppelt gestrickten Tuch, wer die Strickspitze wiedererkennt - ja sie ist abgeschaut beim "[In the Pink](http://flauschiversum.de/2014/01/in-the-pink/ "In the Pink")".
+Ich finde ja wenn man Muster strickt, ist es doof, dass es auf der Rückseite des Strickstücks immer Fäden gibt, die die Rückseite mitunter unansehnlich machen oder an denen man sich verheddert...
+
+Praktisch ist es, wenn man das Doppelstricken für sich entdeckt. Ich spare es mir hier eine Fotoanleitung zu machen, denn es gibt genug gute Anleitungen auf [Youtube](https://youtu.be/2yhfjOQeQl8?is=z-tem7kGOcBR-BMb), stattdessen sind hier ein paar Fotos von meinem ersten doppelt gestrickten Tuch. Wer die Strickspitze wiedererkennt - ja sie ist abgeschaut beim "[In the Pink](/2014/01/in-the-pink/ "In the Pink")".
 
 ![lila Außen hinten](IMG_3749.jpg)
 ![orange Außen hinten](IMG_3747.jpg)
