@@ -1,7 +1,7 @@
 ---
-title: "de Wullstuuv"
-permalink: /2013/07/de-wullstuuv/
-tags: [Einkaufen, Filzen]
+title: "Wolle zum Spinnen und Filzen"
+permalink: /2013/07/wolle_zum_spinnen_und_filzen/
+tags: [Einkaufen, Filzen, Wolle]
 author: Ermeline
 date: 2013-07-28 00:50:23
 excerpt: "Das ist der Laden für Spinner und Filzer."
