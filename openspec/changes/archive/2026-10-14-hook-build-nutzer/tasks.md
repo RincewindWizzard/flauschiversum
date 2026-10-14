@@ -7,11 +7,11 @@
 ## 2. Anleitung
 
 - [x] 2.1 README „Server für das Deployment einrichten“: alle Schritte aus der Design-Entscheidung 5 mit kopierbaren Befehlen, jeweils mit Benutzer (root, `flauschiversum`, `git`), Installation von Rust und Cargo per `rustup`, Kontrollbefehle nach jedem Schritt, Fehlersuche, Aktualisieren; den bisherigen Hook-Abschnitt anpassen; prüfen: alle Befehle der Anleitung stehen in der Reihenfolge, in der sie auf einem frischen Debian/Ubuntu funktionieren (Durchsicht, soweit ohne Server möglich), Pfade und Dateinamen stimmen mit den Skripten überein
-- [ ] 2.2 Den Verweis von `production-deployment` („Deployment per Git-Hook“) auf `build-user` ergänzen, sobald beide Changes archiviert sind; prüfen: `openspec validate --specs --strict` ohne Fehler
+- [x] 2.2 Den Verweis von `production-deployment` („Deployment per Git-Hook“) auf `build-user` ergänzen, sobald beide Changes archiviert sind; prüfen: `openspec validate --specs --strict` ohne Fehler
 
 ## 3. Abnahme am Server (Betreiber)
 
-- [ ] 3.1 Einrichtung nach der README auf dem echten Server, erster Lauf von Hand, dann ein Test-Push; prüfen: Seite liegt unter `/httpdocs/`, Protokoll vorhanden, `sudo -u git cat /var/share/flauschiversum/.ssh/deploy_key` wird verweigert
+- [x] 3.1 Einrichtung nach der README auf dem echten Server, erster Lauf von Hand, dann ein Test-Push; prüfen: Seite liegt unter `/httpdocs/`, Protokoll vorhanden, `sudo -u git cat /var/share/flauschiversum/.ssh/deploy_key` wird verweigert — Abnahme laut Serverlog des Betreibers: Pushes bauen und deployen als `flauschiversum` (Übertragung nach `flauschiversum:/httpdocs/` erfolgreich); die Verweigerung des Schlüssel-Lesens durch `git` wurde im Log nicht gezeigt.
 
 ## Workflow follow-up
 

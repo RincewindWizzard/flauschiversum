@@ -119,10 +119,10 @@ Der Workflow `.github/workflows/production.yml` SHALL bei jedem Push auf `master
 - **THEN** erscheint der private Schlüssel in keinem Log und nicht in einem Artefakt, und er liegt nach dem Lauf nicht mehr auf dem Runner
 
 ### Requirement: Deployment per Git-Hook
-Für Umgebungen ohne GitHub Actions SHALL das Repository einen `post-receive`-Hook (`scripts/git-hooks/post-receive`) und ein Installationsskript (`scripts/install-git-hook.sh`) liefern. Bei einem Push auf `refs/heads/master` baut der Hook in einem temporären Verzeichnis aus dem gepushten Stand und ruft dort `flauschiversum deploy` auf, mit dauerhaftem Bild- und Compiler-Cache außerhalb des temporären Verzeichnisses. Pushes auf andere Branches lösen nichts aus. Der Hook meldet Erfolg oder Fehler an den Pusher und schreibt ein Protokoll.
+Für Umgebungen ohne GitHub Actions SHALL das Repository einen `post-receive`-Hook (`scripts/git-hooks/post-receive`) und ein Installationsskript (`scripts/install-git-hook.sh`) liefern. Bei einem Push auf den Hauptbranch des Repositorys (den Branch, auf den `HEAD` zeigt) lässt der Hook den gepushten Stand von einem eigenen Build-Benutzer bauen und mit `flauschiversum deploy` übertragen; Aufbau, Rechte und Einrichtung dieses Benutzers beschreibt die Spec `build-user`. Pushes auf andere Branches lösen nichts aus. Der Hook meldet Erfolg oder Fehler an den Pusher, das Protokoll liegt im Home des Build-Benutzers.
 
 #### Scenario: Push auf master
-- **WHEN** auf `master` des Git-Servers gepusht wird
+- **WHEN** auf `master` (den Hauptbranch) des Git-Servers gepusht wird
 - **THEN** wird die Seite gebaut und nach `/httpdocs/` übertragen, und der Pusher sieht das Ergebnis
 
 #### Scenario: Push auf einen anderen Branch
