@@ -4,7 +4,7 @@
 - [x] 1.2 Abgleich der Manifeste (nur geänderte Hashes, Manifest vom Server per `ssh cat`) und Pfadprüfung; Transport `tar` über SSH (Archiv aus den Crates `tar` und `flate2`, Modus 644) und SFTP (`-mkdir`/`put`/`chmod`), automatische Erkennung, Weg im Trockenlauf genannt; prüfen: Tests mit lokalem Ziel und Ersatzprogrammen für `ssh` und `sftp` (erstes Deployment, zweiter Lauf 0 Dateien, geänderter Text nur Seiten, beide Wege gleiches Ergebnis)
 - [x] 1.3 Einbau als gerades Skript für `sh -s` (Verzeichnisse, erst Medien/Index dann Seiten per `mv -f`, Löschung veralteter Dateien und `rmdir`, Manifest zuletzt, Zwischenverzeichnis auch bei Fehlern entfernt); prüfen: Test der Reihenfolge, fremde Datei bleibt, `../`-Pfad im Server-Manifest wird abgewiesen, abgebrochener Transfer lässt Manifest und alte Seite unverändert
 - [x] 1.4 Fehlerfälle und Hinweise: nicht erreichbarer Server, kein Übertragungsweg, Hinweis auf fremde Einträge beim ersten Mal, Trockenlauf; prüfen: Tests, Lauf gegen die echte Seite (10 146 Dateien) in ein lokales Ziel, zweiter Lauf überträgt nichts
-- [ ] 1.5 Erkennungslauf am echten Server: `flauschiversum deploy --dry-run` zeigt, welchen Weg der Server erlaubt (Betreiber führt ihn aus, Ergebnis fließt in die README); prüfen: Weg ist `tar über SSH` oder `SFTP`
+- [x] 1.5 Erkennungslauf am echten Server: `flauschiversum deploy --dry-run` zeigt, welchen Weg der Server erlaubt (Betreiber führt ihn aus, Ergebnis fließt in die README); prüfen: Weg ist `tar über SSH` oder `SFTP` — Ergebnis am echten Server: „Übertragungsweg: tar über SSH“.
 
 ## 2. Automatisierung
 
