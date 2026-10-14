@@ -262,8 +262,9 @@ kann der Git-Benutzer nicht lesen. Die Ausgabe sieht der Pusher (`remote: …`),
 #### Server für das Deployment einrichten
 
 Gilt für Debian/Ubuntu. Angenommen: der Git-Server läuft unter dem Benutzer **`git`**, das Bare-Repository liegt in
-`/media/git/nadja/flauschiversum`, und dieses Repository ist auf dem Server ausgecheckt in `~/flauschiversum` (für die Skripte
-unter `scripts/`; ein anderer Ort geht genauso). Passe die Namen an. Alle Befehle als `root` (`sudo -i`), sofern nicht anders
+`/media/git/nadja/flauschiversum` (das ist das **Bare-Repository**, in das gepusht wird; `REPO`, der Hook und der Build
+verwenden nur dieses). Die Skripte unter `scripts/` brauchst du einmalig als Dateien: dafür ein normaler Klon, z. B.
+`git clone /media/git/nadja/flauschiversum ~/flauschiversum` (als `root`; ein anderer Ort geht genauso). Passe die Namen an. Alle Befehle als `root` (`sudo -i`), sofern nicht anders
 steht. Bedarf: etwa 2 GB RAM und 3 GB Platz, der erste Build dauert einige Minuten.
 
 **1. Pakete.** C-Compiler und Linker braucht Rust für Bibliotheken wie `libwebp`; `flock` stammt aus `util-linux`.
