@@ -22,16 +22,15 @@ Zunächst will ich die Ärmel weg haben, dazu Falte ich das Shirt, zeichne mir m
 ![Shirt gespannt](DSCF1322.jpg)
 ![Vorzeichnung](DSCF1325.jpg)
 
-So, jetzt wird die Grinsekatze übertragen, überlegt euch bei einem Motiv vorher was ihr wegschneiden wollt und ob das auch so funktioniert, wie ihr euch das vorstellt. Manchmal hat man tolle Ideen und muss feststellen, dass sich diese nicht unbedingt immer umsetzen lassen, wenn ihr euch nicht sicher seid, dann macht einfach ein paar Tests an einem echt ranzigen Shirt, ich habe zum Beispiel lange überlegt, wie ich die Nase der Katze hinbekommen kann. Nachdem ich mit meiner Skizze zufrieden war, habe ich die einzelnen Zähne, die Nase und Augen ausgeschnitten, das ist ein bisschen fummelig aber mit einer guten Schere (Nagelschere kann hilfreich sein) ist das Ganze kein Problem. Achtet beim Schneiden darauf, dass ihr nicht zu viel wegnehmt und auch, dass die Abstände der Löcher voneinander ungefähr bei einem Zentimeter liegen, denn anderenfalls hat man am Ende ein großes hässliches Loch.
+So, jetzt wird die Grinsekatze übertragen. Überlegt euch bei einem Motiv vorher was ihr wegschneiden wollt und ob das auch so funktioniert, wie ihr euch das vorstellt. Manchmal hat man tolle Ideen und muss feststellen, dass sich diese nicht unbedingt immer umsetzen lassen. Wenn ihr euch nicht sicher seid, dann macht einfach ein paar Tests an einem echt ranzigen Shirt, ich habe zum Beispiel lange überlegt, wie ich die Nase der Katze hinbekommen kann. Nachdem ich mit meiner Skizze zufrieden war, habe ich die einzelnen Zähne, die Nase und Augen ausgeschnitten, das ist ein bisschen fummelig aber mit einer guten Schere (Nagelschere kann hilfreich sein) ist das Ganze kein Problem. Achtet beim Schneiden darauf, dass ihr nicht zu viel wegnehmt und auch, dass die Abstände der Löcher voneinander ungefähr bei einem Zentimeter liegen, denn anderenfalls hat man am Ende ein großes hässliches Loch.
 
 ![geschnitten](DSCF1326.jpg)
 ![Stoffmalfarben](DSCF1327.jpg)
 ![bemalt und geschnitten](DSCF1329.jpg)
+![Kragenentfernung](DSCF1333.jpg)
 
 Ich wollte die Grinsekatze noch etwas hervorheben mit Farben, gerade weil mein Shirt dunkelgrau ist, hielt ich das für eine gute Idee und so habe ich mich wieder anhand eines Bildes orientiert und mit meinen Stoffkreiden losgemalt. Meine Farben muss ich erst mal kurz bügeln, danach ziehe ich noch an den Löchern, dadurch dreht sich der Stoff etwas ein und die Schnittkanten sehen nicht mehr so neu aus. Jetzt kann ich mit meinen anderen Plänen fortfahren, die da wären - die Ärmel abzuschneiden und auf die Vorderseite noch was raufzumalen. Wenn man sich jetzt noch ein blaues, grünes oder violettes Shirt untendrunter anzieht, hat man eine stets lächelnde Grinsekatze.
 
 ![Vorderseite](DSCF1331.jpg)
-![Kragenentfernung](DSCF1333.jpg)
-
 ![Gesamtansicht Vorderseite](DSCF1330.jpg)
 ![Rückseite angezogen](DSCF1334.jpg)
