@@ -14,7 +14,6 @@ Nachdem das Flauschiversum nun viiiiel zu lange nicht mehr kre-aktiv war, gibt e
 
 Also ich sah mir die ganzen vielen Videos an um Anregungen zu suchen und stellte nach einiger Zeit fest, dass ich mir immer die gleichen Ideen anschaue. Hier ein Totenkopf, da ein Schmetterling und hey schneiden-wir-das-Shirt-in-Streifen. Also hab ich überlegt und meine Idee kam mir mit diesem Shirt. Ich finde Katzen (für diejenigen, die es tatsächlich noch nicht wissen sollten ;) ) total toll. Und welche Katze kennt jeder? Genau, die Grinsekatze aus Alice im Wunderland. Also auf zur Suchmaschine und das Internet nach Bildern durchforsten lassen. Das ist dabei herausgekommen und an diesem Bild werde ich mich orientieren.
 
-![Grinsekatzenvorlage](DSCF1323.jpg)
 
 ![Shirt halbiert mit Markierung](DSCF1320.jpg)
 ![Shirt geschnitten](DSCF1321.jpg)
