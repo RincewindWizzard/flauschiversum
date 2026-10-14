@@ -1,0 +1,7 @@
+# Nach /etc/flauschiversum/deploy.conf kopieren (Eigentümer root, Modus 644). Wird von deploy-commit als Shell gelesen.
+# Bare-Repository, aus dem gebaut wird:
+REPO=/media/git/nadja/flauschiversum
+# Optional: Ziel des Deployments (Standard flauschiversum:/httpdocs/, also der SSH-Eintrag des Benutzers flauschiversum):
+#TARGET=flauschiversum:/httpdocs/
+# Optional: wie lange ein zweiter Push auf den ersten wartet, in Sekunden:
+#LOCK_WAIT=1800

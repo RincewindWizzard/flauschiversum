@@ -1,0 +1,5 @@
+# Nach /etc/sudoers.d/flauschiversum (root:root, 440); "git" durch den Benutzer ersetzen, unter dem der Git-Server die Hooks ausführt.
+# Prüfen: visudo -cf /etc/sudoers.d/flauschiversum
+# Erlaubt wird nur dieser eine, root-eigene Befehl als Benutzer flauschiversum; die Commit-ID prüft der Befehl selbst streng.
+Defaults:git !requiretty
+git ALL=(flauschiversum) NOPASSWD: /usr/local/libexec/flauschiversum/deploy-commit [0-9a-f]*

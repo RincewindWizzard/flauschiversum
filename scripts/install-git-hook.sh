@@ -14,5 +14,5 @@ if [ -e "$dest" ] && ! cmp -s "$src" "$dest"; then
 fi
 install -m 755 "$src" "$dest"
 echo "Hook installiert: $dest"
-echo "Deployt wird bei Pushes auf refs/heads/master (anderer Branch: DEPLOY_REF). Voraussetzungen auf dem Server:"
-echo "  Rust (cargo), Git, tar und ein SSH-Eintrag 'flauschiversum' für den Benutzer, unter dem der Hook läuft."
+echo "Deployt wird bei Pushes auf refs/heads/master (anderer Branch: DEPLOY_REF). Voraussetzung: der Benutzer"
+echo "flauschiversum und die sudo-Regel (README, \"Server für das Deployment einrichten\")."

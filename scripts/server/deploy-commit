@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Baut und deployt genau einen Commit. Läuft als Benutzer `flauschiversum` (per sudo aus dem post-receive-Hook).
+# Installation: siehe README ("Server für das Deployment einrichten"); gehört root und ist nur für root schreibbar.
+# Aufruf: deploy-commit <40-stellige Commit-ID>
+# Konfiguration: /etc/flauschiversum/deploy.conf (FLAUSCHI_CONF für Tests) mit REPO=… und optional TARGET=… und LOCK_WAIT=…
+set -uo pipefail
+
+id="${1-}"
+if [ "$#" -ne 1 ] || ! [[ "$id" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "Fehler: erwartet genau eine 40-stellige Commit-ID (Kleinbuchstaben und Ziffern)." >&2
+  exit 2
+fi
+
+conf="${FLAUSCHI_CONF:-/etc/flauschiversum/deploy.conf}"
+REPO="" TARGET="" LOCK_WAIT=1800
+# shellcheck disable=SC1090
+[ -r "$conf" ] && . "$conf"
+if [ -z "$REPO" ] || [ ! -d "$REPO" ]; then
+  echo "Fehler: REPO fehlt oder existiert nicht (Konfiguration: $conf)." >&2
+  exit 2
+fi
+
+state="$HOME/.cache/flauschiversum"
+mkdir -p "$state"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Ein Lauf nach dem anderen; ein zweiter Push wartet auf den ersten.
+exec 9>"$state/deploy.lock"
+if ! flock -w "$LOCK_WAIT" 9; then
+  echo "Fehler: Sperre nach ${LOCK_WAIT}s nicht erhalten (läuft ein anderes Deployment?)." >&2
+  exit 1
+fi
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+run() {
+  echo "==> Export von ${id:0:10} aus $REPO"
+  git --git-dir="$REPO" -c safe.directory="$REPO" archive "$id" | tar -x -C "$work" || {
+    echo "Fehler: Der Stand $id konnte nicht exportiert werden (unbekannter Commit?)." >&2
+    return 1
+  }
+  cd "$work" || return 1
+  export CARGO_TARGET_DIR="$state/target"
+  args=(deploy --cache "$state/images")
+  [ -n "$TARGET" ] && args+=(--target "$TARGET")
+  cargo run --release --locked -- "${args[@]}"
+}
+
+run 2>&1 | tee -a "$state/deploy.log"
+exit "${PIPESTATUS[0]}"
