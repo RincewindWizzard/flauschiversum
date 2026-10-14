@@ -1,9 +1,13 @@
 ---
 title: "Katze"
 permalink: /2026/10/katze/
-author: Ermeline
-date: 2026-10-14
+tags: [Katzen]
+author: Ehrlich
+date: 2026-10-14 12:00:00
+image: "PXL_20261014_102835277.RAW-01.COVER.jpg"
+excerpt: "nur eine Katze"
 ---
 ## Anhänge
-
+ 
+Hier steht noch nichts
 ![Schubia](PXL_20261014_102835277.RAW-01.COVER.jpg)
