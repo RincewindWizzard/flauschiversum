@@ -61,11 +61,15 @@ Unter dem Inhalt SHALL die Post-Seite Links auf den nächstälteren und den näc
 - **THEN** gibt es einen Link auf den nächstälteren Post und keinen auf einen neueren
 
 ### Requirement: Autor am Ende des Beitrags
-Hat der Post einen Autor, SHALL die Seite nach dem Beitragstext die Zeile „Von <Autor>“ zeigen, wobei der Name auf `/about/` verlinkt. Die Zeile steht nach dem Inhalt und vor den Links zum älteren und neueren Beitrag. Hat der Post keinen Autor, gibt es die Zeile nicht.
+Hat der Post einen Autor, SHALL die Seite nach dem Beitragstext die Zeile „Von <Autor>“ zeigen, wobei der Name auf `/about/` verlinkt. Die Zeile steht nach dem Inhalt und vor den Links zum älteren und neueren Beitrag. Die Zeile SHALL rechtsbündig stehen und nach oben einen sichtbaren Abstand zum Beitragstext haben, der mindestens eine Zeilenhöhe beträgt. Hat der Post keinen Autor, gibt es die Zeile nicht.
 
 #### Scenario: Autor nach dem Text
 - **WHEN** die Seite des Posts „Alraune“ mit `author: Ermeline` geöffnet wird
 - **THEN** steht „Von Ermeline“ mit Link auf `/about/` nach dem letzten Absatz und vor „älterer Beitrag“
+
+#### Scenario: Rechtsbündig mit Abstand
+- **WHEN** die Seite eines Posts mit Autor geöffnet wird
+- **THEN** ist die Zeile „Von …“ rechtsbündig, und zwischen dem letzten Absatz des Textes und der Zeile liegt ein Abstand von mehr als einer Zeilenhöhe
 
 #### Scenario: Ohne Autor
 - **WHEN** ein Post kein Feld `author` hat
@@ -92,3 +96,22 @@ Die Post-Seite SHALL nach dem Kontakt-Hinweis und vor der Navigation zum ältere
 #### Scenario: Keine ähnlichen Beiträge
 - **WHEN** ein Beitrag kein Schlagwort mit einem anderen Beitrag teilt
 - **THEN** zeigt die Seite keine Karte
+
+### Requirement: Lesbare Absätze
+Im Text eines Beitrags und einer Einzelseite SHALL zwischen aufeinanderfolgenden Absätzen ein sichtbarer vertikaler Abstand von mindestens einer Zeilenhöhe liegen. Listen, Zitate und vorformatierte Blöcke SHALL nach unten einen vergleichbaren Abstand haben, Überschriften SHALL einen größeren Abstand davor als danach haben. Der Abstand SHALL mit der Schriftgröße skalieren und gilt nur im Textbereich der Seite, nicht in Kopf, Sidebar, Übersichten und Karten.
+
+#### Scenario: Zwei Absätze nacheinander
+- **WHEN** ein Beitrag zwei aufeinanderfolgende Absätze enthält
+- **THEN** liegt zwischen dem Ende des ersten und dem Anfang des zweiten Absatzes ein Abstand, der mindestens eine Zeilenhöhe beträgt
+
+#### Scenario: Liste und Überschrift im Text
+- **WHEN** ein Beitrag auf einen Absatz eine Liste und danach eine Überschrift folgen lässt
+- **THEN** ist die Liste vom Absatz davor und vom Text danach sichtbar abgesetzt, und die Überschrift hat mehr Abstand nach oben als nach unten
+
+#### Scenario: Bereiche außerhalb des Textes bleiben unverändert
+- **WHEN** eine Übersichts- oder Themenseite, die Sidebar oder der Autorenhinweis betrachtet wird
+- **THEN** ändern sich deren Abstände durch diese Anforderung nicht
+
+#### Scenario: Dunkles Thema
+- **WHEN** das dunkle Farbschema aktiv ist
+- **THEN** sind die Absatzabstände dieselben wie im hellen Schema

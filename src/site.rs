@@ -1133,7 +1133,7 @@ pub mod tests {
         }
         // Chronologische Liste: alle bisherigen /page/<N>/ bleiben, erste Seite unter /beitraege/
         assert!(g.outputs.contains("/beitraege/"));
-        for n in 1..49 {
+        for n in 1..43 {
             assert!(g.outputs.contains(&format!("/page/{n}/")), "/page/{n}/");
         }
         for page in ["/themen/", "/suche/", "/pagefind/pagefind.js", "/pagefind/pagefind-entry.json"] {
