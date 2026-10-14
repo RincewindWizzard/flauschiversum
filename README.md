@@ -289,18 +289,19 @@ ls -ld /var/share/flauschiversum           # Kontrolle: drwxr-x--- flauschiversu
 Eine Login-Shell braucht der Benutzer nicht: `sudo -u flauschiversum <Befehl>` startet den Befehl auch so. Alle
 Einrichtungsbefehle unten laufen deshalb als `sudo -u flauschiversum -H …` von `root` aus.
 
-Damit der Build das Repository lesen, aber nicht verändern kann, kommt `flauschiversum` in die Gruppe von `git`
-(geschrieben wird weiter nur von `git`):
+Der Build muss das Repository nur **lesen** können. Prüfe, ob `flauschiversum` das darf (Git gehört das Repository dem
+Benutzer `git`; als `root` oder `flauschiversum` verweigert Git den Zugriff mit „nicht in einem Git-Repository“, solange
+das Verzeichnis nicht als sicher markiert ist – `deploy-commit` setzt dafür selbst `safe.directory`, deshalb dieselbe Option
+hier in der Kontrolle):
 
 ```bash
-usermod -aG git flauschiversum
-chmod -R g+rX /media/git/nadja/flauschiversum
-git -C /media/git/nadja/flauschiversum config core.sharedRepository group
-sudo -u flauschiversum ls /media/git/nadja/flauschiversum      # Kontrolle: listet das Repository
+sudo -u flauschiversum git -c safe.directory=/media/git/nadja/flauschiversum --git-dir=/media/git/nadja/flauschiversum rev-parse master
 ```
 
-Auch die übergeordneten Verzeichnisse (`/media/git`, `/media/git/nadja`) müssen für `flauschiversum` durchsuchbar sein
-(`namei -l /media/git/nadja/flauschiversum` zeigt, wo es scheitert; nötigenfalls `chmod g+x` bzw. `o+x` dort).
+Das muss eine Commit-ID ausgeben. Scheitert es mit „Keine Berechtigung“, braucht `flauschiversum` Leserechte: entweder
+Mitglied der Gruppe des Repositorys werden (`usermod -aG <Gruppe> flauschiversum`, Gruppe siehe `ls -ld`) oder das Repository
+für andere lesbar machen (`chmod -R o+rX`). Ist es schon für alle lesbar, ist nichts zu tun. Auch die übergeordneten Verzeichnisse
+(`/media/git`, `/media/git/nadja`) müssen durchsuchbar sein (`namei -l /media/git/nadja/flauschiversum` zeigt, wo es scheitert).
 
 **3. Rust und Cargo installieren** (nur im Home von `flauschiversum`, systemweit wird nichts verändert):
 
@@ -368,7 +369,7 @@ sudo -u git ~/flauschiversum/scripts/install-git-hook.sh /media/git/nadja/flausc
 ```
 
 **8. Erster Lauf von Hand**, damit der erste Release-Build nicht im Push hängt (Commit-ID:
-`git -C /media/git/nadja/flauschiversum rev-parse master`):
+`git --git-dir=/media/git/nadja/flauschiversum -c safe.directory=/media/git/nadja/flauschiversum rev-parse master`):
 
 ```bash
 sudo -u git sudo -n -u flauschiversum /usr/local/libexec/flauschiversum/deploy-commit <40-stellige Commit-ID>
@@ -384,7 +385,7 @@ oben). Vorab zeigt `deploy --dry-run` in einem Export, was passieren würde.
 | Meldung / Symptom | Ursache |
 |---|---|
 | `sudo: a password is required` / `no tty present` | sudoers-Datei fehlt oder nennt den falschen Benutzer (Schritt 6) |
-| `Permission denied` beim Export | `flauschiversum` ist nicht in der Gruppe `git` oder das Repository nicht gruppenlesbar (Schritt 2) |
+| `Permission denied` beim Export | `flauschiversum` darf das Repository nicht lesen (Schritt 2) |
 | `linker 'cc' not found` | `build-essential` fehlt (Schritt 1) |
 | `Permission denied (publickey)` / `Host key verification failed` | Schlüssel nicht beim Hoster eingetragen oder `known_hosts` fehlt (Schritt 4) |
 | `Sperre nach … nicht erhalten` | ein anderes Deployment läuft noch (`LOCK_WAIT` in `deploy.conf`) |
