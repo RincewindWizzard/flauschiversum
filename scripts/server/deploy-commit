@@ -31,13 +31,16 @@ if ! flock -w "$LOCK_WAIT" 9; then
   exit 1
 fi
 
-work="$(mktemp -d)"
-trap 'rm -rf "$work"' EXIT
+# Fester Arbeitsbaum statt eines neuen temporären Verzeichnisses je Lauf: Cargo erkennt unveränderten Code an Pfad und
+# Dateizeiten, und `read-tree -u` fasst nur Dateien an, die sich zwischen den Commits geändert haben.
+work="$state/src"
+mkdir -p "$work"
 
 run() {
   echo "==> Export von ${id:0:10} aus $REPO"
-  git --git-dir="$REPO" -c safe.directory="$REPO" archive "$id" | tar -x -C "$work" || {
-    echo "Fehler: Der Stand $id konnte nicht exportiert werden (unbekannter Commit?)." >&2
+  GIT_INDEX_FILE="$state/src.index" git --git-dir="$REPO" --work-tree="$work" -c safe.directory="$REPO" \
+      read-tree -u --reset "$id" || {
+    echo "Fehler: Der Stand $id konnte nicht ausgecheckt werden (unbekannter Commit?)." >&2
     return 1
   }
   cd "$work" || return 1
