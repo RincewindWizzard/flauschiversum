@@ -1,7 +1,7 @@
 ---
 title: "Test"
 permalink: /2026/10/test/
-tags: [Challenge]
+tags: [Challenge, Katzen]
 author: Ehrlich
 date: 2026-10-14
 excerpt: "nur ein test"
