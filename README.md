@@ -399,4 +399,3 @@ und ImageMagick nötig, `--preview` erzeugt Vorschaubilder; nach dem Archivieren
 `openspec/changes/archive/2026-10-12-favicon-maskottchen/assets/`). Die Dateien sind eingecheckt, der Build erzeugt sie nicht.
 
 
-asd

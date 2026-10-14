@@ -14,7 +14,7 @@ Hier ist Platz für die "Visitenkarten von verschiedensten Veranstaltungen" (All
 ![Vorne](DSCF4746.JPG)
 ![Seite 1](DSCF4747.JPG)
 ![Seite 2](DSCF4748.JPG)
-![Seite 3(DSCF4749.JPG)
+![Seite 3](DSCF4749.JPG)
 ![Seite 4](DSCF4750.JPG)
 ![Seite 5](DSCF4751.JPG)
 ![Hinten](DSCF4752.JPG)
