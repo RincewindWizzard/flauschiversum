@@ -5,7 +5,7 @@ Die Zeile „Von Ermeline“ am Ende eines Beitrags steht linksbündig und ohne 
 ## What Changes
 
 - `p.author` im Beitrag wird rechtsbündig ausgerichtet.
-- Zwischen dem Beitragstext und der Zeile liegt ein Abstand nach oben (rund 1,5 Zeilen); nach unten bleibt der Abstand zu „Schreibe Ihr eine Nachricht!“ bzw. zum Seitenende angemessen klein.
+- Zwischen dem Beitragstext und der Zeile liegt ein Abstand nach oben (rund 1,3 Zeilen); nach unten bleibt der Abstand zu „Schreibe Ihr eine Nachricht!“ bzw. zum Seitenende angemessen klein.
 - Die Zeile bleibt in Wortlaut, Verlinkung (`/about/`) und Reihenfolge unverändert; nur die Darstellung ändert sich. Hat ein Beitrag keinen Autor, gibt es die Zeile weiterhin nicht.
 
 ## Capabilities

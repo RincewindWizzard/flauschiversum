@@ -14,7 +14,7 @@
    ```css
    main.page p.author {
      text-align: right;
-     margin-top: 1.5em;
+     margin-top: 2em;
    }
    ```
 

@@ -5,13 +5,29 @@ main.page {
   padding-right: 1em;
   margin-bottom: 2em;
 
-  & h2 {
-    padding-top: 1em;
+  /* Der Reset in main.css nimmt allen Blöcken den Rand; im Fließtext trennt der Abstand nach unten die Absätze
+     (mehr als eine Zeilenhöhe: Zeilenabstand 1,52, daher 1,6em; in em, damit er mit der Schrift wächst). Absätze mit Klasse (Autor, Kontakt) bleiben unberührt. */
+  & p:not([class]), & ul:not([class]), & ol:not([class]), & blockquote, & pre {
+    margin-bottom: 1.6em;
+  }
+
+  & li > p:last-child, & blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  & h2, & h3, & h4 {
+    margin-top: 1.6em;
+    margin-bottom: 0.5em;
   }
 
   & > ul {
     margin-left: 1em;
-    margin-bottom: 1em;
+  }
+
+  /* Unterschrift am Ende des Beitrags: rechtsbündig, mit Luft zum Text */
+  & p.author {
+    text-align: right;
+    margin-top: 2em;
   }
 }
 

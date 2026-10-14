@@ -414,6 +414,60 @@ await test('Favicon: drei Icons verlinkt und mit passendem Medientyp ausgeliefer
   }
 });
 
+await test('Beitragstext: zwischen Absätzen liegt mindestens eine Zeilenhöhe Abstand (hell und dunkel), Klassen-Absätze und Übersichten unverändert', async () => {
+  for (const scheme of ['light', 'dark']) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: scheme });
+    const page = await ctx.newPage();
+    await page.goto(BASE + '/2019/02/kloppeltardis/');
+    const gaps = await page.locator('main.page').evaluate((main) => {
+      const out = [];
+      for (const p of main.querySelectorAll(':scope > p:not([class])')) {
+        const next = p.nextElementSibling;
+        if (next && next.matches('p:not([class])')) {
+          const lh = parseFloat(getComputedStyle(p).lineHeight) || 1.5 * parseFloat(getComputedStyle(p).fontSize);
+          out.push({ gap: next.getBoundingClientRect().top - p.getBoundingClientRect().bottom, lh });
+        }
+      }
+      return out;
+    });
+    assert.ok(gaps.length > 0, `${scheme}: Beitrag mit aufeinanderfolgenden Absätzen erwartet`);
+    for (const { gap, lh } of gaps) assert.ok(gap >= lh, `${scheme}: Abstand ${gap} px kleiner als Zeilenhöhe ${lh} px`);
+    const contact = await page.locator('p.contact').evaluate((el) => getComputedStyle(el).marginBottom);
+    assert.equal(contact, '0px', `${scheme}: Kontaktzeile behält ihren Rand`);
+    await ctx.close();
+  }
+  const page = await open('/', 1280);
+  const m = await page.locator('main#home p').first().evaluate((el) => getComputedStyle(el).marginBottom).catch(() => '0px');
+  assert.equal(m, '0px', 'Startseite unverändert');
+  await page.close();
+});
+
+await test('Autorzeile „Von …“: rechtsbündig mit Abstand zum Text (hell und dunkel)', async () => {
+  for (const scheme of ['light', 'dark']) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: scheme });
+    const page = await ctx.newPage();
+    await page.goto(BASE + '/2014/01/alraune/');
+    const author = page.locator('main.page p.author');
+    assert.equal(await author.count(), 1, `${scheme}: genau eine Autorzeile`);
+    assert.equal(await author.evaluate((el) => getComputedStyle(el).textAlign), 'right', `${scheme}: rechtsbündig`);
+    const { gap, lh, right, mainRight } = await author.evaluate((el) => {
+      const prev = el.previousElementSibling;
+      const cs = getComputedStyle(el);
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      return {
+        gap: el.getBoundingClientRect().top - prev.getBoundingClientRect().bottom,
+        lh: parseFloat(cs.lineHeight) || 1.5 * parseFloat(cs.fontSize),
+        right: r.getBoundingClientRect().right,
+        mainRight: el.getBoundingClientRect().right,
+      };
+    });
+    assert.ok(gap > lh, `${scheme}: Abstand ${gap} px nicht größer als Zeilenhöhe ${lh} px`);
+    assert.ok(mainRight - right < 2, `${scheme}: Text endet am rechten Rand (${mainRight - right} px Lücke)`);
+    await ctx.close();
+  }
+});
+
 await browser.close();
 for (const r of results) console.log(r.join(' – '));
 process.exit(results.every((r) => r[0] === 'ok') ? 0 : 1);

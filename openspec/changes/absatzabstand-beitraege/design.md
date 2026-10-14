@@ -15,13 +15,13 @@ In `page.css`:
 
 ```css
 main.page {
-  & p, & ul, & ol, & blockquote, & pre { margin-block: 0 1em; }
-  & p + p { margin-top: 0; }
-  & h2, & h3, & h4 { margin-block: 1.6em 0.5em; }
+  & p:not([class]), & ul:not([class]), & ol:not([class]), & blockquote, & pre { margin-bottom: 1.6em; }
+  & li > p:last-child, & blockquote > :last-child { margin-bottom: 0; }
+  & h2, & h3, & h4 { margin-top: 1.6em; margin-bottom: 0.5em; }
 }
 ```
 
-Abstand **nach** jedem Block (`1em`, entspricht rund 1,5 Zeilen bei `line-height: 1.52`) statt Abstand oben und unten, damit sich Abstände nicht addieren; `h2` behält seine Wirkung, das bisherige `padding-top: 1em` wird durch den Überschriften-Abstand ersetzt, damit es nicht doppelt zählt. Der Abstand ist in `em`, wächst also mit der Schriftgröße.
+Abstand **nach** jedem Block (`1.6em`, etwas mehr als eine Zeilenhöhe bei `line-height: 1.52`; `1em` wäre weniger als eine Zeile gewesen) statt Abstand oben und unten, damit sich Abstände nicht addieren; `h2` behält seine Wirkung, das bisherige `padding-top: 1em` wird durch den Überschriften-Abstand ersetzt, damit es nicht doppelt zählt. Der Abstand ist in `em`, wächst also mit der Schriftgröße.
 
 *Alternative:* ein Wert in `rem` oder `px` — verworfen, weil er bei geänderter Schriftgröße (Zoom, Nutzer-Einstellung) nicht mitwächst. *Alternative:* Absatzeinzug statt Abstand — verworfen, weil im Web Abstand üblicher und für kurze Absätze besser lesbar ist.
 
@@ -39,6 +39,6 @@ Ein Playwright-Test lädt einen Beitrag mit mindestens zwei aufeinanderfolgenden
 
 ## Risks / Trade-offs
 
-- [Seiten werden länger] → gewollt; der Abstand ist mit rund 1,5 Zeilen moderat, in `page.css` an einer Stelle einstellbar.
+- [Seiten werden länger] → gewollt; der Abstand ist mit gut einer Zeile moderat, in `page.css` an einer Stelle einstellbar.
 - [Doppelte Abstände mit bestehenden Regeln (`h2` padding, `ul` margin, Figuren)] → die bisherigen Einzelregeln werden mit der neuen zusammengeführt; Sichtprüfung auf Beiträgen mit Bildern, Listen und Überschriften.
 - [Eingebettetes HTML in Beiträgen hat eigene Abstände] → `p:not([class])` und Regeln auf Blockelementen können dort greifen; stichprobenartige Prüfung der Beiträge mit viel eingebettetem HTML.
