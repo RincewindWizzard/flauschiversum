@@ -10,6 +10,7 @@ fails=0
 check() { if "${@:2}"; then echo "ok   $1"; else echo "FEHLER $1"; fails=$((fails + 1)); fi; }
 
 git init -q --bare "$base/server.git"
+git -C "$base/server.git" symbolic-ref HEAD refs/heads/master
 "$src/scripts/install-git-hook.sh" "$base/server.git" >/dev/null
 check "Hook wird installiert" test -x "$base/server.git/hooks/post-receive"
 check "zweite Installation desselben Hooks ist in Ordnung" "$src/scripts/install-git-hook.sh" "$base/server.git"
@@ -54,6 +55,16 @@ check "Fehler im Build erreicht den Pusher" bash -c "grep -q 'Build kaputt' <<<'
 (cd "$base/work" && git rm -q FAIL && git commit -q -m heil)
 out="$(DEPLOY_SUDO=false push master)"
 check "fehlschlagendes sudo meldet die Einrichtung" bash -c "grep -q 'Einrichtung prüfen' <<<'$out'"
+
+# Hauptbranch richtet sich nach HEAD des Repositorys: bei main deployt main, master nicht mehr
+git -C "$base/server.git" symbolic-ref HEAD refs/heads/main
+(cd "$base/work" && git checkout -q -b main)
+out="$(push main)"
+check "Push auf den Hauptbranch main deployt, wenn HEAD darauf zeigt" grep -q "STUB-COMMIT" <<<"$out"
+(cd "$base/work" && git checkout -q master && git commit -q --allow-empty -m nochmal)
+out="$(push master)"
+check "master deployt nicht, wenn HEAD auf main zeigt" bash -c "! grep -q STUB-COMMIT <<<'$out'"
+git -C "$base/server.git" symbolic-ref HEAD refs/heads/master
 
 # --- deploy-commit mit Ersatz für cargo ---
 dc="$src/scripts/server/deploy-commit"

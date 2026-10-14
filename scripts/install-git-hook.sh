@@ -14,5 +14,5 @@ if [ -e "$dest" ] && ! cmp -s "$src" "$dest"; then
 fi
 install -m 755 "$src" "$dest"
 echo "Hook installiert: $dest"
-echo "Deployt wird bei Pushes auf refs/heads/master (anderer Branch: DEPLOY_REF). Voraussetzung: der Benutzer"
+echo "Deployt wird nur bei Pushes auf den Hauptbranch (Branch, auf den HEAD des Repositorys zeigt; anders: DEPLOY_REF). Voraussetzung: der Benutzer"
 echo "flauschiversum und die sudo-Regel (README, \"Server für das Deployment einrichten\")."

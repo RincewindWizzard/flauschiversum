@@ -252,12 +252,12 @@ Ziel, z. B. wenn der Build auf dem Webserver läuft), `--base-url`, `--cache`, `
 
 ### Automatisch: Git-Hook (ohne GitHub Actions)
 
-Für ein Repository auf einem eigenen Git-Server: Bei einem Push auf `master` baut der Hook `post-receive` den gepushten Stand
+Für ein Repository auf einem eigenen Git-Server: Bei einem Push auf den Hauptbranch baut der Hook `post-receive` den gepushten Stand
 und deployt ihn. **Der Build läuft nicht unter dem Git-Benutzer, sondern unter dem eigenen Benutzer `flauschiversum`**
 (Home `/var/share/flauschiversum`): Dort liegen der SSH-Schlüssel zum Webserver und die Rust-Installation. Der Hook darf
 per `sudo` genau einen festen Befehl als dieser Benutzer starten (`deploy-commit <Commit-ID>`), sonst nichts; den Schlüssel
 kann der Git-Benutzer nicht lesen. Die Ausgabe sieht der Pusher (`remote: …`), das Protokoll steht in
-`/var/share/flauschiversum/.cache/flauschiversum/deploy.log`. Anderer Branch: `DEPLOY_REF=refs/heads/main` in der Umgebung des Hooks.
+`/var/share/flauschiversum/.cache/flauschiversum/deploy.log`. Hauptbranch ist der Branch, auf den `HEAD` des Bare-Repositorys zeigt (Kontrolle: `git --git-dir=… symbolic-ref HEAD`, nötigenfalls `git --git-dir=… symbolic-ref HEAD refs/heads/main`); alle anderen Branches deployen nie. Fest vorgeben lässt er sich mit `DEPLOY_REF=refs/heads/main` in der Umgebung des Hooks.
 
 #### Server für das Deployment einrichten
 
@@ -295,7 +295,7 @@ das Verzeichnis nicht als sicher markiert ist – `deploy-commit` setzt dafür s
 hier in der Kontrolle):
 
 ```bash
-sudo -u flauschiversum git -c safe.directory=/media/git/nadja/flauschiversum --git-dir=/media/git/nadja/flauschiversum rev-parse master
+sudo -u flauschiversum git -c safe.directory=/media/git/nadja/flauschiversum --git-dir=/media/git/nadja/flauschiversum rev-parse HEAD
 ```
 
 Das muss eine Commit-ID ausgeben. Scheitert es mit „Keine Berechtigung“, braucht `flauschiversum` Leserechte: entweder
@@ -369,7 +369,7 @@ sudo -u git ~/flauschiversum/scripts/install-git-hook.sh /media/git/nadja/flausc
 ```
 
 **8. Erster Lauf von Hand**, damit der erste Release-Build nicht im Push hängt (Commit-ID:
-`git --git-dir=/media/git/nadja/flauschiversum -c safe.directory=/media/git/nadja/flauschiversum rev-parse master`):
+`git --git-dir=/media/git/nadja/flauschiversum -c safe.directory=/media/git/nadja/flauschiversum rev-parse HEAD`):
 
 ```bash
 sudo -u git sudo -n -u flauschiversum /usr/local/libexec/flauschiversum/deploy-commit <40-stellige Commit-ID>
