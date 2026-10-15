@@ -2,6 +2,7 @@
 # Neue Schlagworte hier ergänzen; unbekannte Schlagworte lässt der Build nicht durch.
 # Die Schlagworte sind die einzige Ordnung der Beiträge (keine Kategorien): grobe Themen wie Wolle, Nähen oder Basteln stehen neben feinen wie Filzen oder Quilten.
 - name: Amigurumi
+- name: Anleitung
 - name: Basteln
 - name: Blog
 - name: Brandings
