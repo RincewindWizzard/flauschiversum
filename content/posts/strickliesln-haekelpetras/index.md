@@ -13,6 +13,7 @@ Auch bei [Hobbii](https://hobbii.de/) kann man sich nur allzu schnell in den Anl
 
 Auf [Stricknetz](https://www.stricknetz.info/home/) wird man umfangreich fündig was Tipps und Tricks rund ums Frickeln angeht. 
 
+Wer Interesse an (Lehr)Büchern hat könnte hier bei [Projekt Gutenberg](https://www.gutenberg.org/ebooks/subjects/search/?query=knitting) fündig werden. 
 
 Wer bei englischen Anleitungen [Übersetzungshilfe](http://a.b.c.de1.cc/StrickbegriffeAbkuerzung-deutscheUebersetzung.pdf) braucht, soll sie auch erhalten. 
 
