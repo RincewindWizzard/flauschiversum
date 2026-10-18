@@ -7,7 +7,6 @@ date: 2014-07-23 11:07:27
 image: DSCF1407.jpg
 excerpt: "Weil der neue Hut so toll ist und so viel Spaß gemacht hat, hab ich mich gleich auch noch am dritten Tag dem Filzen gewidmet. "
 ---
-
 ![ausgelegte Wolle](DSCF1388-e1421952622650.jpg)
 ![abdecken mit Gaze](DSCF1389-e1421952634356.jpg)
 ![gefilzter Hut](DSCF1390-e1421952645761.jpg)
