@@ -11,12 +11,15 @@ excerpt: "Weil der neue Hut so toll ist und so viel Spaß gemacht hat, hab ich m
 ![abdecken mit Gaze](DSCF1389-e1421952634356.jpg)
 ![gefilzter Hut](DSCF1390-e1421952645761.jpg)
 
-Weil der neue Hut so toll ist und so viel Spaß gemacht hat, hab ich mich gleich auch noch am dritten Tag dem Filzen gewidmet. Hier sind ein paar Fotos vom Entstehungsprozess.  
-
+Weil der [neue Hut](/2014/07/ermelines-neuer-hexenhut/) so toll ist und so viel Spaß gemacht hat, hab ich mich gleich auch noch am dritten Tag dem Filzen gewidmet. Hier sind ein paar Fotos vom Entstehungsprozess.  
 
 ![Fixierung mit Wäscheklammern](DSCF1392.jpg)
 
-Ich habe beim letzten Hut auf Perlenzierde verzichtet, aber diesmal dürfen sie mein Hutband verschönern, das aus einem sehr dünnen gefilzten Band besteht, welches ich nach dem Filzen mit den Fingern gehäkelt habe, jetzt hab ich die Falten gelegt und das Schätzchen trocknet nun. Ich hab mich für noch mehr Zwirbel entschieden, also hat dieser Hut nun nicht nur am Zipfel ein Löckchen sondern auch zwei als Abschluss des Hutbandes. Sie trocken um die Bleistifte gewickelt, die Wäscheklammern an den Hutfalten hab ich noch zur Sicherheit hinzugefügt, halten würde es auch so. Nachdem der Hut getrocknet ist, werden auch die Farben noch leuchtender hervorkommen. Morgen werden wir das fertige Ergebnis sehen...  ;)
+Ich habe beim letzten Hut auf Perlenzierde verzichtet, aber diesmal dürfen sie mein Hutband verschönern, das aus einem sehr dünnen gefilzten Band besteht, welches ich nach dem Filzen mit den Fingern gehäkelt habe. Jetzt hab ich die Falten gelegt und das Schätzchen trocknet nun. 
+
+Ich hab mich für noch mehr Zwirbel entschieden, also hat dieser Hut nun nicht nur am Zipfel ein Löckchen sondern auch zwei als Abschluss des Hutbandes. Sie trocken um die Bleistifte gewickelt, die Wäscheklammern an den Hutfalten hab ich noch zur Sicherheit hinzugefügt, halten würde es auch so. 
+
+Nachdem der Hut getrocknet ist, werden auch die Farben noch leuchtender hervorkommen. Morgen werden wir das fertige Ergebnis sehen... ;)
 
 ![Hexenhut rechts](DSCF1406.jpg)
 ![Hexenhut links](DSCF1407.jpg)
