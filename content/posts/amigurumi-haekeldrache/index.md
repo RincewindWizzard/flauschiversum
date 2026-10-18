@@ -10,8 +10,12 @@ excerpt: "Ich habe vor langer Zeit mal eine Anleitung zum Häkeln eines Drachens
 
 Ich habe vor langer Zeit mal eine Anleitung zum Häkeln eines Drachens
 gesucht und gefunden, der Drache war mir jedoch zu klein und so habe ich
-ihn vergrößert und einige Details hinzugefügt. Tatsächlich habe ich die
-detaillierte Anleitung aber zunächst kein Foto gehabt. Aber den Ferien
+ihn vergrößert und einige Details hinzugefügt. 
+
+Der kleine Drache ist mein Lehrprojekt zum Häkelnlernen gewesen und als ich das Prinzip verstanden hatte, hab ich direkt das Wissen genutzt und was eigenes draus gemacht.
+
+Tatsächlich habe ich die
+detaillierte Anleitung, aber zunächst kein Foto gehabt. Aber den Ferien
 sei Dank, ich hab mich die letzten Tage mal hingesetzt und den Drachen
 erneut gehäkelt. Hier ist jetzt endlich die bebilderte Anleitung meines
 Amigurumidrachens.
@@ -41,7 +45,6 @@ LM=Luftmasche
 15. 2M zus., 3fM, wiederh. =18M, mit Watte füllen 
 16. 2M zus., 1fM, wiederh., KM+ Faden durchz. =12M
 17. 2M zus., 1fM, wiederh., KM+ Faden durchz. =8M
-
 
 ![Körper](DSCF1360.jpg)
 
@@ -77,7 +80,6 @@ LM=Luftmasche
 29. 2M zus., 2fM, wiederh. =18M, mit Watte füllen 
 30. 2M zus. bis das Loch geschl. ist, KM+ Faden durchz.
 
-
 ![Schwanz](DSCF1361.jpg)
 
 ## Schwanz
@@ -92,13 +94,11 @@ LM=Luftmasche
 9. 15fM …
 wiederh. bis 42fM, KM+ Faden durchz.
 
-
 ![Augenlider](DSCF1362.jpg)
 
 ## Augenlider 2x
 1. 2LM, in die 1.LM 6fM
 2. M verd. bis 12M, KM
-
 
 ![Ohren](DSCF1363.jpg)
 
@@ -112,7 +112,6 @@ wiederh. bis 42fM, KM+ Faden durchz.
 7. 12fM, KM+ Faden durchz.
 8. 12fM, KM+ Faden durchz.
 Ohren unten zusammenraffen und vernähen
-
 
 ![Arme](DSCF1364.jpg)
 
@@ -132,7 +131,6 @@ Ohren unten zusammenraffen und vernähen
 13. 12fM,
 14. KM+ Faden durchz.
 
-
 ![Beine](DSCF1365.jpg)
 
 ## Beine 2x
@@ -148,7 +146,6 @@ Ohren unten zusammenraffen und vernähen
 10. Jede 3.M zus. =12M
 11. 12fM, KM+ Faden durchz.
 
-
 ![Flügel](DSCF1366.jpg)
 
 ## Flügel 2x
@@ -156,10 +153,11 @@ Stege: 21LM, 15fM, 11LM, 10fM, 11LM, 10fM
 
 Die Flügelmembranen sind improvisiert und sehen jedes Mal anders aus. Ich habe schon überlegt beim nächsten mal ein Spitzenmuster von einem Häkeldeckchen zu nehmen.
 
-
 ## Stachelkamm
 Ich habe den Zackenkamm auf verschiedenste Weisen gehäkelt,man kann einfach eine Reihe fM häkeln und dann immer abwechselnd fM und 2 Stäbchen oder man kann direkt in einem Rutsch KM, fM, Stäbchen, fM, KM; oder man denkt sich einfach was eigenes aus.
+
 So sieht mein Drachenbaby aus.
+
 ![Drache links](DSCF1368.jpg)
 ![Drache Flügel angelegt](DSCF1370.jpg)
 ![Drache Flügel ausgebreitet](DSCF1369.jpg)
@@ -167,8 +165,8 @@ So sieht mein Drachenbaby aus.
 ![Drache links nah](DSCF1374.jpg)
 
 Den großen Drachen habe ich auf Wunsch einer Freundin gehäkelt, er soll ein Geschenk für ihre Mama sein.
+
 ![Oben](IMG_20150612_085906.jpg)
-![Seite](IMG_20150612_085949.jpg)
 ![Profil](IMG_20150612_085956.jpg)
 ![Hinten](IMG_20150612_090012.jpg)
 ![Seite hinten](IMG_20150612_090018.jpg)
@@ -178,11 +176,8 @@ Den großen Drachen habe ich auf Wunsch einer Freundin gehäkelt, er soll ein Ge
 ![Seite oben](IMG_20150612_090034.jpg)
 ![Buh](IMG_20150612_090058.jpg)
 
-
-Viel Spass eure Ermeline, ich freue mich über Drachenbabyfotos.
+Viel Spaß eure Ermeline, ich freue mich über Drachenbabyfotos.
 
 Eines habe ich von Svenja bekommen, sie hat gerade erst mit dem Häkeln begonnen, ist der Drache nicht richtig toll geworden?
 ![Drache vorne](Svenjas_Drache.jpg)
 ![Drache Seite](Svenjas_Drache_2.jpg)
-
-
