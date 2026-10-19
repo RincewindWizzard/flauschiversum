@@ -11,4 +11,4 @@ date: 2026-10-19
 ![abgesteppt](IMG_20261019_201643.jpg)
 ![Stoff durchlöchert](IMG_20261019_201704.jpg)
 ![Kanten umnähen](IMG_20261019_201714.jpg)
-
+![Kürbisgesicht Zwischenstand](IMG_20261019_234449.jpg)
