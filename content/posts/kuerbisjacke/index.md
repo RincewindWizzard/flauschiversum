@@ -1,8 +1,10 @@
 ---
 title: "Kürbisjacke"
 permalink: /2026/10/kuerbisjacke/
+tags: [Upcycling, Nähen, Halloween]
 author: Ermeline
 date: 2026-10-19
+excerpt: "Eine Secondhandjacke und Stoffreste können ein effektvolles Accessoires fürs perfekte herbstliche Halloweenoutfit sein."
 ---
 ## Anhänge
 
