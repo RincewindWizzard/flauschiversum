@@ -6,7 +6,7 @@ author: Ermeline
 date: 2026-10-19
 excerpt: "Eine Secondhandjacke und Stoffreste können ein effektvolles Accessoires fürs perfekte herbstliche Halloweenoutfit sein."
 ---
-## Anhänge
+Eine Secondhandjacke und Stoffreste können ein effektvolles Accessoire fürs perfekte herbstliche Halloweenoutfit sein. 
 
 ![Kürbisgesicht Rückseite](IMG_20261019_190537.jpg)
 ![Stoffauswahl](IMG_20261019_190547.jpg)
