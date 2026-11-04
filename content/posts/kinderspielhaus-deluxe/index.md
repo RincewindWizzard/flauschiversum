@@ -52,3 +52,5 @@ Damit auch jeder weiß: "Dieses Haus gehört jemandem:" Habe ich noch ein kleine
 Im Sommer steht oft ein eigener Outdoor-Pool (Planschbecken) vor der Tür neben den kleinen Blumenkästen, die mit dem Wasser der Regentonne gegossen werden. Das untere Foto zeigt das Haus im Winterquartier. Es ist sooooo süß, oder? 
 
 Und es gibt schon Pläne für Version 2.0 ;) und deshalb ist mein Papa der Coolste.
+
+Update: inzwischen ist das Haus schon 12 Jahre alt und hat drei Generationen intensiv spielender Hausbewohner hinter sich. Diese sind zwar der Größe nach zu urteilen, dem Haus entwachsen aber lassen sich dennoch das ein oder andere Mal dazu hinreißen sich dort zurückzuziehen. Eine Kernsanierung musste noch nicht durchgeführt werden. 
