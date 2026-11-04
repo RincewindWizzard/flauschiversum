@@ -31,4 +31,15 @@ Weil mir Kleidung immer besser steht, wenn sie auf der Taille endet, habe ich di
 
 Und hier seht ihr nun mein fertiges Herbstliches Halloweenoutfit für den Alltag. 
 
-Kürbistastische Grüße entsendet Eure Ermeline 
+Kürbistastische Grüße entsendet Eure Ermeline
+
+## Anhänge
+
+![](PXL_20261102_055420124~2.jpg)
+![](PXL_20261102_055429455~2.jpg)
+![](PXL_20261102_055453038~2.jpg)
+![](PXL_20261104_174732360~2.jpg)
+![](PXL_20261104_174827808~2.jpg)
+![](PXL_20261104_174845144.MP~2.jpg)
+![](PXL_20261104_174935579.jpg)
+![](PXL_20261104_174941286~2.jpg)
