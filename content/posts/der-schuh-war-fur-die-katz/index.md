@@ -10,8 +10,9 @@ excerpt: "So um hier mal den Beweis zu bringen, dass ich auch noch andere Dinge 
 
 ![Mishou im Puschen](DSCF1523.JPG)
 
-So um hier mal den Beweis zu bringen, dass ich auch noch andere Dinge als Kopfbedeckungen filzen kann... Hoffentlich bekommt keiner Käsefüße. Es ist ein Schuh geworden - gut, zugegebenermaßen, er ist ein wenig zu groß geraten aber aus verlässlicher Quelle weiß ich, dass das Nathan und Mishou nicht im geringsten stört. Dieser Puschen besteht aus etwa 400 - 450 Gramm Merinovlies und darf nun als Katzen-Schlafstätte dienen, hoffentlich beruhigen die beiden sich bald, sodass ich mal ein Bild mit der eigentlichen Funktionsweise posten kann. Manchmal wünscht man sich, dass Katzen auf einen hören würden, wenn man sagt: "Leg dich hin." Tja und dass das Ganze nicht so richtig funktioniert, wenn man den Puschen nicht richtig benutzt, kann man den Beiden so oft sagen wie man will.
+So um hier mal den Beweis zu bringen, dass ich auch noch andere Dinge als Kopfbedeckungen filzen kann... Hoffentlich bekommt keiner Käsefüße. Es ist ein Schuh geworden - gut, zugegebenermaßen, er ist ein wenig zu groß geraten aber aus verlässlicher Quelle weiß ich, dass das Nathan und Mishou nicht im geringsten stört. 
 
+Dieser Puschen besteht aus etwa 400 - 450 Gramm Merinovlies und darf nun als Katzen-Schlafstätte dienen, hoffentlich beruhigen die beiden sich bald, sodass ich mal ein Bild mit der eigentlichen Funktionsweise posten kann. Manchmal wünscht man sich, dass Katzen auf einen hören würden, wenn man sagt: "Leg dich hin." Tja und dass das Ganze nicht so richtig funktioniert, wenn man den Puschen nicht richtig benutzt, kann man den Beiden so oft sagen wie man will.
 
 ![Mischou mit Puschen](DSCF1522.jpg)
 ![im Puschen 1](DSCF1524.jpg)
