@@ -12,7 +12,6 @@ Ich habe heute im Bus gezeichnet. Ich habe allgemein in letzter Zeit viel gezeic
 
 Es folgen die Kategorien:
 
-
 ## Frauen und Engel
 
 ![Frau von Hinten](DSCF3152.jpg)
@@ -34,7 +33,6 @@ Es folgen die Kategorien:
 ![Frau im Herbstwind](DSCF3179.jpg)
 ![Wirbelndes Mädchen](DSCF3180.jpg)
 
-
 ## Gesichter und Gesichtsteile
 
 ![Frauengesicht](DSCF3169-e1440597870847.jpg)
@@ -54,7 +52,6 @@ Es folgen die Kategorien:
 ![Auge 3](DSCF3208.jpg)
 ![Katze im Auge](DSCF3216.jpg)
 
-
 ## Grusel
 
 ![RIP Santa](DSCF3202-e1440598378966.jpg)
@@ -70,7 +67,6 @@ Es folgen die Kategorien:
 ![Spinne](DSCF3232.jpg)
 ![Schleimmonster](DSCF3228.jpg)
 
-
 ## Kuschel und niedlich
 
 ![Grinsekatze 1](DSCF3172-e1440598992217.jpg)
@@ -80,7 +76,6 @@ Es folgen die Kategorien:
 ![Grinsekatze 2](DSCF3173.jpg)
 ![Grinsekatze 3](DSCF3175.jpg)
 ![Grinsekatze 5](DSCF3177.jpg)
-
 
 ## Gedöns
 
