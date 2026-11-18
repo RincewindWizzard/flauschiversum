@@ -10,9 +10,9 @@ excerpt: "Also eine Aufgabe aus der Unterstufe der Erzieherausbildung war es ein
 
 ![Buchdeckel nah](IMG_4273.JPG)
 
-Also eine Aufgabe aus der Unterstufe der Erzieherausbildung war es ein modernes Märchen zu schreiben und ein Märchenbuch zu gestalten. Gesagt getan und hier ist das Gemeinschaftswerk von  einer Mitauszubildenden und mir.
+Also eine Aufgabe aus der Unterstufe der Erzieherausbildung war es, ein modernes Märchen zu schreiben und ein Märchenbuch zu gestalten. Gesagt getan und hier ist das Gemeinschaftswerk von  einer Mitauszubildenden und mir.
 
-Das Cover wurde mit dem Holzbrenner in Dickleder gebrannt und mit Lederfarben nachbearbeitet. Nach dem Brennen wurde das Leder auf den lilafarbenen Lederumschlag genietet und dann wurde das Buch eingeschlagen. Was man auf diesem Bild nicht sehen kann, sind die Kanten des Buches, die mit Kupferblech eingefasst wurden und dem Ganzen den letzten Schliff geben.
+Das Cover wurde mit dem Holzbrenner in Dickleder gebrannt und mit Lederfarben nachgearbeitet. Nach dem Brennen wurde das Leder auf den lilafarbenen Lederumschlag genietet und dann wurde das Buch eingeschlagen. Was man auf diesem Bild nicht sehen kann, sind die Kanten des Buches, die mit Kupferblech eingefasst wurden und dem Ganzen den letzten Schliff geben.
 
 ![Buchdeckel](IMG_4274.JPG)
 
