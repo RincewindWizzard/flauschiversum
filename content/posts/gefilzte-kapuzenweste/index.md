@@ -8,11 +8,12 @@ image: "DSCF2770f.jpg"
 excerpt: "Lange lange lag dieses Projekt herum, noch vor meinem Umzug wurde dieses Ding angefilzt, unfertig und farblich nicht mehr meiner Stimmung entsprechend, für über ein Jahr auf Eis gelegt und fast vergessen."
 ---
 
-
 ![Weste getragen hinten](DSCF2769f.jpg)
 ![Weste getragen Seite](DSCF2768f.jpg)
 
-Lange lange lag dieses Projekt herum, noch vor meinem Umzug wurde dieses Ding angefilzt, unfertig und farblich nicht mehr meiner Stimmung entsprechend, für über ein Jahr auf Eis gelegt und fast vergessen. Ursprünglich angedacht war es, dass ich mir eine Gugel filze, leider schrumpfte sie unter meinen Händen nicht schnell genug und ich hatte mich tatsächlich übernommen, so war das Ding nur angefilzt und trocknete allmählich, sodass ich es dann zunächst mal in eine Plastiktüte verbannte und in meinem Frust vergaß. Nur so nebenbei, dies ist der denkbar unwürdigste Weg ein Filzwerk zu behandeln. Ich hatte es einfach trocknen lassen mit all der Seife, die noch enthalten war. Glücklicherweise hat sich mein schlecht behandeltes Werk nicht gerächt, die Wolle stank nicht, sie war nicht verklebt oder spröde... mein Glück.
+Lange lange lag dieses Projekt herum, noch vor meinem Umzug wurde dieses Ding angefilzt, unfertig und farblich nicht mehr meiner Stimmung entsprechend, für über ein Jahr auf Eis gelegt und fast vergessen. Ursprünglich angedacht war es, dass ich mir eine Gugel filze, leider schrumpfte sie unter meinen Händen nicht schnell genug und ich hatte mich tatsächlich übernommen, so war das Ding nur angefilzt und trocknete allmählich, sodass ich es dann zunächst mal in eine Plastiktüte verbannte und in meinem Frust vergaß. 
+
+Nur so nebenbei, dies ist der denkbar unwürdigste Weg ein Filzwerk zu behandeln. Ich hatte es einfach trocknen lassen mit all der Seife, die noch enthalten war. Glücklicherweise hat sich mein schlecht behandeltes Werk nicht gerächt, die Wolle stank nicht, sie war nicht verklebt oder spröde... mein Glück.
 
 ![Weste getragen vorne](DSCF2771f.jpg)
 ![Seite mit Kapuze](DSCF2770f.jpg)
