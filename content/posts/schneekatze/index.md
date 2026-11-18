@@ -15,7 +15,6 @@ excerpt: "Ein lang gehegter Traum geht in Erfüllung. Wenn ich schon derzeit nic
 Ein lang gehegter Traum geht in Erfüllung. Wenn ich schon derzeit nicht meine eigene Hauskatze haben kann, dann doch wohl die Schneekatze im Hinterhof. Da wache ich also auf und sehe, es schneit schon wieder... Schneehose und -jacke rausgekramt, Handschuhe an und raus in den
 Schnee...
 
-
 ![Katze vorne](DSCF2035-e1422100903751.jpg)
 ![Katze nah Seite](DSCF2036-e1422100916980.jpg)
 ![rechte Seite](DSCF2037-e1422100929579.jpg)
