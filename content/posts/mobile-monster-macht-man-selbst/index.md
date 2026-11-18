@@ -88,4 +88,4 @@ Weil erfahrungsgemäß der verwendete Filz fusselt und ausfranzt möchte ich ein
 
 So, es folgen die Äuglein. Dazu verwende ich wieder den Filz und schneide ihn mir in der gewünschten Form aus. Ich habe mir vorgezeichnet, wo ich die Pupillen haben möchte, diese werden auch mit schwarzem Filz gemacht. Nun noch die Augen im Gesicht positionieren und feststecken. Festnähen... dies ist einer der erwähnten nicht versteckbaren Nähte, deshalb nimm dir den Zickzackstich und umrunde das Auge sorgfältig. Mit ein paar kleinen Lichtreflexen wirken die Augen echter und ausdruckstärker.
 
-Fertig ist die Monstertasche schaut auch in den Beitrag 
+Fertig ist die Monstertasche schaut auch in den Beitrag zu den (Monsterkissen)[/2015/04/monstermassiges-kuschelkissen/], da gibt's nen tollen Hack für das Nähen mit Fusseligen Plüschstoffen. ;)
