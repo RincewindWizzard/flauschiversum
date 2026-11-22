@@ -17,8 +17,7 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
+
 
 # Deployments laufen nacheinander und werden nie abgebrochen
 concurrency:
