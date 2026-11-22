@@ -1,5 +1,5 @@
 # Forgejo-Variante von .github/workflows/production.yml (gleicher Ablauf, läuft auf dem eigenen Runner).
-# Produktiv-Deployment: baut die Seite bei jedem Push auf `master` und legt sie per SSH auf den Server
+# Produktiv-Deployment: baut die Seite bei jedem Push auf `main` und legt sie per SSH auf den Server
 # (flauschiversum:/httpdocs/, siehe `flauschiversum deploy --help`). Das Staging (GitHub Pages) gibt es hier nicht.
 #
 # Einmalige Einrichtung (Repository → Einstellungen → Actions → Geheimnisse):
@@ -14,7 +14,7 @@ name: Produktion
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 permissions:
